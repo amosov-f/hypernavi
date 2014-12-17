@@ -1,8 +1,8 @@
-package ru.navi.server.servlet;
+package ru.hyper.server.servlet;
 
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import ru.navi.hyper.algo.GoodsClassifier;
+import ru.hyper.core.algo.GoodsClassifier;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,12 +20,12 @@ public class HyperNaviServlet extends HttpServlet {
     private final GoodsClassifier classifier;
 
     @Inject
-    public HyperNaviServlet(@NotNull GoodsClassifier classifier) {
+    public HyperNaviServlet(@NotNull final GoodsClassifier classifier) {
         this.classifier = classifier;
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws ServletException, IOException {
         final String text = req.getParameter("text");
         resp.getWriter().println(classifier.classify(text));
     }

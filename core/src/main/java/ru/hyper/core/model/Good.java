@@ -1,4 +1,4 @@
-package ru.navi.hyper.model;
+package ru.hyper.core.model;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package ru.navi.server;
+package ru.hyper.server;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -7,8 +7,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jetbrains.annotations.NotNull;
-import ru.navi.hyper.algo.GoodsClassifier;
-import ru.navi.server.servlet.HyperNaviServlet;
+import ru.hyper.core.algo.GoodsClassifier;
+import ru.hyper.server.servlet.HyperNaviServlet;
 
 /**
  * User: amosov-f
@@ -27,7 +27,6 @@ public class HyperNaviServer {
         ServletContextHandler handler = new ServletContextHandler();
         handler.addServlet(new ServletHolder(injector.getInstance(HyperNaviServlet.class)), "/");
         server.setHandler(handler);
-        System.out.println("!!!");
         server.start();
     }
 }

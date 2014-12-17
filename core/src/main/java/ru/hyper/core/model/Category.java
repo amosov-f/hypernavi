@@ -1,4 +1,4 @@
-package ru.navi.hyper.model;
+package ru.hyper.core.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +30,13 @@ public enum Category {
     MEAT("Мясо и колбасные изделия"),
     WEAR("Одежда и обувь");
 
+    @NotNull
+    private final String name;
+
+    private Category(@NotNull final String name) {
+        this.name = name;
+    }
+
     @Nullable
     public static Category parse(@NotNull final String name) {
         for (final Category category : values()) {
@@ -41,14 +48,13 @@ public enum Category {
     }
 
     @NotNull
-    private final String name;
-
-    private Category(@NotNull final String name) {
-        this.name = name;
-    }
-
-    @NotNull
     public String getName() {
         return name;
+    }
+
+    public static void main(String[] args) {
+        for (final Category category : Category.values()) {
+            System.out.println(category.getName());
+        }
     }
 }

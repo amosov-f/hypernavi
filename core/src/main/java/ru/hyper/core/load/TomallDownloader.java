@@ -1,4 +1,4 @@
-package ru.navi.hyper.load;
+package ru.hyper.core.load;
 
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.io.IOUtils;
@@ -8,12 +8,13 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import ru.navi.hyper.model.Category;
-import ru.navi.hyper.model.Good;
+import ru.hyper.core.model.Category;
+import ru.hyper.core.model.Good;
 
 import java.io.*;
 import java.util.Iterator;
@@ -56,8 +57,59 @@ public class TomallDownloader {
     }
 
     @NotNull
+    private static HttpClient httpClient() {
+        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(N_THREADS);
+        connectionManager.setDefaultMaxPerRoute(N_THREADS);
+        return HttpClientBuilder.create()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setConnectTimeout(CONNECT_TIMEOUT)
+                        .setSocketTimeout(SOCKET_TIMEOUT).build()).build();
+    }
+
+    public static void main(@NotNull String[] args) throws IOException {
+        int minId = MIN_ID;
+        final InputStream in = TomallDownloader.class.getResourceAsStream("/tomall/goods.txt");
+        if (in != null) {
+            final BufferedReader fin = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while ((line = fin.readLine()) != null) {
+                final String[] parts = line.split("\t");
+                minId = Math.max(minId, Integer.parseInt(parts[0]) + 1);
+            }
+        }
+
+        final FileWriter fout = new FileWriter("src/main/resources/tomall/goods.txt", true);
+        final TomallDownloader downloader = new TomallDownloader(minId, MAX_ID);
+        for (final Good good : downloader.getGoods()) {
+            fout.write(good + "\n");
+            fout.flush();
+            System.out.println(good);
+        }
+        fout.close();
+    }
+
+    @NotNull
     public Iterable<Good> getGoods() {
         return new TomallGoods();
+    }
+
+    private static final class GoodParser {
+        @Nullable
+        public static Good parse(final int id, @NotNull final String html) throws IOException {
+            try {
+                final Element element = Jsoup.parse(html).body().child(0).child(1).child(0).child(0);
+                final String name = element.child(1).child(0).child(0).text();
+                final Category category = Category.parse(element.child(2).child(1).child(0).child(0).child(0).child(1).child(0).child(0).child(0).child(1).child(0).text());
+                if (category == null) {
+                    return null;
+                }
+                return new Good(id, name, category);
+            } catch (IndexOutOfBoundsException e) {
+                return null;
+            }
+        }
     }
 
     private class TomallGoods implements Iterable<Good> {
@@ -70,6 +122,7 @@ public class TomallDownloader {
                         limiter.acquire();
                         try {
                             final HttpResponse response = httpClient.execute(request);
+                            EntityUtils.consumeQuietly(response.getEntity());
                             final Good good = GoodParser.parse(curId, IOUtils.toString(response.getEntity().getContent(), "windows-1251"));
                             if (good != null) {
                                 goods.put(good);
@@ -115,56 +168,5 @@ public class TomallDownloader {
                 }
             };
         }
-    }
-
-    private static final class GoodParser {
-        @Nullable
-        public static Good parse(final int id, @NotNull final String html) throws IOException {
-            try {
-                final Element element = Jsoup.parse(html).body().child(0).child(1).child(0).child(0);
-                final String name = element.child(1).child(0).child(0).text();
-                final Category category = Category.parse(element.child(2).child(1).child(0).child(0).child(0).child(1).child(0).child(0).child(0).child(1).child(0).text());
-                if (category == null) {
-                    return null;
-                }
-                return new Good(id, name, category);
-            } catch (IndexOutOfBoundsException e) {
-                return null;
-            }
-        }
-    }
-
-    @NotNull
-    private static HttpClient httpClient() {
-        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(Integer.MAX_VALUE);
-        connectionManager.setDefaultMaxPerRoute(Integer.MAX_VALUE);
-        return HttpClientBuilder.create()
-                .setConnectionManager(connectionManager)
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setConnectTimeout(CONNECT_TIMEOUT)
-                        .setSocketTimeout(SOCKET_TIMEOUT).build()).build();
-    }
-
-    public static void main(@NotNull String[] args) throws IOException {
-        int minId = MIN_ID;
-        final InputStream in = TomallDownloader.class.getResourceAsStream("/tomall/goods.txt");
-        if (in != null) {
-            final BufferedReader fin = new BufferedReader(new InputStreamReader(in));
-            String line;
-            while ((line = fin.readLine()) != null) {
-                final String[] parts = line.split("\t");
-                minId = Math.max(minId, Integer.parseInt(parts[0]) + 1);
-            }
-        }
-
-        final FileWriter fout = new FileWriter("src/main/resources/tomall/goods.txt", true);
-        final TomallDownloader downloader = new TomallDownloader(minId, MAX_ID);
-        for (final Good good : downloader.getGoods()) {
-            fout.write(good + "\n");
-            fout.flush();
-            System.out.println(good);
-        }
-        fout.close();
     }
 }

@@ -1,8 +1,8 @@
-package ru.navi.hyper.algo;
+package ru.hyper.core.algo;
 
 import org.jetbrains.annotations.NotNull;
-import ru.navi.hyper.model.Category;
-import ru.navi.hyper.model.Good;
+import ru.hyper.core.model.Category;
+import ru.hyper.core.model.Good;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
