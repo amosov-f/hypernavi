@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,9 +48,11 @@ public class MarkerActivity extends Activity {
 
         System.out.println(getFilesDir());
 
+        System.out.println(Environment.getExternalStorageDirectory());
+
         final PrintWriter writer;
         try {
-            writer = new PrintWriter(openFileOutput("hypermarker.txt", Context.MODE_APPEND));
+            writer = new PrintWriter(new FileOutputStream(new File(Environment.getExternalStorageDirectory(), "hypermarker.txt"), true), true);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -95,7 +98,13 @@ public class MarkerActivity extends Activity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("onClick");
                 if (schemePosition == null) {
+                    return;
+                }
+                final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Toast.makeText(MarkerActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -105,12 +114,10 @@ public class MarkerActivity extends Activity {
                 findViewById(R.id.button).setVisibility(View.INVISIBLE);
 
                 locations.clear();
-
-
-                final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                     @Override
                     public void onLocationChanged(@NotNull final Location location) {
+                        System.out.println("onLocationChanged");
                         locations.add(location);
                         if (locations.size() == N_LOCATIONS) {
                             locationManager.removeUpdates(this);
