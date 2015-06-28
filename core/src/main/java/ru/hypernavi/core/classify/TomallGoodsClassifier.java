@@ -114,7 +114,7 @@ public final class TomallGoodsClassifier implements GoodsClassifier {
     private static List<Good> read() throws IOException {
         return IOUtils.readLines(TomallGoodsClassifier.class.getResourceAsStream("/tomall/goods.txt")).stream()
                 .map(line -> line.split("\t"))
-                .map(parts -> new Good(Integer.parseInt(parts[0]), parts[1], Category.parse(parts[2])))
+                .map(parts -> new Good(Integer.parseInt(parts[0]), parts[1], Objects.requireNonNull(Category.parse(parts[2]))))
                 .collect(Collectors.toList());
     }
 

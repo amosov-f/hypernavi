@@ -1,6 +1,7 @@
 package ru.hypernavi.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -38,9 +39,9 @@ public enum Category {
         this.name = name;
     }
 
-    @NotNull
+    @Nullable
     public static Category parse(@NotNull final String name) {
-        return Arrays.stream(values()).filter(category -> category.getName().equals(name)).findFirst().get();
+        return Arrays.stream(values()).filter(category -> category.getName().equals(name)).findFirst().orElse(null);
     }
 
     @NotNull
