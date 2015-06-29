@@ -13,6 +13,7 @@
         <module>core</module>
         <module>util</module>
         <module>ml</module>
+        <module>marker</module>
     </modules>
 
     <dependencyManagement>
