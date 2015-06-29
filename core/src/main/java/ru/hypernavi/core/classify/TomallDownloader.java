@@ -176,7 +176,7 @@ final class TomallDownloader {
             }
         }
 
-        final FileWriter fout = new FileWriter("src/main/resources/tomall/goods.txt", true);
+        final FileWriter fout = new FileWriter("core/src/main/resources/tomall/goods.txt", true);
         final TomallDownloader downloader = new TomallDownloader(minId, MAX_ID);
         for (final Good good : downloader.getGoods()) {
             fout.write(good + "\n");
