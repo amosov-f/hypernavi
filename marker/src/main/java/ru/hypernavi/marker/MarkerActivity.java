@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.hyper.marker.R;
 import ru.hypernavi.util.GeoPoint;
 
 import java.io.File;
