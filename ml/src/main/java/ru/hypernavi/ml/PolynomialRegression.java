@@ -26,7 +26,6 @@ public final class PolynomialRegression extends AbstractClassifier {
 
     public PolynomialRegression(final int deg) {
         this.deg = deg;
-        regression.setRidge(0.03);
     }
 
     @Override

@@ -9,12 +9,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>marker</artifactId>
+    <artifactId>client</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>marker</module>
+        <module>app</module>
+    </modules>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>4.1.1.4</platform.version>
-        <android.plugin.version>3.8.2</android.plugin.version>
+        <project.version.name.number>1.0.0</project.version.name.number>
+        <project.version.code>1</project.version.code>
+        <project.emulator.name><!-- TODO emulator name --></project.emulator.name>
+        <project.verbosity>true</project.verbosity>
+        <java.version>1.7</java.version>
     </properties>
 
     <dependencies>
@@ -22,30 +29,30 @@
             <groupId>ru.hypernavi</groupId>
             <artifactId>util</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>4.1.1.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                    <artifactId>android-maven-plugin</artifactId>
-                    <version>${android.plugin.version}</version>
-                    <extensions>true</extensions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
+                <version>3.8.2</version>
+                <extensions>true</extensions>
                 <configuration>
                     <sdk>
-                        <platform>21</platform>
+                        <platform>22</platform>
                     </sdk>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

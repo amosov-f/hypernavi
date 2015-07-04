@@ -1,4 +1,4 @@
-package ru.hypernavi.app;
+package ru.hypernavi.client.app;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,8 +7,7 @@ import android.widget.Toast;
 /**
  * Created by bakharevk on 30.06.15.
  */
-public class AppActivity extends Activity {
-
+public final class AppActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,4 +1,4 @@
-package ru.hypernavi.marker;
+package ru.hypernavi.client.marker;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,15 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.util.GeoPoint;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class MarkerActivity extends Activity {
+public final class MarkerActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(MarkerActivity.class.getName());
 
     private static final String SCHEME_PATH = "/okey/okey_tallinskoe_shema_magazina_b.jpg";
@@ -49,19 +44,6 @@ public class MarkerActivity extends Activity {
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(scheme);
-
-        LOG.info("Files dir: " + getFilesDir());
-        LOG.info("External storage directory: " + Environment.getExternalStorageDirectory());
-
-        final File logFile = new File(Environment.getExternalStorageDirectory(), "hypermarker.txt");
-        final PrintWriter fout;
-        try {
-            fout = new PrintWriter(new FileOutputStream(logFile, true), true);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        fout.println();
-        fout.println(SCHEME_PATH);
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -134,7 +116,6 @@ public class MarkerActivity extends Activity {
                             updatingGeoPosition = false;
 
                             LOG.info(schemePosition + " -> " + geoPosition);
-                            fout.println(System.currentTimeMillis() + " " + schemePosition.x + " " + schemePosition.y + " " + geoPosition.getLatitude() + " " + geoPosition.getLongitude());
                             Toast.makeText(MarkerActivity.this, schemePosition + " -> " + geoPosition, Toast.LENGTH_SHORT).show();
                         }
                     }
