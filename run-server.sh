@@ -5,10 +5,10 @@
 
 git pull
 mvn3 clean install -Dandroid.sdk.path=/opt/android-sdk-linux
-rc=$?
-if [ ! $rc -eq 0 ]; then
+status=$?
+if [ ! $status -eq 0 ]; then
     echo "Maven build failed!"
-    sl -e
+    exit 1
 fi
 fuser -KILL -k -n tcp 80
 nohup java -jar server/target/hypernavi-server-jar-with-dependencies.jar -port 80 -cfg /common.properties /test.properties 2>> /dev/null >> /dev/null &
