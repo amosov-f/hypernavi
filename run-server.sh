@@ -6,7 +6,7 @@
 git pull
 mvn3 clean install -Dandroid.sdk.path=/opt/android-sdk-linux
 rc=$?
-if [[ $rc != 0 ]] ; then
+if [ ! $rc -eq 0 ]; then
     echo "Maven build failed!"
     sl -e
 fi
