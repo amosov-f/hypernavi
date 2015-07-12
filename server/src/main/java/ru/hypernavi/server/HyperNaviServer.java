@@ -29,7 +29,7 @@ public final class HyperNaviServer {
             }
         });
 
-        final int port = 8080;
+        final int port = 80;
         final Server server = new Server(port);
         ServletContextHandler handler = new ServletContextHandler();
         handler.addServlet(new ServletHolder(injector.getInstance(GoodsClassificationService.class)), "/");
