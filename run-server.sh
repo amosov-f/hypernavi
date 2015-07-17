@@ -3,6 +3,7 @@
 # ssh hypernavi@hypernavi.cloudapp.net
 # sudo sh /hol/arkanavt/hypernavi/run-server.sh
 
+cd /hol/arkanavt/hypernavi
 git pull
 mvn3 clean install -Dandroid.sdk.path=/opt/android-sdk-linux
 status=$?
