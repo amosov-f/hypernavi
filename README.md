@@ -9,7 +9,7 @@ about: TBD
 
 1. Java 1.8
 2. Android SDK 22
-3. Maven 3.1.1
+3. Maven 3.1.1 (optional)
 
 ###How to install project (for IntelliJ IDEA)
 
