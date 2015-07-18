@@ -17,7 +17,7 @@ In `Project Structure`,
 
 1. Add JDK 1.8 and Android SDK 22 to `SDKs` in `Platform Settings`
 2. Set `Project SDK` to JDK 1.8 and `Project language level` to 8 in `Project` tab
-3. Set Android SDK 22 to `Module SDK` for `app` and `marker` modules (see `Dependencies` in `Modules` tab)
+3. Set `Module SDK` to Android SDK 22 for `app` and `marker` modules (see `Dependencies` in `Modules` tab)
 
 ###How to run server on local machine
 
