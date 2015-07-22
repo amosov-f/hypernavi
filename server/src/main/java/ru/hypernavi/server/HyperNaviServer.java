@@ -7,17 +7,21 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.core.classify.GoodsClassifier;
 import ru.hypernavi.core.classify.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.TomallGoodsClassifier;
+import ru.hypernavi.server.handler.BeforeRequestHandler;
 import ru.hypernavi.server.servlet.GoodsClassificationService;
 
 import java.util.Properties;
-import java.util.logging.Logger;
 
 /**
  * User: amosov-f
@@ -25,7 +29,7 @@ import java.util.logging.Logger;
  * Time: 0:19
  */
 public final class HyperNaviServer {
-    private static final Logger LOG = Logger.getLogger(HyperNaviServer.class.getName());
+    private static final Log LOG = LogFactory.getLog(HyperNaviServer.class);
 
     private static final String OPT_PORT = "port";
     private static final String OPT_CONFIG = "cfg";
@@ -44,6 +48,9 @@ public final class HyperNaviServer {
             properties.load(HyperNaviServer.class.getResourceAsStream(configPath));
         }
 
+        // TODO: configure log4j files from command line
+        DOMConfigurator.configure(HyperNaviServer.class.getResource("/log4j.xml"));
+
         final Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
@@ -57,10 +64,14 @@ public final class HyperNaviServer {
             }
         });
 
+        final ServletContextHandler context = new ServletContextHandler();
+        context.addServlet(new ServletHolder(injector.getInstance(GoodsClassificationService.class)), "/category");
+        final HandlerCollection handlers = new HandlerCollection();
+        handlers.addHandler(new BeforeRequestHandler());
+        handlers.addHandler(context);
+
         final Server server = new Server(port);
-        ServletContextHandler handler = new ServletContextHandler();
-        handler.addServlet(new ServletHolder(injector.getInstance(GoodsClassificationService.class)), "/category");
-        server.setHandler(handler);
+        server.setHandler(handlers);
 
         server.start();
         LOG.info("Server started on port " + port + "!");
