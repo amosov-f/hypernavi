@@ -21,11 +21,7 @@ In `Project Structure`,
 
 ###How to run server on local machine
 
-Create and run configuration for HyperNaviServer class with next command line arguments,
-
-`-port 8080 -cfg /common.properties /debug.properties`
-
-Send request to server in your browser,
+Run `Run Server` configuration. Send request to server in your browser,
 
 [http://localhost:8080/category?text=носки](http://localhost:8080/category?text=носки)
 
