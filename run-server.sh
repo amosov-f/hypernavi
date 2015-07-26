@@ -12,5 +12,5 @@ if [ ! $status -eq 0 ]; then
     exit 1
 fi
 fuser -KILL -k -n tcp 80
-nohup java -jar server/target/hypernavi-server-jar-with-dependencies.jar -port 80 -cfg /common.properties /test.properties 2>> /dev/null >> /dev/null &
+nohup java -jar server/target/hypernavi-server-jar-with-dependencies.jar -port 80 -cfg /common.properties /test.properties -logcfg /log4j-dev.xml -logdir /hol/arkanavt/hypernavi/log  2>> /dev/null >> /dev/null &
 echo "Starting server..."

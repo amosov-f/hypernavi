@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender name="Main" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="${LOGS_DIR}/current-hypernavi_main-${PORT}" />
+        <param name="Append" value="true"/>
+        <param name="MaxBackupIndex" value="0"/>
+        <param name="MaxFileSize" value="5GB"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ddMMyy HHmmss.SSS}{Europe/Moscow} %5p [%t] %c{1} &lt;%X{reqid}&gt; %m %throwable>>%n"/>
+        </layout>
+    </appender>
+
+    <logger name="org.springframework">
+        <level value="info"/>
+    </logger>
+
+    <logger name="net">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.apache">
+        <level value="info"/>
+    </logger>
+
+    <logger name="httpclient">
+        <level value="error"/>
+    </logger>
+
+    <logger name="org.eclipse.jetty">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.apache.http.client.protocol">
+        <level value="error"/>
+    </logger>
+
+    <root>
+        <priority value="ALL"/>
+        <appender-ref ref="Main"/>
+    </root>
+</log4j:configuration>
