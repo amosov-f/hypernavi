@@ -5,7 +5,10 @@
 *.iml
 
 ## Directory-based project format:
-.idea/
+.idea/*
+!.idea/runConfigurations
+!.idea/inspectionProfiles
+!.idea/projectCodeStyle.xml
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
