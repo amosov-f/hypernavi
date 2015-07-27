@@ -14,7 +14,7 @@ public final class Good {
     @NotNull
     private final Category category;
 
-    public Good(final int id, @NotNull String name, @NotNull Category category) {
+    public Good(final int id, @NotNull final String name, @NotNull final Category category) {
         this.id = id;
         this.name = name;
         this.category = category;

@@ -1,7 +1,14 @@
 package ru.hypernavi.core.classify;
 
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+
+import org.apache.commons.io.IOUtils;
 import ru.hypernavi.core.Category;
 import ru.hypernavi.core.Good;
 import weka.classifiers.Classifier;
@@ -13,11 +20,6 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * User: amosov-f
@@ -86,7 +88,7 @@ public final class TomallGoodsClassifier implements GoodsClassifier {
         classifier.buildClassifier(filteredData);
 
         if (validate) {
-            Evaluation evaluation = new Evaluation(learn);
+            final Evaluation evaluation = new Evaluation(learn);
             evaluation.evaluateModel(classifier, test);
 
             LOG.info(evaluation.toSummaryString());
@@ -96,6 +98,7 @@ public final class TomallGoodsClassifier implements GoodsClassifier {
     }
 
     @NotNull
+    @Override
     public Category classify(@NotNull final String text) {
         final DenseInstance instance = new DenseInstance(2);
         final Instances instances = data.stringFreeStructure();
@@ -123,7 +126,7 @@ public final class TomallGoodsClassifier implements GoodsClassifier {
         final Scanner cin = new Scanner(System.in);
         LOG.info("You are welcome!");
         while (true) {
-            String text = cin.nextLine();
+            final String text = cin.nextLine();
             LOG.info(classifier.classify(text).getName());
         }
     }

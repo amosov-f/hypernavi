@@ -1,5 +1,13 @@
 package ru.hypernavi.client.marker;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
@@ -11,13 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.util.GeoPoint;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 public final class MarkerActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(MarkerActivity.class.getName());
@@ -26,7 +28,7 @@ public final class MarkerActivity extends Activity {
     private static final int N_LOCATIONS = 5;
 
     @NotNull
-    private List<Location> locations = new ArrayList<>();
+    private final List<Location> locations = new ArrayList<>();
 
     private Point schemePosition;
     private GeoPoint geoPosition;
@@ -54,7 +56,7 @@ public final class MarkerActivity extends Activity {
 
                 final Matrix inverse = new Matrix();
                 imageView.getImageMatrix().invert(inverse);
-                final float[] schemePoint = new float[]{event.getX(), event.getY()};
+                final float[] schemePoint = {event.getX(), event.getY()};
                 inverse.mapPoints(schemePoint);
                 final int x = (int) schemePoint[0];
                 final int y = (int) schemePoint[1];

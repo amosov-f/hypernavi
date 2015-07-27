@@ -1,5 +1,13 @@
 package ru.hypernavi.server.handler;
 
+import org.jetbrains.annotations.NotNull;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,13 +15,6 @@ import org.apache.http.HttpHeaders;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.jetbrains.annotations.NotNull;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * User: amosov-f
@@ -27,7 +28,7 @@ public final class BeforeRequestHandler extends AbstractHandler {
     public void handle(@NotNull final String target,
                        @NotNull final Request request,
                        @NotNull final HttpServletRequest req,
-                       @NotNull final HttpServletResponse resp) throws IOException, ServletException
+                       @NotNull final HttpServletResponse resp) throws IOException
     {
         if (req.getCharacterEncoding() == null && HttpMethod.POST.is(req.getMethod())) {
             req.setCharacterEncoding(StandardCharsets.UTF_8.name());

@@ -1,9 +1,11 @@
 package ru.hypernavi.core.classify;
 
 import org.jetbrains.annotations.NotNull;
-import ru.hypernavi.core.Category;
 
 import java.util.Random;
+
+
+import ru.hypernavi.core.Category;
 
 /**
  * User: amosov-f
@@ -13,7 +15,7 @@ import java.util.Random;
 public final class RandomGoodsClassifier implements GoodsClassifier {
     @NotNull
     @Override
-    public Category classify(@NotNull String text) {
+    public Category classify(@NotNull final String text) {
         return Category.values()[new Random().nextInt(Category.values().length)];
     }
 }

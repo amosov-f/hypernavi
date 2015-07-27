@@ -1,5 +1,8 @@
 package ru.hypernavi.client.app;
 
+import org.jetbrains.annotations.Nullable;
+
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -9,7 +12,7 @@ import android.widget.Toast;
  */
 public final class AppActivity extends Activity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Toast.makeText(AppActivity.this, "Hi!", Toast.LENGTH_SHORT).show();
     }

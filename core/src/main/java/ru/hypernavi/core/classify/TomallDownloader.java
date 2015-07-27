@@ -1,5 +1,18 @@
 package ru.hypernavi.core.classify;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.io.IOUtils;
@@ -10,21 +23,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import ru.hypernavi.core.Category;
 import ru.hypernavi.core.Good;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * User: amosov-f
@@ -65,7 +67,7 @@ final class TomallDownloader {
     @NotNull
     private final HttpClient httpClient = httpClient();
 
-    public TomallDownloader(final int minId, final int maxId) {
+    TomallDownloader(final int minId, final int maxId) {
         this.minId = minId;
         this.maxId = maxId;
     }
@@ -76,13 +78,13 @@ final class TomallDownloader {
     }
 
     @Nullable
-    private static Good parse(final int id, @NotNull final String html) throws IOException {
+    private static Good parse(final int id, @NotNull final String html) {
         try {
             final Element element = child(Jsoup.parse(html).body(), 0, 1, 0, 0);
             final String name = child(element, 1, 0, 0).text();
             final Category category = Category.parse(child(element, 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0).text());
             return category != null ? new Good(id, name, category) : null;
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
             return null;
         }
     }
@@ -107,7 +109,7 @@ final class TomallDownloader {
     }
 
     private final class TomallGoods implements Iterable<Good> {
-        public TomallGoods() {
+        TomallGoods() {
             new Thread(() -> {
                 for (int id = minId; id <= maxId; id++) {
                     final int curId = id;
@@ -146,7 +148,7 @@ final class TomallDownloader {
                     }
                     try {
                         nextGood = goods.poll(SOCKET_TIMEOUT, TimeUnit.MILLISECONDS);
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException ignored) {
                         Thread.currentThread().interrupt();
                     }
                     return nextGood != null;
