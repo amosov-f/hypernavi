@@ -21,6 +21,7 @@ import ru.hypernavi.core.classify.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.TomallGoodsClassifier;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
 import ru.hypernavi.server.servlet.GoodsClassificationService;
+import ru.hypernavi.server.servlet.SchemaServlet;
 
 /**
  * User: amosov-f
@@ -76,6 +77,8 @@ public final class HyperNaviServer {
 
         final ServletContextHandler context = new ServletContextHandler();
         context.addServlet(new ServletHolder(injector.getInstance(GoodsClassificationService.class)), "/category");
+        context.addServlet(new ServletHolder(new SchemaServlet()), "/schema");
+
         final HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(new BeforeRequestHandler());
         handlers.addHandler(context);

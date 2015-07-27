@@ -10,18 +10,23 @@ import org.jetbrains.annotations.NotNull;
 public final class GeoPoint {
     private final double latitude;
     private final double longitude;
+    private static final double EARTH_RADIUS = 6350;
 
     public GeoPoint(final double latitude, final double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
+    public double getLatitude() { return latitude; }
     public double getLongitude() {
         return longitude;
+    }
+
+    public static double distance(GeoPoint a, GeoPoint b) {
+        double lat = a.getLatitude() - b.getLatitude();
+        double lon = a.getLongitude() - b.getLongitude();
+        double angleDistance = Math.sqrt(lat * lat + lon * lon);
+        return EARTH_RADIUS * 360 / 2 * Math.PI * angleDistance;
     }
 
     @NotNull
