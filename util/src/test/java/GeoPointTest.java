@@ -10,7 +10,7 @@ public final class GeoPointTest {
 
     @Test
     public void test() throws Exception {
-        //test(60.0, 30.0, 59.85588055, 30.0, 16.71);
+        test(60.0, 30.0, 59.85588055, 30.0, 16.71);
         test(60.0, 30.0, 60.0, 30.6098805, 33.93);
     }
 
