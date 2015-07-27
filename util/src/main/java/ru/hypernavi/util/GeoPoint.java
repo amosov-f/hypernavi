@@ -22,11 +22,12 @@ public final class GeoPoint {
         return longitude;
     }
 
-    public static double distance(GeoPoint a, GeoPoint b) {
-        double lat = a.getLatitude() - b.getLatitude();
-        double lon = a.getLongitude() - b.getLongitude();
-        double angleDistance = Math.sqrt(lat * lat + lon * lon);
-        return EARTH_RADIUS * 360 / 2 * Math.PI * angleDistance;
+    public static double distance(final GeoPoint a, final GeoPoint b) {
+        final double lat = a.getLatitude() - b.getLatitude();
+        final double lon = a.getLongitude() - b.getLongitude();
+        final double angleDistance = Math.sqrt(lat * lat + lon * lon);
+        final double gradToRadian = 2 * Math.PI / 360;
+        return EARTH_RADIUS * gradToRadian * angleDistance;
     }
 
     @NotNull

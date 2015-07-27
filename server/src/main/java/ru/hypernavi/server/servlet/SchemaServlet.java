@@ -1,5 +1,6 @@
 package ru.hypernavi.server.servlet;
 
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.util.GeoPoint;
 
@@ -12,8 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,64 +26,52 @@ public class SchemaServlet extends HttpServlet {
     }
 
     private void readAllSchemas() throws IOException {
-        List<Integer> idHyperNavi = new ArrayList<>();
-        List<Double> latitude = new ArrayList<>();
-        List<Double> longitude = new ArrayList<>();
+        final List<Integer> idHyperNavi = new ArrayList<>();
+        final List<Double> latitude = new ArrayList<>();
+        final List<Double> longitude = new ArrayList<>();
         schemas = new ArrayList<>();
         coordinates = new ArrayList<>();
-        try
-        {
-            Scanner scanner = new Scanner("/Okey.txt");
-            while (scanner.hasNext()) {
-                if (scanner.hasNextInt()) {
-                    idHyperNavi.add(scanner.nextInt());
-                } else {
-                    latitude.add(scanner.nextDouble());
-                    longitude.add(scanner.nextDouble());
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println("No such file");
+
+        final String initFile = IOUtils.toString(getClass().getResourceAsStream("/Okey.txt"));
+        final String[] tokens = initFile.split("[ \n]+");
+        for (int i = 0; i < tokens.length; i += 3) {
+            idHyperNavi.add(Integer.parseInt(tokens[i]));
+            latitude.add(Double.parseDouble(tokens[i + 1]));
+            longitude.add(Double.parseDouble(tokens[i + 2]));
         }
 
         for (int i = 0; i < idHyperNavi.size(); ++i)
         {
-            coordinates.add(new GeoPoint(longitude.get(i), latitude.get(i)));
-            File f = new File("/Okey_" + idHyperNavi.get(i).toString() + ".jpeg");
-            schemas.add(ImageIO.read(f));
+            coordinates.add(new GeoPoint(latitude.get(i), longitude.get(i)));
+            schemas.add(ImageIO.read(getClass().getResourceAsStream("/Okey_" + idHyperNavi.get(i).toString() + ".jpg")));
         }
-        System.out.println("Finished reading images");
-        System.out.println(schemas.size());
-
     }
 
     private List<BufferedImage> schemas;
     private List<GeoPoint> coordinates;
-    private final double MIN_DISTASNCE = 400.0;
+    private static final double MIN_DISTANCE = 40.0;
     @Override
     protected void doGet(@NotNull final HttpServletRequest request,
                          @NotNull final HttpServletResponse response) throws ServletException, IOException {
         final Double longitude = Double.parseDouble(request.getParameter("longitude"));
         final Double latitude = Double.parseDouble(request.getParameter("latitude"));
-        final GeoPoint currentPosition = new GeoPoint(longitude, latitude);
+        final GeoPoint currentPosition = new GeoPoint(latitude, longitude);
 
-        int bestHypernavi = closestHypernavi(currentPosition);
-        if (GeoPoint.distance(coordinates.get(bestHypernavi), currentPosition) > MIN_DISTASNCE)
+        final int bestHypernavi = closestHypernavi(currentPosition);
+        if (bestHypernavi == -1 || GeoPoint.distance(coordinates.get(bestHypernavi), currentPosition) > MIN_DISTANCE)
         {
             response.sendError(404);
         }
         else {
             response.setContentType("image/jpeg");
-            OutputStream out = response.getOutputStream();
+            final OutputStream out = response.getOutputStream();
             ImageIO.write(schemas.get(bestHypernavi), "jpg", out);
             out.close();
         }
     }
-    private int closestHypernavi(GeoPoint position) {
+    private int closestHypernavi(final GeoPoint position) {
         double minDistance = Double.POSITIVE_INFINITY;
-        int bestHypernavi = 0;
+        int bestHypernavi = -1;
         for (int i = 0; i < coordinates.size(); ++i) {
             if (GeoPoint.distance(coordinates.get(i), position) < minDistance) {
                 minDistance = GeoPoint.distance(coordinates.get(i), position);
