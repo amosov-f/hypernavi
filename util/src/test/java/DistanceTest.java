@@ -1,12 +1,11 @@
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import ru.hypernavi.util.GeoPoint;
 
 /**
  * Created by Acer on 27.07.2015.
  */
-public final class GeoPointTest {
-    private static final double EPS = 0.1;
+public final class DistanceTest {
 
     @Test
     public void test() throws Exception {
@@ -16,10 +15,11 @@ public final class GeoPointTest {
         test(60.0, 30.0, 60.0, 30.6098805, 33.93);
     }
 
-    private void test(final double firstLatitude, final double firstLongitude, final double secondLatitude,
-                      final double secondLongitude, final double actualDistance) {
+    private static void test(final double firstLatitude, final double firstLongitude, final double secondLatitude,
+                      final double secondLongitude, final double actualDistance)
+    {
         final GeoPoint firstGeoPoint = new GeoPoint(firstLatitude, firstLongitude);
         final GeoPoint secondGeoPoint = new GeoPoint(secondLatitude, secondLongitude);
-        Assert.assertEquals(GeoPoint.distance(firstGeoPoint, secondGeoPoint), actualDistance, EPS);
+        assertEquals(GeoPoint.distance(firstGeoPoint, secondGeoPoint), actualDistance, actualDistance * 4.0E-3);
     }
 }
