@@ -13,18 +13,18 @@ public final class GeoPoint {
     private static final double EARTH_RADIUS = 6371.0d;
     private static final double GRAD_TO_RADIAN = 2.0d * Math.PI / 360.0d;
 
-    public static class my3DPoint{
+    public static class My3DPoint {
         private final double x;
         private final double y;
         private final double z;
 
-        private my3DPoint(final double currentX, final double currentY, final double currentZ) {
+        private My3DPoint(final double currentX, final double currentY, final double currentZ) {
             x = currentX;
             y = currentY;
             z = currentZ;
         }
 
-        private my3DPoint(final GeoPoint p) {
+        private My3DPoint(final GeoPoint p) {
             final double latitudeInRadian = p.getLatitude() * GRAD_TO_RADIAN;
             final double longitudeInRadian = p.getLongitude() *GRAD_TO_RADIAN;
             x = EARTH_RADIUS * Math.cos(latitudeInRadian) * Math.cos(longitudeInRadian);
@@ -45,8 +45,8 @@ public final class GeoPoint {
 
     public static double distance(final GeoPoint a, final GeoPoint b) {
 
-        final my3DPoint pA = new my3DPoint(a);
-        final my3DPoint pB = new my3DPoint(b);
+        final My3DPoint pA = new My3DPoint(a);
+        final My3DPoint pB = new My3DPoint(b);
         double aBDistance = Math.pow(pA.x - pB.x, 2.0d) + Math.pow(pA.y - pB.y, 2.0d) +  Math.pow(pA.z - pB.z, 2.0d);
         aBDistance = Math.sqrt(aBDistance);
         final double cosPhi = 1.0d - aBDistance * aBDistance / (2.0d * EARTH_RADIUS * EARTH_RADIUS);
