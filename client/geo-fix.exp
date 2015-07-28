@@ -1,0 +1,15 @@
+#!/usr/bin/expect
+
+proc accuracy {x} {
+    return "[expr ($x + 5 * (0.5 - rand()) / 111195.18666666)]"
+}
+
+spawn telnet localhost 5554
+expect "OK"
+while true {
+    set lon [accuracy 60]
+    set lat [accuracy 30]
+    send "geo fix $lon $lat\r"
+    expect "OK"
+    sleep 1
+}
