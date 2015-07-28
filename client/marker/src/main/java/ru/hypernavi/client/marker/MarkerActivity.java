@@ -25,14 +25,10 @@ public final class MarkerActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(MarkerActivity.class.getName());
 
     private static final String SCHEME_PATH = "/okey/okey_tallinskoe_shema_magazina_b.jpg";
-    private static final int N_LOCATIONS = 5;
+    private static final int CIRCLE_RADIUS = 50;
 
-    @NotNull
-    private final List<Location> locations = new ArrayList<>();
-
+    @Nullable
     private Point schemePosition;
-    private GeoPoint geoPosition;
-
     private boolean updatingGeoPosition;
 
     @Override
@@ -74,7 +70,7 @@ public final class MarkerActivity extends Activity {
                 final Bitmap image = scheme.copy(Bitmap.Config.ARGB_8888, true);
 
                 final Canvas canvas = new Canvas(image);
-                canvas.drawCircle(x, y, 50, paint);
+                canvas.drawCircle(x, y, CIRCLE_RADIUS, paint);
                 canvas.drawPoint(x, y, paint);
                 schemePosition = new Point(x, y);
 
@@ -101,28 +97,18 @@ public final class MarkerActivity extends Activity {
                 findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                 findViewById(R.id.button).setVisibility(View.INVISIBLE);
 
-                locations.clear();
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new PositionUpdater(locationManager));
             }
         });
     }
 
-    private void updateGeoPosition() {
-        double latitude = 0;
-        double longitude = 0;
-        for (final Location location : locations) {
-            latitude += location.getLatitude();
-            longitude += location.getLongitude();
-        }
-        latitude /= locations.size();
-        longitude /= locations.size();
+    private final class PositionUpdater implements LocationListener {
+        private static final int N_LOCATIONS = 5;
 
-        geoPosition = new GeoPoint(latitude, longitude);
-    }
-
-    private class PositionUpdater implements LocationListener {
         @NotNull
         private final LocationManager manager;
+        @NotNull
+        private final List<Location> locations = new ArrayList<>();
 
         PositionUpdater(@NotNull final LocationManager manager) {
             this.manager = manager;
@@ -137,7 +123,7 @@ public final class MarkerActivity extends Activity {
             }
             manager.removeUpdates(this);
 
-            updateGeoPosition();
+            final GeoPoint geoPosition = average(locations);
 
             findViewById(R.id.button).setVisibility(View.VISIBLE);
             findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
@@ -158,6 +144,17 @@ public final class MarkerActivity extends Activity {
 
         @Override
         public void onProviderDisabled(@NotNull final String provider) {
+        }
+
+        @NotNull
+        private GeoPoint average(@NotNull final List<Location> locations) {
+            double sumLat = 0;
+            double sumLon = 0;
+            for (final Location location : locations) {
+                sumLat += location.getLatitude();
+                sumLon += location.getLongitude();
+            }
+            return new GeoPoint(sumLat / locations.size(), sumLon / locations.size());
         }
     }
 }
