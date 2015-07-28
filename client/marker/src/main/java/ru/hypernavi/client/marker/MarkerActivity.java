@@ -102,38 +102,7 @@ public final class MarkerActivity extends Activity {
                 findViewById(R.id.button).setVisibility(View.INVISIBLE);
 
                 locations.clear();
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NotNull final Location location) {
-                        LOG.fine("onLocationChanged");
-                        locations.add(location);
-                        if (locations.size() == N_LOCATIONS) {
-                            locationManager.removeUpdates(this);
-
-                            updateGeoPosition();
-
-                            findViewById(R.id.button).setVisibility(View.VISIBLE);
-                            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-
-                            updatingGeoPosition = false;
-
-                            LOG.info(schemePosition + " -> " + geoPosition);
-                            Toast.makeText(MarkerActivity.this, schemePosition + " -> " + geoPosition, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onStatusChanged(@NotNull final String provider, final int status, @NotNull final Bundle extras) {
-                    }
-
-                    @Override
-                    public void onProviderEnabled(@NotNull final String provider) {
-                    }
-
-                    @Override
-                    public void onProviderDisabled(@NotNull final String provider) {
-                    }
-                });
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new PositionUpdater(locationManager));
             }
         });
     }
@@ -149,6 +118,47 @@ public final class MarkerActivity extends Activity {
         longitude /= locations.size();
 
         geoPosition = new GeoPoint(latitude, longitude);
+    }
+
+    private class PositionUpdater implements LocationListener {
+        @NotNull
+        private final LocationManager manager;
+
+        PositionUpdater(@NotNull final LocationManager manager) {
+            this.manager = manager;
+        }
+
+        @Override
+        public void onLocationChanged(@NotNull final Location location) {
+            LOG.fine("onLocationChanged");
+            locations.add(location);
+            if (locations.size() != N_LOCATIONS) {
+                return;
+            }
+            manager.removeUpdates(this);
+
+            updateGeoPosition();
+
+            findViewById(R.id.button).setVisibility(View.VISIBLE);
+            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+
+            updatingGeoPosition = false;
+
+            LOG.info(schemePosition + " -> " + geoPosition);
+            Toast.makeText(MarkerActivity.this, schemePosition + " -> " + geoPosition, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onStatusChanged(@NotNull final String provider, final int status, @NotNull final Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(@NotNull final String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(@NotNull final String provider) {
+        }
     }
 }
 
