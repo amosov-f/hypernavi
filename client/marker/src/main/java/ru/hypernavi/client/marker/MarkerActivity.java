@@ -3,6 +3,7 @@ package ru.hypernavi.client.marker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public final class MarkerActivity extends Activity {
         //final Bitmap scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
         final double lon = 31;
         final double lat = 62;
+
         final Bitmap scheme = extructScheme(lat, lon);
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -102,7 +104,8 @@ public final class MarkerActivity extends Activity {
                 findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                 findViewById(R.id.button).setVisibility(View.INVISIBLE);
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new PositionUpdater(locationManager));
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                    new PositionUpdater(locationManager, imageView));
             }
         });
     }
@@ -114,9 +117,12 @@ public final class MarkerActivity extends Activity {
         private final LocationManager manager;
         @NotNull
         private final List<Location> locations = new ArrayList<>();
+        @NotNull
+        private final ImageView myView;
 
-        PositionUpdater(@NotNull final LocationManager manager) {
+        PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView) {
             this.manager = manager;
+            myView = imageView;
         }
 
         @Override
@@ -129,6 +135,13 @@ public final class MarkerActivity extends Activity {
             manager.removeUpdates(this);
 
             final GeoPoint geoPosition = average(locations);
+
+            final double lat = geoPosition.getLatitude();
+            final double lon = geoPosition.getLongitude();
+
+            final Bitmap scheme = extructScheme(lat, lon);
+
+            myView.setImageBitmap(scheme);
 
             findViewById(R.id.button).setVisibility(View.VISIBLE);
             findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
@@ -172,8 +185,8 @@ public final class MarkerActivity extends Activity {
                     final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schema?lat="
                                                                + lat + "&lon=" + lon).openConnection();
                     scheme[0] = BitmapFactory.decodeStream(myConnection.getInputStream());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (IOException e) {
+                    LOG.warning(e.getMessage());
                     LOG.warning("Can't read from internet");
                 }
             }
@@ -182,7 +195,7 @@ public final class MarkerActivity extends Activity {
         try {
             secondary.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.warning(e.getMessage());
         }
         if (scheme[0] == null) {
             scheme[0] = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
