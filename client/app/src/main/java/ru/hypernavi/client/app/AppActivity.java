@@ -20,6 +20,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 import ru.hypernavi.util.GeoPoint;
@@ -34,6 +35,8 @@ public final class AppActivity extends Activity {
     private Point schemePosition;
     private boolean updatingGeoPosition;
 
+    private Bitmap scheme;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +44,17 @@ public final class AppActivity extends Activity {
 
         findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
+        LOG.info("onCreate start");
         //final Bitmap scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
-        final double lon = 31;
-        final double lat = 62;
+        final double lon = 30.1;
+        final double lat = 59.75;
 
-        final Bitmap scheme = extructScheme(lat, lon);
+        scheme = extructScheme(lat, lon);
 
-        final ScalingView imageView = (ScalingView) findViewById(R.id.imageView);
+        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(scheme);
+        //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        //android:scaleType="centerCrop"
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
@@ -56,12 +62,19 @@ public final class AppActivity extends Activity {
 
             @Override
             public void onClick(final View v) {
+                final float maxScale = 10;
+                final float step = 0.5f;
 
                 final float x = imageView.getScaleX();
                 final float y = imageView.getScaleY();
 
-                imageView.setScaleX(x + 1);
-                imageView.setScaleY(y + 1);
+                if ((x > maxScale - step) || (y > maxScale - step)) {
+                    imageView.setScaleX(maxScale);
+                    imageView.setScaleY(maxScale);
+                } else {
+                    imageView.setScaleX(x + step);
+                    imageView.setScaleY(y + step);
+                }
             }
         });
 
@@ -69,12 +82,19 @@ public final class AppActivity extends Activity {
 
             @Override
             public void onClick(final View v) {
+                final float minScale = 0.5f;
+                final float step = 0.5f;
 
                 final float x = imageView.getScaleX();
                 final float y = imageView.getScaleY();
 
-                imageView.setScaleX(x - 1);
-                imageView.setScaleY(y - 1);
+                if ((x < minScale + step) || (y < minScale + step)) {
+                    imageView.setScaleX(minScale);
+                    imageView.setScaleY(minScale);
+                } else {
+                    imageView.setScaleX(x - step);
+                    imageView.setScaleY(y - step);
+                }
             }
         });
 
@@ -84,6 +104,7 @@ public final class AppActivity extends Activity {
                 if (updatingGeoPosition) {
                     return false;
                 }
+                LOG.info("Touch");
 
                 final Matrix inverse = new Matrix();
                 imageView.getImageMatrix().invert(inverse);
@@ -110,6 +131,7 @@ public final class AppActivity extends Activity {
                 schemePosition = new Point(x, y);
 
                 imageView.setImageBitmap(image);
+                LOG.info("End touch");
                 return true;
             }
         });
@@ -117,7 +139,7 @@ public final class AppActivity extends Activity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(@NotNull final View v) {
-                LOG.fine("onClick");
+                LOG.info("onClick");
                 if (schemePosition == null) {
                     return;
                 }
@@ -139,23 +161,23 @@ public final class AppActivity extends Activity {
     }
 
     private final class PositionUpdater implements LocationListener {
-        private static final int N_LOCATIONS = 5;
+        private static final int N_LOCATIONS = 1;
 
         @NotNull
         private final LocationManager manager;
         @NotNull
         private final List<Location> locations = new ArrayList<>();
         @NotNull
-        private final ScalingView myView;
+        private final ImageView myView;
 
-        PositionUpdater(@NotNull final LocationManager manager, @NotNull final ScalingView imageView) {
+        PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView) {
             this.manager = manager;
             myView = imageView;
         }
 
         @Override
         public void onLocationChanged(@NotNull final Location location) {
-            LOG.fine("onLocationChanged");
+            LOG.info("onLocationChanged");
             locations.add(location);
             if (locations.size() != N_LOCATIONS) {
                 return;
@@ -167,7 +189,7 @@ public final class AppActivity extends Activity {
             final double lat = geoPosition.getLatitude();
             final double lon = geoPosition.getLongitude();
 
-            final Bitmap scheme = extructScheme(lat, lon);
+            scheme = extructScheme(lat, lon);
 
             myView.setImageBitmap(scheme);
 
@@ -205,14 +227,14 @@ public final class AppActivity extends Activity {
     }
 
     private Bitmap extructScheme(final double lat, final double lon) {
-        final Bitmap[] scheme = {null};
+        final Bitmap[] localScheme = {null};
         final Thread secondary = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schema?lat="
                                                                + lat + "&lon=" + lon).openConnection();
-                    scheme[0] = BitmapFactory.decodeStream(myConnection.getInputStream());
+                    localScheme[0] = BitmapFactory.decodeStream(myConnection.getInputStream());
                 } catch (IOException e) {
                     LOG.warning(e.getMessage());
                     LOG.warning("Can't read from internet");
@@ -225,10 +247,10 @@ public final class AppActivity extends Activity {
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
         }
-        if (scheme[0] == null) {
-            scheme[0] = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
+        if (localScheme[0] == null) {
+            localScheme[0] = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
         }
-        return  scheme[0];
+        return  localScheme[0];
     }
 }
 
