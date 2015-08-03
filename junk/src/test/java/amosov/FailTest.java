@@ -12,6 +12,6 @@ import static org.junit.Assert.assertEquals;
 public final class FailTest {
     @Test
     public void test() {
-        assertEquals(true, true);
+        assertEquals(true, false);
     }
 }
