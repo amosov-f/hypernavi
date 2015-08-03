@@ -17,7 +17,7 @@
                     android:id="@+id/imageView"/>
             <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="87dp">
+                    android:layout_height="169dp">
                 <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -30,6 +30,13 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/progressBar" android:layout_gravity="center_horizontal"
                         android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+                <ZoomControls
+                        android:id="@+id/zoomControls1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

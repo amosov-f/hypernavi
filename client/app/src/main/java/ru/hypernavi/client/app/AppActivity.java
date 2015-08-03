@@ -18,10 +18,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
@@ -50,34 +50,33 @@ public final class AppActivity extends Activity {
         final ScalingView imageView = (ScalingView) findViewById(R.id.imageView);
         imageView.setImageBitmap(scheme);
 
-        /*
-        long downTime = SystemClock.uptimeMillis();
-        long eventTime = SystemClock.uptimeMillis() + 100;
-        float x = 0.0f;
-        float y = 0.0f;
-        // List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-        int metaState = 0;
-        MotionEvent myEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, metaState);
-        imageView.dispatchTouchEvent(myEvent);
+        final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
-        downTime = SystemClock.uptimeMillis();
-        eventTime = SystemClock.uptimeMillis() + 100;
-        x = 50.0f;
-        y = 50.0f;
-        // List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-        metaState = 0;
-        myEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y, metaState);
-        imageView.dispatchTouchEvent(myEvent);
+        zoom.setOnZoomInClickListener(new View.OnClickListener() {
 
-        downTime = SystemClock.uptimeMillis();
-        eventTime = SystemClock.uptimeMillis() + 100;
-        x = 50.0f;
-        y = 50.0f;
-        // List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-        metaState = 0;
-        myEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, metaState);
-        imageView.dispatchTouchEvent(myEvent);
-        */
+            @Override
+            public void onClick(final View v) {
+
+                final float x = imageView.getScaleX();
+                final float y = imageView.getScaleY();
+
+                imageView.setScaleX(x + 1);
+                imageView.setScaleY(y + 1);
+            }
+        });
+
+        zoom.setOnZoomOutClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final float x = imageView.getScaleX();
+                final float y = imageView.getScaleY();
+
+                imageView.setScaleX(x - 1);
+                imageView.setScaleY(y - 1);
+            }
+        });
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
