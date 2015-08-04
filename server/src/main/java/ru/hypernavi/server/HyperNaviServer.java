@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -82,9 +83,7 @@ public final class HyperNaviServer {
             properties.load(HyperNaviServer.class.getResourceAsStream(configPath));
         }
 
-        if (cmd.hasOption(OPT_LOG_DIR)) {
-            System.setProperty("LOGS_DIR", cmd.getOptionValue(OPT_LOG_DIR));
-        }
+        Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
         DOMConfigurator.configure(HyperNaviServer.class.getResource(cmd.getOptionValue(OPT_LOG_CFG)));
 
         final HandlerCollection handlers = new HandlerCollection();

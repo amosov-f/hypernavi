@@ -3,7 +3,7 @@ HyperNavi
 Hypermarket Navigator
 ------
 
-##Build status
+###Build status
 * [HyperNavi -- Release to Dev] (http://hypernavi.cloudapp.net:8111/viewLog.html?buildTypeId=Hypernavi_Build&buildId=lastFinished) ![report status](http://hypernavi.cloudapp.net:8111/app/rest/builds/buildType:Hypernavi_Build/statusIcon)
 
 about: TBD
