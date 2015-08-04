@@ -2,13 +2,19 @@ package ru.hypernavi.server;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -16,12 +22,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.hypernavi.core.classify.GoodsClassifier;
-import ru.hypernavi.core.classify.RandomGoodsClassifier;
-import ru.hypernavi.core.classify.TomallGoodsClassifier;
+import org.reflections.Reflections;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
-import ru.hypernavi.server.servlet.GoodsClassificationService;
-import ru.hypernavi.server.servlet.SchemaServlet;
 
 /**
  * User: amosov-f
@@ -46,6 +48,29 @@ public final class HyperNaviServer {
     private HyperNaviServer() {
     }
 
+    @NotNull
+    private static ServletContextHandler servlets(@NotNull final Properties properties) {
+        final Injector injector = Guice.createInjector(new HyperNaviModule(properties));
+        final ServletContextHandler context = new ServletContextHandler();
+        for (final Class<? extends HttpServlet> servletClass : servletClasses()) {
+            final HttpServlet service = injector.getInstance(servletClass);
+            final WebServlet serviceConfig = servletClass.getAnnotation(WebServlet.class);
+            for (final String path : serviceConfig.value()) {
+                LOG.info("Bound http service '" + serviceConfig.name() + "' @'" + path + "' as " + servletClass.getSimpleName());
+                context.addServlet(new ServletHolder(service), path);
+            }
+        }
+        return context;
+    }
+
+    @NotNull
+    @SuppressWarnings("unchecked")
+    private static Set<Class<? extends HttpServlet>> servletClasses() {
+        return new Reflections("ru.hypernavi").getTypesAnnotatedWith(WebServlet.class).stream()
+                .map(annotatedClass -> (Class<? extends HttpServlet>) annotatedClass)
+                .collect(Collectors.toSet());
+    }
+
     public static void main(@NotNull final String[] args) throws Exception {
         // TODO: use DefaultParser
         final CommandLine cmd = new GnuParser().parse(OPTIONS, args);
@@ -62,27 +87,9 @@ public final class HyperNaviServer {
         }
         DOMConfigurator.configure(HyperNaviServer.class.getResource(cmd.getOptionValue(OPT_LOG_CFG)));
 
-        final Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                final Class<? extends GoodsClassifier> goodsClassifierClass;
-                if ("tomall".equals(properties.getProperty("hypernavi.category.model"))) {
-                    goodsClassifierClass = TomallGoodsClassifier.class;
-                } else {
-                    goodsClassifierClass = RandomGoodsClassifier.class;
-                }
-                bind(GoodsClassifier.class).to(goodsClassifierClass);
-            }
-        });
-
-        final ServletContextHandler context = new ServletContextHandler();
-        context.addServlet(new ServletHolder(injector.getInstance(GoodsClassificationService.class)), "/category");
-        context.addServlet(new ServletHolder(new SchemaServlet()), "/schema");
-
         final HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(new BeforeRequestHandler());
-        handlers.addHandler(context);
-
+        handlers.addHandler(servlets(properties));
         final Server server = new Server(port);
         server.setHandler(handlers);
 

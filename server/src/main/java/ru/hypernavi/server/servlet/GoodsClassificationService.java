@@ -2,6 +2,7 @@ package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import ru.hypernavi.core.classify.GoodsClassifier;
  * Date: 24.11.14
  * Time: 0:35
  */
+@WebServlet(name = "category", value = "/category")
 public final class GoodsClassificationService extends HttpServlet {
     private static final Log LOG = LogFactory.getLog(GoodsClassificationService.class);
 

@@ -2,13 +2,8 @@ package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
 
-
-import ru.hypernavi.core.Hypernavi;
-import ru.hypernavi.core.SchemaBuilder;
-import ru.hypernavi.util.GeoPoint;
-
 import javax.imageio.ImageIO;
-import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,9 +12,15 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+
+import ru.hypernavi.core.Hypernavi;
+import ru.hypernavi.core.SchemaBuilder;
+import ru.hypernavi.util.GeoPoint;
+
 /**
  * Created by Константин on 19.07.2015.
  */
+@WebServlet(name = "schema", value = "/schema")
 public final class SchemaServlet extends HttpServlet {
     @NotNull
     private final List<Hypernavi> hypernavis;
