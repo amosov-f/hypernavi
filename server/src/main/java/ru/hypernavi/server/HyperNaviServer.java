@@ -86,7 +86,12 @@ public final class HyperNaviServer {
         final Server server = new Server(port);
         server.setHandler(handlers);
 
-        server.start();
+        try {
+            server.start();
+        } catch (Exception e) {
+            LOG.fatal("Server doesn't started on port " + port + "!", e);
+            System.exit(0);
+        }
         LOG.info("Server started on port " + port + "!");
         server.join();
     }
