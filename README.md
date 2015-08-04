@@ -3,6 +3,9 @@ HyperNavi
 Hypermarket Navigator
 ------
 
+##Build status
+* [HyperNavi -- Release to Dev] (http://hypernavi.cloudapp.net:8111/viewLog.html?buildTypeId=Hypernavi_Build&buildId=lastFinished) ![report status](http://hypernavi.cloudapp.net:8111/app/rest/builds/buildType:Hypernavi_Build/statusIcon)
+
 about: TBD
 
 ###System requirements
@@ -28,6 +31,3 @@ Run `Run Server` configuration. Send request to server in your browser,
 ###How to run android application in emulator/device
 
 Create and run configuration for MarkerActivity class. Select emulator or USB device in configuration settings.
-
-###Other HOWTOs
-  - [How to deploy project to remote server](docs/howto/HowToDeploy.md)
