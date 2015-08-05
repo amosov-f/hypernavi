@@ -66,6 +66,9 @@ crashlytics-build.properties
 bin/
 gen/
 
+# Build output
+**/out
+
 # Gradle files
 .gradle/
 build/

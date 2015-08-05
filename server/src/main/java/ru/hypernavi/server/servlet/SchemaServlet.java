@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import ru.hypernavi.util.GeoPoint;
  * Created by Константин on 19.07.2015.
  */
 @WebServlet(name = "schema", value = "/schema")
-public final class SchemaServlet extends HttpServlet {
+public final class SchemaServlet extends AbstractHttpService {
     @NotNull
     private final List<Hypernavi> hypernavis;
     private static final double MIN_DISTANCE = 40.0;
@@ -34,8 +33,7 @@ public final class SchemaServlet extends HttpServlet {
 
 
     @Override
-    protected void doGet(@NotNull final HttpServletRequest request,
-                         @NotNull final HttpServletResponse response) throws IOException {
+    public void process(@NotNull final HttpServletRequest request, @NotNull final HttpServletResponse response) throws IOException {
         final Map<String, String[]> parameterMap = request.getParameterMap();
         if (!parameterMap.containsKey("lon") || !parameterMap.containsKey("lat"))
         {

@@ -7,6 +7,14 @@
         </layout>
     </appender>
 
+    <appender name="AccessFileShort" class="org.apache.log4j.FileAppender"  >
+        <param name="File" value="${LOGS_DIR}/current-hypernavi_access_short-${PORT}" />
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value='%X{reqtimeMs} %X{service} %X{reqid} %X{anstime} %X{s}%n'/>
+        </layout>
+    </appender>
+
     <logger name="org.springframework">
         <level value="info"/>
     </logger>
@@ -29,6 +37,10 @@
 
     <logger name="org.apache.http.client.protocol">
         <level value="error"/>
+    </logger>
+
+    <logger name="ACCESS_LOG" additivity="false">
+        <appender-ref ref="AccessFileShort" />
     </logger>
 
     <root>

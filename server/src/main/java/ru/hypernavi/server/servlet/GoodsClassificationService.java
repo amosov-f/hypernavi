@@ -3,7 +3,6 @@ package ru.hypernavi.server.servlet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,7 +22,7 @@ import ru.hypernavi.core.classify.GoodsClassifier;
  * Time: 0:35
  */
 @WebServlet(name = "category", value = "/category")
-public final class GoodsClassificationService extends HttpServlet {
+public final class GoodsClassificationService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(GoodsClassificationService.class);
 
     @NotNull
@@ -35,7 +34,7 @@ public final class GoodsClassificationService extends HttpServlet {
     }
 
     @Override
-    protected void doGet(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
+    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
         // request reading
         final String text = req.getParameter("text");
 

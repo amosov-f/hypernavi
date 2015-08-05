@@ -3,24 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>ru.hypernavi</groupId>
         <artifactId>hypernavi</artifactId>
+        <groupId>ru.hypernavi</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ml</artifactId>
+    <artifactId>util8</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>ru.hypernavi</groupId>
-            <artifactId>util8</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>weka-dev</artifactId>
-            <version>3.7.12</version>
+            <artifactId>util</artifactId>
         </dependency>
     </dependencies>
 </project>

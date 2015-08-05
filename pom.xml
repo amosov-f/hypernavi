@@ -15,6 +15,7 @@
         <module>ml</module>
         <module>client</module>
         <module>junk</module>
+        <module>util8</module>
     </modules>
 
     <properties>
@@ -29,6 +30,11 @@
             <dependency>
                 <groupId>ru.hypernavi</groupId>
                 <artifactId>util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.hypernavi</groupId>
+                <artifactId>util8</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -15,6 +15,7 @@ import org.apache.http.HttpHeaders;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import ru.hypernavi.server.util.HttpTools;
 
 /**
  * User: amosov-f
@@ -38,13 +39,14 @@ public final class BeforeRequestHandler extends AbstractHandler {
         if (HttpMethod.POST.is(req.getMethod()) || HttpMethod.PUT.is(req.getMethod())) {
             // trigger urlencoded post data upload from client
             req.getParameterMap();
+            request.setAttribute(HttpTools.CONTENT_RECEIVED_TS, System.currentTimeMillis());
         }
 
         final String acceptEncoding = req.getHeader(HttpHeaders.ACCEPT_ENCODING);
         LOG.info(String.format(
                 "Received %s request '%s' (source=%s,%s; gzip_deflate=%b; length=%s; read_time_ms=%s; connection_id=%s)",
                 req.getMethod(),
-                req.getScheme() + ":" + request.getHttpURI(),
+                HttpTools.requestURL(req),
                 req.getRemoteAddr(),
                 req.getRemotePort(),
                 StringUtils.contains(acceptEncoding, "gzip") || StringUtils.contains(acceptEncoding, "deflate"),

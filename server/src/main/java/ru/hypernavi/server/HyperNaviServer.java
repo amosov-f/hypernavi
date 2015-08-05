@@ -21,9 +21,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.reflections.Reflections;
+import ru.hypernavi.server.handler.AfterRequestHandler;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
 
 /**
@@ -89,6 +91,9 @@ public final class HyperNaviServer {
         final HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(new BeforeRequestHandler());
         handlers.addHandler(servlets(properties));
+        final RequestLogHandler requestLogHandler = new RequestLogHandler();
+        requestLogHandler.setRequestLog(new AfterRequestHandler());
+        handlers.addHandler(requestLogHandler);
         final Server server = new Server(port);
         server.setHandler(handlers);
 
