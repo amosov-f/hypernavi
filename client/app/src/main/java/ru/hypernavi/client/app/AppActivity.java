@@ -42,19 +42,12 @@ public final class AppActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-
         LOG.info("onCreate start");
-        //final Bitmap scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
-        final double lon = 30.1;
-        final double lat = 59.75;
 
-        scheme = extructScheme(lat, lon);
+        scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(scheme);
-        //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        //android:scaleType="centerCrop"
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
@@ -136,28 +129,16 @@ public final class AppActivity extends Activity {
             }
         });
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(@NotNull final View v) {
-                LOG.info("onClick");
-                if (schemePosition == null) {
-                    return;
-                }
-                final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                updatingGeoPosition = true;
+        updatingGeoPosition = true;
 
-                findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                findViewById(R.id.button).setVisibility(View.INVISIBLE);
-
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                    new PositionUpdater(locationManager, imageView));
-            }
-        });
+       locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+            new PositionUpdater(locationManager, imageView));
     }
 
     private final class PositionUpdater implements LocationListener {
@@ -193,13 +174,18 @@ public final class AppActivity extends Activity {
 
             myView.setImageBitmap(scheme);
 
-            findViewById(R.id.button).setVisibility(View.VISIBLE);
-            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-
             updatingGeoPosition = false;
 
             LOG.info(schemePosition + " -> " + geoPosition);
             Toast.makeText(AppActivity.this, schemePosition + " -> " + geoPosition, Toast.LENGTH_SHORT).show();
+
+            final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                new PositionUpdater(locationManager, myView));
         }
 
         @Override

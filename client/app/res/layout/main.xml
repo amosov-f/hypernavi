@@ -19,22 +19,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/imageView"/>
-                <RelativeLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="169dp">
-                    <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Я тут!"
-                            android:id="@+id/button" android:layout_gravity="center_horizontal"
-                            android:layout_alignBottom="@+id/progressBar" android:layout_centerHorizontal="true"/>
-                    <ProgressBar
-                            style="?android:attr/progressBarStyleLarge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/progressBar" android:layout_gravity="center_horizontal"
-                            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
-                </RelativeLayout>
+
             </LinearLayout>
         </HorizontalScrollView>
     </ScrollView>
