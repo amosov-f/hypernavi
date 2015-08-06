@@ -65,7 +65,7 @@ public class SchemaInfoServlet extends AbstractHttpService {
             String answer;
             try {
                 final JSONObject obj = new JSONObject();
-                obj.put("URL", "hypernavi.cloudapp.net/schema?lon=" + lon + "&lat=" + lat);
+                obj.put("URL", "http://hypernavi.cloudapp.net/schema?lon=" + lon + "&lat=" + lat);
                 obj.put("latitude", hypernavis.get(bestHypernavi).getLocation().getLatitude());
                 obj.put("longitude", hypernavis.get(bestHypernavi).getLocation().getLongitude());
                 obj.put("type", "Okey");
