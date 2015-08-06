@@ -1,31 +1,35 @@
 package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
-
-import javax.imageio.ImageIO;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
 
+import com.google.common.net.MediaType;
+import org.json.JSONException;
+import org.json.JSONObject;
 import ru.hypernavi.core.Hypermarket;
 import ru.hypernavi.core.SchemaBuilder;
 import ru.hypernavi.util.GeoPoint;
 
 /**
- * Created by Константин on 19.07.2015.
+ * Created by Константин on 06.08.2015.
  */
-@WebServlet(name = "schema", value = "/schema")
-public final class SchemaServlet extends AbstractHttpService {
+
+@WebServlet(name = "schemainfo", value = "/schemainfo")
+public class SchemaInfoServlet extends AbstractHttpService {
     @NotNull
     private final List<Hypermarket> hypernavis;
     private static final double MIN_DISTANCE = 40.0;
 
-    public SchemaServlet()
+    public SchemaInfoServlet()
     {
         final SchemaBuilder reader = new SchemaBuilder();
         hypernavis = reader.read("/hypernavi_list.txt");
@@ -33,7 +37,8 @@ public final class SchemaServlet extends AbstractHttpService {
 
 
     @Override
-    public void process(@NotNull final HttpServletRequest request, @NotNull final HttpServletResponse response) throws IOException {
+    public void process(@NotNull final HttpServletRequest request,
+                         @NotNull final HttpServletResponse response) throws IOException {
         final Map<String, String[]> parameterMap = request.getParameterMap();
         if (!parameterMap.containsKey("lon") || !parameterMap.containsKey("lat"))
         {
@@ -52,9 +57,27 @@ public final class SchemaServlet extends AbstractHttpService {
         }
         else {
             response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("image/jpeg");
+            response.setContentType(MediaType.JSON_UTF_8.type());
+            final double lon = hypernavis.get(bestHypernavi).getLocation().getLongitude();
+            final double lat = hypernavis.get(bestHypernavi).getLocation().getLatitude();
+
             final OutputStream out = response.getOutputStream();
-            ImageIO.write(hypernavis.get(bestHypernavi).getSchema(), "jpg", out);
+            String answer;
+            try {
+                final JSONObject obj = new JSONObject();
+                obj.put("URL", "hypernavi.cloudapp.net/scheme?lon=" + lon + "&lat=" + lat);
+                obj.put("latitude", hypernavis.get(bestHypernavi).getLocation().getLatitude());
+                obj.put("longitude", hypernavis.get(bestHypernavi).getLocation().getLongitude());
+                obj.put("type", "Okey");
+                obj.put("adress", "Default");
+                obj.put("correct", true);
+                answer = obj.toString();
+            }
+            catch (JSONException e)
+            {
+                answer = "{\"correct\":false}";
+            }
+            out.write(answer.getBytes());
         }
     }
 
