@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 import com.google.common.net.MediaType;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.core.Hypermarket;
@@ -64,14 +66,25 @@ public class SchemaInfoServlet extends AbstractHttpService {
             final OutputStream out = response.getOutputStream();
             String answer;
             try {
-                final JSONObject obj = new JSONObject();
-                obj.put("URL", "http://hypernavi.cloudapp.net/schema?lon=" + lon + "&lat=" + lat);
-                obj.put("latitude", hypernavis.get(bestHypernavi).getLocation().getLatitude());
-                obj.put("longitude", hypernavis.get(bestHypernavi).getLocation().getLongitude());
-                obj.put("type", "Okey");
-                obj.put("adress", "Default");
-                obj.put("correct", true);
-                answer = obj.toString();
+                final JSONObject jsonResponse = new JSONObject();
+                final List<Hypermarket> markets = new ArrayList<>();
+                markets.add(hypernavis.get(bestHypernavi));
+                final JSONArray hypermarkets = new JSONArray();
+                for (int i = 0; i < markets.size(); ++i)
+                {
+                    final JSONObject obj = new JSONObject();
+                    obj.put("URL", "http://hypernavi.cloudapp.net/schema?lon=" + lon + "&lat=" + lat);
+                    obj.put("latitude", markets.get(i).getLocation().getLatitude());
+                    obj.put("longitude", markets.get(i).getLocation().getLongitude());
+                    obj.put("type", "Okey");
+                    obj.put("adress", "Default");
+                    obj.put("correct", true);
+                    hypermarkets.put(i, obj);
+                }
+                jsonResponse.put("hypermarkets", hypermarkets);
+                jsonResponse.put("lontitude", longitude);
+                jsonResponse.put("latitude", latitude);
+                answer = jsonResponse.toString();
             }
             catch (JSONException e)
             {
