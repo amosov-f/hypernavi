@@ -17,6 +17,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,18 +41,29 @@ public final class AppActivity extends Activity {
 
     private Bitmap scheme;
     private JSONObject root;
+    private int displayWidth;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        final Display display = getWindowManager().getDefaultDisplay();
+        final Point displaySize = new Point();
+        display.getSize(displaySize);
+        displayWidth = displaySize.x;
+
         LOG.info("onCreate start");
 
         scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
 
+        final int imageWidth = scheme.getWidth();
+
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(scheme);
+
+        LOG.warning("Image width " + imageWidth);
+        LOG.warning("Display width " + displayWidth);
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
@@ -175,9 +187,16 @@ public final class AppActivity extends Activity {
             final double lon = geoPosition.getLongitude();
 
             extructJSON(lat, lon);
+
             try {
-                final String schemURL = root.getString("URL");
-                LOG.info(schemURL);
+                // for .net server
+                //final String schemURL = root.getJSONArray("hypermarkets").getJSONObject(0).getString("URL");
+
+                // for localhost
+                final double longitude = root.getJSONArray("hypermarkets").getJSONObject(0).getDouble("longitude");
+                final double latitude = root.getJSONArray("hypermarkets").getJSONObject(0).getDouble("latitude");
+                final String schemURL = "http://10.0.2.2:8080/schema?lon="+longitude+"&lat="+latitude;
+
                 extructScheme(schemURL);
             } catch (JSONException e) {
                 Toast.makeText(AppActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -230,10 +249,10 @@ public final class AppActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schemainfo?lat="
-                                                               + lat + "&lon=" + lon).openConnection();
-                    //final URLConnection myConnection = new URL("http://10.0.2.2:8080/schemainfo?lat="
+                    //final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schemainfo?lat="
                     //                                           + lat + "&lon=" + lon).openConnection();
+                    final URLConnection myConnection = new URL("http://10.0.2.2:8080/schemainfo?lat="
+                                                               + lat + "&lon=" + lon).openConnection();
                     jString[0] = IOUtils.toString(myConnection.getInputStream());
                 } catch (IOException e) {
                     LOG.warning(e.getMessage());
@@ -249,9 +268,11 @@ public final class AppActivity extends Activity {
         }
         if (jString[0] == null) {
             Toast.makeText(AppActivity.this, "JSON string is null", Toast.LENGTH_SHORT).show();
+            LOG.warning("JSON string is null");
         } else {
             try {
                 root = new JSONObject(jString[0]);
+                LOG.info(root.toString());
             } catch (JSONException e) {
                 LOG.warning(e.getMessage());
             }
@@ -259,7 +280,6 @@ public final class AppActivity extends Activity {
     }
 
     private void extructScheme(final String currentSchemeURL) {
-        //final Bitmap[] localScheme = {null};
         final Thread secondary = new Thread(new Runnable() {
             @Override
             public void run() {
