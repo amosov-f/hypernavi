@@ -24,9 +24,9 @@ public class ArrayMapStructure<T extends Hypermarket> implements MapStructure<T>
 
     @NotNull
     @Override
-    public Positioned[] find(final GeoPoint position, final int number) {
+    public T[] find(final GeoPoint position, final int number) {
         final int k = number > size() ? size() : number;
-        final Positioned[] result = new Hypermarket[k];
+        final T[] result = (T[]) new Hypermarket[k];
         final double[] distance = new double[listPoints.length];
         for (int i = 0; i < listPoints.length; ++i) {
             distance[i] = GeoPoint.distance(position, listPoints[i].getLocation());
@@ -38,9 +38,12 @@ public class ArrayMapStructure<T extends Hypermarket> implements MapStructure<T>
         Collections.sort(sorted, new Comparator<Pair<Double, Integer>>() {
             @Override
             public int compare(final Pair<Double, Integer> lhs, final Pair<Double, Integer> rhs) {
-                return lhs.getKey() < rhs.getKey() ? 1 : 0;
+                if (lhs.getKey() < rhs.getKey()) { return -1; }
+                else if (lhs.getKey() > rhs.getKey()) { return 1; }
+                else { return 0; }
             }
         });
+
         for (int i = 0; i < k; ++i) {
             result[i] = listPoints[sorted.get(i).getValue()];
         }
@@ -48,9 +51,9 @@ public class ArrayMapStructure<T extends Hypermarket> implements MapStructure<T>
     }
 
     @Override
-    public Hypermarket get(final int id) {
+    public T get(final int id) {
         for (int i = 0; i < listPoints.length; ++i) {
-            if (listPoints[i].getID() == id) {
+            if (listPoints[i].getId() == id) {
                 return listPoints[i];
             }
         }

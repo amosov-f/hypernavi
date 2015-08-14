@@ -22,47 +22,43 @@ public class HypermarketReader {
             final String jsonFile = IOUtils.toString(getClass().getResourceAsStream(path));
             hypermarketInfo = new JSONObject(jsonFile);
 
-        } catch (IOException e) {
-
-        } catch (JSONException e) {
-
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     public BufferedImage getSchema() {
-        BufferedImage result = null;
+        final BufferedImage result;
         try {
             final String pathScheme = hypermarketInfo.getString("schemePath");
             result = ImageIO.read(getClass().getResourceAsStream("/" + pathScheme));
-        } catch (JSONException e) {
-            //e.printStackTrace();
-        } catch (IOException e) {
-            //e.printStackTrace();
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return result;
     }
 
     @NotNull
     public GeoPoint getCoordinate() {
-        double lat = 0.0;
-        double lon = 0.0;
+        final double lat;
+        final double lon;
 
         try {
             lat = hypermarketInfo.getDouble("latitude");
             lon = hypermarketInfo.getDouble("longitude");
         } catch (JSONException e) {
-            //  e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return new GeoPoint(lat, lon);
     }
 
     @NotNull
     public String getAdress() {
-        String adress = "default";
+        final String adress;
         try {
             adress = hypermarketInfo.getString("adress");
         } catch (JSONException e) {
-            //
+            throw new RuntimeException(e.getMessage());
         }
 
         return adress;
@@ -70,11 +66,11 @@ public class HypermarketReader {
 
     @NotNull
     public String getType() {
-        String type = "default";
+        final String type;
         try {
             type = hypermarketInfo.getString("type");
         } catch (JSONException e) {
-            //
+            throw new RuntimeException(e.getMessage());
         }
         return type;
     }

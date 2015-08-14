@@ -30,15 +30,14 @@ import ru.hypernavi.util.GeoPoint;
 @WebServlet(name = "schemainfo", value = "/schemainfo")
 public class SchemaInfoServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(SchemaInfoServlet.class);
+
     @NotNull
     private final HypermarketHolder markets;
-
 
     public SchemaInfoServlet() {
         markets = HypermarketHolder.getInstance();
     }
 
-    // TODO: take JSON to alone class
     @Override
     public void process(@NotNull final HttpServletRequest request,
                         @NotNull final HttpServletResponse response) throws IOException {
@@ -60,15 +59,19 @@ public class SchemaInfoServlet extends AbstractHttpService {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.JSON_UTF_8.type());
-        final double lon = bestHypernavi.getLocation().getLongitude();
-        final double lat = bestHypernavi.getLocation().getLatitude();
         final OutputStream out = response.getOutputStream();
 
+        final List<Hypermarket> market = new ArrayList<>();
+        market.add(bestHypernavi);
+
+        out.write(generateJSON(market, currentPosition).getBytes());
+    }
+
+    // TODO: take JSON to alone class
+    private String generateJSON(final List<Hypermarket> market, final GeoPoint possition) {
         String answer;
         try {
             final JSONObject jsonResponse = new JSONObject();
-            final List<Hypermarket> market = new ArrayList<>();
-            market.add(bestHypernavi);
             final JSONArray hypermarkets = new JSONArray();
             for (int i = 0; i < market.size(); ++i) {
                 final JSONObject obj = new JSONObject();
@@ -80,14 +83,16 @@ public class SchemaInfoServlet extends AbstractHttpService {
                 hypermarkets.put(obj);
             }
             jsonResponse.put("hypermarkets", hypermarkets);
-            jsonResponse.put("lontitude", longitude);
-            jsonResponse.put("latitude", latitude);
+            jsonResponse.put("lontitude", possition.getLongitude());
+            jsonResponse.put("latitude", possition.getLatitude());
             jsonResponse.put("correct", true);
             answer = jsonResponse.toString();
         }
         catch (JSONException e) {
             answer = "{\"correct\":false}";
+            LOG.warn("Can't create JSON responce. Request: Latitude = " + possition.getLatitude()
+                     + " Longitude = " + possition.getLongitude() + "\n" + e.getMessage());
         }
-        out.write(answer.getBytes());
+        return answer;
     }
 }

@@ -12,7 +12,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 28.07.2015.
  */
-
+// TODO: take some logic to another classes (reading, add interfaces)
 public class Hypermarket implements Positioned {
     private static final Log LOG = LogFactory.getLog(Hypermarket.class);
     private static int maxId = 0;
@@ -34,21 +34,17 @@ public class Hypermarket implements Positioned {
     }
 
     @NotNull
-    public BufferedImage getSchema() {
-        return schema;
-    }
+    public BufferedImage getSchema() { return schema; }
 
     @NotNull
     @Override
-    public GeoPoint getLocation() {
-        return coordinate;
-    }
+    public GeoPoint getLocation() { return coordinate; }
 
-    public int getID() {
-        return id;
-    }
+    public int getId() { return id; }
 
-    public String getMd5hash() {
-        return  md5hash;
-    }
+    public String getMd5hash() { return  md5hash; }
+
+    public String getType() { return type; }
+
+    public String getAdress() {return adress; }
 }

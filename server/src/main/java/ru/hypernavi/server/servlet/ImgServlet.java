@@ -7,8 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-
 
 import ru.hypernavi.core.Hypermarket;
 import ru.hypernavi.core.HypermarketHolder;
@@ -31,13 +29,12 @@ public final class ImgServlet extends AbstractHttpService {
         final Hypermarket bestHypernavi = markets.getMD5(md5hash);
         if (bestHypernavi == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return ;
         }
-        else {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("image/jpeg");
-            final OutputStream out = response.getOutputStream();
-            ImageIO.write(bestHypernavi.getSchema(), "jpg", out);
-        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("image/jpeg");
+        ImageIO.write(bestHypernavi.getSchema(), "jpg", response.getOutputStream());
     }
 
     @NotNull

@@ -20,22 +20,29 @@ import ru.hypernavi.util.GeoPoint;
 public class HypermarketHolder {
     private static final Log LOG = LogFactory.getLog(HypermarketHolder.class);
     private static HypermarketHolder instance = null;
+    @NotNull
+    private final Map<String, Integer> md5id;
+    @NotNull
+    private MapStructure<Hypermarket> markets;
 
     protected HypermarketHolder() {
-        String[] pathHypermarket = null;
+        final String[] pathHypermarket;
         try {
             final String initFile = IOUtils.toString(HypermarketHolder.class.getResourceAsStream("/hypermarketlist.txt"));
             pathHypermarket = initFile.split("[; \n]+");
         } catch (IOException e) {
-            LOG.warn("Some problems with init file");
+            LOG.error("Some problems with init file");
+            throw new RuntimeException(e.getMessage());
         }
 
         md5id = new TreeMap<>();
+
         final List<Hypermarket> listHyper = new ArrayList<>();
         for (int i = 0; i < pathHypermarket.length; ++i) {
             listHyper.add(new Hypermarket(pathHypermarket[i]));
-            md5id.put("/" + ImageHash.generate(listHyper.get(i).getSchema()) + ".jpg", listHyper.get(i).getID());
+            md5id.put("/" + ImageHash.generate(listHyper.get(i).getSchema()) + ".jpg", listHyper.get(i).getId());
         }
+
         final Hypermarket[] copyList = new Hypermarket[listHyper.size()];
         markets = new ArrayMapStructure<>(listHyper.toArray(copyList));
     }
@@ -47,17 +54,11 @@ public class HypermarketHolder {
         return instance;
     }
 
-
-    @NotNull
-    private final Map<String, Integer> md5id;
-    @NotNull
-    private MapStructure<Hypermarket> markets;
-
     public Hypermarket getMD5(final String ImadeHash) {
-        return instance.markets.get(instance.md5id.get(ImadeHash));
+        return markets.get(md5id.get(ImadeHash));
     }
 
     public Hypermarket getClosest(final GeoPoint possition) {
-        return (Hypermarket)markets.findClosest(possition);
+        return markets.findClosest(possition);
     }
 }

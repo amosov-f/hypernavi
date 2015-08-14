@@ -10,20 +10,19 @@ import ru.hypernavi.util.GeoPoint;
  */
 public interface MapStructure<T extends Hypermarket> {
     @NotNull
-    default Positioned findClosest(final GeoPoint possition) {
+    default T findClosest(final GeoPoint possition) {
         return find(possition, 1)[0];
     }
 
     @NotNull
-    default Positioned[] findAll(final GeoPoint possition) {
+    default T[] findAll(final GeoPoint possition) {
         return find(possition, size());
     }
 
     @NotNull
-    Positioned[] find(final GeoPoint possition, final int number);
+    T[] find(final GeoPoint possition, final int number);
 
-
-    Hypermarket get(final int id);
+    T get(final int id);
 
     int size();
 }
