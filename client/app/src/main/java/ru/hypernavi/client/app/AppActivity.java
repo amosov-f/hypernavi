@@ -37,11 +37,11 @@ public final class AppActivity extends Activity {
 
     @Nullable
     private Point schemePosition;
-    private boolean updatingGeoPosition;
 
-    private Bitmap scheme;
+    private Bitmap originScheme;
     private JSONObject root;
     private int displayWidth;
+    private int displayHigh;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -52,18 +52,18 @@ public final class AppActivity extends Activity {
         final Point displaySize = new Point();
         display.getSize(displaySize);
         displayWidth = displaySize.x;
+        displayHigh = displaySize.y;
 
         LOG.info("onCreate start");
 
-        scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
-
-        final int imageWidth = scheme.getWidth();
+        originScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageBitmap(scheme);
+        imageView.setImageBitmap(originScheme);
 
-        LOG.warning("Image width " + imageWidth);
-        LOG.warning("Display width " + displayWidth);
+        LOG.info( "Image XScale " + imageView.getScaleX());
+        LOG.info("Display width " + displayWidth);
+        LOG.info("Display high " + displayHigh);
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
@@ -71,7 +71,7 @@ public final class AppActivity extends Activity {
 
             @Override
             public void onClick(final View v) {
-                final float maxScale = 10;
+                final float maxScale = 4;
                 final float step = 0.5f;
 
                 final float x = imageView.getScaleX();
@@ -84,6 +84,16 @@ public final class AppActivity extends Activity {
                     imageView.setScaleX(x + step);
                     imageView.setScaleY(y + step);
                 }
+
+                final Display display = getWindowManager().getDefaultDisplay();
+                final Point displaySize = new Point();
+                display.getSize(displaySize);
+                displayWidth = displaySize.x;
+                displayHigh = displaySize.y;
+
+                LOG.warning("Image XScale " + imageView.getScaleX());
+                LOG.warning("Display width " + displayWidth);
+                LOG.warning("Display high " + displayHigh);
             }
         });
 
@@ -91,7 +101,7 @@ public final class AppActivity extends Activity {
 
             @Override
             public void onClick(final View v) {
-                final float minScale = 0.5f;
+                final float minScale = 1.0f;
                 final float step = 0.5f;
 
                 final float x = imageView.getScaleX();
@@ -104,16 +114,115 @@ public final class AppActivity extends Activity {
                     imageView.setScaleX(x - step);
                     imageView.setScaleY(y - step);
                 }
+
+                final Display display = getWindowManager().getDefaultDisplay();
+                final Point displaySize = new Point();
+                display.getSize(displaySize);
+                displayWidth = displaySize.x;
+                displayHigh = displaySize.y;
+
+                LOG.warning("Image XScale " + imageView.getScaleX());
+                LOG.warning("Display width " + displayWidth);
+                LOG.warning("Display high " + displayHigh);
             }
         });
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
+            float downX;
+            float downY;
+            int totalX;
+            int totalY;
+            int scrollByX;
+            int scrollByY;
             @Override
             public boolean onTouch(@NotNull final View v, @NotNull final MotionEvent event) {
-                if (updatingGeoPosition) {
-                    return false;
-                }
                 LOG.info("Touch");
+
+                final int maxLeft = -getMaxXScroll();
+                final int maxRight = -maxLeft;
+                final int maxTop = -getMaxYScroll();
+                final int maxBottom = -maxTop;
+                LOG.warning("maxLeft: " + maxLeft + " maxTop: " + maxTop );
+                final float currentX;
+                final float currentY;
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        downX = event.getX();
+                        downY = event.getY();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        currentX = event.getX();
+                        currentY = event.getY();
+                        scrollByX = (int)(downX - currentX);
+                        scrollByY = (int)(downY - currentY);
+
+                        // scrolling to left side of image (pic moving to the right)
+                        if (currentX > downX) {
+                            if (totalX == maxLeft) {
+                                scrollByX = 0;
+                            }
+                            if (totalX > maxLeft) {
+                                totalX = totalX + scrollByX;
+                            }
+                            if (totalX < maxLeft) {
+                                scrollByX = maxLeft - (totalX - scrollByX);
+                                totalX = maxLeft;
+                            }
+                        }
+
+                        // scrolling to right side of image (pic moving to the left)
+                        if (currentX < downX) {
+                            if (totalX == maxRight) {
+                                scrollByX = 0;
+                            }
+                            if (totalX < maxRight) {
+                                totalX = totalX + scrollByX;
+                            }
+                            if (totalX > maxRight) {
+                                scrollByX = maxRight - (totalX - scrollByX);
+                                totalX = maxRight;
+                            }
+                        }
+
+                        // scrolling to top of image (pic moving to the bottom)
+                        if (currentY > downY) {
+                            if (totalY == maxTop) {
+                                scrollByY = 0;
+                            }
+                            if (totalY > maxTop) {
+                                totalY = totalY + scrollByY;
+                            }
+                            if (totalY < maxTop) {
+                                scrollByY = maxTop - (totalY - scrollByY);
+                                totalY = maxTop;
+                            }
+                        }
+
+                        // scrolling to bottom of image (pic moving to the top)
+                        if (currentY < downY) {
+                            if (totalY == maxBottom) {
+                                scrollByY = 0;
+                            }
+                            if (totalY < maxBottom) {
+                                totalY = totalY + scrollByY;
+                            }
+                            if (totalY > maxBottom) {
+                                scrollByY = maxBottom - (totalY - scrollByY);
+                                totalY = maxBottom;
+                            }
+                        }
+
+                        imageView.scrollBy(scrollByX, scrollByY);
+                        downX = currentX;
+                        downY = currentY;
+                        break;
+                    default:
+                        LOG.warning("other event");
+                }
+
+                LOG.info("Touch ");
 
                 final Matrix inverse = new Matrix();
                 imageView.getImageMatrix().invert(inverse);
@@ -122,7 +231,7 @@ public final class AppActivity extends Activity {
                 final int x = (int) schemePoint[0];
                 final int y = (int) schemePoint[1];
 
-                if (x < 0 || x >= scheme.getWidth() || y < 0 || y >= scheme.getHeight()) {
+                if (x < 0 || x >= originScheme.getWidth() || y < 0 || y >= originScheme.getHeight()) {
                     return false;
                 }
 
@@ -132,7 +241,9 @@ public final class AppActivity extends Activity {
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(7);
 
-                final Bitmap image = scheme.copy(Bitmap.Config.ARGB_8888, true);
+                final Bitmap image = originScheme.copy(Bitmap.Config.ARGB_8888, true);
+                LOG.warning("XTouch " + x);
+                LOG.warning("YTouch " + y);
 
                 final Canvas canvas = new Canvas(image);
                 canvas.drawCircle(x, y, CIRCLE_RADIUS, paint);
@@ -151,10 +262,9 @@ public final class AppActivity extends Activity {
             return;
         }
 
-        updatingGeoPosition = true;
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
             new PositionUpdater(locationManager, imageView));
+
     }
 
     private final class PositionUpdater implements LocationListener {
@@ -202,9 +312,7 @@ public final class AppActivity extends Activity {
                 Toast.makeText(AppActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
-            myView.setImageBitmap(scheme);
-
-            updatingGeoPosition = false;
+            myView.setImageBitmap(originScheme);
 
             LOG.info(schemePosition + " -> " + geoPosition);
             Toast.makeText(AppActivity.this, schemePosition + " -> " + geoPosition, Toast.LENGTH_SHORT).show();
@@ -214,6 +322,7 @@ public final class AppActivity extends Activity {
                 Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
                 new PositionUpdater(locationManager, myView));
 
@@ -285,7 +394,7 @@ public final class AppActivity extends Activity {
             public void run() {
                 try {
                     final URLConnection myConnection = new URL(currentSchemeURL).openConnection();
-                    scheme = BitmapFactory.decodeStream(myConnection.getInputStream());
+                    originScheme = BitmapFactory.decodeStream(myConnection.getInputStream());
                 } catch (IOException e) {
                     LOG.warning(e.getMessage());
                     LOG.warning("Can't read from internet");
@@ -298,9 +407,17 @@ public final class AppActivity extends Activity {
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
         }
-        if (scheme == null) {
-            scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
+        if (originScheme == null) {
+            originScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
         }
+    }
+
+    private int getMaxXScroll() {
+        return Math.abs((originScheme.getWidth() / 2) - (displayWidth / 2));
+    }
+
+    private int getMaxYScroll() {
+        return Math.abs((originScheme.getHeight() / 2) - (displayHigh / 2));
     }
 }
 
