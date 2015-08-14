@@ -14,11 +14,13 @@ import java.util.Map;
 
 
 import com.google.common.net.MediaType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.core.Hypermarket;
-import ru.hypernavi.core.SchemaBuilder;
+import ru.hypernavi.core.HypermarketHolder;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -27,23 +29,21 @@ import ru.hypernavi.util.GeoPoint;
 
 @WebServlet(name = "schemainfo", value = "/schemainfo")
 public class SchemaInfoServlet extends AbstractHttpService {
+    private static final Log LOG = LogFactory.getLog(SchemaInfoServlet.class);
     @NotNull
-    private final List<Hypermarket> hypernavis;
-    private static final double MIN_DISTANCE = 40.0;
+    private final HypermarketHolder markets;
 
-    public SchemaInfoServlet()
-    {
-        final SchemaBuilder reader = new SchemaBuilder();
-        hypernavis = reader.read("/hypernavi_list.txt");
+
+    public SchemaInfoServlet() {
+        markets = HypermarketHolder.getInstance();
     }
 
-
+    // TODO: take JSON to alone class
     @Override
     public void process(@NotNull final HttpServletRequest request,
-                         @NotNull final HttpServletResponse response) throws IOException {
+                        @NotNull final HttpServletResponse response) throws IOException {
         final Map<String, String[]> parameterMap = request.getParameterMap();
-        if (!parameterMap.containsKey("lon") || !parameterMap.containsKey("lat"))
-        {
+        if (!parameterMap.containsKey("lon") || !parameterMap.containsKey("lat")) {
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
             return;
         }
@@ -52,57 +52,42 @@ public class SchemaInfoServlet extends AbstractHttpService {
         final Double latitude = Double.parseDouble(request.getParameter("lat"));
         final GeoPoint currentPosition = new GeoPoint(latitude, longitude);
 
-        final int bestHypernavi = closestHypernavi(currentPosition);
-        if (bestHypernavi == -1 || GeoPoint.distance(hypernavis.get(bestHypernavi).getLocation(), currentPosition) > MIN_DISTANCE)
-        {
+        final Hypermarket bestHypernavi = markets.getClosest(currentPosition);
+        if (bestHypernavi == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
-        else {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType(MediaType.JSON_UTF_8.type());
-            final double lon = hypernavis.get(bestHypernavi).getLocation().getLongitude();
-            final double lat = hypernavis.get(bestHypernavi).getLocation().getLatitude();
 
-            final OutputStream out = response.getOutputStream();
-            String answer;
-            try {
-                final JSONObject jsonResponse = new JSONObject();
-                final List<Hypermarket> markets = new ArrayList<>();
-                markets.add(hypernavis.get(bestHypernavi));
-                final JSONArray hypermarkets = new JSONArray();
-                for (int i = 0; i < markets.size(); ++i)
-                {
-                    final JSONObject obj = new JSONObject();
-                    obj.put("URL", "http://hypernavi.cloudapp.net/schema?lon=" + lon + "&lat=" + lat);
-                    obj.put("latitude", markets.get(i).getLocation().getLatitude());
-                    obj.put("longitude", markets.get(i).getLocation().getLongitude());
-                    obj.put("type", "Okey");
-                    obj.put("adress", "Default");
-                    obj.put("correct", true);
-                    hypermarkets.put(i, obj);
-                }
-                jsonResponse.put("hypermarkets", hypermarkets);
-                jsonResponse.put("lontitude", longitude);
-                jsonResponse.put("latitude", latitude);
-                answer = jsonResponse.toString();
-            }
-            catch (JSONException e)
-            {
-                answer = "{\"correct\":false}";
-            }
-            out.write(answer.getBytes());
-        }
-    }
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType(MediaType.JSON_UTF_8.type());
+        final double lon = bestHypernavi.getLocation().getLongitude();
+        final double lat = bestHypernavi.getLocation().getLatitude();
+        final OutputStream out = response.getOutputStream();
 
-    private int closestHypernavi(final GeoPoint position) {
-        double minDistance = Double.POSITIVE_INFINITY;
-        int bestHypernavi = -1;
-        for (int i = 0; i < hypernavis.size(); ++i) {
-            if (GeoPoint.distance(hypernavis.get(i).getLocation(), position) < minDistance) {
-                minDistance = GeoPoint.distance(hypernavis.get(i).getLocation(), position);
-                bestHypernavi = i;
+        String answer;
+        try {
+            final JSONObject jsonResponse = new JSONObject();
+            final List<Hypermarket> market = new ArrayList<>();
+            market.add(bestHypernavi);
+            final JSONArray hypermarkets = new JSONArray();
+            for (int i = 0; i < market.size(); ++i) {
+                final JSONObject obj = new JSONObject();
+                obj.put("URL", "http://localhost:8080/img/" + market.get(i).getMd5hash() + ".jpg");
+                obj.put("latitude", market.get(i).getLocation().getLatitude());
+                obj.put("longitude", market.get(i).getLocation().getLongitude());
+                obj.put("type", "Okey");
+                obj.put("adress", "Default");
+                hypermarkets.put(obj);
             }
+            jsonResponse.put("hypermarkets", hypermarkets);
+            jsonResponse.put("lontitude", longitude);
+            jsonResponse.put("latitude", latitude);
+            jsonResponse.put("correct", true);
+            answer = jsonResponse.toString();
         }
-        return bestHypernavi;
+        catch (JSONException e) {
+            answer = "{\"correct\":false}";
+        }
+        out.write(answer.getBytes());
     }
 }

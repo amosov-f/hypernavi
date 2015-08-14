@@ -57,5 +57,5 @@ public abstract class AbstractHttpService extends HttpServlet {
         ));
     }
 
-    public abstract void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException;
+    public abstract void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException ;
 }

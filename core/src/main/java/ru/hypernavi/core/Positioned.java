@@ -8,10 +8,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 30.07.2015.
  */
-public interface GeoPointed {
+public interface Positioned {
     @NotNull
     GeoPoint getLocation();
-
-    @NotNull
-    int getId();
 }
