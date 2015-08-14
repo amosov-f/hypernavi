@@ -67,65 +67,11 @@ public final class AppActivity extends Activity {
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
-        zoom.setOnZoomInClickListener(new View.OnClickListener() {
+        final ZoomInClickListener zoomInClickListener = new ZoomInClickListener(imageView);
+        final ZoomOutClickListener zoomOutClickListener = new ZoomOutClickListener(imageView);
 
-            @Override
-            public void onClick(final View v) {
-                final float maxScale = 4;
-                final float step = 0.5f;
-
-                final float x = imageView.getScaleX();
-                final float y = imageView.getScaleY();
-
-                if ((x > maxScale - step) || (y > maxScale - step)) {
-                    imageView.setScaleX(maxScale);
-                    imageView.setScaleY(maxScale);
-                } else {
-                    imageView.setScaleX(x + step);
-                    imageView.setScaleY(y + step);
-                }
-
-                final Display display = getWindowManager().getDefaultDisplay();
-                final Point displaySize = new Point();
-                display.getSize(displaySize);
-                displayWidth = displaySize.x;
-                displayHigh = displaySize.y;
-
-                LOG.warning("Image XScale " + imageView.getScaleX());
-                LOG.warning("Display width " + displayWidth);
-                LOG.warning("Display high " + displayHigh);
-            }
-        });
-
-        zoom.setOnZoomOutClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-                final float minScale = 1.0f;
-                final float step = 0.5f;
-
-                final float x = imageView.getScaleX();
-                final float y = imageView.getScaleY();
-
-                if ((x < minScale + step) || (y < minScale + step)) {
-                    imageView.setScaleX(minScale);
-                    imageView.setScaleY(minScale);
-                } else {
-                    imageView.setScaleX(x - step);
-                    imageView.setScaleY(y - step);
-                }
-
-                final Display display = getWindowManager().getDefaultDisplay();
-                final Point displaySize = new Point();
-                display.getSize(displaySize);
-                displayWidth = displaySize.x;
-                displayHigh = displaySize.y;
-
-                LOG.warning("Image XScale " + imageView.getScaleX());
-                LOG.warning("Display width " + displayWidth);
-                LOG.warning("Display high " + displayHigh);
-            }
-        });
+        zoom.setOnZoomInClickListener(zoomInClickListener);
+        zoom.setOnZoomOutClickListener(zoomOutClickListener);
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
             float downX;
@@ -136,13 +82,13 @@ public final class AppActivity extends Activity {
             int scrollByY;
             @Override
             public boolean onTouch(@NotNull final View v, @NotNull final MotionEvent event) {
-                LOG.info("Touch");
+                LOG.warning("new Touch");
 
                 final int maxLeft = -getMaxXScroll();
                 final int maxRight = -maxLeft;
                 final int maxTop = -getMaxYScroll();
                 final int maxBottom = -maxTop;
-                LOG.warning("maxLeft: " + maxLeft + " maxTop: " + maxTop );
+                LOG.info("maxLeft: " + maxLeft + " maxTop: " + maxTop );
                 final float currentX;
                 final float currentY;
                 switch (event.getAction()) {
@@ -264,7 +210,6 @@ public final class AppActivity extends Activity {
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
             new PositionUpdater(locationManager, imageView));
-
     }
 
     private final class PositionUpdater implements LocationListener {
@@ -420,4 +365,3 @@ public final class AppActivity extends Activity {
         return Math.abs((originScheme.getHeight() / 2) - (displayHigh / 2));
     }
 }
-
