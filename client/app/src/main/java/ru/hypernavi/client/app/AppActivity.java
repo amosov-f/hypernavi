@@ -18,8 +18,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
@@ -32,16 +30,12 @@ public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
 
     private static final String SCHEME_PATH = "/file_not_found.jpg";
-    private static final int CIRCLE_RADIUS = 50;
     private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
-
-    @Nullable
-    private Point schemePosition;
 
     private Bitmap originScheme;
     private JSONObject root;
     private int displayWidth;
-    private int displayHigh;
+    private int displayHeight;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -52,7 +46,7 @@ public final class AppActivity extends Activity {
         final Point displaySize = new Point();
         display.getSize(displaySize);
         displayWidth = displaySize.x;
-        displayHigh = displaySize.y;
+        displayHeight = displaySize.y;
 
         LOG.info("onCreate start");
 
@@ -63,7 +57,7 @@ public final class AppActivity extends Activity {
 
         LOG.info( "Image XScale " + imageView.getScaleX());
         LOG.info("Display width " + displayWidth);
-        LOG.info("Display high " + displayHigh);
+        LOG.info("Display high " + displayHeight);
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
@@ -73,134 +67,9 @@ public final class AppActivity extends Activity {
         zoom.setOnZoomInClickListener(zoomInClickListener);
         zoom.setOnZoomOutClickListener(zoomOutClickListener);
 
-        imageView.setOnTouchListener(new View.OnTouchListener() {
-            float downX;
-            float downY;
-            int totalX;
-            int totalY;
-            int scrollByX;
-            int scrollByY;
-            @Override
-            public boolean onTouch(@NotNull final View v, @NotNull final MotionEvent event) {
-                LOG.warning("new Touch");
+        final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(displayWidth, displayHeight, imageView);
 
-                final int maxLeft = -getMaxXScroll();
-                final int maxRight = -maxLeft;
-                final int maxTop = -getMaxYScroll();
-                final int maxBottom = -maxTop;
-                LOG.info("maxLeft: " + maxLeft + " maxTop: " + maxTop );
-                final float currentX;
-                final float currentY;
-                switch (event.getAction()) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        downX = event.getX();
-                        downY = event.getY();
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        currentX = event.getX();
-                        currentY = event.getY();
-                        scrollByX = (int)(downX - currentX);
-                        scrollByY = (int)(downY - currentY);
-
-                        // scrolling to left side of image (pic moving to the right)
-                        if (currentX > downX) {
-                            if (totalX == maxLeft) {
-                                scrollByX = 0;
-                            }
-                            if (totalX > maxLeft) {
-                                totalX = totalX + scrollByX;
-                            }
-                            if (totalX < maxLeft) {
-                                scrollByX = maxLeft - (totalX - scrollByX);
-                                totalX = maxLeft;
-                            }
-                        }
-
-                        // scrolling to right side of image (pic moving to the left)
-                        if (currentX < downX) {
-                            if (totalX == maxRight) {
-                                scrollByX = 0;
-                            }
-                            if (totalX < maxRight) {
-                                totalX = totalX + scrollByX;
-                            }
-                            if (totalX > maxRight) {
-                                scrollByX = maxRight - (totalX - scrollByX);
-                                totalX = maxRight;
-                            }
-                        }
-
-                        // scrolling to top of image (pic moving to the bottom)
-                        if (currentY > downY) {
-                            if (totalY == maxTop) {
-                                scrollByY = 0;
-                            }
-                            if (totalY > maxTop) {
-                                totalY = totalY + scrollByY;
-                            }
-                            if (totalY < maxTop) {
-                                scrollByY = maxTop - (totalY - scrollByY);
-                                totalY = maxTop;
-                            }
-                        }
-
-                        // scrolling to bottom of image (pic moving to the top)
-                        if (currentY < downY) {
-                            if (totalY == maxBottom) {
-                                scrollByY = 0;
-                            }
-                            if (totalY < maxBottom) {
-                                totalY = totalY + scrollByY;
-                            }
-                            if (totalY > maxBottom) {
-                                scrollByY = maxBottom - (totalY - scrollByY);
-                                totalY = maxBottom;
-                            }
-                        }
-
-                        imageView.scrollBy(scrollByX, scrollByY);
-                        downX = currentX;
-                        downY = currentY;
-                        break;
-                    default:
-                        LOG.warning("other event");
-                }
-
-                LOG.info("Touch ");
-
-                final Matrix inverse = new Matrix();
-                imageView.getImageMatrix().invert(inverse);
-                final float[] schemePoint = {event.getX(), event.getY()};
-                inverse.mapPoints(schemePoint);
-                final int x = (int) schemePoint[0];
-                final int y = (int) schemePoint[1];
-
-                if (x < 0 || x >= originScheme.getWidth() || y < 0 || y >= originScheme.getHeight()) {
-                    return false;
-                }
-
-                final Paint paint = new Paint();
-                paint.setAntiAlias(true);
-                paint.setColor(Color.RED);
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setStrokeWidth(7);
-
-                final Bitmap image = originScheme.copy(Bitmap.Config.ARGB_8888, true);
-                LOG.warning("XTouch " + x);
-                LOG.warning("YTouch " + y);
-
-                final Canvas canvas = new Canvas(image);
-                canvas.drawCircle(x, y, CIRCLE_RADIUS, paint);
-                canvas.drawPoint(x, y, paint);
-                schemePosition = new Point(x, y);
-
-                imageView.setImageBitmap(image);
-                LOG.info("End touch");
-                return true;
-            }
-        });
+        imageView.setOnTouchListener(viewOnTouchListener);
 
         final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -259,8 +128,8 @@ public final class AppActivity extends Activity {
 
             myView.setImageBitmap(originScheme);
 
-            LOG.info(schemePosition + " -> " + geoPosition);
-            Toast.makeText(AppActivity.this, schemePosition + " -> " + geoPosition, Toast.LENGTH_SHORT).show();
+            LOG.info("GeoPosition " + geoPosition);
+            Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
 
             final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -362,6 +231,6 @@ public final class AppActivity extends Activity {
     }
 
     private int getMaxYScroll() {
-        return Math.abs((originScheme.getHeight() / 2) - (displayHigh / 2));
+        return Math.abs((originScheme.getHeight() / 2) - (displayHeight / 2));
     }
 }
