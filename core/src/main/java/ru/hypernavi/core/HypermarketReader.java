@@ -2,15 +2,12 @@ package ru.hypernavi.core;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.util.GeoPoint;
@@ -19,13 +16,17 @@ import ru.hypernavi.util.GeoPoint;
  * Created by Константин on 14.08.2015.
  */
 public class HypermarketReader {
+    private static final Log LOG = LogFactory.getLog(HypermarketReader.class);
+
     @NotNull
     private final JSONObject hypermarketInfo;
 
     public HypermarketReader(final String path) {
+        LOG.info("Reading hypermarket from " + path);
         try {
             final String jsonFile = IOUtils.toString(getClass().getResourceAsStream(path));
             hypermarketInfo = new JSONObject(jsonFile);
+            LOG.info("Hypermarket loaded from " + path);
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e.getMessage());
         }
