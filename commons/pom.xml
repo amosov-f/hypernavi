@@ -12,6 +12,10 @@
     <groupId>ru.hypernavi</groupId>
     <artifactId>commons</artifactId>
 
+    <properties>
+        <java.version>1.7</java.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ru.hypernavi</groupId>
