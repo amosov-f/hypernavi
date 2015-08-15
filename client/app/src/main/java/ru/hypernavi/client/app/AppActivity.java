@@ -4,16 +4,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,10 +26,10 @@ import android.view.Display;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.util.GeoPoint;
-import org.apache.commons.io.IOUtils;
 
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
@@ -165,6 +169,18 @@ public final class AppActivity extends Activity {
             }
             return new GeoPoint(sumLat / locations.size(), sumLon / locations.size());
         }
+    }
+
+    // TODO: move to module util
+    @NotNull
+    private Properties loadProperties(@NotNull final String resourcesPath) {
+        final Properties properties = new Properties();
+        try {
+            properties.load(AppActivity.class.getResourceAsStream(resourcesPath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return properties;
     }
 
     private void extructJSON(final double lat, final double lon) {
