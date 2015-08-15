@@ -184,7 +184,7 @@ public final class AppActivity extends Activity {
     }
 
     private void extructJSON(final double lat, final double lon) {
-        final String[] jString = new String[1];
+        String hypermarketsJSON;
         final ExecutorService service = Executors.newFixedThreadPool(1);
         final Future<String> task = service.submit(new Callable<String>() {
             @Nullable
@@ -204,18 +204,19 @@ public final class AppActivity extends Activity {
             }
         });
         try {
-            jString[0] = task.get();
+            hypermarketsJSON = task.get();
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
+            hypermarketsJSON = null;
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
-        if (jString[0] == null) {
+        if (hypermarketsJSON == null) {
             Toast.makeText(AppActivity.this, "JSON string is null", Toast.LENGTH_SHORT).show();
             LOG.warning("JSON string is null");
         } else {
             try {
-                root = new JSONObject(jString[0]);
+                root = new JSONObject(hypermarketsJSON);
                 LOG.info(root.toString());
             } catch (JSONException e) {
                 LOG.warning(e.getMessage());
