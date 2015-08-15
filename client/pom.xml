@@ -27,7 +27,7 @@
     <dependencies>
         <dependency>
             <groupId>ru.hypernavi</groupId>
-            <artifactId>util</artifactId>
+            <artifactId>commons</artifactId>
         </dependency>
 
         <dependency>

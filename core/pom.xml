@@ -16,6 +16,10 @@
             <groupId>ru.hypernavi</groupId>
             <artifactId>ml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ru.hypernavi</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
