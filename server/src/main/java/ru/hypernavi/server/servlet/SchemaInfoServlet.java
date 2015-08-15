@@ -1,7 +1,6 @@
 package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +17,8 @@ import java.util.Map;
 import com.google.common.net.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.commons.HypermarketSerializer;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.core.HypermarketHolder;

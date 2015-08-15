@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +19,8 @@ import ru.hypernavi.util.GeoPoint;
  */
 public enum InfoResponceSerializer {
     ;
+    private static final Log LOG = LogFactory.getLog(InfoResponceSerializer.class);
+
 
     @Nullable
     public static JSONObject serialize(final InfoResponce responce) {
@@ -41,6 +46,7 @@ public enum InfoResponceSerializer {
             jsonResponse.put("meta", metainfo);
 
         } catch (JSONException e) {
+            LOG.warn(e.getMessage());
             return null;
         }
         return jsonResponse;
@@ -64,6 +70,7 @@ public enum InfoResponceSerializer {
             final double latitude = meta.getDouble("latitude");
             location = new GeoPoint(latitude, longitude);
         } catch (JSONException e) {
+            LOG.warn(e.getMessage());
             return null;
         }
         return new InfoResponce(markets, location);
