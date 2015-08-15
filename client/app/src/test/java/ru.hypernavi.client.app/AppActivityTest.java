@@ -16,7 +16,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * Time: 14:45
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = "client/app/AndroidManifest.xml", sdk = 21)
+@Config(manifest = "../app/AndroidManifest.xml", sdk = 21)
 public class AppActivityTest {
     private AppActivity appActivity;
 
