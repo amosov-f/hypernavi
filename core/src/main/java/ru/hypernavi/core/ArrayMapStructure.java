@@ -14,7 +14,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 14.08.2015.
  */
-public class ArrayMapStructure<T extends Hypermarket> implements MapStructure<T> {
+public class ArrayMapStructure<T extends Positioned> implements MapStructure<T> {
     private static final Log LOG = LogFactory.getLog(ArrayMapStructure.class);
     private final T[] listPoints;
 
@@ -31,33 +31,16 @@ public class ArrayMapStructure<T extends Hypermarket> implements MapStructure<T>
         for (int i = 0; i < listPoints.length; ++i) {
             distance[i] = GeoPoint.distance(position, listPoints[i].getLocation());
         }
-        final List<Pair<Double, Integer> > sorted = new ArrayList<>();
+        final List<Pair<Double, Integer>> sorted = new ArrayList<>();
         for (int i = 0; i < listPoints.length; ++i) {
             sorted.add(new Pair<>(distance[i], i));
         }
-        Collections.sort(sorted, new Comparator<Pair<Double, Integer>>() {
-            @Override
-            public int compare(final Pair<Double, Integer> lhs, final Pair<Double, Integer> rhs) {
-                if (lhs.getKey() < rhs.getKey()) { return -1; }
-                else if (lhs.getKey() > rhs.getKey()) { return 1; }
-                else { return 0; }
-            }
-        });
+        Collections.sort(sorted, Comparator.comparing(Pair::getKey));
 
         for (int i = 0; i < k; ++i) {
             result[i] = listPoints[sorted.get(i).getValue()];
         }
         return result;
-    }
-
-    @Override
-    public T get(final int id) {
-        for (int i = 0; i < listPoints.length; ++i) {
-            if (listPoints[i].getId() == id) {
-                return listPoints[i];
-            }
-        }
-        return null;
     }
 
     @Override

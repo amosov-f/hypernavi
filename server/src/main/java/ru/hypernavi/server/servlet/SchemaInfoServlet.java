@@ -1,6 +1,7 @@
 package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.hypernavi.commons.HypermarketSerializer;
 import ru.hypernavi.core.Hypermarket;
 import ru.hypernavi.core.HypermarketHolder;
 import ru.hypernavi.util.GeoPoint;
@@ -56,7 +58,6 @@ public class SchemaInfoServlet extends AbstractHttpService {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.JSON_UTF_8.type());
         final OutputStream out = response.getOutputStream();
@@ -68,6 +69,7 @@ public class SchemaInfoServlet extends AbstractHttpService {
     }
 
     // TODO: take JSON to alone class
+    @NotNull
     private String generateJSON(final List<Hypermarket> market, final GeoPoint possition) {
         String answer;
         try {
@@ -78,20 +80,20 @@ public class SchemaInfoServlet extends AbstractHttpService {
                 obj.put("URL", "http://localhost:8080/img/" + market.get(i).getMd5hash() + ".jpg");
                 obj.put("latitude", market.get(i).getLocation().getLatitude());
                 obj.put("longitude", market.get(i).getLocation().getLongitude());
-                obj.put("type", "Okey");
-                obj.put("adress", "Default");
+                obj.put("type", market.get(i).getType());
+                obj.put("adress", market.get(i).getAdress());
                 hypermarkets.put(obj);
+                //hypermarkets.put(HypermarketSerializer.createJSON(market.get(i)));
             }
             jsonResponse.put("hypermarkets", hypermarkets);
             jsonResponse.put("lontitude", possition.getLongitude());
             jsonResponse.put("latitude", possition.getLatitude());
             jsonResponse.put("correct", true);
             answer = jsonResponse.toString();
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             answer = "{\"correct\":false}";
             LOG.warn("Can't create JSON responce. Request: Latitude = " + possition.getLatitude()
-                     + " Longitude = " + possition.getLongitude() + "\n" + e.getMessage());
+                    + " Longitude = " + possition.getLongitude() + "\n" + e.getMessage());
         }
         return answer;
     }

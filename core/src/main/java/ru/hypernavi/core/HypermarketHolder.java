@@ -1,6 +1,7 @@
 package ru.hypernavi.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,13 +41,14 @@ public class HypermarketHolder {
         final List<Hypermarket> listHyper = new ArrayList<>();
         for (int i = 0; i < pathHypermarket.length; ++i) {
             listHyper.add(new Hypermarket(pathHypermarket[i]));
-            md5id.put("/" + ImageHash.generate(listHyper.get(i).getSchema()) + ".jpg", listHyper.get(i).getId());
+            md5id.put("/" + listHyper.get(i).getMd5hash() + ".jpg", listHyper.get(i).getId());
         }
 
         final Hypermarket[] copyList = new Hypermarket[listHyper.size()];
         markets = new ArrayMapStructure<>(listHyper.toArray(copyList));
     }
 
+    @NotNull
     public static HypermarketHolder getInstance() {
         if (instance == null) {
             instance = new HypermarketHolder();
@@ -54,10 +56,7 @@ public class HypermarketHolder {
         return instance;
     }
 
-    public Hypermarket getMD5(final String ImadeHash) {
-        return markets.get(md5id.get(ImadeHash));
-    }
-
+    @Nullable
     public Hypermarket getClosest(final GeoPoint possition) {
         return markets.findClosest(possition);
     }
