@@ -36,7 +36,12 @@
             <version>4.1.1.4</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.robolectric</groupId>
+            <artifactId>robolectric</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
