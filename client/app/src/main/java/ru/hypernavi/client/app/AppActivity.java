@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 
@@ -168,26 +169,30 @@ public final class AppActivity extends Activity {
 
     private void extructJSON(final double lat, final double lon) {
         final String[] jString = new String[1];
-        final Thread secondary = new Thread(new Runnable() {
+        final ExecutorService service = Executors.newFixedThreadPool(1);
+        final Future<String> task = service.submit(new Callable<String>() {
+            @Nullable
             @Override
-            public void run() {
+            public String call() throws Exception {
                 try {
                     //final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schemainfo?lat="
                     //                                           + lat + "&lon=" + lon).openConnection();
                     final URLConnection myConnection = new URL("http://10.0.2.2:8080/schemainfo?lat="
-                                                               + lat + "&lon=" + lon).openConnection();
-                    jString[0] = IOUtils.toString(myConnection.getInputStream());
+                            + lat + "&lon=" + lon).openConnection();
+                    return IOUtils.toString(myConnection.getInputStream());
                 } catch (IOException e) {
                     LOG.warning(e.getMessage());
                     LOG.warning("Can't read string from internet");
+                    return null;
                 }
             }
         });
-        secondary.start();
         try {
-            secondary.join();
+            jString[0] = task.get();
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
         if (jString[0] == null) {
             Toast.makeText(AppActivity.this, "JSON string is null", Toast.LENGTH_SHORT).show();
