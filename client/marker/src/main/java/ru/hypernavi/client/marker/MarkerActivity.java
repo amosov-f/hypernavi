@@ -3,9 +3,6 @@ package ru.hypernavi.client.marker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -27,7 +24,7 @@ import ru.hypernavi.util.GeoPoint;
 public final class MarkerActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(MarkerActivity.class.getName());
 
-    private static final String SCHEME_PATH = "/file_not_found.jpg";
+    private static final String SCHEME_PATH = "/okey/okey_tallinskoe_shema_magazina_b.jpg";
     private static final int CIRCLE_RADIUS = 50;
 
     @Nullable
@@ -41,11 +38,7 @@ public final class MarkerActivity extends Activity {
 
         findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
-        //final Bitmap scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
-        final double lon = 31;
-        final double lat = 62;
-
-        final Bitmap scheme = extructScheme(lat, lon);
+        final Bitmap scheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(scheme);
@@ -104,8 +97,7 @@ public final class MarkerActivity extends Activity {
                 findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                 findViewById(R.id.button).setVisibility(View.INVISIBLE);
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                    new PositionUpdater(locationManager, imageView));
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new PositionUpdater(locationManager));
             }
         });
     }
@@ -117,12 +109,9 @@ public final class MarkerActivity extends Activity {
         private final LocationManager manager;
         @NotNull
         private final List<Location> locations = new ArrayList<>();
-        @NotNull
-        private final ImageView myView;
 
-        PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView) {
+        PositionUpdater(@NotNull final LocationManager manager) {
             this.manager = manager;
-            myView = imageView;
         }
 
         @Override
@@ -135,13 +124,6 @@ public final class MarkerActivity extends Activity {
             manager.removeUpdates(this);
 
             final GeoPoint geoPosition = average(locations);
-
-            final double lat = geoPosition.getLatitude();
-            final double lon = geoPosition.getLongitude();
-
-            final Bitmap scheme = extructScheme(lat, lon);
-
-            myView.setImageBitmap(scheme);
 
             findViewById(R.id.button).setVisibility(View.VISIBLE);
             findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
@@ -174,33 +156,6 @@ public final class MarkerActivity extends Activity {
             }
             return new GeoPoint(sumLat / locations.size(), sumLon / locations.size());
         }
-    }
-
-    private Bitmap extructScheme(final double lat, final double lon) {
-        final Bitmap[] scheme = {null};
-        final Thread secondary = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schema?lat="
-                                                               + lat + "&lon=" + lon).openConnection();
-                    scheme[0] = BitmapFactory.decodeStream(myConnection.getInputStream());
-                } catch (IOException e) {
-                    LOG.warning(e.getMessage());
-                    LOG.warning("Can't read from internet");
-                }
-            }
-        });
-        secondary.start();
-        try {
-            secondary.join();
-        } catch (InterruptedException e) {
-            LOG.warning(e.getMessage());
-        }
-        if (scheme[0] == null) {
-            scheme[0] = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
-        }
-        return  scheme[0];
     }
 }
 
