@@ -20,7 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.commons.HypermarketSerializer;
 import ru.hypernavi.core.Hypermarket;
 import ru.hypernavi.core.HypermarketHolder;
 import ru.hypernavi.util.GeoPoint;
