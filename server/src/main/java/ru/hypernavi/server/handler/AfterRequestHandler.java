@@ -47,7 +47,7 @@ public final class AfterRequestHandler extends AbstractLifeCycle implements Requ
                     .map(Long.class::cast)
                     .orElse(request.getTimeStamp());
             final long answerTime = System.currentTimeMillis() - realTimeStamp;
-            MDC.put(HttpTools.SERVICE, request.getAttribute(HttpTools.SERVICE));
+            MDC.put(HttpTools.SERVICE, n(request.getAttribute(HttpTools.SERVICE)));
             MDC.put("reqtimeMs", request.getTimeStamp());
             MDC.put("ip", n(request.getRemoteAddr()));
             MDC.put("anstime", answerTime);
