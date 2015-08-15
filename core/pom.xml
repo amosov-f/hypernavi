@@ -54,6 +54,10 @@
             <artifactId>google-api-client-util</artifactId>
             <version>1.2.3-alpha</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
