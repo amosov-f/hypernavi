@@ -2,6 +2,8 @@ package ru.hypernavi.core;
 
 import org.jetbrains.annotations.Nullable;
 
+
+import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
 
 /**

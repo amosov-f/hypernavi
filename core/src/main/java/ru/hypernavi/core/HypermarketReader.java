@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -28,33 +29,36 @@ public class HypermarketReader {
             hypermarketInfo = new JSONObject(jsonFile);
             LOG.info("Hypermarket loaded from " + path);
         } catch (IOException | JSONException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
-    @NotNull
-    public String getHash() {
-        final String hash;
+    public int getId() {
+        final int id;
         try {
-            hash = hypermarketInfo.getString("md5hash");
+            id = hypermarketInfo.getInt("id");
         } catch (JSONException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
-        return hash;
+        return id;
     }
-/*
+
     @NotNull
-    public byte[] getSchema() {
-        final byte[] result;
-        try {
-            final String pathScheme = "/okey/" + hypermarketInfo.getString("schemePath");
-            result = IOUtils.toByteArray(getClass().getResourceAsStream(pathScheme));
-        } catch (JSONException | IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return result;
+    public Hypermarket construct() {
+        return new Hypermarket(getId(), getCoordinate(), getAdress(), getType(), getUrl());
     }
-*/
+
+    @NotNull
+    public String getUrl() {
+        final String url;
+        try {
+            url = hypermarketInfo.getString("url");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return url;
+    }
+
     @NotNull
     public GeoPoint getCoordinate() {
         final double lat;
@@ -64,7 +68,7 @@ public class HypermarketReader {
             lat = hypermarketInfo.getDouble("latitude");
             lon = hypermarketInfo.getDouble("longitude");
         } catch (JSONException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
         return new GeoPoint(lat, lon);
     }
@@ -75,7 +79,7 @@ public class HypermarketReader {
         try {
             adress = hypermarketInfo.getString("adress");
         } catch (JSONException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         return adress;
@@ -87,7 +91,7 @@ public class HypermarketReader {
         try {
             type = hypermarketInfo.getString("type");
         } catch (JSONException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
         return type;
     }

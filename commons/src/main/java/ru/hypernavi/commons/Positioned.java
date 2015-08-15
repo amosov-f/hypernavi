@@ -1,4 +1,4 @@
-package ru.hypernavi.core;
+package ru.hypernavi.commons;
 
 import org.jetbrains.annotations.NotNull;
 

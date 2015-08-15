@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -40,8 +41,9 @@ public class HypermarketHolder {
 
         final List<Hypermarket> listHyper = new ArrayList<>();
         for (int i = 0; i < pathHypermarket.length; ++i) {
-            listHyper.add(new Hypermarket(pathHypermarket[i]));
-            md5id.put("/" + listHyper.get(i).getMd5hash() + ".jpg", listHyper.get(i).getId());
+            final HypermarketReader reader = new HypermarketReader(pathHypermarket[i]);
+            listHyper.add(reader.construct());
+            md5id.put(listHyper.get(i).getUrl(), listHyper.get(i).getId());
         }
 
         final Hypermarket[] copyList = new Hypermarket[listHyper.size()];

@@ -1,6 +1,7 @@
 package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.core.Hypermarket;
+import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.HypermarketSerializer;
 import ru.hypernavi.core.HypermarketHolder;
 import ru.hypernavi.util.GeoPoint;
 
@@ -57,40 +59,47 @@ public class SchemaInfoServlet extends AbstractHttpService {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.JSON_UTF_8.type());
-        final OutputStream out = response.getOutputStream();
-
         final List<Hypermarket> market = new ArrayList<>();
         market.add(bestHypernavi);
 
-        out.write(generateJSON(market, currentPosition).getBytes());
+        final String json = generateJSON(market, currentPosition);
+        if (json == null) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType(MediaType.JSON_UTF_8.type());
+        final OutputStream out = response.getOutputStream();
+        out.write(json.getBytes());
     }
 
     // TODO: take JSON to alone class
-    @NotNull
+    @Nullable
     private String generateJSON(final List<Hypermarket> market, final GeoPoint possition) {
         String answer;
         try {
             final JSONObject jsonResponse = new JSONObject();
             final JSONArray hypermarkets = new JSONArray();
             for (int i = 0; i < market.size(); ++i) {
-                final JSONObject obj = new JSONObject();
-                obj.put("URL", "http://localhost:8080/img/" + market.get(i).getMd5hash() + ".jpg");
-                obj.put("latitude", market.get(i).getLocation().getLatitude());
-                obj.put("longitude", market.get(i).getLocation().getLongitude());
-                obj.put("type", market.get(i).getType());
-                obj.put("adress", market.get(i).getAdress());
-                hypermarkets.put(obj);
-                //hypermarkets.put(HypermarketSerializer.createJSON(market.get(i)));
+                hypermarkets.put(HypermarketSerializer.serialize(market.get(i)));
             }
-            jsonResponse.put("hypermarkets", hypermarkets);
-            jsonResponse.put("lontitude", possition.getLongitude());
-            jsonResponse.put("latitude", possition.getLatitude());
-            jsonResponse.put("correct", true);
+
+            final JSONObject metainfo = new JSONObject();
+            final JSONObject data = new JSONObject();
+
+            metainfo.put("lontitude", possition.getLongitude());
+            metainfo.put("latitude", possition.getLatitude());
+            metainfo.put("iscorrect", true);
+
+            data.put("hypermarkets", hypermarkets);
+
+            jsonResponse.put("data", data);
+            jsonResponse.put("meta", metainfo);
+
             answer = jsonResponse.toString();
         } catch (JSONException e) {
-            answer = "{\"correct\":false}";
+            answer = null;
             LOG.warn("Can't create JSON responce. Request: Latitude = " + possition.getLatitude()
                     + " Longitude = " + possition.getLongitude() + "\n" + e.getMessage());
         }

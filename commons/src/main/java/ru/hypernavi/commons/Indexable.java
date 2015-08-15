@@ -1,4 +1,4 @@
-package ru.hypernavi.core;
+package ru.hypernavi.commons;
 
 /**
  * Created by Константин on 15.08.2015.

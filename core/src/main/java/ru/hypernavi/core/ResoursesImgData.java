@@ -27,11 +27,8 @@ public class ResoursesImgData implements ImgHolder {
             for (int i = 0; i < paths.length(); ++i) {
                 final String pathScheme = paths.getString(i);
                 final byte[] result = IOUtils.toByteArray(getClass().getResourceAsStream(pathScheme));
-          //      LOG.info(pathScheme);
-          //      LOG.info(ImageHash.generate(result));
                 md5Image.put("/" + ImageHash.generate(result) + ".jpg", result);
             }
-        //    LOG.info(md5Image.size());
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e.getMessage());
         }

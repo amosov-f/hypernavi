@@ -9,6 +9,8 @@ import java.util.*;
 import javafx.util.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
 
 /**
