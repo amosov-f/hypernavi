@@ -23,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.HypermarketSerializer;
+import ru.hypernavi.commons.InfoResponce;
+import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.core.HypermarketHolder;
 import ru.hypernavi.util.GeoPoint;
 
@@ -62,7 +64,7 @@ public class SchemaInfoServlet extends AbstractHttpService {
         final List<Hypermarket> market = new ArrayList<>();
         market.add(bestHypernavi);
 
-        final String json = generateJSON(market, currentPosition);
+        final JSONObject json = InfoResponceSerializer.serialize(new InfoResponce(market, currentPosition));
         if (json == null) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
@@ -71,38 +73,6 @@ public class SchemaInfoServlet extends AbstractHttpService {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.JSON_UTF_8.type());
         final OutputStream out = response.getOutputStream();
-        out.write(json.getBytes());
-    }
-
-    // TODO: take JSON to alone class
-    @Nullable
-    private String generateJSON(final List<Hypermarket> market, final GeoPoint possition) {
-        String answer;
-        try {
-            final JSONObject jsonResponse = new JSONObject();
-            final JSONArray hypermarkets = new JSONArray();
-            for (int i = 0; i < market.size(); ++i) {
-                hypermarkets.put(HypermarketSerializer.serialize(market.get(i)));
-            }
-
-            final JSONObject metainfo = new JSONObject();
-            final JSONObject data = new JSONObject();
-
-            metainfo.put("lontitude", possition.getLongitude());
-            metainfo.put("latitude", possition.getLatitude());
-            metainfo.put("iscorrect", true);
-
-            data.put("hypermarkets", hypermarkets);
-
-            jsonResponse.put("data", data);
-            jsonResponse.put("meta", metainfo);
-
-            answer = jsonResponse.toString();
-        } catch (JSONException e) {
-            answer = null;
-            LOG.warn("Can't create JSON responce. Request: Latitude = " + possition.getLatitude()
-                    + " Longitude = " + possition.getLongitude() + "\n" + e.getMessage());
-        }
-        return answer;
+        out.write(json.toString().getBytes());
     }
 }
