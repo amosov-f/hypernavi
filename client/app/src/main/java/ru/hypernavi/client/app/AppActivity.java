@@ -45,28 +45,15 @@ public final class AppActivity extends Activity {
     private int displayWidth;
     private int displayHeight;
 
-    @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-
+    private void getParametersDisplay() {
         final Display display = getWindowManager().getDefaultDisplay();
         final Point displaySize = new Point();
         display.getSize(displaySize);
         displayWidth = displaySize.x;
         displayHeight = displaySize.y;
+    }
 
-        LOG.info("onCreate start");
-
-        originScheme = loadDefaultScheme();
-
-        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageBitmap(originScheme);
-
-        LOG.info("Image XScale " + imageView.getScaleX());
-        LOG.info("Display width " + displayWidth);
-        LOG.info("Display high " + displayHeight);
-
+    private void registerZoomListeners(final ImageView imageView) {
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
 
         final ZoomInClickListener zoomInClickListener = new ZoomInClickListener(imageView);
@@ -74,19 +61,49 @@ public final class AppActivity extends Activity {
 
         zoom.setOnZoomInClickListener(zoomInClickListener);
         zoom.setOnZoomOutClickListener(zoomOutClickListener);
+    }
 
+    private void registerTouchListeners(final ImageView imageView) {
         final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(displayWidth, displayHeight, imageView);
-
         imageView.setOnTouchListener(viewOnTouchListener);
+    }
 
+    private void registerGPSListeners(final ImageView imageView) {
         final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
+            LOG.warning("No GPS module finded.");
             return;
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
                 new PositionUpdater(locationManager, imageView));
+    }
+
+
+    private void drawDisplayImage(final ImageView imageView) {
+        originScheme = loadDefaultScheme();
+        imageView.setImageBitmap(originScheme);
+        LOG.info("Image XScale " + imageView.getScaleX());
+        LOG.info("Display width " + displayWidth);
+        LOG.info("Display high " + displayHeight);
+    }
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        LOG.info("onCreate start");
+
+        setContentView(R.layout.main);
+        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
+
+        getParametersDisplay();
+        drawDisplayImage(imageView);
+
+        registerZoomListeners(imageView);
+        registerTouchListeners(imageView);
+        registerGPSListeners(imageView);
     }
 
     private final class PositionUpdater implements LocationListener {
@@ -124,26 +141,16 @@ public final class AppActivity extends Activity {
             if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
                 originScheme = loadDefaultScheme();
                 LOG.warning("No markets in responce.");
-            }
-            else {
-                final String schemURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
-                extructScheme(schemURL);
+            } else {
+                final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
+                extructScheme(schemaURL);
             }
             myView.setImageBitmap(originScheme);
 
             LOG.info("GeoPosition " + geoPosition);
             Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
 
-            final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
-                LOG.warning("No GPS module finded.");
-                return;
-            }
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
-                    new PositionUpdater(locationManager, myView));
-
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0, new PositionUpdater(manager, myView));
         }
 
         @Override
@@ -182,6 +189,7 @@ public final class AppActivity extends Activity {
         return properties;
     }
 
+    // TODO: move extructor to another module
     private void extructJSON(final double lat, final double lon) {
         String hypermarketsJSON;
         final ExecutorService service = Executors.newFixedThreadPool(1);
