@@ -29,6 +29,8 @@ import android.widget.ZoomControls;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.hypernavi.commons.InfoResponce;
+import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
@@ -38,6 +40,7 @@ public final class AppActivity extends Activity {
     private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
 
     private Bitmap originScheme;
+    @Nullable
     private JSONObject root;
     private int displayWidth;
     private int displayHeight;
@@ -55,12 +58,12 @@ public final class AppActivity extends Activity {
 
         LOG.info("onCreate start");
 
-        originScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
+        originScheme = loadDefaultScheme();
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(originScheme);
 
-        LOG.info( "Image XScale " + imageView.getScaleX());
+        LOG.info("Image XScale " + imageView.getScaleX());
         LOG.info("Display width " + displayWidth);
         LOG.info("Display high " + displayHeight);
 
@@ -83,7 +86,7 @@ public final class AppActivity extends Activity {
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
-            new PositionUpdater(locationManager, imageView));
+                new PositionUpdater(locationManager, imageView));
     }
 
     private final class PositionUpdater implements LocationListener {
@@ -117,20 +120,15 @@ public final class AppActivity extends Activity {
 
             extructJSON(lat, lon);
 
-            try {
-                // for .net server
-                //final String schemURL = root.getJSONArray("hypermarkets").getJSONObject(0).getString("URL");
-
-                // for localhost
-                final double longitude = root.getJSONArray("hypermarkets").getJSONObject(0).getDouble("longitude");
-                final double latitude = root.getJSONArray("hypermarkets").getJSONObject(0).getDouble("latitude");
-                final String schemURL = "http://10.0.2.2:8080/schema?lon="+longitude+"&lat="+latitude;
-
-                extructScheme(schemURL);
-            } catch (JSONException e) {
-                Toast.makeText(AppActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            final InfoResponce responce = InfoResponceSerializer.deserialize(root);
+            if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
+                originScheme = loadDefaultScheme();
+                LOG.warning("No markets in responce.");
             }
-
+            else {
+                final String schemURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
+                extructScheme(schemURL);
+            }
             myView.setImageBitmap(originScheme);
 
             LOG.info("GeoPosition " + geoPosition);
@@ -139,11 +137,12 @@ public final class AppActivity extends Activity {
             final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
+                LOG.warning("No GPS module finded.");
                 return;
             }
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
-                new PositionUpdater(locationManager, myView));
+                    new PositionUpdater(locationManager, myView));
 
         }
 
@@ -191,8 +190,6 @@ public final class AppActivity extends Activity {
             @Override
             public String call() throws Exception {
                 try {
-                    //final URLConnection myConnection = new URL("http://hypernavi.cloudapp.net/schemainfo?lat="
-                    //                                           + lat + "&lon=" + lon).openConnection();
                     final URLConnection myConnection = new URL("http://10.0.2.2:8080/schemainfo?lat="
                             + lat + "&lon=" + lon).openConnection();
                     return IOUtils.toString(myConnection.getInputStream());
@@ -209,42 +206,60 @@ public final class AppActivity extends Activity {
             LOG.warning(e.getMessage());
             hypermarketsJSON = null;
         } catch (ExecutionException e) {
+            LOG.warning("Oops.");
             throw new RuntimeException(e);
         }
         if (hypermarketsJSON == null) {
             Toast.makeText(AppActivity.this, "JSON string is null", Toast.LENGTH_SHORT).show();
             LOG.warning("JSON string is null");
-        } else {
-            try {
-                root = new JSONObject(hypermarketsJSON);
-                LOG.info(root.toString());
-            } catch (JSONException e) {
-                LOG.warning(e.getMessage());
-            }
+            return;
+        }
+        try {
+            root = new JSONObject(hypermarketsJSON);
+            LOG.info(root.toString());
+        } catch (JSONException e) {
+            LOG.warning(e.getMessage());
+            root = null;
         }
     }
 
+    @NotNull
+    private Bitmap loadDefaultScheme() {
+        final Bitmap defaultScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
+        if (defaultScheme == null) {
+            throw new RuntimeException("No default scheme founded");
+        }
+        return defaultScheme;
+    }
+
     private void extructScheme(final String currentSchemeURL) {
-        final Thread secondary = new Thread(new Runnable() {
+        final ExecutorService service = Executors.newFixedThreadPool(1);
+        final Future<Bitmap> task = service.submit(new Callable<Bitmap>() {
+            @Nullable
             @Override
-            public void run() {
+            public Bitmap call() throws Exception {
                 try {
                     final URLConnection myConnection = new URL(currentSchemeURL).openConnection();
-                    originScheme = BitmapFactory.decodeStream(myConnection.getInputStream());
+                    return BitmapFactory.decodeStream(myConnection.getInputStream());
                 } catch (IOException e) {
                     LOG.warning(e.getMessage());
                     LOG.warning("Can't read from internet");
+                    return null;
                 }
+
             }
         });
-        secondary.start();
+
         try {
-            secondary.join();
+            originScheme = task.get();
+            if (originScheme == null) {
+                originScheme = loadDefaultScheme();
+            }
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
-        }
-        if (originScheme == null) {
-            originScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
+            originScheme = loadDefaultScheme();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 

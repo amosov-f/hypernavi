@@ -36,7 +36,7 @@ public enum InfoResponceSerializer {
             final JSONObject metainfo = new JSONObject();
             final JSONObject data = new JSONObject();
 
-            metainfo.put("lontitude", responce.getLocation().getLongitude());
+            metainfo.put("longitude", responce.getLocation().getLongitude());
             metainfo.put("latitude", responce.getLocation().getLatitude());
             metainfo.put("iscorrect", true);
 
