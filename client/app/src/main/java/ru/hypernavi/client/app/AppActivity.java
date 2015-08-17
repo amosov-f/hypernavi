@@ -4,11 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
+
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
+import ru.hypernavi.commons.RequestString;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
@@ -100,7 +104,7 @@ public final class AppActivity extends Activity {
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
-                new PositionUpdater(locationManager, imageView));
+            new PositionUpdater(locationManager, imageView));
     }
 
 
@@ -141,8 +145,13 @@ public final class AppActivity extends Activity {
             final double lat = geoPosition.getLatitude();
             final double lon = geoPosition.getLongitude();
             // TODO
-            final String infoURL = "http://10.0.2.2:8080/schemainfo";
-            root = extructJSON(lat, lon, infoURL);
+            try {
+                final String infoURL = "http://10.0.2.2:8080/schemainfo";
+                root = extructJSON(lat, lon, infoURL);
+            } catch (MalformedURLException e) {
+                LOG.warning("can't construct URL for info");
+                throw new RuntimeException(e);
+            }
 
             final InfoResponce responce = InfoResponceSerializer.deserialize(root);
             if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
@@ -197,10 +206,11 @@ public final class AppActivity extends Activity {
     }
 
     // TODO: move extructor to another module
-    private JSONObject extructJSON(final double lat, final double lon, final String infoURL) {
+    private JSONObject extructJSON(final double lat, final double lon, final String infoURL) throws MalformedURLException {
         String hypermarketsJSON;
-        final RequestToJSON requestToJSON = new RequestToJSON(lat, lon, infoURL);
-        final Future<String> task = executorService.submit(requestToJSON);
+        final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
+        final RequestString requestString = new RequestString(requestURL);
+        final Future<String> task = executorService.submit(requestString);
         try {
             hypermarketsJSON = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -243,9 +253,7 @@ public final class AppActivity extends Activity {
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
             return loadDefaultScheme();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
+        } catch (ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);
         }
     }
