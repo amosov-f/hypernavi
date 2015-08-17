@@ -92,72 +92,21 @@ public class ViewOnTouchListener implements View.OnTouchListener {
                 int scrollByY = (int) (downY - currentY);
 
                 // scrolling to left side of image (pic moving to the right)
-                scrollByX = newScroll(currentX > downX, totalX > maxLeft, totalX, maxLeft, scrollByX);
-                totalX = newTotal(currentX > downX, totalX > maxLeft, totalX, maxLeft, scrollByX);
-                /*if (currentX > downX) {
-                    if (totalX == maxLeft) {
-                        scrollByX = 0;
-                    }
-                    if (totalX > maxLeft) {
-                        totalX = totalX + scrollByX;
-                    }
-                    if (totalX < maxLeft) {
-                        scrollByX = maxLeft - (totalX - scrollByX);
-                        totalX = maxLeft;
-                    }
-                }*/
+                scrollByX = newScroll(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
+                totalX = newTotal(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
 
                 // scrolling to right side of image (pic moving to the left)
-                scrollByX = newScroll(currentX < downX, totalX < maxRight, totalX, maxRight, scrollByX);
-                totalX = newTotal(currentX < downX, totalX < maxRight, totalX, maxRight, scrollByX);
-                /*
-                if (currentX < downX) {
-                    if (totalX == maxRight) {
-                        scrollByX = 0;
-                    }
-                    if (totalX < maxRight) {
-                        totalX = totalX + scrollByX;
-                    }
-                    if (totalX > maxRight) {
-                        scrollByX = maxRight - (totalX - scrollByX);
-                        totalX = maxRight;
-                    }
-                }
-                */
-                // scrolling to top of image (pic moving to the bottom)
-                scrollByY = newScroll(currentY > downY, totalY > maxTop, totalY, maxTop, scrollByY);
-                totalY = newTotal(currentY > downY, totalY > maxTop, totalY, maxTop, scrollByY);
+                scrollByX = newScroll(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
+                totalX = newTotal(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
 
-                /*if (currentY > downY) {
-                    if (totalY == maxTop) {
-                        scrollByY = 0;
-                    }
-                    if (totalY > maxTop) {
-                        totalY = totalY + scrollByY;
-                    }
-                    if (totalY < maxTop) {
-                        scrollByY = maxTop - (totalY - scrollByY);
-                        totalY = maxTop;
-                    }
-                }*/
+                // scrolling to top of image (pic moving to the bottom)
+                scrollByY = newScroll(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
+                totalY = newTotal(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
 
                 // scrolling to bottom of image (pic moving to the top)
-                scrollByY = newScroll(currentY < downY, totalY < maxBottom, totalY, maxBottom, scrollByY);
-                totalY = newTotal(currentY < downY, totalY < maxBottom, totalY, maxBottom, scrollByY);
-                /*
-                if (currentY < downY) {
-                    if (totalY == maxBottom) {
-                        scrollByY = 0;
-                    }
-                    if (totalY < maxBottom) {
-                        totalY = totalY + scrollByY;
-                    }
-                    if (totalY > maxBottom) {
-                        scrollByY = maxBottom - (totalY - scrollByY);
-                        totalY = maxBottom;
-                    }
-                }
-                */
+                scrollByY = newScroll(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
+                totalY = newTotal(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
+
                 myView.scrollBy(scrollByX, scrollByY);
                 downX = currentX;
                 downY = currentY;
