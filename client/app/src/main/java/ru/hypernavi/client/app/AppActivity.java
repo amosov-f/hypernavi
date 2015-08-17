@@ -142,7 +142,7 @@ public final class AppActivity extends Activity {
             final double lon = geoPosition.getLongitude();
             // TODO
             final String infoURL = "http://10.0.2.2:8080/schemainfo";
-            extructJSON(lat, lon, infoURL);
+            root = extructJSON(lat, lon, infoURL);
 
             final InfoResponce responce = InfoResponceSerializer.deserialize(root);
             if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
@@ -150,7 +150,7 @@ public final class AppActivity extends Activity {
                 LOG.warning("No markets in responce.");
             } else {
                 final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
-                extructScheme(schemaURL);
+                originScheme = extructScheme(schemaURL);
             }
             myView.setImageBitmap(originScheme);
 
@@ -197,7 +197,7 @@ public final class AppActivity extends Activity {
     }
 
     // TODO: move extructor to another module
-    private void extructJSON(final double lat, final double lon, final String infoURL) {
+    private JSONObject extructJSON(final double lat, final double lon, final String infoURL) {
         String hypermarketsJSON;
         final RequestToJSON requestToJSON = new RequestToJSON(lat, lon, infoURL);
         final Future<String> task = executorService.submit(requestToJSON);
@@ -215,14 +215,13 @@ public final class AppActivity extends Activity {
         if (hypermarketsJSON == null) {
             Toast.makeText(AppActivity.this, "JSON string is null", Toast.LENGTH_SHORT).show();
             LOG.warning("JSON string is null");
-            return;
+            return null;
         }
         try {
-            root = new JSONObject(hypermarketsJSON);
-            LOG.info(root.toString());
+            return new JSONObject(hypermarketsJSON);
         } catch (JSONException e) {
             LOG.warning(e.getMessage());
-            root = null;
+            return null;
         }
     }
 
@@ -235,19 +234,18 @@ public final class AppActivity extends Activity {
         return defaultScheme;
     }
 
-    private void extructScheme(final String currentSchemeURL) {
+    private Bitmap extructScheme(final String currentSchemeURL) {
         final RequestToScheme requestToScheme = new RequestToScheme(currentSchemeURL);
         final Future<Bitmap> task = executorService.submit(requestToScheme);
 
         try {
-            originScheme = task.get();
-            if (originScheme == null) {
-                originScheme = loadDefaultScheme();
-            }
+            return task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
-            originScheme = loadDefaultScheme();
+            return loadDefaultScheme();
         } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
     }
