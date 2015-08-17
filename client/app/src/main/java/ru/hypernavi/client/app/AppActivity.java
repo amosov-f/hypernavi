@@ -4,14 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
-
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +23,6 @@ import android.view.Display;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.InfoResponce;
@@ -37,13 +33,40 @@ public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
 
     private static final String SCHEME_PATH = "/file_not_found.jpg";
+    private static final String PROPERTIES_SCHEME = "/app-common.properties";
     private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
+    private static final long MAX_TIME_OUT = 1000L;
 
     private Bitmap originScheme;
     @Nullable
     private JSONObject root;
     private int displayWidth;
     private int displayHeight;
+
+    private int nThread;
+    private ExecutorService executorService;
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        LOG.info("onCreate start");
+
+        setContentView(R.layout.main);
+
+        final Properties properties = loadProperties(PROPERTIES_SCHEME);
+        nThread = Integer.parseInt(properties.getProperty("app.request.pool.size"));
+        executorService = Executors.newFixedThreadPool(nThread);
+
+        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
+
+        getParametersDisplay();
+        drawDisplayImage(imageView);
+
+        registerZoomListeners(imageView);
+        registerTouchListeners(imageView);
+        registerGPSListeners(imageView);
+    }
 
     private void getParametersDisplay() {
         final Display display = getWindowManager().getDefaultDisplay();
@@ -89,23 +112,6 @@ public final class AppActivity extends Activity {
         LOG.info("Display high " + displayHeight);
     }
 
-    @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        LOG.info("onCreate start");
-
-        setContentView(R.layout.main);
-        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-
-        getParametersDisplay();
-        drawDisplayImage(imageView);
-
-        registerZoomListeners(imageView);
-        registerTouchListeners(imageView);
-        registerGPSListeners(imageView);
-    }
-
     private final class PositionUpdater implements LocationListener {
         private static final int N_LOCATIONS = 3;
 
@@ -134,8 +140,9 @@ public final class AppActivity extends Activity {
 
             final double lat = geoPosition.getLatitude();
             final double lon = geoPosition.getLongitude();
-
-            extructJSON(lat, lon);
+            // TODO
+            final String infoURL = "http://10.0.2.2:8080/schemainfo";
+            extructJSON(lat, lon, infoURL);
 
             final InfoResponce responce = InfoResponceSerializer.deserialize(root);
             if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
@@ -190,31 +197,19 @@ public final class AppActivity extends Activity {
     }
 
     // TODO: move extructor to another module
-    private void extructJSON(final double lat, final double lon) {
+    private void extructJSON(final double lat, final double lon, final String infoURL) {
         String hypermarketsJSON;
-        final ExecutorService service = Executors.newFixedThreadPool(1);
-        final Future<String> task = service.submit(new Callable<String>() {
-            @Nullable
-            @Override
-            public String call() throws Exception {
-                try {
-                    final URLConnection myConnection = new URL("http://10.0.2.2:8080/schemainfo?lat="
-                            + lat + "&lon=" + lon).openConnection();
-                    return IOUtils.toString(myConnection.getInputStream());
-                } catch (IOException e) {
-                    LOG.warning(e.getMessage());
-                    LOG.warning("Can't read string from internet");
-                    return null;
-                }
-            }
-        });
+        final RequestToJSON requestToJSON = new RequestToJSON(lat, lon, infoURL);
+        final Future<String> task = executorService.submit(requestToJSON);
         try {
-            hypermarketsJSON = task.get();
+            hypermarketsJSON = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
             hypermarketsJSON = null;
         } catch (ExecutionException e) {
             LOG.warning("Oops.");
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
         if (hypermarketsJSON == null) {
@@ -241,22 +236,8 @@ public final class AppActivity extends Activity {
     }
 
     private void extructScheme(final String currentSchemeURL) {
-        final ExecutorService service = Executors.newFixedThreadPool(1);
-        final Future<Bitmap> task = service.submit(new Callable<Bitmap>() {
-            @Nullable
-            @Override
-            public Bitmap call() throws Exception {
-                try {
-                    final URLConnection myConnection = new URL(currentSchemeURL).openConnection();
-                    return BitmapFactory.decodeStream(myConnection.getInputStream());
-                } catch (IOException e) {
-                    LOG.warning(e.getMessage());
-                    LOG.warning("Can't read from internet");
-                    return null;
-                }
-
-            }
-        });
+        final RequestToScheme requestToScheme = new RequestToScheme(currentSchemeURL);
+        final Future<Bitmap> task = executorService.submit(requestToScheme);
 
         try {
             originScheme = task.get();
