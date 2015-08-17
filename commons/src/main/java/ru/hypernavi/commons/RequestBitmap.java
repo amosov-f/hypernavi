@@ -1,9 +1,8 @@
-package ru.hypernavi.client.app;
+package ru.hypernavi.commons;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.Callable;
@@ -16,18 +15,12 @@ import android.graphics.BitmapFactory;
 /**
  * Created by Acer on 15.08.2015.
  */
-public class RequestToScheme implements Callable<Bitmap> {
-    private static final Logger LOG = Logger.getLogger(RequestToScheme.class.getName());
+public class RequestBitmap implements Callable<Bitmap> {
+    private static final Logger LOG = Logger.getLogger(RequestBitmap.class.getName());
     private URL myUrl;
 
-    public RequestToScheme(final String infoURL) {
-        myUrl = null;
-        try {
-            myUrl = new URL(infoURL);
-        } catch (MalformedURLException e) {
-            LOG.warning("can't construct URL for scheme");
-            //e.printStackTrace();
-        }
+    public RequestBitmap(final URL url) {
+        myUrl = url;
     }
 
     @Nullable

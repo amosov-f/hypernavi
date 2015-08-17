@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
+import ru.hypernavi.commons.RequestBitmap;
 import ru.hypernavi.commons.RequestString;
 import ru.hypernavi.util.GeoPoint;
 
@@ -144,7 +145,6 @@ public final class AppActivity extends Activity {
 
             final double lat = geoPosition.getLatitude();
             final double lon = geoPosition.getLongitude();
-            // TODO
             try {
                 final String infoURL = "http://10.0.2.2:8080/schemainfo";
                 root = extructJSON(lat, lon, infoURL);
@@ -159,7 +159,11 @@ public final class AppActivity extends Activity {
                 LOG.warning("No markets in responce.");
             } else {
                 final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
-                originScheme = extructScheme(schemaURL);
+                try {
+                    originScheme = extructScheme(schemaURL);
+                } catch (MalformedURLException e) {
+                    LOG.warning("Can't construct url for scheme");
+                }
             }
             myView.setImageBitmap(originScheme);
 
@@ -244,9 +248,9 @@ public final class AppActivity extends Activity {
         return defaultScheme;
     }
 
-    private Bitmap extructScheme(final String currentSchemeURL) {
-        final RequestToScheme requestToScheme = new RequestToScheme(currentSchemeURL);
-        final Future<Bitmap> task = executorService.submit(requestToScheme);
+    private Bitmap extructScheme(final String currentSchemeURL) throws MalformedURLException {
+        final RequestBitmap requestBitmap = new RequestBitmap(new URL(currentSchemeURL));
+        final Future<Bitmap> task = executorService.submit(requestBitmap);
 
         try {
             return task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);

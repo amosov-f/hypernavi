@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * Created by Acer on 15.08.2015.
  */
+//TODO: check and correct nullPointerException
 public class RequestString implements Callable<String> {
     private static final Logger LOG = Logger.getLogger(RequestString.class.getName());
     private final URL myUrl;
