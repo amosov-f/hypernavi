@@ -2,13 +2,14 @@ package ru.hypernavi.client.app;
 
 import java.util.logging.Logger;
 
+
 import android.view.View;
 import android.widget.ImageView;
 
 /**
  * Created by Acer on 14.08.2015.
  */
-public class ZoomInClickListener implements View.OnClickListener{
+public class ZoomInClickListener implements View.OnClickListener {
     private static final Logger LOG = Logger.getLogger(ZoomInClickListener.class.getName());
     private final ImageView myView;
 

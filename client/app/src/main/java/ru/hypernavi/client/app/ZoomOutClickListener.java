@@ -2,6 +2,7 @@ package ru.hypernavi.client.app;
 
 import java.util.logging.Logger;
 
+
 import android.view.View;
 import android.widget.ImageView;
 

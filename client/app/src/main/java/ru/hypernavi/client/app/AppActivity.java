@@ -270,12 +270,4 @@ public final class AppActivity extends Activity {
             throw new RuntimeException(e);
         }
     }
-
-    private int getMaxXScroll() {
-        return Math.abs((originScheme.getWidth() / 2) - (displayWidth / 2));
-    }
-
-    private int getMaxYScroll() {
-        return Math.abs((originScheme.getHeight() / 2) - (displayHeight / 2));
-    }
 }
