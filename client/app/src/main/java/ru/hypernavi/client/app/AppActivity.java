@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
@@ -23,6 +24,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Display;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
@@ -40,7 +42,7 @@ public final class AppActivity extends Activity {
     private static final String SCHEME_PATH = "/file_not_found.jpg";
     private static final String PROPERTIES_SCHEME = "/app-common.properties";
     private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
-    private static final long MAX_TIME_OUT = 1000L;
+    private static final long MAX_TIME_OUT = 5000L;
 
     private Bitmap originScheme;
     @Nullable
@@ -50,6 +52,9 @@ public final class AppActivity extends Activity {
 
     private int nThread;
     private ExecutorService executorService;
+
+    private LocationManager locationManager;
+    private Long timeCorrection;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -68,9 +73,9 @@ public final class AppActivity extends Activity {
         getParametersDisplay();
         drawDisplayImage(imageView);
 
+        registerGPSListeners(imageView);
         registerZoomListeners(imageView);
         registerTouchListeners(imageView);
-        registerGPSListeners(imageView);
     }
 
     private void getParametersDisplay() {
@@ -91,21 +96,32 @@ public final class AppActivity extends Activity {
         zoom.setOnZoomOutClickListener(zoomOutClickListener);
     }
 
+    private void registerBottonListener(final LocationManager locationManager, final ImageView imageView) {
+        final Button button = (Button) findViewById(R.id.button);
+
+        final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager,
+            imageView, timeCorrection, this);
+        button.setOnClickListener(buttonOnClickListener);
+    }
+
     private void registerTouchListeners(final ImageView imageView) {
         final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(displayWidth, displayHeight, imageView);
         imageView.setOnTouchListener(viewOnTouchListener);
     }
 
+    public void sendRequest(final ImageView imageView) {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
+            new PositionUpdater(locationManager, imageView));
+    }
+
     private void registerGPSListeners(final ImageView imageView) {
-        final LocationManager locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+        locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
             LOG.warning("No GPS module finded.");
             return;
         }
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
-            new PositionUpdater(locationManager, imageView));
+        sendRequest(imageView);
     }
 
 
@@ -134,6 +150,10 @@ public final class AppActivity extends Activity {
 
         @Override
         public void onLocationChanged(@NotNull final Location location) {
+            if (timeCorrection == null) {
+                timeCorrection = (new Date()).getTime() - location.getTime();
+                registerBottonListener(manager, myView);
+            }
             LOG.info("onLocationChanged");
             locations.add(location);
             if (locations.size() != N_LOCATIONS) {
@@ -162,15 +182,13 @@ public final class AppActivity extends Activity {
                 try {
                     originScheme = extructScheme(schemaURL);
                 } catch (MalformedURLException e) {
-                    LOG.warning("Can't construct url for scheme");
+                    LOG.warning("Can't construct url for scheme. " + e.getMessage());
                 }
             }
             myView.setImageBitmap(originScheme);
 
             LOG.info("GeoPosition " + geoPosition);
             Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
-
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0, new PositionUpdater(manager, myView));
         }
 
         @Override

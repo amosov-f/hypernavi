@@ -13,10 +13,18 @@
                   android:layout_weight="1.17" android:layout_gravity="center_horizontal"
                   android:layout_alignParentTop="true" android:layout_alignParentLeft="true" android:layout_alignParentStart="true">
     </ZoomControls>
-           <!-- <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-            </RelativeLayout> -->
+    <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="update position"
+            android:id="@+id/button"
+            android:layout_alignBottom="@+id/zoomControls1" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    <!-- <RelativeLayout
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
+     </RelativeLayout> -->
 </RelativeLayout>
 
 
