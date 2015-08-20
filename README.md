@@ -4,7 +4,7 @@ Hypermarket Navigator
 ------
 
 ###Build status
-* [HyperNavi -- Release to Dev] (http://hypernavi.cloudapp.net:8111/viewLog.html?buildTypeId=Hypernavi_Build&buildId=lastFinished) ![report status](http://hypernavi.cloudapp.net:8111/app/rest/builds/buildType:Hypernavi_Build/statusIcon)
+* [HyperNavi -- Release to Dev] (http://hypernavi.net:8111/viewLog.html?buildTypeId=Hypernavi_ReleaseToDev&buildId=lastFinished) ![report status](http://hypernavi.net:8111/app/rest/builds/buildType:Hypernavi_Build/statusIcon)
 
 ###About
 
@@ -22,7 +22,9 @@ In `Project Structure`,
 
 1. Add JDK 1.8 and Android SDK 22 to `SDKs` in `Platform Settings`
 2. Set `Project SDK` to JDK 1.8 and `Project language level` to 8 in `Project` tab
-3. Set `Module SDK` to Android SDK 22 for `app` and `marker` modules (see `Dependencies` in `Modules` tab)
+3. Set `Module SDK` to Android SDK 22 for `client`, `app` and `marker` modules (see `Dependencies` in `Modules` tab)
+
+After, run `Run Tests [All]` configuration
 
 ###How to run server on local machine
 
