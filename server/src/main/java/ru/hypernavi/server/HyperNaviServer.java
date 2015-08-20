@@ -99,7 +99,6 @@ public final class HyperNaviServer {
 
         try {
             server.start();
-            throw new RuntimeException("Pizza!");
         } catch (Exception e) {
             LOG.fatal("Server doesn't started on port " + port + "!", e);
             System.exit(0);
