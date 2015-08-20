@@ -4,7 +4,7 @@ Hypermarket Navigator
 ------
 
 ###Build status
-* [HyperNavi -- Release to Dev] (http://hypernavi.net:8111/viewLog.html?buildTypeId=Hypernavi_ReleaseToDev&buildId=lastFinished) ![report status](http://hypernavi.net:8111/app/rest/builds/buildType:Hypernavi_Build/statusIcon)
+* [HyperNavi -- Release to Dev] (http://hypernavi.net:8111/viewLog.html?buildTypeId=Hypernavi_ReleaseToDev&buildId=lastFinished) ![report status](http://hypernavi.net:8111/app/rest/builds/buildType:Hypernavi_ReleaseToDev/statusIcon)
 
 ###About
 
