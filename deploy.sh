@@ -9,7 +9,7 @@ nohup java -jar ~/${FILENAME} -port 80 -cfg /common.properties /test.properties 
 
 LOADED=-1
 ATTEMPTS=3
-while [ ${LOADED} -ne 0 && ${ATTEMPTS} -gt 0 ]; do
+while [ ${LOADED} -ne 0 ] && [ ${ATTEMPTS} -gt 0 ]; do
 	sleep 30
 	nc -z -w 1 ${HOST} 80
 	LOADED=$?
