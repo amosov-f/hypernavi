@@ -8,7 +8,7 @@ mv -v server/target/hypernavi-server-jar-with-dependencies.jar ~/${FILENAME}
 nohup java -jar ~/${FILENAME} -port 80 -cfg /common.properties /test.properties -logcfg /log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
 
 LOADED=-1
-ATTEMPTS=10
+ATTEMPTS=3
 while [[ ${LOADED} -ne 0 && ${ATTEMPTS} -gt 0 ]]; do
 	sleep 30
 	nc -z -w 1 ${HOST} 80
