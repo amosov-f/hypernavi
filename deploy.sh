@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 HOST=hypernavi.net
 FILENAME=hypernavi-dev-`stat -c %Y server/target/hypernavi-server-jar-with-dependencies.jar`.jar
