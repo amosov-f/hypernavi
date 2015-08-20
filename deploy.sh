@@ -9,14 +9,14 @@ nohup java -jar ~/${FILENAME} -port 80 -cfg /common.properties /test.properties 
 
 LOADED=-1
 ATTEMPTS=3
-while [[ ${LOADED} -ne 0 && ${ATTEMPTS} -gt 0 ]]; do
+while [ ${LOADED} -ne 0 && ${ATTEMPTS} -gt 0 ]; do
 	sleep 30
 	nc -z -w 1 ${HOST} 80
 	LOADED=$?
 	ATTEMPTS=$(( ATTEMPTS-1 ))
 done
 
-if [[ ${LOADED} -ne 0 ]]; then
+if [ ${LOADED} -ne 0 ]; then
 	echo "Server is not responding!"
 	echo "##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
 	exit 1
