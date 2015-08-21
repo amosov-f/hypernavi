@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -48,7 +49,36 @@ public final class HyperNaviServer {
         addOption(Option.builder(OPT_LOG_DIR).hasArg().desc("directory for logs").build());
     }};
 
-    private HyperNaviServer() {
+    @NotNull
+    private final Server server;
+
+    HyperNaviServer(final int port, @NotNull final Properties properties) {
+        final HandlerCollection handlers = new HandlerCollection();
+        handlers.addHandler(new BeforeRequestHandler());
+        handlers.addHandler(servlets(properties));
+        final RequestLogHandler requestLogHandler = new RequestLogHandler();
+        requestLogHandler.setRequestLog(new AfterRequestHandler());
+        handlers.addHandler(requestLogHandler);
+        server = new Server(port);
+        server.setHandler(handlers);
+    }
+
+
+    void start() throws Exception {
+        server.start();
+        LOG.info("Server started on port " + getPort() + "!");
+    }
+
+    void stop() {
+        try {
+            server.stop();
+        } catch (Exception e) {
+            LOG.error("Exception has been thrown while trying to stop Mobile Search Server", e);
+        }
+    }
+
+    private int getPort() {
+        return ((ServerConnector) server.getConnectors()[0]).getLocalPort();
     }
 
     @NotNull
@@ -88,22 +118,12 @@ public final class HyperNaviServer {
         Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
         DOMConfigurator.configure(HyperNaviServer.class.getResource(cmd.getOptionValue(OPT_LOG_CFG)));
 
-        final HandlerCollection handlers = new HandlerCollection();
-        handlers.addHandler(new BeforeRequestHandler());
-        handlers.addHandler(servlets(properties));
-        final RequestLogHandler requestLogHandler = new RequestLogHandler();
-        requestLogHandler.setRequestLog(new AfterRequestHandler());
-        handlers.addHandler(requestLogHandler);
-        final Server server = new Server(port);
-        server.setHandler(handlers);
-
+        final HyperNaviServer server = new HyperNaviServer(port, properties);
         try {
             server.start();
         } catch (Exception e) {
             LOG.fatal("Server doesn't started on port " + port + "!", e);
             System.exit(0);
         }
-        LOG.info("Server started on port " + port + "!");
-        server.join();
     }
 }

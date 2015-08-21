@@ -5,7 +5,7 @@ FILENAME=hypernavi-dev-`stat -c %Y server/target/hypernavi-server-jar-with-depen
 fuser -KILL -k -n tcp 80
 rm -r ~/hypernavi-dev-*
 mv -v server/target/hypernavi-server-jar-with-dependencies.jar ~/${FILENAME}
-nohup java -jar ~/${FILENAME} -port 80 -cfg /common.properties /test.properties -logcfg /log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
+nohup java -jar ~/${FILENAME} -port 80 -cfg /common.properties /dev.properties -logcfg /log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
 
 LOADED=-1
 ATTEMPTS=3
