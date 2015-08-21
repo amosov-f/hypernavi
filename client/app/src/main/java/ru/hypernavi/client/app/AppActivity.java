@@ -6,9 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
@@ -43,6 +41,7 @@ public final class AppActivity extends Activity {
     private static final String PROPERTIES_SCHEME = "/app-common.properties";
     private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
     private static final long MAX_TIME_OUT = 5000L;
+    private static final int FIVE_MINUTES = 1000 * 60 * 5;
 
     private Bitmap originScheme;
     @Nullable
@@ -121,9 +120,20 @@ public final class AppActivity extends Activity {
             LOG.warning("No GPS module finded.");
             return;
         }
+        final Location cashLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if ((cashLocation != null) && (isActual(cashLocation, Long.valueOf(0L)))) {
+            LOG.info("cashLocation is actual");
+            sendInfoRequest(new GeoPoint(cashLocation), imageView);
+        } else {
+            LOG.info("cashLocation is not actual");
+        }
         sendRequest(imageView);
     }
 
+    public boolean isActual(final Location location, final Long timeCorrection) {
+        LOG.info("locaction time is " + location.getTime());
+        return (location.getTime() + timeCorrection + FIVE_MINUTES > (new Date()).getTime());
+    }
 
     private void drawDisplayImage(final ImageView imageView) {
         originScheme = loadDefaultScheme();
@@ -133,13 +143,40 @@ public final class AppActivity extends Activity {
         LOG.info("Display high " + displayHeight);
     }
 
-    private final class PositionUpdater implements LocationListener {
-        private static final int N_LOCATIONS = 3;
+    private void sendInfoRequest(final GeoPoint geoPosition, final ImageView imageView) {
+        final double lat = geoPosition.getLatitude();
+        final double lon = geoPosition.getLongitude();
+        try {
+            //final String infoURL = "http://10.0.2.2:8080/schemainfo";
+            final String infoURL = "http://hypernavi.net/schemainfo";
+            root = extructJSON(lat, lon, infoURL);
+        } catch (MalformedURLException e) {
+            LOG.warning("can't construct URL for info");
+            throw new RuntimeException(e);
+        }
 
+        final InfoResponce responce = InfoResponceSerializer.deserialize(root);
+        if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
+            originScheme = loadDefaultScheme();
+            LOG.warning("No markets in responce.");
+        } else {
+            //final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
+            final String schemaURL = "http://hypernavi.net" + responce.getClosestMarkets().get(0).getUrl();
+            try {
+                originScheme = extructScheme(schemaURL);
+            } catch (MalformedURLException e) {
+                LOG.warning("Can't construct url for scheme. " + e.getMessage());
+            }
+        }
+        imageView.setImageBitmap(originScheme);
+
+        LOG.info("GeoPosition " + geoPosition);
+        Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
+    }
+
+    private final class PositionUpdater implements LocationListener {
         @NotNull
         private final LocationManager manager;
-        @NotNull
-        private final List<Location> locations = new ArrayList<>();
         @NotNull
         private final ImageView myView;
 
@@ -152,43 +189,15 @@ public final class AppActivity extends Activity {
         public void onLocationChanged(@NotNull final Location location) {
             if (timeCorrection == null) {
                 timeCorrection = (new Date()).getTime() - location.getTime();
+                LOG.warning("Time correction is " + timeCorrection);
                 registerBottonListener(manager, myView);
             }
             LOG.info("onLocationChanged");
-            locations.add(location);
-            if (locations.size() != N_LOCATIONS) {
-                return;
-            }
+
             manager.removeUpdates(this);
 
-            final GeoPoint geoPosition = average(locations);
-
-            final double lat = geoPosition.getLatitude();
-            final double lon = geoPosition.getLongitude();
-            try {
-                final String infoURL = "http://10.0.2.2:8080/schemainfo";
-                root = extructJSON(lat, lon, infoURL);
-            } catch (MalformedURLException e) {
-                LOG.warning("can't construct URL for info");
-                throw new RuntimeException(e);
-            }
-
-            final InfoResponce responce = InfoResponceSerializer.deserialize(root);
-            if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
-                originScheme = loadDefaultScheme();
-                LOG.warning("No markets in responce.");
-            } else {
-                final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
-                try {
-                    originScheme = extructScheme(schemaURL);
-                } catch (MalformedURLException e) {
-                    LOG.warning("Can't construct url for scheme. " + e.getMessage());
-                }
-            }
-            myView.setImageBitmap(originScheme);
-
-            LOG.info("GeoPosition " + geoPosition);
-            Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
+            final GeoPoint geoPosition = new GeoPoint(location);
+            sendInfoRequest(geoPosition, myView);
         }
 
         @Override
@@ -201,17 +210,6 @@ public final class AppActivity extends Activity {
 
         @Override
         public void onProviderDisabled(@NotNull final String provider) {
-        }
-
-        @NotNull
-        private GeoPoint average(@NotNull final List<Location> locations) {
-            double sumLat = 0;
-            double sumLon = 0;
-            for (final Location location : locations) {
-                sumLat += location.getLatitude();
-                sumLon += location.getLongitude();
-            }
-            return new GeoPoint(sumLat / locations.size(), sumLon / locations.size());
         }
     }
 

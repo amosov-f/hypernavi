@@ -13,7 +13,7 @@ import android.widget.ImageView;
  * Created by Acer on 19.08.2015.
  */
 public class ButtonOnClickListener implements View.OnClickListener {
-    private static final int ONE_MINUTES = 1000 * 60 * 1;
+
     private static final Logger LOG = Logger.getLogger(ButtonOnClickListener.class.getName());
     private final LocationManager myLocationManager;
     private final ImageView myImageView;
@@ -31,12 +31,13 @@ public class ButtonOnClickListener implements View.OnClickListener {
     @Override
     public void onClick(final View v) {
         final Location location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        final long locationTime = location.getTime() + myTimeCorrection;
-        if (locationTime + ONE_MINUTES < (new Date()).getTime()) {
+        if (!myAppActivity.isActual(location, myTimeCorrection)) {
+            LOG.info("send new request to update position");
             myAppActivity.sendRequest(myImageView);
         }
-        LOG.warning("location time is " + (location.getTime() + myTimeCorrection));
-        final Date date = new Date();
-        LOG.warning("util time is     " + date.getTime());
+        LOG.info("location time is " + (location.getTime() + myTimeCorrection));
+        LOG.info("util time is     " + (new Date()).getTime());
     }
+
+
 }
