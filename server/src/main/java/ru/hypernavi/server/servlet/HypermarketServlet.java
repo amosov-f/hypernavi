@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * Created by Константин on 21.08.2015.
  */
-@WebServlet(name = "add hyper", value = "/hyper")
+@WebServlet(name = "add hyper", value = "/hypermarket")
 public class HypermarketServlet extends AbstractHttpService {
 
     @Override
