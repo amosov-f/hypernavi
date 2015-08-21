@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form name="loginForm" method="post" action="register/hypermarket">
+    <table>
+        <tr>
+            <td>longitude:</td>
+            <td><input type="text" name="lon"/></td>
+        </tr>
+        <tr>
+            <td>latitude:</td>
+            <td><input type="text" name="lat"/></td>
+        </tr>
+        <tr>
+            <td>Адрес:</td>
+            <td><input type="text" name="adress"/></td>
+        </tr>
+        <tr>
+            <td>Ссылка на схему:</td>
+            <td><input type="text" name="imageURL"/></td>
+        </tr>
+        <tr>
+            <td>Тип гипермаркета:</td>
+            <td><select name="type">
+                <option value="None"></option>
+                <option value="Okey">Окей</option>
+                <option value="Ashan">Ашан</option>
+                <option value= "Prisma">Prisma</option>
+                <option value="Lenta">Лента</option>
+                <option value="k-ryoka">К-руока</option>
+                <option value="Karusel">Карусель</option>
+            </select></td>
+        </tr>
+    </table>
+
+    <input type="submit" value="Add hypermarket"/>
+</form>
+</body>
+</html>
