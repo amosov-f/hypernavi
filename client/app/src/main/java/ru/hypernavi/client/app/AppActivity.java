@@ -3,7 +3,7 @@ package ru.hypernavi.client.app;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -36,7 +36,7 @@ import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
-
+    private static final String LOCAL_FILE_NAME = "cacheScheme.png";
     private static final String SCHEME_PATH = "/file_not_found.jpg";
     private static final String PROPERTIES_SCHEME = "/app-common.properties";
     private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
@@ -99,7 +99,7 @@ public final class AppActivity extends Activity {
         final Button button = (Button) findViewById(R.id.button);
 
         final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager,
-            imageView, timeCorrection, this);
+               imageView, timeCorrection, this);
         button.setOnClickListener(buttonOnClickListener);
     }
 
@@ -116,12 +116,12 @@ public final class AppActivity extends Activity {
     private void registerGPSListeners(final ImageView imageView) {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_LONG).show();
             LOG.warning("No GPS module finded.");
             return;
         }
         final Location cashLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if ((cashLocation != null) && (isActual(cashLocation, Long.valueOf(0L)))) {
+        if ((cashLocation != null) && (isActual(cashLocation, 0L))) {
             LOG.info("cashLocation is actual");
             sendInfoRequest(new GeoPoint(cashLocation), imageView);
         } else {
@@ -136,7 +136,7 @@ public final class AppActivity extends Activity {
     }
 
     private void drawDisplayImage(final ImageView imageView) {
-        originScheme = loadDefaultScheme();
+        originScheme = loadCachedOrDefaultScheme();
         imageView.setImageBitmap(originScheme);
         LOG.info("Image XScale " + imageView.getScaleX());
         LOG.info("Display width " + displayWidth);
@@ -152,12 +152,20 @@ public final class AppActivity extends Activity {
             root = extructJSON(lat, lon, infoURL);
         } catch (MalformedURLException e) {
             LOG.warning("can't construct URL for info");
-            throw new RuntimeException(e);
+            Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
+            return;
+            //throw new RuntimeException(e);
+        }
+
+        if (root == null) {
+            LOG.warning("can't construct URL for info");
+            Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
+            return;
         }
 
         final InfoResponce responce = InfoResponceSerializer.deserialize(root);
         if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
-            originScheme = loadDefaultScheme();
+            originScheme = loadCachedOrDefaultScheme();
             LOG.warning("No markets in responce.");
         } else {
             //final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
@@ -166,9 +174,13 @@ public final class AppActivity extends Activity {
                 originScheme = extructScheme(schemaURL);
             } catch (MalformedURLException e) {
                 LOG.warning("Can't construct url for scheme. " + e.getMessage());
+                Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
+                return;
             }
         }
+
         imageView.setImageBitmap(originScheme);
+        cachedScheme();
 
         LOG.info("GeoPosition " + geoPosition);
         Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
@@ -243,7 +255,6 @@ public final class AppActivity extends Activity {
             throw new RuntimeException(e);
         }
         if (hypermarketsJSON == null) {
-            Toast.makeText(AppActivity.this, "JSON string is null", Toast.LENGTH_SHORT).show();
             LOG.warning("JSON string is null");
             return null;
         }
@@ -256,12 +267,49 @@ public final class AppActivity extends Activity {
     }
 
     @NotNull
-    private Bitmap loadDefaultScheme() {
+    private Bitmap loadCachedOrDefaultScheme() {
+
+        final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
+        if (file.exists()) {
+            try {
+                final Bitmap cachedScheme = BitmapFactory.decodeStream(new FileInputStream(file));
+                if (cachedScheme == null) {
+                    LOG.warning("File: " + file.getPath());
+                    throw new RuntimeException("No cached scheme founded in existing file " + file.getPath() + " 555");
+                }
+                LOG.info("cached scheme is returned");
+                return  cachedScheme;
+            } catch (FileNotFoundException e) {
+                LOG.warning("can't find file " + e.getMessage());
+            }
+        }
+
         final Bitmap defaultScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
         if (defaultScheme == null) {
             throw new RuntimeException("No default scheme founded");
         }
+        LOG.info("default scheme is returned");
         return defaultScheme;
+    }
+
+    private void cachedScheme() {
+        final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            LOG.warning("can't create file for cached scheme " + e.getMessage());
+        }
+        try {
+            final FileOutputStream out = new FileOutputStream(file);
+            LOG.warning("file where we write: " + file.toString());
+            originScheme.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+            LOG.info("scheme is cached");
+        } catch (FileNotFoundException e) {
+            LOG.warning("cached file is null " + e.getMessage());
+        } catch (IOException e) {
+            LOG.warning("can't close outputStream " + e.getMessage());
+        }
     }
 
     private Bitmap extructScheme(final String currentSchemeURL) throws MalformedURLException {
@@ -272,7 +320,7 @@ public final class AppActivity extends Activity {
             return task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
-            return loadDefaultScheme();
+            return loadCachedOrDefaultScheme();
         } catch (ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);
         }
