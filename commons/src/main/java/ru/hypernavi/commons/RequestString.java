@@ -29,7 +29,7 @@ public class RequestString implements Callable<String> {
         try {
             final HttpURLConnection myConnection = (HttpURLConnection) (myUrl.openConnection());
             LOG.warning("String is loaded");
-            return IOUtils.toString(myConnection.getInputStream());
+            return IOUtils.toString(myConnection.getInputStream(), "UTF-8");
         } catch (IOException e) {
             LOG.warning(e.getMessage());
             LOG.warning("Can't read String from internet");
