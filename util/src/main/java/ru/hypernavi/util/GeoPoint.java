@@ -2,9 +2,6 @@ package ru.hypernavi.util;
 
 import org.jetbrains.annotations.NotNull;
 
-
-import android.location.Location;
-
 /**
  * User: amosov-f
  * Date: 26.11.14
@@ -18,11 +15,6 @@ public final class GeoPoint {
     public GeoPoint(final double latitude, final double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-    public GeoPoint(final Location location) {
-        this.latitude = location.getLatitude();
-        this.longitude = location.getLongitude();
     }
 
     public double getLatitude() { return latitude; }

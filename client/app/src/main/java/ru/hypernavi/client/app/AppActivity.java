@@ -11,7 +11,6 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 import android.widget.ZoomControls;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.hypernavi.client.app.util.GeoPoints;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.commons.RequestBitmap;
@@ -39,9 +39,8 @@ public final class AppActivity extends Activity {
     private static final String LOCAL_FILE_NAME = "cacheScheme.png";
     private static final String SCHEME_PATH = "/file_not_found.jpg";
     private static final String PROPERTIES_SCHEME = "/app-common.properties";
-    private static final long MIN_TIME_BETWEEN_GPS_UPDATES = 5000;
     private static final long MAX_TIME_OUT = 5000L;
-    private static final int FIVE_MINUTES = 1000 * 60 * 5;
+    private static final int FIVETEEN_MINUTES = 1000 * 60 * 15;
 
     private Bitmap originScheme;
     @Nullable
@@ -51,6 +50,8 @@ public final class AppActivity extends Activity {
 
     private int nThread;
     private ExecutorService executorService;
+    private String infoURL;
+    private String schemaURL;
 
     private LocationManager locationManager;
     private Long timeCorrection;
@@ -64,7 +65,7 @@ public final class AppActivity extends Activity {
         setContentView(R.layout.main);
 
         final Properties properties = loadProperties(PROPERTIES_SCHEME);
-        nThread = Integer.parseInt(properties.getProperty("app.request.pool.size"));
+        executeProperties(properties);
         executorService = Executors.newFixedThreadPool(nThread);
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -109,8 +110,7 @@ public final class AppActivity extends Activity {
     }
 
     public void sendRequest(final ImageView imageView) {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_GPS_UPDATES, 0,
-            new PositionUpdater(locationManager, imageView));
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new PositionUpdater(locationManager, imageView), null);
     }
 
     private void registerGPSListeners(final ImageView imageView) {
@@ -123,7 +123,7 @@ public final class AppActivity extends Activity {
         final Location cashLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if ((cashLocation != null) && (isActual(cashLocation, 0L))) {
             LOG.info("cashLocation is actual");
-            sendInfoRequest(new GeoPoint(cashLocation), imageView);
+            sendInfoRequest(GeoPoints.makeGeoPoint(cashLocation), imageView);
         } else {
             LOG.info("cashLocation is not actual");
         }
@@ -132,7 +132,7 @@ public final class AppActivity extends Activity {
 
     public boolean isActual(final Location location, final Long timeCorrection) {
         LOG.info("locaction time is " + location.getTime());
-        return (location.getTime() + timeCorrection + FIVE_MINUTES > (new Date()).getTime());
+        return (location.getTime() + timeCorrection + FIVETEEN_MINUTES > (new Date()).getTime());
     }
 
     private void drawDisplayImage(final ImageView imageView) {
@@ -148,8 +148,8 @@ public final class AppActivity extends Activity {
         final double lon = geoPosition.getLongitude();
         try {
             //final String infoURL = "http://10.0.2.2:8080/schemainfo";
-            final String infoURL = "http://hypernavi.net/schemainfo";
-            root = extructJSON(lat, lon, infoURL);
+            root = extructJSON(lat, lon, this.infoURL);
+            LOG.info("infoURL: " + this.infoURL);
         } catch (MalformedURLException e) {
             LOG.warning("can't construct URL for info");
             Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
@@ -159,7 +159,6 @@ public final class AppActivity extends Activity {
 
         if (root == null) {
             LOG.warning("can't construct URL for info");
-            Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -169,9 +168,10 @@ public final class AppActivity extends Activity {
             LOG.warning("No markets in responce.");
         } else {
             //final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
-            final String schemaURL = "http://hypernavi.net" + responce.getClosestMarkets().get(0).getUrl();
+            final String schemaFullURL = this.schemaURL + responce.getClosestMarkets().get(0).getUrl();
             try {
-                originScheme = extructScheme(schemaURL);
+
+                originScheme = extructScheme(schemaFullURL);
             } catch (MalformedURLException e) {
                 LOG.warning("Can't construct url for scheme. " + e.getMessage());
                 Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
@@ -208,7 +208,7 @@ public final class AppActivity extends Activity {
 
             manager.removeUpdates(this);
 
-            final GeoPoint geoPosition = new GeoPoint(location);
+            final GeoPoint geoPosition = GeoPoints.makeGeoPoint(location);
             sendInfoRequest(geoPosition, myView);
         }
 
@@ -232,9 +232,16 @@ public final class AppActivity extends Activity {
         try {
             properties.load(AppActivity.class.getResourceAsStream(resourcesPath));
         } catch (IOException e) {
+            LOG.warning("can't load property");
             throw new RuntimeException(e);
         }
         return properties;
+    }
+
+    private void executeProperties(final Properties properties) {
+        nThread = Integer.parseInt(properties.getProperty("app.request.pool.size"));
+        infoURL = properties.getProperty("app.server.info.host");
+        schemaURL = properties.getProperty("app.server.schema.host");
     }
 
     // TODO: move extructor to another module
