@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -100,7 +101,7 @@ public final class AppActivity extends Activity {
         final Button button = (Button) findViewById(R.id.button);
 
         final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager,
-               imageView, timeCorrection, this);
+                imageView, timeCorrection, this);
         button.setOnClickListener(buttonOnClickListener);
     }
 
@@ -285,7 +286,7 @@ public final class AppActivity extends Activity {
                     throw new RuntimeException("No cached scheme founded in existing file " + file.getPath() + " 555");
                 }
                 LOG.info("cached scheme is returned");
-                return  cachedScheme;
+                return cachedScheme;
             } catch (FileNotFoundException e) {
                 LOG.warning("can't find file " + e.getMessage());
             }
