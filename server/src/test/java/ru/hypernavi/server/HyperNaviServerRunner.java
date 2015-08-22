@@ -36,12 +36,14 @@ public final class HyperNaviServerRunner extends Runner {
     @Override
     public void run(@NotNull final RunNotifier runNotifier) {
         if (!registered.getAndSet(true)) {
-            runNotifier.addListener(new HyperNaviLaunchingListener());
+            runNotifier.addListener(HyperNaviLaunchingListener.INSTANCE);
         }
         delegate.run(runNotifier);
     }
 
     private static final class HyperNaviLaunchingListener extends RunListener {
+        private static final HyperNaviLaunchingListener INSTANCE = new HyperNaviLaunchingListener();
+
         @NotNull
         private final HyperNaviServerLauncher launcher = new HyperNaviServerLauncher();
         @NotNull
