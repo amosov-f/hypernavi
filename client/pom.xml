@@ -54,7 +54,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <sdk>
-                        <platform>22</platform>
+                        <platform>23</platform>
                     </sdk>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
