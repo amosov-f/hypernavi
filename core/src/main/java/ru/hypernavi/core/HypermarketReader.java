@@ -45,7 +45,7 @@ public class HypermarketReader {
 
     @NotNull
     public Hypermarket construct() {
-        return new Hypermarket(getId(), getCoordinate(), getAdress(), getType(), getUrl());
+        return new Hypermarket(getId(), getCoordinate(), getAddress(), getType(), getUrl());
     }
 
     @NotNull
@@ -74,15 +74,15 @@ public class HypermarketReader {
     }
 
     @NotNull
-    public String getAdress() {
-        final String adress;
+    public String getAddress() {
+        final String address;
         try {
-            adress = hypermarketInfo.getString("adress");
+            address = hypermarketInfo.getString("address");
         } catch (JSONException ignored) {
-            return "No adress found";
+            return "No address found";
         }
 
-        return adress;
+        return address;
     }
 
     @NotNull

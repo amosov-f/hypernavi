@@ -10,7 +10,7 @@ import ru.hypernavi.util.GeoPoint;
 public class Hypermarket implements Positioned, Indexable {
     private final int id;
     @NotNull
-    private final String adress;
+    private final String address;
     @NotNull
     private final String url;
     @NotNull
@@ -20,12 +20,12 @@ public class Hypermarket implements Positioned, Indexable {
 
     public Hypermarket(final int id,
                        @NotNull final GeoPoint location,
-                       @NotNull final String adress,
+                       @NotNull final String address,
                        @NotNull final String type,
                        @NotNull final String url) {
         this.id = id;
         this.location = location;
-        this.adress = adress;
+        this.address = address;
         this.type = type;
         this.url = url;
     }
@@ -52,7 +52,7 @@ public class Hypermarket implements Positioned, Indexable {
     }
 
     @NotNull
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 }
