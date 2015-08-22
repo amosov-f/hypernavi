@@ -154,7 +154,7 @@ public final class MarkerActivity extends Activity {
                 sumLat += location.getLatitude();
                 sumLon += location.getLongitude();
             }
-            return new GeoPoint(sumLat / locations.size(), sumLon / locations.size());
+            return new GeoPoint(sumLon / locations.size(), sumLat / locations.size());
         }
     }
 }

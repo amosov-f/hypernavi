@@ -68,7 +68,7 @@ public enum InfoResponceSerializer {
 
             final double longitude = meta.getDouble("longitude");
             final double latitude = meta.getDouble("latitude");
-            location = new GeoPoint(latitude, longitude);
+            location = new GeoPoint(longitude, latitude);
         } catch (JSONException e) {
             LOG.warn(e.getMessage());
             return null;

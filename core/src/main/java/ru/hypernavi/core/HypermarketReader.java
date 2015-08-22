@@ -53,8 +53,8 @@ public class HypermarketReader {
         final String url;
         try {
             url = hypermarketInfo.getString("url");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+        } catch (JSONException ignored) {
+            return "No schema founded";
         }
         return url;
     }
@@ -70,7 +70,7 @@ public class HypermarketReader {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        return new GeoPoint(lat, lon);
+        return new GeoPoint(lon, lat);
     }
 
     @NotNull
@@ -78,8 +78,8 @@ public class HypermarketReader {
         final String adress;
         try {
             adress = hypermarketInfo.getString("adress");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+        } catch (JSONException ignored) {
+            return "No adress found";
         }
 
         return adress;
@@ -90,8 +90,8 @@ public class HypermarketReader {
         final String type;
         try {
             type = hypermarketInfo.getString("type");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+        } catch (JSONException ignored) {
+            return "No type founded";
         }
         return type;
     }

@@ -35,7 +35,7 @@ public enum HypermarketSerializer {
             id = jsonObject.getInt("id");
             final double longitude = jsonObject.getDouble("longitude");
             final double latitude = jsonObject.getDouble("latitude");
-            location = new GeoPoint(latitude, longitude);
+            location = new GeoPoint(longitude, latitude);
             adress = jsonObject.getString("adress");
             type = jsonObject.getString("type");
             url = jsonObject.getString("url");
