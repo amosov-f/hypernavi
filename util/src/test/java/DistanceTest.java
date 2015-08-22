@@ -18,8 +18,8 @@ public final class DistanceTest {
     private static void test(final double firstLatitude, final double firstLongitude, final double secondLatitude,
                       final double secondLongitude, final double actualDistance)
     {
-        final GeoPoint firstGeoPoint = new GeoPoint(firstLatitude, firstLongitude);
-        final GeoPoint secondGeoPoint = new GeoPoint(secondLatitude, secondLongitude);
+        final GeoPoint firstGeoPoint = new GeoPoint(firstLongitude, firstLatitude);
+        final GeoPoint secondGeoPoint = new GeoPoint(secondLongitude, secondLatitude);
         assertEquals(GeoPoint.distance(firstGeoPoint, secondGeoPoint), actualDistance, actualDistance * 4.0E-3);
     }
 }
