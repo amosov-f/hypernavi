@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -15,9 +14,9 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * Date: 15.08.15
  * Time: 14:45
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest = "../app/AndroidManifest.xml", sdk = 21)
-public class AppActivityTest {
+@Config(sdk = 21)
+@RunWith(CustomRobolectricTestRunner.class)
+public final class AppActivityTest {
     private AppActivity appActivity;
 
     @Before
