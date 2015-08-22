@@ -32,7 +32,7 @@ public class RequestBitmap implements Callable<Bitmap> {
         } catch (IOException e) {
             LOG.warning(e.getMessage());
             LOG.warning("Can't read scheme from internet");
-            return  null;
+            return null;
         }
     }
 }
