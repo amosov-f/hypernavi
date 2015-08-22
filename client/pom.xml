@@ -57,6 +57,7 @@
                         <platform>23</platform>
                     </sdk>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <sign>true</sign>
                 </configuration>
             </plugin>
         </plugins>
