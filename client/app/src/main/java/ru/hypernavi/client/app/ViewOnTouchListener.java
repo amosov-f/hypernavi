@@ -43,7 +43,7 @@ public class ViewOnTouchListener implements View.OnTouchListener {
     private int newScroll(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
         if (inBorder) {
             if (total == max) {
-               return 0;
+                return 0;
             } else if (notReachedMax) {
                 return scroll;
             } else {
