@@ -17,8 +17,7 @@ public class HypermarketServlet extends AbstractHttpService {
 
     @Override
     public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        final java.io.OutputStream out = resp.getOutputStream();
         resp.setContentType("text/html");
-        out.write(IOUtils.toString(HypermarketServlet.class.getResourceAsStream("/hypermarket.html")).getBytes());
+        resp.getOutputStream().write(IOUtils.toByteArray(HypermarketServlet.class.getResourceAsStream("/hypermarket.html")));
     }
 }
