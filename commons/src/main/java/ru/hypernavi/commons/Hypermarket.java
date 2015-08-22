@@ -22,8 +22,7 @@ public class Hypermarket implements Positioned, Indexable {
                        @NotNull final GeoPoint location,
                        @NotNull final String adress,
                        @NotNull final String type,
-                       @NotNull final String url)
-    {
+                       @NotNull final String url) {
         this.id = id;
         this.location = location;
         this.adress = adress;
