@@ -33,9 +33,10 @@ public final class GeoPoint {
         final double aLongitude = Math.toRadians(a.getLongitude());
         final double bLongitude = Math.toRadians(b.getLongitude());
 
-        final double answer = Math.pow(Math.sin((aLatitude - bLatitude) / 2.0d), 2.0d) + Math.cos(aLatitude) * Math.cos(bLatitude)
-                * Math.pow(Math.sin((aLongitude - bLongitude) / 2.0d), 2.0d);
-        return 2.0d * EARTH_RADIUS * Math.asin(Math.sqrt(answer));
+        //noinspection MagicNumber
+        final double answer = Math.pow(Math.sin((aLatitude - bLatitude) / 2), 2) + Math.cos(aLatitude) * Math.cos(bLatitude)
+                      * Math.pow(Math.sin((aLongitude - bLongitude) / 2), 2);
+        return 2 * EARTH_RADIUS * Math.asin(Math.sqrt(answer));
     }
 
     @Nullable
