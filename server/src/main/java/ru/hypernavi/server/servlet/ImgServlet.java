@@ -39,5 +39,5 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final ImgHolder images = new FileImgLoader();
+    private final ImgHolder images = new ResoursesImgData();
 }
