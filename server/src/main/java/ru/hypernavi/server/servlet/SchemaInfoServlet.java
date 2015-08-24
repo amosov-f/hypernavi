@@ -52,7 +52,7 @@ public class SchemaInfoServlet extends AbstractHttpService {
         final Double latitude = Double.parseDouble(request.getParameter("lat"));
         final GeoPoint currentPosition = new GeoPoint(longitude, latitude);
 
-        final Hypermarket bestHypernavi = markets.getClosest(currentPosition);
+        final Hypermarket bestHypernavi = markets.getClosest(currentPosition, 1).get(0);
         if (bestHypernavi == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
+import ru.hypernavi.core.FileImgLoader;
 import ru.hypernavi.core.ImgHolder;
 import ru.hypernavi.core.ResoursesImgData;
 
@@ -37,5 +39,5 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final ImgHolder images = new ResoursesImgData();
+    private final ImgHolder images = new FileImgLoader();
 }

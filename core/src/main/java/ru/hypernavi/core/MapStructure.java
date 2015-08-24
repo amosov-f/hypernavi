@@ -1,8 +1,13 @@
 package ru.hypernavi.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+import java.util.List;
+
+
+import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
 
@@ -12,16 +17,19 @@ import ru.hypernavi.util.GeoPoint;
 public interface MapStructure<T extends Positioned> {
     @Nullable
     default T findClosest(final GeoPoint possition) {
-        return find(possition, 1)[0];
+        final List<T> closest = find(possition, 1);
+        return closest == null ? null : closest.get(0);
     }
 
     @Nullable
-    default T[] findAll(final GeoPoint possition) {
+    default List<T> findAll(final GeoPoint possition) {
         return find(possition, size());
     }
 
     @Nullable
-    T[] find(final GeoPoint possition, final int number);
+    List<T> find(final GeoPoint possition, final int number);
 
     int size();
+
+    void add(@NotNull final T hyper);
 }
