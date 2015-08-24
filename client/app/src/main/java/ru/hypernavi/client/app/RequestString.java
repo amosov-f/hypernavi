@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 //TODO: check and correct nullPointerException
 public class RequestString implements Callable<String> {
     private static final Logger LOG = Logger.getLogger(RequestString.class.getName());
+
     private final URL myUrl;
 
     public RequestString(final URL url) {
@@ -28,8 +29,14 @@ public class RequestString implements Callable<String> {
     public String call() throws InterruptedException {
         try {
             final HttpURLConnection myConnection = (HttpURLConnection) (myUrl.openConnection());
-            LOG.warning("String is loaded");
-            return IOUtils.toString(myConnection.getInputStream(), "UTF-8");
+            myConnection.getResponseCode();
+            if (myConnection.getResponseCode() != myConnection.HTTP_OK) {
+                LOG.warning("Response code is " + myConnection.getResponseCode());
+                return null;
+            } else {
+                LOG.warning("String is loaded");
+                return IOUtils.toString(myConnection.getInputStream());
+            }
         } catch (IOException e) {
             LOG.warning(e.getMessage());
             LOG.warning("Can't read String from internet");

@@ -1,10 +1,10 @@
-package ru.hypernavi.commons;
+package ru.hypernavi.client.app;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
@@ -25,10 +25,17 @@ public class RequestBitmap implements Callable<Bitmap> {
 
     @Nullable
     @Override
-    public Bitmap call() throws Exception {
+    public Bitmap call() {
         try {
-            final URLConnection myConnection = myUrl.openConnection();
-            return BitmapFactory.decodeStream(myConnection.getInputStream());
+            final HttpURLConnection myConnection = (HttpURLConnection) (myUrl.openConnection());
+            myConnection.getResponseCode();
+            if (myConnection.getResponseCode() != myConnection.HTTP_OK) {
+                LOG.warning("Response code is " + myConnection.getResponseCode());
+                return null;
+            } else {
+                LOG.info("Bitmap is loaded");
+                return BitmapFactory.decodeStream(myConnection.getInputStream());
+            }
         } catch (IOException e) {
             LOG.warning(e.getMessage());
             LOG.warning("Can't read scheme from internet");

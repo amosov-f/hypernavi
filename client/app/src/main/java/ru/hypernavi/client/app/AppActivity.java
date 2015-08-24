@@ -31,7 +31,6 @@ import org.json.JSONObject;
 import ru.hypernavi.client.app.util.GeoPoints;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
-import ru.hypernavi.commons.RequestBitmap;
 import ru.hypernavi.commons.RequestString;
 import ru.hypernavi.util.GeoPoint;
 
@@ -41,7 +40,8 @@ public final class AppActivity extends Activity {
     private static final String SCHEME_PATH = "/file_not_found.jpg";
     private static final String PROPERTIES_SCHEME = "/app-common.properties";
     private static final long MAX_TIME_OUT = 5000L;
-    private static final int FIVETEEN_MINUTES = 1000 * 60 * 15;
+    //noinspection MagicNumber
+    private static final int FIVETEEN_MINUTES = 1000 * 50 * 1;
 
     private Bitmap originScheme;
     @Nullable
@@ -147,6 +147,7 @@ public final class AppActivity extends Activity {
     private void sendInfoRequest(final GeoPoint geoPosition, final ImageView imageView) {
         final double lat = geoPosition.getLatitude();
         final double lon = geoPosition.getLongitude();
+        LOG.info("GeoPoint coordinates " + "lat: " + lat + "lon: " + lon);
         try {
             //final String infoURL = "http://10.0.2.2:8080/schemainfo";
             root = extructJSON(lat, lon, this.infoURL);
@@ -247,10 +248,11 @@ public final class AppActivity extends Activity {
 
     // TODO: move extructor to another module
     private JSONObject extructJSON(final double lat, final double lon, final String infoURL) throws MalformedURLException {
-        String hypermarketsJSON;
         final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
         final RequestString requestString = new RequestString(requestURL);
+        LOG.info("JSON request URL" + requestURL.toString());
         final Future<String> task = executorService.submit(requestString);
+        String hypermarketsJSON;
         try {
             hypermarketsJSON = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -274,19 +276,34 @@ public final class AppActivity extends Activity {
         }
     }
 
+    private Bitmap extructScheme(final String currentSchemeURL) throws MalformedURLException {
+        final RequestBitmap requestBitmap = new RequestBitmap(new URL(currentSchemeURL));
+        final Future<Bitmap> task = executorService.submit(requestBitmap);
+
+        try {
+            return task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            LOG.warning(e.getMessage());
+            return loadCachedOrDefaultScheme();
+        } catch (ExecutionException | TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @NotNull
     private Bitmap loadCachedOrDefaultScheme() {
-
         final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
         if (file.exists()) {
             try {
                 final Bitmap cachedScheme = BitmapFactory.decodeStream(new FileInputStream(file));
                 if (cachedScheme == null) {
                     LOG.warning("File: " + file.getPath());
-                    throw new RuntimeException("No cached scheme founded in existing file " + file.getPath() + " 555");
+                    LOG.warning("No cached scheme founded in existing file " + file.getPath());
+                    this.deleteFile(file.getPath());
+                } else {
+                    LOG.info("cached scheme is returned");
+                    return cachedScheme;
                 }
-                LOG.info("cached scheme is returned");
-                return cachedScheme;
             } catch (FileNotFoundException e) {
                 LOG.warning("can't find file " + e.getMessage());
             }
@@ -303,34 +320,25 @@ public final class AppActivity extends Activity {
     private void cachedScheme() {
         final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
         try {
-            file.createNewFile();
+            if (file.createNewFile()) {
+                try {
+                    final FileOutputStream out = new FileOutputStream(file);
+                    LOG.warning("file where we write: " + file.toString());
+                    originScheme.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    out.close();
+                    LOG.info("scheme is cached");
+                } catch (FileNotFoundException e) {
+                    LOG.warning("cached file is null " + e.getMessage());
+                } catch (IOException e) {
+                    LOG.warning("can't close outputStream " + e.getMessage());
+                }
+            }
         } catch (IOException e) {
             LOG.warning("can't create file for cached scheme " + e.getMessage());
         }
-        try {
-            final FileOutputStream out = new FileOutputStream(file);
-            LOG.warning("file where we write: " + file.toString());
-            originScheme.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.close();
-            LOG.info("scheme is cached");
-        } catch (FileNotFoundException e) {
-            LOG.warning("cached file is null " + e.getMessage());
-        } catch (IOException e) {
-            LOG.warning("can't close outputStream " + e.getMessage());
-        }
     }
 
-    private Bitmap extructScheme(final String currentSchemeURL) throws MalformedURLException {
-        final RequestBitmap requestBitmap = new RequestBitmap(new URL(currentSchemeURL));
-        final Future<Bitmap> task = executorService.submit(requestBitmap);
-
-        try {
-            return task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            LOG.warning(e.getMessage());
-            return loadCachedOrDefaultScheme();
-        } catch (ExecutionException | TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+    public void crashApplication() {
+        throw new RuntimeException("I am crashed");
     }
 }
