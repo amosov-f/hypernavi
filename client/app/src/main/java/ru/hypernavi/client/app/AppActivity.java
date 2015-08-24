@@ -31,7 +31,6 @@ import org.json.JSONObject;
 import ru.hypernavi.client.app.util.GeoPoints;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
-import ru.hypernavi.commons.RequestString;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {

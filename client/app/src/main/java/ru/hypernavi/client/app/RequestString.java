@@ -1,4 +1,4 @@
-package ru.hypernavi.commons;
+package ru.hypernavi.client.app;
 
 import org.jetbrains.annotations.Nullable;
 
