@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.reflections.Reflections;
 import ru.hypernavi.server.handler.AfterRequestHandler;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
+import ru.hypernavi.util.Config;
+import ru.hypernavi.util.MoreIOUtils;
 
 /**
  * User: amosov-f
@@ -52,10 +53,10 @@ public final class HyperNaviServer {
     @NotNull
     private final Server server;
 
-    HyperNaviServer(final int port, @NotNull final Properties properties) {
+    HyperNaviServer(final int port, @NotNull final Config config) {
         final HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(new BeforeRequestHandler());
-        handlers.addHandler(servlets(properties));
+        handlers.addHandler(servlets(config));
         final RequestLogHandler requestLogHandler = new RequestLogHandler();
         requestLogHandler.setRequestLog(new AfterRequestHandler());
         handlers.addHandler(requestLogHandler);
@@ -82,8 +83,8 @@ public final class HyperNaviServer {
     }
 
     @NotNull
-    private static ServletContextHandler servlets(@NotNull final Properties properties) {
-        final Injector injector = Guice.createInjector(new HyperNaviModule(properties));
+    private static ServletContextHandler servlets(@NotNull final Config config) {
+        final Injector injector = Guice.createInjector(new HyperNaviModule(config));
         final ServletContextHandler context = new ServletContextHandler();
         for (final Class<? extends HttpServlet> servletClass : servletClasses()) {
             final HttpServlet service = injector.getInstance(servletClass);
@@ -109,16 +110,12 @@ public final class HyperNaviServer {
         final CommandLine cmd = new GnuParser().parse(OPTIONS, args);
         System.setProperty("PORT", cmd.getOptionValue(OPT_PORT));
         final int port = Integer.parseInt(cmd.getOptionValue(OPT_PORT));
-        final Properties properties = new Properties();
-        for (final String configPath : cmd.getOptionValues(OPT_CONFIG)) {
-            // TODO: read config from file system
-            properties.load(HyperNaviServer.class.getResourceAsStream(configPath));
-        }
+        final Config config = Config.load(cmd.getOptionValues(OPT_CONFIG));
 
         Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
-        DOMConfigurator.configure(HyperNaviServer.class.getResource(cmd.getOptionValue(OPT_LOG_CFG)));
+        DOMConfigurator.configure(MoreIOUtils.toURL(cmd.getOptionValue(OPT_LOG_CFG)));
 
-        final HyperNaviServer server = new HyperNaviServer(port, properties);
+        final HyperNaviServer server = new HyperNaviServer(port, config);
         try {
             server.start();
         } catch (Exception e) {

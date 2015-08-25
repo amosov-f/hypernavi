@@ -15,7 +15,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * Time: 14:45
  */
 @Config(sdk = 21)
-@RunWith(CustomRobolectricTestRunner.class)
+@RunWith(AppRobolectricTestRunner.class)
 public final class AppActivityTest {
     private AppActivity appActivity;
 

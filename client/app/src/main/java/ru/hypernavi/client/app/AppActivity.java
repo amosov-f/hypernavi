@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -31,13 +30,14 @@ import org.json.JSONObject;
 import ru.hypernavi.client.app.util.GeoPoints;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
+import ru.hypernavi.util.Config;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     private static final String LOCAL_FILE_NAME = "cacheScheme.png";
     private static final String SCHEME_PATH = "/file_not_found.jpg";
-    private static final String PROPERTIES_SCHEME = "/app-common.properties";
+    private static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
     private static final long MAX_TIME_OUT = 5000L;
     //noinspection MagicNumber
     private static final int FIVETEEN_MINUTES = 1000 * 50 * 1;
@@ -64,8 +64,11 @@ public final class AppActivity extends Activity {
 
         setContentView(R.layout.main);
 
-        final Properties properties = loadProperties(PROPERTIES_SCHEME);
-        executeProperties(properties);
+        try {
+            executeProperties(Config.load(PROPERTIES_SCHEME));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         executorService = Executors.newFixedThreadPool(nThread);
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -226,23 +229,10 @@ public final class AppActivity extends Activity {
         }
     }
 
-    // TODO: move to module util
-    @NotNull
-    private Properties loadProperties(@NotNull final String resourcesPath) {
-        final Properties properties = new Properties();
-        try {
-            properties.load(AppActivity.class.getResourceAsStream(resourcesPath));
-        } catch (IOException e) {
-            LOG.warning("can't load property");
-            throw new RuntimeException(e);
-        }
-        return properties;
-    }
-
-    private void executeProperties(final Properties properties) {
-        nThread = Integer.parseInt(properties.getProperty("app.request.pool.size"));
-        infoURL = properties.getProperty("app.server.info.host");
-        schemaURL = properties.getProperty("app.server.schema.host");
+    private void executeProperties(@NotNull final Config config) {
+        nThread = config.getInt("app.request.pool.size");
+        infoURL = config.getProperty("app.server.info.host");
+        schemaURL = config.getProperty("app.server.schema.host");
     }
 
     // TODO: move extructor to another module

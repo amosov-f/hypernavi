@@ -3,13 +3,11 @@ package ru.hypernavi.server;
 import org.jetbrains.annotations.NotNull;
 
 
-import java.util.Properties;
-
-
 import com.google.inject.AbstractModule;
 import ru.hypernavi.core.classify.GoodsClassifier;
 import ru.hypernavi.core.classify.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.TomallGoodsClassifier;
+import ru.hypernavi.util.Config;
 
 /**
  * User: amosov-f
@@ -18,16 +16,16 @@ import ru.hypernavi.core.classify.TomallGoodsClassifier;
  */
 public final class HyperNaviModule extends AbstractModule {
     @NotNull
-    private final Properties properties;
+    private final Config config;
 
-    public HyperNaviModule(@NotNull final Properties properties) {
-        this.properties = properties;
+    public HyperNaviModule(@NotNull final Config config) {
+        this.config = config;
     }
 
     @Override
     protected void configure() {
         final Class<? extends GoodsClassifier> goodsClassifierClass;
-        if ("tomall".equals(properties.getProperty("hypernavi.category.model"))) {
+        if ("tomall".equals(config.getProperty("hypernavi.category.model"))) {
             goodsClassifierClass = TomallGoodsClassifier.class;
         } else {
             goodsClassifierClass = RandomGoodsClassifier.class;
