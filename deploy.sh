@@ -12,7 +12,7 @@ mv -v server/target/hypernavi-server-jar-with-dependencies.jar ~/${FILENAME}
 mv -v data /root/data
 
 # starting server
-nohup java -jar ~/${FILENAME} -port 80 -cfg classpath:/common.properties classpath:/dev.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
+nohup java -jar ~/${FILENAME} -port 80 -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
 
 # checking server start
 LOADED=-1

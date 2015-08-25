@@ -17,7 +17,7 @@ public enum MoreIOUtils {
 
     @Nullable
     public static InputStream getInputStream(@NotNull final String path) throws FileNotFoundException {
-        if (path.startsWith("classpath")) {
+        if (isClasspath(path)) {
             return MoreIOUtils.class.getResourceAsStream(path
                     .replace('\\', '/') // fix Windows-style path
                     .replace("classpath:", ""));
@@ -27,6 +27,10 @@ public enum MoreIOUtils {
 
     @NotNull
     public static URL toURL(@NotNull final String path) throws MalformedURLException {
-        return path.startsWith("classpath:") ? MoreIOUtils.class.getResource(path.replace("classpath:", "")) : new URL(path);
+        return isClasspath(path) ? MoreIOUtils.class.getResource(path.replace("classpath:", "")) : new URL(path);
+    }
+
+    public static boolean isClasspath(@NotNull final String path) {
+        return path.startsWith("classpath:");
     }
 }
