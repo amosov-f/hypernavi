@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
  * Time: 14:45
  */
 @Config(sdk = 21)
-@RunWith(AppRobolectricTestRunner.class)
+@RunWith(ru.hypernavi.client.app.AppRobolectricTestRunner.class)
 public final class AppActivityTest {
     private AppActivity appActivity;
 
