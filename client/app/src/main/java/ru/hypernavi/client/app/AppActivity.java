@@ -64,6 +64,12 @@ public final class AppActivity extends Activity implements SensorEventListener {
     private Long timeCorrection;
 
     private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private boolean lastAccelerometerSet = false;
+    private boolean lastMagnetometerSet = false;
+    private float[] lastAccelerometer = new float[3];
+    private float[] lastMagnetometer = new float[3];
     private long timeStamp = (new Date()).getTime();
 
     @Override
@@ -87,6 +93,8 @@ public final class AppActivity extends Activity implements SensorEventListener {
         drawDisplayImage(imageView);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         registerGPSListeners(imageView);
         registerZoomListeners(imageView);
@@ -211,8 +219,8 @@ public final class AppActivity extends Activity implements SensorEventListener {
     protected void onResume() {
         super.onResume();
         // for the system's orientation sensor registered listeners
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-            SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -225,29 +233,33 @@ public final class AppActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(final SensorEvent event) {
         // get the angle around the z-axis rotated
-        final float degree = Math.round(event.values[0]);
-        // create a rotation animation (reverse turn degree degrees)
         if (event.timestamp < timeStamp + THREE_SECONDS) {
             return;
         }
-        LOG.info("timeStamp is  " +  event.timestamp);
-        LOG.info("values: " + event.values[0] + " " + event.values[1] + " " + event.values[2]);
-        timeStamp = event.timestamp;
-        /*
-        //RotateAnimation rotateAnimation = new RotateAnimation(currentDegree, -degree,
-        //    Animation.RELATIVE_TO_SELF, 0.5f,
-        //   Animation.RELATIVE_TO_SELF, 0.5f);
-        // how long the animation will take place
-        //rotateAnimation.setDuration(210);
-        // set the animation after the end of the reservation status
-        //rotateAnimation.setFillAfter(true);
-        // Start the animation
-        //imageView.startAnimation(rotateAnimation);
-        */
-        imageView.setRotation(-degree);
-        LOG.info("imageView rotation around pivot " + imageView.getRotation());
-        LOG.info("imageView rotation around x " + imageView.getRotationX());
-        LOG.info("imageView rotation around y " + imageView.getRotationY());
+        if (event.sensor == accelerometer) {
+            System.arraycopy(event.values, 0, lastAccelerometer, 0, event.values.length);
+            lastAccelerometerSet = true;
+        } else if (event.sensor == magnetometer) {
+            System.arraycopy(event.values, 0, lastMagnetometer, 0, event.values.length);
+            lastMagnetometerSet = true;
+        }
+        if (lastAccelerometerSet && lastMagnetometerSet) {
+            lastAccelerometerSet = false;
+            lastMagnetometerSet = false;
+            final float[] R = new float[9];
+            SensorManager.getRotationMatrix(R, null, lastAccelerometer, lastMagnetometer);
+            final float[] orientation = new float[3];
+            SensorManager.getOrientation(R, orientation);
+            final float azimuthInDegress = (float) (Math.toDegrees(orientation[0]) + 360) % 360;
+            // create a rotation animation (reverse turn degree degrees)
+            LOG.info("timeStamp is  " + event.timestamp);
+            LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
+                     + " " + Math.toDegrees(orientation[2]));
+            timeStamp = event.timestamp;
+
+            imageView.setRotation(-azimuthInDegress);
+            LOG.info("imageView rotation around pivot " + imageView.getRotation());
+        }
     }
     //
     private final class PositionUpdater implements LocationListener {
