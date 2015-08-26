@@ -16,6 +16,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,12 +37,13 @@ import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.GeoPoint;
 
-public final class AppActivity extends Activity /* implements SensorEventListener*/ {
+public final class AppActivity extends Activity implements SensorEventListener {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     private static final String LOCAL_FILE_NAME = "cacheScheme.png";
     private static final String SCHEME_PATH = "/file_not_found.jpg";
     private static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
     private static final long MAX_TIME_OUT = 5000L;
+    private static final long THREE_SECONDS = 3000000000L;
     //noinspection MagicNumber
     private static final int FIVETEEN_MINUTES = 1000 * 50 * 1;
 
@@ -58,9 +63,8 @@ public final class AppActivity extends Activity /* implements SensorEventListene
     private LocationManager locationManager;
     private Long timeCorrection;
 
-    //private SensorManager sensorManager;
-    //private float currentDegree = 0f;
-    //private long timeStamp = (new Date()).getTime();
+    private SensorManager sensorManager;
+    private long timeStamp = (new Date()).getTime();
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -82,7 +86,7 @@ public final class AppActivity extends Activity /* implements SensorEventListene
         getParametersDisplay();
         drawDisplayImage(imageView);
 
-        //sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         registerGPSListeners(imageView);
         registerZoomListeners(imageView);
@@ -197,7 +201,7 @@ public final class AppActivity extends Activity /* implements SensorEventListene
         LOG.info("GeoPosition " + geoPosition);
         Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
     }
-    /*
+    //
     @Override
     public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
 
@@ -219,28 +223,33 @@ public final class AppActivity extends Activity /* implements SensorEventListene
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(final SensorEvent event) {
         // get the angle around the z-axis rotated
-        float degree = Math.round(event.values[0]);
+        final float degree = Math.round(event.values[0]);
         // create a rotation animation (reverse turn degree degrees)
-        if (event.timestamp < timeStamp + 5000000000L) {
+        if (event.timestamp < timeStamp + THREE_SECONDS) {
             return;
         }
         LOG.info("timeStamp is  " +  event.timestamp);
         LOG.info("values: " + event.values[0] + " " + event.values[1] + " " + event.values[2]);
         timeStamp = event.timestamp;
-        RotateAnimation rotateAnimation = new RotateAnimation(currentDegree, -degree,
-            Animation.RELATIVE_TO_SELF, 0.5f,
-            Animation.RELATIVE_TO_SELF, 0.5f);
+        /*
+        //RotateAnimation rotateAnimation = new RotateAnimation(currentDegree, -degree,
+        //    Animation.RELATIVE_TO_SELF, 0.5f,
+        //   Animation.RELATIVE_TO_SELF, 0.5f);
         // how long the animation will take place
-        rotateAnimation.setDuration(210);
+        //rotateAnimation.setDuration(210);
         // set the animation after the end of the reservation status
-        rotateAnimation.setFillAfter(true);
+        //rotateAnimation.setFillAfter(true);
         // Start the animation
-        imageView.startAnimation(rotateAnimation);
-        currentDegree = -degree;
+        //imageView.startAnimation(rotateAnimation);
+        */
+        imageView.setRotation(-degree);
+        LOG.info("imageView rotation around pivot " + imageView.getRotation());
+        LOG.info("imageView rotation around x " + imageView.getRotationX());
+        LOG.info("imageView rotation around y " + imageView.getRotationY());
     }
-    */
+    //
     private final class PositionUpdater implements LocationListener {
         @NotNull
         private final LocationManager manager;
