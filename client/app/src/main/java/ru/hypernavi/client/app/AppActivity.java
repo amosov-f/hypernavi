@@ -33,7 +33,7 @@ import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.GeoPoint;
 
-public final class AppActivity extends Activity {
+public final class AppActivity extends Activity /* implements SensorEventListener*/ {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     private static final String LOCAL_FILE_NAME = "cacheScheme.png";
     private static final String SCHEME_PATH = "/file_not_found.jpg";
@@ -48,6 +48,8 @@ public final class AppActivity extends Activity {
     private int displayWidth;
     private int displayHeight;
 
+    private ImageView imageView;
+
     private int nThread;
     private ExecutorService executorService;
     private String infoURL;
@@ -55,6 +57,10 @@ public final class AppActivity extends Activity {
 
     private LocationManager locationManager;
     private Long timeCorrection;
+
+    //private SensorManager sensorManager;
+    //private float currentDegree = 0f;
+    //private long timeStamp = (new Date()).getTime();
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -68,10 +74,12 @@ public final class AppActivity extends Activity {
         executeProperties(properties);
         executorService = Executors.newFixedThreadPool(nThread);
 
-        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
         getParametersDisplay();
         drawDisplayImage(imageView);
+
+        //sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         registerGPSListeners(imageView);
         registerZoomListeners(imageView);
@@ -186,7 +194,50 @@ public final class AppActivity extends Activity {
         LOG.info("GeoPosition " + geoPosition);
         Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
     }
+    /*
+    @Override
+    public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // for the system's orientation sensor registered listeners
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+            SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // to stop the listener and save battery
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // get the angle around the z-axis rotated
+        float degree = Math.round(event.values[0]);
+        // create a rotation animation (reverse turn degree degrees)
+        if (event.timestamp < timeStamp + 5000000000L) {
+            return;
+        }
+        LOG.info("timeStamp is  " +  event.timestamp);
+        LOG.info("values: " + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+        timeStamp = event.timestamp;
+        RotateAnimation rotateAnimation = new RotateAnimation(currentDegree, -degree,
+            Animation.RELATIVE_TO_SELF, 0.5f,
+            Animation.RELATIVE_TO_SELF, 0.5f);
+        // how long the animation will take place
+        rotateAnimation.setDuration(210);
+        // set the animation after the end of the reservation status
+        rotateAnimation.setFillAfter(true);
+        // Start the animation
+        imageView.startAnimation(rotateAnimation);
+        currentDegree = -degree;
+    }
+    */
     private final class PositionUpdater implements LocationListener {
         @NotNull
         private final LocationManager manager;

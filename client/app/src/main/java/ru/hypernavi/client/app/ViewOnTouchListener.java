@@ -33,11 +33,14 @@ public class ViewOnTouchListener implements View.OnTouchListener {
     }
 
     private int getMaxXScroll(final Bitmap myScheme) {
-        return Math.abs((myScheme.getWidth() / 2) - (myDisplayWidth / 2));
+        //LOG.info("scheme width " + myScheme.getWidth());
+        //noinspection MagicNumber
+        return (int) (1.5f * Math.abs((myScheme.getWidth() / 2.0f) - (myDisplayWidth / myView.getScaleX() / 2.0f)));
     }
 
     private int getMaxYScroll(final Bitmap myScheme) {
-        return Math.abs((myScheme.getHeight() / 2) - (myDisplayHeight / 2));
+        //noinspection MagicNumber
+        return (int) (1.5f * Math.abs((myScheme.getHeight() / 2.0f) - (myDisplayHeight / myView.getScaleY() / 2.0f)));
     }
 
     private int newScroll(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
@@ -65,7 +68,6 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         }
         return total;
     }
-
 
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
