@@ -1,4 +1,4 @@
-package ru.hypernavi.server.servlet;
+package ru.hypernavi.server.servlet.client;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -8,9 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-import ru.hypernavi.core.FileImgLoader;
-import ru.hypernavi.core.ImgHolder;
-import ru.hypernavi.core.ResoursesImgData;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import ru.hypernavi.core.database.ImageDataBase;
+import ru.hypernavi.core.database.ImageFileLoader;
+import ru.hypernavi.core.database.ImageResourcesLoader;
+import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
  * Created by Константин on 19.07.2015.
@@ -18,6 +21,8 @@ import ru.hypernavi.core.ResoursesImgData;
 
 @WebServlet(name = "img", value = "/img/*")
 public final class ImgServlet extends AbstractHttpService {
+    private static final Log LOG = LogFactory.getLog(ImgServlet.class);
+
     public ImgServlet() {
     }
 
@@ -25,8 +30,8 @@ public final class ImgServlet extends AbstractHttpService {
     public void process(@NotNull final HttpServletRequest request,
                         @NotNull final HttpServletResponse response) throws IOException {
 
-        final String md5hash = request.getPathInfo();
-        final byte[] schema = images.getImage(md5hash);
+        final String name = request.getPathInfo();
+        final byte[] schema = images.get("/img" + name);
 
         if (schema == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -39,5 +44,6 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final ImgHolder images = new ResoursesImgData();
+    private final ImageDataBase<ImageResourcesLoader> images
+            = new ImageDataBase<>(new ImageResourcesLoader("img/"));
 }

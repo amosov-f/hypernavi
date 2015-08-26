@@ -1,12 +1,10 @@
-package ru.hypernavi.core;
+package ru.hypernavi.core.database;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.StringWriter;
+
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -28,7 +26,7 @@ public class HypermarketReader {
     public HypermarketReader(final String path) {
         LOG.info("Reading hypermarket from " + path);
         try {
-            final StringWriter writer = new StringWriter();
+            //final StringWriter writer = new StringWriter();
             final String jsonFile = IOUtils.toString(getClass().getResourceAsStream(path));
 
             //final InputStream in = new FileInputStream(new File(path));

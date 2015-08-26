@@ -1,4 +1,4 @@
-package ru.hypernavi.core;
+package ru.hypernavi.core.database;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +9,6 @@ import java.util.*;
 import javafx.util.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
 
@@ -20,7 +19,7 @@ public class ArrayMapStructure<T extends Positioned> implements MapStructure<T> 
     private static final Log LOG = LogFactory.getLog(ArrayMapStructure.class);
     private final List<T> listPoints = new ArrayList<>();
 
-    ArrayMapStructure(final T[] points) {
+    public ArrayMapStructure(final T[] points) {
         Collections.addAll(listPoints, points);
     }
 

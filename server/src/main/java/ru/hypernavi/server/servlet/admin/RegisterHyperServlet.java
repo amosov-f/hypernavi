@@ -1,4 +1,4 @@
-package ru.hypernavi.server.servlet;
+package ru.hypernavi.server.servlet.admin;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -7,13 +7,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.io.*;
+
+import java.nio.file.Paths;
 import java.util.Map;
 
 
+import org.apache.commons.io.IOUtils;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.core.HypermarketHolder;
 import ru.hypernavi.core.ImageHash;
-import ru.hypernavi.core.ImageLoader;
+import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.database.ImageLoader;
+import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -21,7 +27,7 @@ import ru.hypernavi.util.GeoPoint;
  */
 @WebServlet(name = "register hypermarket", value = "/register/hypermarket")
 public class RegisterHyperServlet extends AbstractHttpService {
-    private HypermarketHolder hypermarkets;
+    private final HypermarketHolder hypermarkets;
 
     RegisterHyperServlet() {
         hypermarkets = HypermarketHolder.getInstance();
@@ -55,11 +61,34 @@ public class RegisterHyperServlet extends AbstractHttpService {
         final String address = req.getParameter("address");
         final String type = req.getParameter("type");
         final String url = req.getParameter("url");
-        final byte[] image = ImageLoader.loadImage(url);
-        final String md5 = ImageHash.generate(image);
+        final byte[] image = loadImage(url);
+
+        final String md5 = saveImage(image);
         final Hypermarket market = new Hypermarket(maxId, location, address, type, md5);
-        ImageLoader.saveImage(image, md5);
         //SaveHypermarket(market);
         hypermarkets.addHypermarket(market);
+    }
+
+    public static byte[] loadImage(final String path) {
+        final byte[] image;
+        try {
+            image = Files.readAllBytes(Paths.get(path));
+        } catch (IOException ignored) {
+            return null;
+        }
+        return image;
+    }
+
+
+    public static String saveImage(final byte[] image) {
+        final String md5;
+        try {
+            md5 = ImageHash.generate(image);
+            final FileOutputStream out = new FileOutputStream(new File("./img/"+md5 + ".jpg"));
+            IOUtils.write(image, out);
+        } catch (IOException ingored) {
+            return null;
+        }
+        return md5;
     }
 }

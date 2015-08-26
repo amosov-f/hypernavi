@@ -1,4 +1,4 @@
-package ru.hypernavi.core;
+package ru.hypernavi.core.database;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

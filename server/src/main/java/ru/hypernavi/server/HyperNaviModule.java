@@ -30,6 +30,7 @@ public final class HyperNaviModule extends AbstractModule {
         bind(String.class).annotatedWith(Names.named("hypernavi.web.bundle")).toInstance(config.getProperty("hypernavi.web.bundle"));
 
         bindGoodsClassifier();
+
     }
 
     private void bindGoodsClassifier() {

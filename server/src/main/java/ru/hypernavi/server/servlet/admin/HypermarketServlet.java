@@ -1,4 +1,4 @@
-package ru.hypernavi.server.servlet;
+package ru.hypernavi.server.servlet.admin;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
+import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
  * Created by Константин on 21.08.2015.

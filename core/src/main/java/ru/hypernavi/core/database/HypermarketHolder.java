@@ -1,4 +1,4 @@
-package ru.hypernavi.core;
+package ru.hypernavi.core.database;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -6,8 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 import org.apache.commons.io.IOUtils;
