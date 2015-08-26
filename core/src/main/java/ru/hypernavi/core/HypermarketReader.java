@@ -29,9 +29,11 @@ public class HypermarketReader {
         LOG.info("Reading hypermarket from " + path);
         try {
             final StringWriter writer = new StringWriter();
-            final InputStream in = new FileInputStream(new File(path));
-            IOUtils.copy(in, writer, "UTF-8");
-            final String jsonFile = writer.toString();
+            final String jsonFile = IOUtils.toString(getClass().getResourceAsStream(path));
+
+            //final InputStream in = new FileInputStream(new File(path));
+            //IOUtils.copy(in, writer, "UTF-8");
+            //final String jsonFile = writer.toString();
             hypermarketInfo = new JSONObject(jsonFile);
             LOG.info("Hypermarket loaded from " + path);
         } catch (IOException | JSONException e) {

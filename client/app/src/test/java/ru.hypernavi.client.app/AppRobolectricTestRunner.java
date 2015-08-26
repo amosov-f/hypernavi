@@ -14,10 +14,10 @@ import org.robolectric.manifest.AndroidManifest;
 /**
  * Created by amosov-f on 22.08.15.
  */
-public final class CustomRobolectricTestRunner extends RobolectricTestRunner {
-    private static final String[] MANIFEST_PATHS = {"../app/AndroidManifest.xml", "client/app/AndroidManifest.xml"};
+public final class AppRobolectricTestRunner extends RobolectricTestRunner {
+    private static final String[] MANIFEST_PATHS = {"./AndroidManifest.xml", "client/app/AndroidManifest.xml"};
 
-    public CustomRobolectricTestRunner(@NotNull final Class<?> testClass) throws InitializationError {
+    public AppRobolectricTestRunner(@NotNull final Class<?> testClass) throws InitializationError {
         super(testClass);
     }
 

@@ -1,1 +1,1 @@
-./Okey/Okey59.json;./Okey/Okey67.json;./Okey/Okey68.json;./Okey/Okey90.json;./Okey/Okey93.json;./Okey/Okey101.json;./Okey/Okey110.json;./Okey/Okey126.json;
+/okey/Okey59.json;/okey/Okey67.json;/okey/Okey68.json;/okey/Okey90.json;/okey/Okey93.json;/okey/Okey101.json;/okey/Okey110.json;/okey/Okey126.json;

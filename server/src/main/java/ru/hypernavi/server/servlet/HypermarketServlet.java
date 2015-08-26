@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * Created by Константин on 21.08.2015.
  */
+// TODO: extend StaticPageHttpService
 @WebServlet(name = "add hyper", value = "/hypermarket")
 public class HypermarketServlet extends AbstractHttpService {
 

@@ -22,8 +22,7 @@ import static org.junit.Assert.assertThat;
  * Time: 14:45
  */
 @Config(sdk = 21)
-@RunWith(ru.hypernavi.client.app.CustomRobolectricTestRunner.class)
-//@Config(manifest = "client/app/AndroidManifest.xml")
+@RunWith(AppRobolectricTestRunner.class)
 public final class AppActivityTest {
     private AppActivity appActivity;
 
