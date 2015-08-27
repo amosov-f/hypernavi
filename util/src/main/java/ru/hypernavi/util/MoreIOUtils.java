@@ -17,20 +17,21 @@ public enum MoreIOUtils {
 
     @Nullable
     public static InputStream getInputStream(@NotNull final String path) throws FileNotFoundException {
-        if (isClasspath(path)) {
-            return MoreIOUtils.class.getResourceAsStream(path
-                    .replace('\\', '/') // fix Windows-style path
-                    .replace("classpath:", ""));
-        }
-        return new FileInputStream(path);
+        return isClasspath(path) ? MoreIOUtils.class.getResourceAsStream(toResourceName(path)) : new FileInputStream(path);
     }
 
     @NotNull
     public static URL toURL(@NotNull final String path) throws MalformedURLException {
-        return isClasspath(path) ? MoreIOUtils.class.getResource(path.replace("classpath:", "")) : new URL(path);
+        return isClasspath(path) ? MoreIOUtils.class.getResource(toResourceName(path)) : new URL(path);
     }
 
     public static boolean isClasspath(@NotNull final String path) {
         return path.startsWith("classpath:");
+    }
+
+    @NotNull
+    public static String toResourceName(@NotNull final String path) {
+        // fix Windows-style path
+        return path.replace('\\', '/').replace("classpath:", "");
     }
 }

@@ -9,16 +9,14 @@ import ru.hypernavi.server.HyperNaviServerRunner;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Константин on 22.08.2015.
+ * Created by amosov-f on 28.08.15.
  */
-
 @RunWith(HyperNaviServerRunner.class)
-public class ClientBehaviorTest extends AcceptanceTest {
-    @Test(timeout = 2000)
-    public void testOkStatus() {
-        final double lon = 30;
-        final double lat = 60;
-        final HttpResponse resp = execute("/schemainfo?lon="+lon+"&lat="+lat);
+public final class MordaSanityTest extends AcceptanceTest {
+    @Test(timeout = 1000)
+    public void testHtmlContentType() {
+        final HttpResponse resp = execute("/");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+        assertEquals("text/html;charset=utf-8", resp.getEntity().getContentType().getValue());
     }
 }

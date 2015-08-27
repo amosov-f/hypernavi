@@ -13,7 +13,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 /**
  * Created by Константин on 21.08.2015.
  */
-// TODO: extend StaticPageHttpService
+// TODO: extend HtmlPageHttpService
 @WebServlet(name = "add hyper", value = "/hypermarket")
 public class HypermarketServlet extends AbstractHttpService {
 
