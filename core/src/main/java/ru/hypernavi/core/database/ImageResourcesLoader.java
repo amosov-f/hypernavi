@@ -55,13 +55,20 @@ public class ImageResourcesLoader implements ImageLoader {
 
     private void loadFromConfig(@NotNull final String pathDir) {
         try {
-            final Stream<String> listPath = IOUtils.readLines(
+            final List<String> localpaths = IOUtils.readLines(
                     ImageResourcesLoader.class.getClassLoader()
-                            .getResourceAsStream(pathDir), Charsets.UTF_8)
-                    .stream().map(s -> "/" + pathDir + s);
+                            .getResourceAsStream(pathDir), Charsets.UTF_8);
+            LOG.info(localpaths.size());
+            localpaths.forEach(LOG::info);
+            //localpaths.stream().map(s -> "/" + pathDir + s);
+
+            //final Stream<String> listPath = IOUtils.readLines(
+            //        ImageResourcesLoader.class.getClassLoader()
+            //                .getResourceAsStream(pathDir), Charsets.UTF_8)
+            //        .stream().map(s -> "/" + pathDir + s);
 
 
-            Collections.addAll(paths, listPath.toArray(String[]::new));
+            Collections.addAll(paths, localpaths.stream().map(s -> "/" + pathDir + s).toArray(String[]::new));
 
             paths.forEach(LOG::info);
         } catch (IOException e) {
