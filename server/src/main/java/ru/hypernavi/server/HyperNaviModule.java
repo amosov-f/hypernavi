@@ -36,7 +36,7 @@ public final class HyperNaviModule extends AbstractModule {
     protected void configure() {
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
         bindTemplates();
-
+        bindString("hypernavi.server.imagepath");
         bindGoodsClassifier();
     }
 

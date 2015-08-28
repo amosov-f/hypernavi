@@ -8,12 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.database.ImageDataBase;
 import ru.hypernavi.core.database.ImageFileLoader;
-import ru.hypernavi.core.database.ImageResourcesLoader;
 import ru.hypernavi.server.servlet.AbstractHttpService;
+import com.google.inject.Inject;
 
 /**
  * Created by Константин on 19.07.2015.
@@ -23,7 +24,12 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 public final class ImgServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(ImgServlet.class);
 
-    public ImgServlet() {
+    private final String dataPath;
+
+    @Inject
+    public ImgServlet(@Named("hypernavi.server.imagepath") @NotNull final String dataPath) {
+        this.dataPath = dataPath;
+        images = new ImageDataBase<>(new ImageFileLoader(dataPath + "/"));
     }
 
     @Override
@@ -31,7 +37,7 @@ public final class ImgServlet extends AbstractHttpService {
                         @NotNull final HttpServletResponse response) throws IOException {
 
         final String name = request.getPathInfo();
-        final byte[] schema = images.get("data/img" + name);
+        final byte[] schema = images.get(dataPath + name);
 
         if (schema == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -44,6 +50,6 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final ImageDataBase<ImageFileLoader> images
-            = new ImageDataBase<>(new ImageFileLoader("data/img/"));
+    private final ImageDataBase<ImageFileLoader> images;
+
 }
