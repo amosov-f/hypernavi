@@ -31,7 +31,7 @@ public final class ImgServlet extends AbstractHttpService {
                         @NotNull final HttpServletResponse response) throws IOException {
 
         final String name = request.getPathInfo();
-        final byte[] schema = images.get("/img" + name);
+        final byte[] schema = images.get("data/img" + name);
 
         if (schema == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -44,6 +44,6 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final ImageDataBase<ImageResourcesLoader> images
-            = new ImageDataBase<>(new ImageResourcesLoader("img/"));
+    private final ImageDataBase<ImageFileLoader> images
+            = new ImageDataBase<>(new ImageFileLoader("data/img/"));
 }

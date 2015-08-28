@@ -69,7 +69,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
         hypermarkets.addHypermarket(market);
     }
 
-    public static byte[] loadImage(final String path) {
+    private static byte[] loadImage(final String path) {
         final byte[] image;
         try {
             image = Files.readAllBytes(Paths.get(path));
@@ -80,13 +80,13 @@ public class RegisterHyperServlet extends AbstractHttpService {
     }
 
 
-    public static String saveImage(final byte[] image) {
+    private static String saveImage(final byte[] image) {
         final String md5;
         try {
             md5 = ImageHash.generate(image);
             final FileOutputStream out = new FileOutputStream(new File("./img/"+md5 + ".jpg"));
             IOUtils.write(image, out);
-        } catch (IOException ingored) {
+        } catch (IOException ignored) {
             return null;
         }
         return md5;
