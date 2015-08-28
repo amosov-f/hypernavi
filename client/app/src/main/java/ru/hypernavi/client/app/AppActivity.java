@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -29,9 +27,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
-import org.json.JSONException;
 import org.json.JSONObject;
+import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPoints;
+import ru.hypernavi.client.app.util.SafeLoader;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.Config;
@@ -39,17 +38,12 @@ import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity implements SensorEventListener {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
-    private static final String LOCAL_FILE_NAME = "cacheScheme.png";
-    private static final String SCHEME_PATH = "/file_not_found.jpg";
     private static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
-    private static final long MAX_TIME_OUT = 5000L;
     private static final long THREE_SECONDS = 3000000000L;
     //noinspection MagicNumber
-    private static final int FIVETEEN_MINUTES = 1000 * 50 * 1;
+    private static final int FIVETEEN_MINUTES = 1000 * 50;
 
     private Bitmap originScheme;
-    @Nullable
-    private JSONObject root;
     private int displayWidth;
     private int displayHeight;
 
@@ -68,9 +62,12 @@ public final class AppActivity extends Activity implements SensorEventListener {
     private Sensor magnetometer;
     private boolean lastAccelerometerSet = false;
     private boolean lastMagnetometerSet = false;
-    private float[] lastAccelerometer = new float[3];
-    private float[] lastMagnetometer = new float[3];
+    private final float[] lastAccelerometer = new float[3];
+    private final float[] lastMagnetometer = new float[3];
     private long timeStamp = (new Date()).getTime();
+
+    private SafeLoader loader;
+    private CacheWorker cache;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -79,15 +76,13 @@ public final class AppActivity extends Activity implements SensorEventListener {
         LOG.info("onCreate start");
 
         setContentView(R.layout.main);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
-        try {
-            executeProperties(Config.load(PROPERTIES_SCHEME));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        getProperties(PROPERTIES_SCHEME);
         executorService = Executors.newFixedThreadPool(nThread);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
+        cache = new CacheWorker(this);
+        loader = new SafeLoader(executorService, cache);
 
         getParametersDisplay();
         drawDisplayImage(imageView);
@@ -132,14 +127,10 @@ public final class AppActivity extends Activity implements SensorEventListener {
         imageView.setOnTouchListener(viewOnTouchListener);
     }
 
-    public void sendRequest(final ImageView imageView) {
-        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new PositionUpdater(locationManager, imageView), null);
-    }
-
     private void registerGPSListeners(final ImageView imageView) {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(AppActivity.this, "GPS disabled!", Toast.LENGTH_LONG).show();
+            writeWarningMessage("GPS disabled!");
             LOG.warning("No GPS module finded.");
             return;
         }
@@ -153,64 +144,87 @@ public final class AppActivity extends Activity implements SensorEventListener {
         sendRequest(imageView);
     }
 
+    public void sendRequest(final ImageView imageView) {
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new PositionUpdater(locationManager, imageView), null);
+    }
+
     public boolean isActual(final Location location, final Long timeCorrection) {
         LOG.info("locaction time is " + location.getTime());
         return (location.getTime() + timeCorrection + FIVETEEN_MINUTES > (new Date()).getTime());
     }
 
     private void drawDisplayImage(final ImageView imageView) {
-        originScheme = loadCachedOrDefaultScheme();
+        originScheme = cache.loadCachedOrDefaultScheme();
         imageView.setImageBitmap(originScheme);
         LOG.info("Image XScale " + imageView.getScaleX());
         LOG.info("Display width " + displayWidth);
         LOG.info("Display high " + displayHeight);
     }
 
+    // TODO: rewrite and take to another file/class
     private void sendInfoRequest(final GeoPoint geoPosition, final ImageView imageView) {
         final double lat = geoPosition.getLatitude();
         final double lon = geoPosition.getLongitude();
         LOG.info("GeoPoint coordinates " + "lat: " + lat + "lon: " + lon);
+        final JSONObject root;
         try {
-            //final String infoURL = "http://10.0.2.2:8080/schemainfo";
-            root = extructJSON(lat, lon, this.infoURL);
-        } catch (MalformedURLException e) {
-            LOG.warning("can't construct URL for info");
-            Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
+            root = loader.getJSON(lat, lon, this.infoURL);
+        } catch (MalformedURLException ignored) {
+            LOG.warning("Can't construct URL for info");
+            writeWarningMessage("Internet disabled!");
             return;
-            //throw new RuntimeException(e);
         }
 
         if (root == null) {
-            LOG.warning("can't construct URL for info");
+            LOG.warning("Can't construct URL for info");
             return;
         }
 
         final InfoResponce responce = InfoResponceSerializer.deserialize(root);
         if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
-            originScheme = loadCachedOrDefaultScheme();
-            LOG.warning("No markets in responce.");
+            originScheme = cache.loadCachedOrDefaultScheme();
+            LOG.warning("No markets in responce");
         } else {
-            //final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
             final String schemaFullURL = this.schemaURL + responce.getClosestMarkets().get(0).getUrl();
             try {
-                originScheme = extructScheme(schemaFullURL);
+                originScheme = loader.getScheme(schemaFullURL);
             } catch (MalformedURLException e) {
                 LOG.warning("Can't construct url for scheme. " + e.getMessage());
-                Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
+                writeWarningMessage("Internet disabled!");
                 return;
             }
         }
 
         imageView.setImageBitmap(originScheme);
-        cachedScheme();
+        cache.saveSchemeToCache(originScheme);
 
         LOG.info("GeoPosition " + geoPosition);
-        Toast.makeText(AppActivity.this, "GeoPosition " + geoPosition, Toast.LENGTH_SHORT).show();
+        writeWarningMessage("GeoPosition " + geoPosition);
     }
+
+    private void getProperties(@NotNull final String path) {
+        try {
+            final Config config = Config.load(path);
+            nThread = config.getInt("app.request.pool.size");
+            infoURL = config.getProperty("app.server.info.host");
+            schemaURL = config.getProperty("app.server.schema.host");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void writeWarningMessage(@NotNull final String message) {
+        Toast.makeText(AppActivity.this, message, Toast.LENGTH_LONG).show();
+    }
+
+    public void crashApplication() {
+        throw new RuntimeException("I am crashed");
+    }
+
     //
     @Override
     public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
-
     }
 
     @Override
@@ -252,14 +266,15 @@ public final class AppActivity extends Activity implements SensorEventListener {
             // create a rotation animation (reverse turn degree degrees)
             LOG.info("timeStamp is  " + event.timestamp);
             LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
-                     + " " + Math.toDegrees(orientation[2]));
+                    + " " + Math.toDegrees(orientation[2]));
             timeStamp = event.timestamp;
 
             imageView.setRotation(-azimuthInDegress);
             LOG.info("imageView rotation around pivot " + imageView.getRotation());
         }
     }
-    //
+
+    // TODO: take from here to another file
     private final class PositionUpdater implements LocationListener {
         @NotNull
         private final LocationManager manager;
@@ -297,116 +312,5 @@ public final class AppActivity extends Activity implements SensorEventListener {
         @Override
         public void onProviderDisabled(@NotNull final String provider) {
         }
-    }
-
-    private void executeProperties(@NotNull final Config config) {
-        nThread = config.getInt("app.request.pool.size");
-        infoURL = config.getProperty("app.server.info.host");
-        schemaURL = config.getProperty("app.server.schema.host");
-    }
-
-    // TODO: move extructor to another module
-    private JSONObject extructJSON(final double lat, final double lon, final String infoURL) throws MalformedURLException {
-        final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
-        LOG.info("infoURL: " + requestURL.toString());
-        final RequestString requestString = new RequestString(requestURL);
-        LOG.info("JSON request URL" + requestURL.toString());
-        final Future<String> task = executorService.submit(requestString);
-        String hypermarketsJSON;
-        try {
-            hypermarketsJSON = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            LOG.warning(e.getMessage());
-            hypermarketsJSON = null;
-        } catch (ExecutionException e) {
-            LOG.warning("Oops.");
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
-        if (hypermarketsJSON == null) {
-            LOG.warning("JSON string is null");
-            return null;
-        }
-        try {
-            return new JSONObject(hypermarketsJSON);
-        } catch (JSONException e) {
-            LOG.warning(e.getMessage());
-            return null;
-        }
-    }
-
-    private Bitmap extructScheme(final String currentSchemeURL) throws MalformedURLException {
-        final RequestBitmap requestBitmap = new RequestBitmap(new URL(currentSchemeURL));
-        final Future<Bitmap> task = executorService.submit(requestBitmap);
-        final Bitmap answer;
-        try {
-            answer = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
-            if (answer == null) {
-                return loadCachedOrDefaultScheme();
-            } else {
-                return answer;
-            }
-        } catch (InterruptedException e) {
-            LOG.warning(e.getMessage());
-            return loadCachedOrDefaultScheme();
-        } catch (ExecutionException | TimeoutException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @NotNull
-    private Bitmap loadCachedOrDefaultScheme() {
-        final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
-        LOG.warning(file.getAbsolutePath());
-        if (file.exists()) {
-            try {
-                final Bitmap cachedScheme = BitmapFactory.decodeStream(new FileInputStream(file));
-                if (cachedScheme == null) {
-                    LOG.warning("File: " + file.getPath());
-                    LOG.warning("No cached scheme founded in existing file " + file.getPath());
-                    //this.deleteFile(file.getPath());
-                } else {
-                    LOG.info("cached scheme is returned");
-                    Toast.makeText(AppActivity.this, "Cached map is loaded!", Toast.LENGTH_LONG).show();
-                    return cachedScheme;
-                }
-            } catch (FileNotFoundException e) {
-                LOG.warning("can't find file " + e.getMessage());
-            }
-        }
-
-        final Bitmap defaultScheme = BitmapFactory.decodeStream(getClass().getResourceAsStream(SCHEME_PATH));
-        if (defaultScheme == null) {
-            throw new RuntimeException("No default scheme founded");
-        }
-        LOG.info("default scheme is returned");
-        Toast.makeText(AppActivity.this, "Default image is loaded!", Toast.LENGTH_LONG).show();
-        return defaultScheme;
-    }
-
-    private void cachedScheme() {
-        final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
-        try {
-            if (file.createNewFile()) {
-                try {
-                    final FileOutputStream out = new FileOutputStream(file);
-                    LOG.warning("file where we write: " + file.toString());
-                    originScheme.compress(Bitmap.CompressFormat.PNG, 100, out);
-                    out.close();
-                    LOG.info("scheme is cached");
-                } catch (FileNotFoundException e) {
-                    LOG.warning("cached file is null " + e.getMessage());
-                } catch (IOException e) {
-                    LOG.warning("can't close outputStream " + e.getMessage());
-                }
-            }
-        } catch (IOException e) {
-            LOG.warning("can't create file for cached scheme " + e.getMessage());
-        }
-    }
-
-    public void crashApplication() {
-        throw new RuntimeException("I am crashed");
     }
 }
