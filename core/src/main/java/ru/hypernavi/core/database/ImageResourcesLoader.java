@@ -55,9 +55,23 @@ public class ImageResourcesLoader implements ImageLoader {
 
     private void loadFromConfig(@NotNull final String pathDir) {
         try {
+
+
+            LOG.info(pathDir);
+
+            if (ImageResourcesLoader.class.getClassLoader()
+                    .getResource(pathDir) == null) {
+                LOG.warn("No such directory!");
+            }
+
+            if (ImageResourcesLoader.class.getClassLoader()
+                    .getResourceAsStream(pathDir) == null) {
+                LOG.warn("Fuck there is no files");
+            }
             final List<String> localpaths = IOUtils.readLines(
                     ImageResourcesLoader.class.getClassLoader()
                             .getResourceAsStream(pathDir), Charsets.UTF_8);
+
             LOG.info(localpaths.size());
             localpaths.forEach(LOG::info);
             //localpaths.stream().map(s -> "/" + pathDir + s);
