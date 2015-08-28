@@ -62,6 +62,8 @@ public class ImageResourcesLoader implements ImageLoader {
 
 
             Collections.addAll(paths, listPath.toArray(String[]::new));
+
+            paths.forEach(LOG::info);
         } catch (IOException e) {
             LOG.warn(e.getMessage());
         }

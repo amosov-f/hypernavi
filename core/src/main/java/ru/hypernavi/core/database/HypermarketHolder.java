@@ -20,8 +20,6 @@ import ru.hypernavi.util.GeoPoint;
 public class HypermarketHolder {
     private static final Log LOG = LogFactory.getLog(HypermarketHolder.class);
     private static HypermarketHolder instance = null;
-    //@NotNull
-    //private final Map<String, Integer> md5id;
     @NotNull
     private final MapStructure<Hypermarket> markets;
 
@@ -35,13 +33,10 @@ public class HypermarketHolder {
             throw new RuntimeException(e.getMessage());
         }
 
-        // md5id = new TreeMap<>();
-
         final List<Hypermarket> listHyper = new ArrayList<>();
         for (int i = 0; i < pathHypermarket.length; ++i) {
             final HypermarketReader reader = new HypermarketReader(pathHypermarket[i]);
             listHyper.add(reader.construct());
-            //  md5id.put(listHyper.get(i).getUrl(), listHyper.get(i).getId());
         }
 
         final Hypermarket[] copyList = new Hypermarket[listHyper.size()];
@@ -57,7 +52,6 @@ public class HypermarketHolder {
     }
 
     public void addHypermarket(@NotNull final Hypermarket hyper) {
-        //md5id.put(hyper.getUrl(), hyper.getId());
         markets.add(hyper);
     }
 
