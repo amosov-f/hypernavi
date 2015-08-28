@@ -173,7 +173,6 @@ public final class AppActivity extends Activity implements SensorEventListener {
         try {
             //final String infoURL = "http://10.0.2.2:8080/schemainfo";
             root = extructJSON(lat, lon, this.infoURL);
-            LOG.info("infoURL: " + this.infoURL);
         } catch (MalformedURLException e) {
             LOG.warning("can't construct URL for info");
             Toast.makeText(AppActivity.this, "Internet disabled!", Toast.LENGTH_LONG).show();
@@ -194,7 +193,6 @@ public final class AppActivity extends Activity implements SensorEventListener {
             //final String schemaURL = "http://10.0.2.2:8080" + responce.getClosestMarkets().get(0).getUrl();
             final String schemaFullURL = this.schemaURL + responce.getClosestMarkets().get(0).getUrl();
             try {
-
                 originScheme = extructScheme(schemaFullURL);
             } catch (MalformedURLException e) {
                 LOG.warning("Can't construct url for scheme. " + e.getMessage());
@@ -310,6 +308,7 @@ public final class AppActivity extends Activity implements SensorEventListener {
     // TODO: move extructor to another module
     private JSONObject extructJSON(final double lat, final double lon, final String infoURL) throws MalformedURLException {
         final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
+        LOG.info("infoURL: " + requestURL.toString());
         final RequestString requestString = new RequestString(requestURL);
         LOG.info("JSON request URL" + requestURL.toString());
         final Future<String> task = executorService.submit(requestString);
@@ -340,9 +339,14 @@ public final class AppActivity extends Activity implements SensorEventListener {
     private Bitmap extructScheme(final String currentSchemeURL) throws MalformedURLException {
         final RequestBitmap requestBitmap = new RequestBitmap(new URL(currentSchemeURL));
         final Future<Bitmap> task = executorService.submit(requestBitmap);
-
+        final Bitmap answer;
         try {
-            return task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
+            answer = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
+            if (answer == null) {
+                return loadCachedOrDefaultScheme();
+            } else {
+                return answer;
+            }
         } catch (InterruptedException e) {
             LOG.warning(e.getMessage());
             return loadCachedOrDefaultScheme();
@@ -354,15 +358,17 @@ public final class AppActivity extends Activity implements SensorEventListener {
     @NotNull
     private Bitmap loadCachedOrDefaultScheme() {
         final File file = new File(this.getFilesDir(), LOCAL_FILE_NAME);
+        LOG.warning(file.getAbsolutePath());
         if (file.exists()) {
             try {
                 final Bitmap cachedScheme = BitmapFactory.decodeStream(new FileInputStream(file));
                 if (cachedScheme == null) {
                     LOG.warning("File: " + file.getPath());
                     LOG.warning("No cached scheme founded in existing file " + file.getPath());
-                    this.deleteFile(file.getPath());
+                    //this.deleteFile(file.getPath());
                 } else {
                     LOG.info("cached scheme is returned");
+                    Toast.makeText(AppActivity.this, "Cached map is loaded!", Toast.LENGTH_LONG).show();
                     return cachedScheme;
                 }
             } catch (FileNotFoundException e) {
@@ -375,6 +381,7 @@ public final class AppActivity extends Activity implements SensorEventListener {
             throw new RuntimeException("No default scheme founded");
         }
         LOG.info("default scheme is returned");
+        Toast.makeText(AppActivity.this, "Default image is loaded!", Toast.LENGTH_LONG).show();
         return defaultScheme;
     }
 
