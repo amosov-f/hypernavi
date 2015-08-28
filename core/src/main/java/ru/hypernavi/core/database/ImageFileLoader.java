@@ -27,6 +27,9 @@ public class ImageFileLoader implements ImageLoader {
         final List<String> images = new ArrayList<>();
 
         final File folder = new File(pathDir);
+        //if (!folder.getName().equals(pathDir)) {
+        LOG.warn(folder.getAbsolutePath());
+        //}
         final File[] listOfFiles = folder.listFiles();
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
@@ -34,7 +37,11 @@ public class ImageFileLoader implements ImageLoader {
                     images.add(pathDir + listOfFiles[i].getName());
                 }
             }
+            images.forEach(LOG::info);
+        } else {
+            LOG.warn("No files in directory");
         }
+
         paths = images.toArray(new String[images.size()]);
     }
 
@@ -44,9 +51,7 @@ public class ImageFileLoader implements ImageLoader {
         LOG.info(name);
         byte[] result = null;
         try {
-            //File image = new File(name);
             final InputStream in = new FileInputStream(new File(name));
-            LOG.error("????????????");
             result = IOUtils.toByteArray(in);
         } catch (IOException ignored) {
             LOG.error("No such file");
