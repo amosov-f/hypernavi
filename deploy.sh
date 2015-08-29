@@ -9,7 +9,7 @@ rm -r ~/hypernavi-dev-*
 mv -v server/target/hypernavi-server-jar-with-dependencies.jar ~/${FILENAME}
 
 # moving data
-mv -v data /root/data
+rsync -a data /root
 
 # starting server
 nohup java -jar ~/${FILENAME} -port 80 -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
