@@ -1,16 +1,13 @@
 package ru.hypernavi.core.database;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
-import com.google.inject.Singleton;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +20,6 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 12.08.2015.
  */
-@Singleton
 public class HypermarketHolder {
     private static final Log LOG = LogFactory.getLog(HypermarketHolder.class);
     @NotNull
