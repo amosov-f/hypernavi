@@ -27,6 +27,10 @@ public class HypermarketHolder {
 
     private final DataLoader loader;
 
+    public int size() {
+        return loader.getPaths().length;
+    }
+
     public HypermarketHolder() {
         this.loader = new FileDataLoader("./data/hypermarkets/");
         final String[] paths = loader.getPaths();

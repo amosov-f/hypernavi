@@ -19,25 +19,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FileDataLoader implements DataLoader {
     private static final Log LOG = LogFactory.getLog(FileDataLoader.class);
-    private final String[] paths;
+
+    private final String pathDir;
 
     public FileDataLoader(final String pathDir) {
-        final List<String> pathsFiles = new ArrayList<>();
-        final File folder = new File(pathDir);
-
-        final File[] listOfFiles = folder.listFiles();
-        if (listOfFiles != null) {
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    pathsFiles.add(pathDir + listOfFiles[i].getName());
-                }
-            }
-            pathsFiles.forEach(LOG::info);
-        } else {
-            LOG.warn("No files in directory");
-        }
-
-        paths = pathsFiles.toArray(new String[pathsFiles.size()]);
+        this.pathDir = pathDir;
     }
 
     @Nullable
@@ -57,7 +43,22 @@ public class FileDataLoader implements DataLoader {
     @NotNull
     @Override
     public String[] getPaths() {
-        return paths;
+        final List<String> pathsFiles = new ArrayList<>();
+        final File folder = new File(pathDir);
+
+        final File[] listOfFiles = folder.listFiles();
+        if (listOfFiles != null) {
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    pathsFiles.add(pathDir + listOfFiles[i].getName());
+                }
+            }
+            pathsFiles.forEach(LOG::info);
+        } else {
+            LOG.warn("No files in directory");
+        }
+
+        return pathsFiles.toArray(new String[pathsFiles.size()]);
     }
 
     @Override

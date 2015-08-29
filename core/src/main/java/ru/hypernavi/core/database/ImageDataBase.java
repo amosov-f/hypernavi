@@ -31,16 +31,18 @@ public class ImageDataBase {
 
     @Nullable
     public final byte[] get(@NotNull final String service, @NotNull final String name) {
+        return loader.load(service + name);
+        /*
         if (nameImage.contains(service + name)) {
             return loader.load(service + name);
         }
-        return null;
+        return null;*/
     }
 
     public void add(@NotNull final String service, @NotNull final String name) {
-        if (loader.load(service + name) != null) {
+        /*if ( != null) {
             nameImage.add(service + name);
-        }
+        }*/
     }
 
     private final Set<String> nameImage;

@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.ImageHash;
+import ru.hypernavi.core.database.FileDataLoader;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.GeoPoint;
@@ -33,6 +34,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(RegisterHyperServlet.class);
 
     private final HypermarketHolder hypermarkets;
+
 
     @Inject
     RegisterHyperServlet(@NotNull final HypermarketHolder hypermarkets) {
@@ -64,7 +66,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
         }
         final GeoPoint location = new GeoPoint(Double.parseDouble(req.getParameter("lon")),
                 Double.parseDouble(req.getParameter("lat")));
-        final int maxId = 0;
+        final int maxId = hypermarkets.size();
         final String address = req.getParameter("address");
         final String type = req.getParameter("type");
         final String url = req.getParameter("url");
@@ -73,7 +75,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
             LOG.error("FUCK!");
         final String md5 = saveImage(image);
         final Hypermarket market = new Hypermarket(maxId, location, address, type, "img/" +  md5 + ".jpg");
-        hypermarkets.addHypermarket(market, type + market.getId() + ".json");
+        hypermarkets.addHypermarket(market, market.getId() + ".json");
         LOG.info("OK!");
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.getOutputStream().print("OK");
@@ -87,7 +89,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
             InputStream is = null;
             try {
                 is = url.openStream();
-                final byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+                final byte[] byteChunk = new byte[4096];
                 int n;
 
                 while ( (n = is.read(byteChunk)) > 0 ) {
@@ -101,7 +103,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
                 if (is != null) { is.close(); }
             }
             image = baos.toByteArray();
-            //image = Files.readAllBytes(Paths.get(path));
+
         } catch (IOException ignored) {
             return null;
         }
