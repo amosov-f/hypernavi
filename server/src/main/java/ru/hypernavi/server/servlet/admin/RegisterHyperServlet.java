@@ -19,7 +19,6 @@ import org.apache.commons.io.IOUtils;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.ImageHash;
 import ru.hypernavi.core.database.HypermarketHolder;
-import ru.hypernavi.core.database.ImageLoader;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.GeoPoint;
 

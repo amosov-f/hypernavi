@@ -13,10 +13,10 @@ import ru.hypernavi.core.ImageHash;
 /**
  * Created by Константин on 24.08.2015.
  */
-public interface ImageLoader {
+public interface DataLoader {
     @Nullable
     byte[] get(final String path);
 
     @Nullable
-    String[] getNames();
+    String[] getPaths();
 }

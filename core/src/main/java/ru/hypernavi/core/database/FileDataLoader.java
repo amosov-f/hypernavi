@@ -17,19 +17,16 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Created by Константин on 26.08.2015.
  */
-public class ImageFileLoader implements ImageLoader {
-    private static final Log LOG = LogFactory.getLog(ImageFileLoader.class);
+public class FileDataLoader implements DataLoader {
+    private static final Log LOG = LogFactory.getLog(FileDataLoader.class);
     private final String[] paths;
 
 
-    public ImageFileLoader(final String pathDir) {
+    public FileDataLoader(final String pathDir) {
 
         final List<String> images = new ArrayList<>();
-
         final File folder = new File(pathDir);
-        //if (!folder.getName().equals(pathDir)) {
-        LOG.warn(folder.getAbsolutePath());
-        //}
+
         final File[] listOfFiles = folder.listFiles();
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
@@ -61,7 +58,7 @@ public class ImageFileLoader implements ImageLoader {
 
     @Nullable
     @Override
-    public String[] getNames() {
+    public String[] getPaths() {
         return paths;
     }
 }

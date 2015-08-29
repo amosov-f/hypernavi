@@ -3,30 +3,24 @@ package ru.hypernavi.core.database;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import ru.hypernavi.core.ImageHash;
 
 /**
  * Created by Константин on 15.08.2015.
  */
-public class ImageDataBase<T extends ImageLoader> {
+public class ImageDataBase {
     private static final Log LOG = LogFactory.getLog(ImageDataBase.class);
-    private final T loader;
+    private final DataLoader loader;
 
-    public ImageDataBase(final T loader) {
+    public ImageDataBase(final DataLoader loader) {
         nameImage = new TreeMap<>();
         this.loader = loader;
-        final String[] paths = loader.getNames();
+        final String[] paths = loader.getPaths();
         if (paths != null) {
             for (final String path : paths) {
                 LOG.info(path);

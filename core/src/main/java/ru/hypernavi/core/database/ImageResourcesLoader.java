@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 import org.apache.commons.io.Charsets;
@@ -22,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Created by Константин on 26.08.2015.
  */
-public class ImageResourcesLoader implements ImageLoader {
+public class ImageResourcesLoader implements DataLoader {
     private static final Log LOG = LogFactory.getLog(ImageResourcesLoader.class);
 
     private final Set<String> paths = new HashSet<>();
@@ -47,7 +44,7 @@ public class ImageResourcesLoader implements ImageLoader {
 
     @Nullable
     @Override
-    public String[] getNames() {
+    public String[] getPaths() {
         final String[] array = new String[paths.size()];
         return paths.toArray(array);
     }

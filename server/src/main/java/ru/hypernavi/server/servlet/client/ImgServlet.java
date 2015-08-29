@@ -12,7 +12,7 @@ import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.database.ImageDataBase;
-import ru.hypernavi.core.database.ImageFileLoader;
+import ru.hypernavi.core.database.FileDataLoader;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import com.google.inject.Inject;
 
@@ -29,7 +29,7 @@ public final class ImgServlet extends AbstractHttpService {
     @Inject
     public ImgServlet(@Named("hypernavi.server.imagepath") @NotNull final String dataPath) {
         this.dataPath = dataPath;
-        images = new ImageDataBase<>(new ImageFileLoader(dataPath + "/"));
+        images = new ImageDataBase(new FileDataLoader(dataPath + "/"));
     }
 
     @Override
@@ -50,6 +50,6 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final ImageDataBase<ImageFileLoader> images;
+    private final ImageDataBase images;
 
 }
