@@ -2,11 +2,13 @@ package ru.hypernavi.client.app;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
@@ -69,6 +71,9 @@ public final class AppActivity extends Activity implements SensorEventListener {
     private SafeLoader loader;
     private CacheWorker cache;
 
+    @Nullable
+    private volatile Location location;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +134,7 @@ public final class AppActivity extends Activity implements SensorEventListener {
 
     private void registerGPSListeners(final ImageView imageView) {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!isGPSProviderEnabled()) {
             writeWarningMessage("GPS disabled!");
             LOG.warning("No GPS module finded.");
             return;
@@ -144,8 +149,12 @@ public final class AppActivity extends Activity implements SensorEventListener {
         sendRequest(imageView);
     }
 
+    private boolean isGPSProviderEnabled() {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || getIntent().getBooleanExtra("enabled", false);
+    }
+
     public void sendRequest(final ImageView imageView) {
-        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new PositionUpdater(locationManager, imageView), null);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new PositionUpdater(locationManager, imageView));
     }
 
     public boolean isActual(final Location location, final Long timeCorrection) {
@@ -274,6 +283,12 @@ public final class AppActivity extends Activity implements SensorEventListener {
         }
     }
 
+    @TestOnly
+    @Nullable
+    Location getLocation() {
+        return location;
+    }
+
     // TODO: take from here to another file
     private final class PositionUpdater implements LocationListener {
         @NotNull
@@ -288,6 +303,8 @@ public final class AppActivity extends Activity implements SensorEventListener {
 
         @Override
         public void onLocationChanged(@NotNull final Location location) {
+            AppActivity.this.location = location;
+
             if (timeCorrection == null) {
                 timeCorrection = (new Date()).getTime() - location.getTime();
                 LOG.warning("Time correction is " + timeCorrection);

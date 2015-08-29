@@ -1,20 +1,29 @@
 package ru.hypernavi.client.app;
 
+import org.jetbrains.annotations.NotNull;
+
+
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ZoomControls;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLocationManager;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
-//import org.robolectric.RuntimeEnvironment;
-//import org.robolectric.Shadows;
+import static ru.hypernavi.util.MoreReflectionUtils.invoke;
 
 /**
  * User: amosov-f
@@ -28,9 +37,9 @@ public final class AppActivityTest {
 
     @Before
     public void setUp() {
-        //appActivity = Robolectric.setupActivity(AppActivity.class);
-        appActivity = Robolectric.buildActivity(AppActivity.class).create().get();
-        //android.provider.Settings;
+        final Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+        intent.putExtra("enabled", true);
+        appActivity = Robolectric.buildActivity(AppActivity.class).withIntent(intent).create().get();
     }
 
     @Test
@@ -52,42 +61,21 @@ public final class AppActivityTest {
         assertNotNull(imageView);
     }
 
-    /*
     @Test
     public void shouldReturnTheLatestLocation() {
-        ImageView header = (ImageView) appActivity.findViewById(R.id.imageView);
-        ShadowImageView shadowHeader = Shadows.shadowOf(header);
-        //LocationManager locationManager = (LocationManager)
-        //    Robolectric.application.getSystemService(Context.LOCATION_SERVICE);
-        //ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
-        //Location expectedLocation = location(LocationManager.GPS_PROVIDER, 12.0, 20.0);
-
-        //shadowLocationManager.simulateLocation(expectedLocation);
-        //Location actualLocation = mainActivity.latestLocation();
-
-        //assertEquals(expectedLocation, actualLocation);
-
-        //appActivity.crashApplication();
-        final LocationManager locationManager = (LocationManager)
-            RuntimeEnvironment.application.getSystemService(Context.LOCATION_SERVICE);
-        ShadowLocationManager shadowLocationManager = Shadows.shadowOf(locationManager);
-        Location expectedLocation = location(LocationManager.GPS_PROVIDER, 30, 60);
-
-        //shadowLocationManager.simulateLocation(expectedLocation);
-        assertTrue(true);
-        //Location actualLocation = appActivity.latestLocation();
-
-        //assertEquals(expectedLocation, actualLocation);
+        final LocationManager locationManager = (LocationManager) RuntimeEnvironment.application.getSystemService(Context.LOCATION_SERVICE);
+        final ShadowLocationManager shadowLocationManager = invoke(Shadows.class, "shadowOf", locationManager);
+        final Location expectedLocation = location(LocationManager.GPS_PROVIDER, 30, 60);
+        shadowLocationManager.simulateLocation(expectedLocation);
+        Assert.assertEquals(expectedLocation, appActivity.getLocation());
     }
 
-
-    private Location location(final String provider, final double longitude, final double latitude) {
+    @NotNull
+    private Location location(@NotNull final String provider, final double lon, final double lat) {
         final Location location = new Location(provider);
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
+        location.setLongitude(lon);
+        location.setLatitude(lat);
         location.setTime(System.currentTimeMillis());
         return location;
     }
-    */
-
 }
