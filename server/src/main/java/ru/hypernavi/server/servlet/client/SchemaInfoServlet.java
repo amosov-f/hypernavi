@@ -16,6 +16,7 @@ import java.util.Map;
 
 
 import com.google.common.net.MediaType;
+import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -37,8 +38,9 @@ public class SchemaInfoServlet extends AbstractHttpService {
     @NotNull
     private final HypermarketHolder markets;
 
-    public SchemaInfoServlet() {
-        markets = HypermarketHolder.getInstance();
+    @Inject
+    public SchemaInfoServlet(@NotNull final HypermarketHolder markets) {
+        this.markets = markets;
     }
 
     @Override

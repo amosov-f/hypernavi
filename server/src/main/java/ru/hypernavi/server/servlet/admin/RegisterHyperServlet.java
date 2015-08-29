@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 
+import com.google.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.ImageHash;
@@ -29,8 +30,9 @@ import ru.hypernavi.util.GeoPoint;
 public class RegisterHyperServlet extends AbstractHttpService {
     private final HypermarketHolder hypermarkets;
 
-    RegisterHyperServlet() {
-        hypermarkets = HypermarketHolder.getInstance();
+    @Inject
+    RegisterHyperServlet(@NotNull final HypermarketHolder hypermarkets) {
+        this.hypermarkets = hypermarkets;
     }
 
     private boolean isRequestHaveKeys(@NotNull final HttpServletRequest req, @Nullable final String[] keys) {

@@ -19,11 +19,10 @@ import ru.hypernavi.util.GeoPoint;
  */
 public class HypermarketHolder {
     private static final Log LOG = LogFactory.getLog(HypermarketHolder.class);
-    private static HypermarketHolder instance = null;
     @NotNull
     private final MapStructure<Hypermarket> markets;
 
-    protected HypermarketHolder() {
+    public HypermarketHolder() {
         final String[] pathHypermarket;
         try {
             final String initFile = IOUtils.toString(HypermarketHolder.class.getResourceAsStream("/hypermarketlist.txt"));
@@ -41,14 +40,6 @@ public class HypermarketHolder {
 
         final Hypermarket[] copyList = new Hypermarket[listHyper.size()];
         markets = new ArrayMapStructure<>(listHyper.toArray(copyList));
-    }
-
-    @NotNull
-    public static HypermarketHolder getInstance() {
-        if (instance == null) {
-            instance = new HypermarketHolder();
-        }
-        return instance;
     }
 
     public void addHypermarket(@NotNull final Hypermarket hyper) {

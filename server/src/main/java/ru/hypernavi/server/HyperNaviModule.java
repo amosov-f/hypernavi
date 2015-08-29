@@ -16,6 +16,7 @@ import ru.hypernavi.commons.Platform;
 import ru.hypernavi.core.classify.GoodsClassifier;
 import ru.hypernavi.core.classify.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.TomallGoodsClassifier;
+import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -58,6 +59,7 @@ public final class HyperNaviModule extends AbstractModule {
             templatesConfig.setTemplateUpdateDelayMilliseconds(0);
         }
         bind(Configuration.class).toInstance(templatesConfig);
+        bind(HypermarketHolder.class).asEagerSingleton();
     }
 
     private void bindGoodsClassifier() {
