@@ -30,7 +30,7 @@ public class ImageResourcesLoader implements DataLoader {
 
     @Nullable
     @Override
-    public byte[] get(final String path) {
+    public byte[] load(final String path) {
         if (paths.contains(path)) {
             try {
                 LOG.info(path);
@@ -42,11 +42,16 @@ public class ImageResourcesLoader implements DataLoader {
         return null;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public String[] getPaths() {
         final String[] array = new String[paths.size()];
         return paths.toArray(array);
+    }
+
+    @Override
+    public void save(final String path, final byte[] data) {
+        throw new RuntimeException("Can not save into resources");
     }
 
 

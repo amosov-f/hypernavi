@@ -3,7 +3,9 @@ package ru.hypernavi.core.database;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -18,30 +20,28 @@ public class ImageDataBase {
     private final DataLoader loader;
 
     public ImageDataBase(final DataLoader loader) {
-        nameImage = new TreeMap<>();
+        nameImage = new HashSet<>();
         this.loader = loader;
         final String[] paths = loader.getPaths();
-        if (paths != null) {
-            for (final String path : paths) {
-                LOG.info(path);
-                nameImage.put(path, loader.get(path));
-            }
-        } else {
-            LOG.warn("No files in config");
+        for (final String path : paths) {
+            LOG.info(path);
+            nameImage.add(path);
         }
     }
 
     @Nullable
-    public final byte[] get(@NotNull final String path) {
-        if (nameImage.containsKey(path)) {
-            return nameImage.get(path);
+    public final byte[] get(@NotNull final String service, @NotNull final String name) {
+        if (nameImage.contains(service + name)) {
+            return loader.load(service + name);
         }
         return null;
     }
 
-    public void add(@NotNull final String path) {
-        nameImage.put(path, loader.get(path));
+    public void add(@NotNull final String service, @NotNull final String name) {
+        if (loader.load(service + name) != null) {
+            nameImage.add(service + name);
+        }
     }
 
-    private final Map<String, byte[]> nameImage;
+    private final Set<String> nameImage;
 }

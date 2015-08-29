@@ -1,9 +1,1 @@
-{
-  "latitude":59.9886,
-  "longitude":30.2253,
-  "address":"default",
-  "url":"/img/F1798473E1325AB830CBD5F1F11E2A5D.jpg",
-  "schemePath":"F1798473E1325AB830CBD5F1F11E2A5D.jpg",
-  "type":"Okey",
-  "id":1
-}
+{"address":"default","latitude":59.9886,"id":1,"type":"Okey","url":"/img/F1798473E1325AB830CBD5F1F11E2A5D.jpg","longitude":30.2253}

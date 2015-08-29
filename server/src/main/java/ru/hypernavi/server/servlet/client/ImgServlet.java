@@ -35,9 +35,9 @@ public final class ImgServlet extends AbstractHttpService {
     @Override
     public void process(@NotNull final HttpServletRequest request,
                         @NotNull final HttpServletResponse response) throws IOException {
-
         final String name = request.getPathInfo();
-        final byte[] schema = images.get(dataPath + name);
+        LOG.info(dataPath + name);
+        final byte[] schema = images.get(dataPath, name);
 
         if (schema == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -51,5 +51,4 @@ public final class ImgServlet extends AbstractHttpService {
 
     @NotNull
     private final ImageDataBase images;
-
 }

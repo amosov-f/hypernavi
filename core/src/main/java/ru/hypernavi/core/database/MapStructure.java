@@ -15,18 +15,21 @@ import ru.hypernavi.util.GeoPoint;
  * Created by Константин on 30.07.2015.
  */
 public interface MapStructure<T extends Positioned> {
-    @Nullable
+    @NotNull
     default T findClosest(final GeoPoint possition) {
         final List<T> closest = find(possition, 1);
-        return closest == null ? null : closest.get(0);
+        if (closest.size() == 0) {
+            throw new IllegalStateException("No closest hyperfounded");
+        }
+        return closest.get(0);
     }
 
-    @Nullable
+    @NotNull
     default List<T> findAll(final GeoPoint possition) {
         return find(possition, size());
     }
 
-    @Nullable
+    @NotNull
     List<T> find(final GeoPoint possition, final int number);
 
     int size();

@@ -9,11 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 
 import com.google.common.net.MediaType;
 import com.google.inject.Inject;
@@ -51,15 +48,18 @@ public class SchemaInfoServlet extends AbstractHttpService {
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
             return;
         }
+        final GeoPoint currentPosition;
+        try {
+            final Double longitude = Double.parseDouble(request.getParameter("lon"));
+            final Double latitude = Double.parseDouble(request.getParameter("lat"));
+            currentPosition = new GeoPoint(longitude, latitude);
+        } catch (NumberFormatException e) {
+            LOG.warn("Invalid format" + e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
-        final Double longitude = Double.parseDouble(request.getParameter("lon"));
-        final Double latitude = Double.parseDouble(request.getParameter("lat"));
-        final GeoPoint currentPosition = new GeoPoint(longitude, latitude);
-
-        final List<Hypermarket> hypermarkets = new ArrayList<>();
-        if (this.markets.getClosest(currentPosition, 5) != null)
-            for (final Hypermarket market : this.markets.getClosest(currentPosition, 5))
-                hypermarkets.add(market);
+        final List<Hypermarket> hypermarkets = markets.getClosest(currentPosition, 5);
 
         if (hypermarkets.size() == 0) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

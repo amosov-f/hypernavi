@@ -1,5 +1,6 @@
 package ru.hypernavi.core.database;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -15,8 +16,10 @@ import ru.hypernavi.core.ImageHash;
  */
 public interface DataLoader {
     @Nullable
-    byte[] get(final String path);
+    byte[] load(final String path);
 
-    @Nullable
+    @NotNull
     String[] getPaths();
+
+    void save(final String path, final byte[] data);
 }

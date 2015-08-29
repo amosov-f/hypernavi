@@ -16,6 +16,8 @@ import ru.hypernavi.commons.Platform;
 import ru.hypernavi.core.classify.GoodsClassifier;
 import ru.hypernavi.core.classify.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.TomallGoodsClassifier;
+import ru.hypernavi.core.database.DataLoader;
+import ru.hypernavi.core.database.FileDataLoader;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
@@ -37,6 +39,7 @@ public final class HyperNaviModule extends AbstractModule {
     protected void configure() {
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
         bindTemplates();
+    //    bind(DataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
         bindString("hypernavi.server.imagepath");
         bindGoodsClassifier();
     }
