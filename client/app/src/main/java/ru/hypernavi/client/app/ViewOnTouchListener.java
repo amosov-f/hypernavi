@@ -32,12 +32,14 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         myView = imageView;
     }
 
+    // TODO amosov-f: union with getMaxYScroll
     private int getMaxXScroll(final Bitmap myScheme) {
         //noinspection MagicNumber
         return (int) (2.0f * Math.abs((Math.max(myScheme.getWidth(), myScheme.getHeight()) / 2.0f) -
                                       (Math.min(myDisplayWidth, myDisplayHeight) / myView.getScaleX() / 2.0f)));
     }
 
+    // TODO amosov-f: union with getMaxXScroll
     private int getMaxYScroll(final Bitmap myScheme) {
         //noinspection MagicNumber
         return (int) (2.0f * Math.abs((Math.max(myScheme.getWidth(), myScheme.getHeight()) / 2.0f) -
@@ -47,29 +49,11 @@ public class ViewOnTouchListener implements View.OnTouchListener {
 
 
     private int newScroll(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
-        if (inBorder) {
-            if (total == max) {
-                return 0;
-            } else if (notReachedMax) {
-                return scroll;
-            } else {
-                return max - (total - scroll);
-            }
-        }
-        return scroll;
+        return inBorder ? total == max ? 0 : notReachedMax ? scroll : max - (total - scroll) : scroll;
     }
 
     private int newTotal(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
-        if (inBorder) {
-            if (total == max) {
-                return total;
-            } else if (notReachedMax) {
-                return total + scroll;
-            } else {
-                return max;
-            }
-        }
-        return total;
+        return inBorder ? total == max ? total : notReachedMax ? total + scroll : max : total;
     }
 
     @Override
@@ -91,6 +75,7 @@ public class ViewOnTouchListener implements View.OnTouchListener {
                 break;
 
             case MotionEvent.ACTION_MOVE:
+                // TODO amosov-f: move to separate method
                 final float currentX = event.getX();
                 final float currentY = event.getY();
                 int scrollByX = (int) (downX - currentX);

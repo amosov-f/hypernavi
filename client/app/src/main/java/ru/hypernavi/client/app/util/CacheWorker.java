@@ -40,6 +40,7 @@ public class CacheWorker {
                 }
             }
         } catch (IOException e) {
+            // TODO amosov-f: ERROR log level
             LOG.warning("can't create file for cached scheme " + e.getMessage());
         }
     }

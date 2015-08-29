@@ -38,11 +38,13 @@ import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.GeoPoint;
 
+// TODO move sensor event listening to separate class
 public final class AppActivity extends Activity implements SensorEventListener {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     private static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
+    // TODO amosov-f: WTF?!?
     private static final long THREE_SECONDS = 300000000L;
-    //noinspection MagicNumber
+    // TODO amosov-f: WTF?!?
     private static final int FIVETEEN_MINUTES = 1000 * 50;
 
     private Bitmap originScheme;
@@ -150,6 +152,7 @@ public final class AppActivity extends Activity implements SensorEventListener {
     }
 
     private boolean isGPSProviderEnabled() {
+        // TODO amosov-f: remove intent checking
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || getIntent().getBooleanExtra("enabled", false);
     }
 

@@ -15,8 +15,10 @@ import android.graphics.BitmapFactory;
 /**
  * Created by Acer on 15.08.2015.
  */
+// TODO amosov-f: create base class for request callable
 public class RequestBitmap implements Callable<Bitmap> {
     private static final Logger LOG = Logger.getLogger(RequestBitmap.class.getName());
+    // TODO amosov-f: @NotNull and final
     private URL myUrl;
 
     public RequestBitmap(final URL url) {

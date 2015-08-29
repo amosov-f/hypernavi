@@ -30,6 +30,7 @@ public class ButtonOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(final View v) {
+        // TODO amosov-f: move location request code to one place
         final Location location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (!myAppActivity.isActual(location, myTimeCorrection)) {
             LOG.info("send new request to update position");

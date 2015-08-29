@@ -1,10 +1,5 @@
 package ru.hypernavi.client.app.util;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.*;
@@ -12,11 +7,8 @@ import java.util.logging.Logger;
 
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.client.app.AppActivity;
 import ru.hypernavi.client.app.RequestBitmap;
 import ru.hypernavi.client.app.RequestString;
 
@@ -35,6 +27,7 @@ public class SafeLoader {
     }
 
     public JSONObject getJSON(final double lat, final double lon, final String infoURL) throws MalformedURLException {
+        // TODO amosov-f: use Uri.Builder
         final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
         LOG.info("infoURL: " + requestURL.toString());
         final RequestString requestString = new RequestString(requestURL);
@@ -51,6 +44,7 @@ public class SafeLoader {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
             LOG.warning("Timeout exception");
+            // TODO amosov-f: remove this shit
             throw new RuntimeException(e);
         }
 

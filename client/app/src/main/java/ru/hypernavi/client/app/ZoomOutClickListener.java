@@ -9,6 +9,7 @@ import android.widget.ImageView;
 /**
  * Created by Acer on 14.08.2015.
  */
+// TODO amosov-f: union with ZoomInClickListener
 public class ZoomOutClickListener implements View.OnClickListener {
     private static final Logger LOG = Logger.getLogger(ZoomOutClickListener.class.getName());
     private final ImageView myView;
