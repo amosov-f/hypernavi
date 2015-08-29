@@ -39,7 +39,7 @@ import ru.hypernavi.util.GeoPoint;
 public final class AppActivity extends Activity implements SensorEventListener {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     private static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
-    private static final long THREE_SECONDS = 3000000000L;
+    private static final long THREE_SECONDS = 300000000L;
     //noinspection MagicNumber
     private static final int FIVETEEN_MINUTES = 1000 * 50;
 
