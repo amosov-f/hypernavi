@@ -1,9 +1,10 @@
 package ru.hypernavi.server.acceptance;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.*;
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 import org.apache.commons.io.IOUtils;
@@ -15,13 +16,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.commons.HypermarketSerializer;
 import ru.hypernavi.commons.InfoResponce;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.server.HyperNaviServerRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Created by Константин on 22.08.2015.
@@ -29,7 +28,7 @@ import static org.junit.Assert.assertFalse;
 
 @RunWith(HyperNaviServerRunner.class)
 public class ClientBehaviorTest extends AcceptanceTest {
-    @Test(timeout = 2000)
+    @Test
     public void testSchemaInfoOkStatus() {
         final double lon = 30;
         final double lat = 60;
@@ -37,7 +36,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
     }
 
-    @Test(timeout = 3000)
+    @Test
     public void testHypermarketSchemaSend() {
         final double lon = 30;
         final double lat = 60;
@@ -72,26 +71,26 @@ public class ClientBehaviorTest extends AcceptanceTest {
     }
 
 
-    @Test(timeout = 2000)
+    @Test
     public void testImgNotFoundStatus() {
         final HttpResponse resp = execute("/img/not_found.jpg");
         assertEquals(HttpStatus.SC_NOT_FOUND, resp.getStatusLine().getStatusCode());
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void testImgOkStatus() {
         final HttpResponse resp = execute("/img/44B7EE44A7015E9F71C26F988EAA195B.jpg");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
     }
 
 
-    @Test(timeout = 2000)
+    @Test
     public void testRegisterBadRequiestStatus() {
         final HttpResponse resp = execute("/register/hypermarket");
         assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine().getStatusCode());
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void testHypermarketOkStatus() {
         final HttpResponse resp = execute("/hypermarket");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());

@@ -35,7 +35,8 @@ public class FileDataLoader implements DataLoader {
             final InputStream in = new FileInputStream(new File(name));
             result = IOUtils.toByteArray(in);
         } catch (IOException ignored) {
-            LOG.error("No such file");
+            // TODO amosov-f: toByteArray IOExeption -> error, new FileInputStream FileNotFoundException -> return null
+            LOG.warn("No such file");
         }
         return result;
     }

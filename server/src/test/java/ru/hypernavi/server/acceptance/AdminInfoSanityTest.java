@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(HyperNaviServerRunner.class)
 public final class AdminInfoSanityTest extends AcceptanceTest {
-    @Test(timeout = 2000)
+    @Test
     public void testOkStatus() {
         final HttpResponse resp = execute("/admin/info");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());

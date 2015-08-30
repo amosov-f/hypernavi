@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(HyperNaviServerRunner.class)
 public final class MordaSanityTest extends AcceptanceTest {
-    @Test(timeout = 2000)
+    @Test
     public void testHtmlContentType() {
         final HttpResponse resp = execute("/");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
