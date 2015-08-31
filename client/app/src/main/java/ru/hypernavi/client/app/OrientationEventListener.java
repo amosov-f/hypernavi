@@ -3,6 +3,7 @@ package ru.hypernavi.client.app;
 import java.util.Date;
 import java.util.logging.Logger;
 
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
  */
 public class OrientationEventListener implements SensorEventListener {
     private static final Logger LOG = Logger.getLogger(OrientationEventListener.class.getName());
+    private static final float PI_IN_DEGREES = (float) Math.toDegrees(Math.PI);
+    //noinspection MagicNumber
     private static final long HALF_A_SECOND = 500000000L;
 
     private final ImageView myImageView;
@@ -71,66 +74,79 @@ public class OrientationEventListener implements SensorEventListener {
             lastMagnetometerSet = true;
         }
         if (lastAccelerometerSet && lastMagnetometerSet) {
-            lastAccelerometerSet = false;
-            lastMagnetometerSet = false;
-            final float[] R = new float[9];
-            SensorManager.getRotationMatrix(R, null, lastAccelerometer, lastMagnetometer);
-            final float[] orientation = new float[3];
-            SensorManager.getOrientation(R, orientation);
-            final float azimuthInDegress = (float) (Math.toDegrees(orientation[0]) + 360) % 360;
-            // create a rotation animation (reverse turn degree degrees)
-            LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
-                     + " " + Math.toDegrees(orientation[2]));
-            timeStamp = event.timestamp;
-
-            //LOG.info("rotation parameters: " + currentDegree + " " + -azimuthInDegress);
-
-            if ((inEpsilonSphere(currentDegree + azimuthInDegress, 360, 20)) ||
+            final float azimuthInDegress = executeAzimuth();
+            //noinspection MagicNumber
+            if ((inEpsilonSphere(currentDegree + azimuthInDegress, PI_IN_DEGREES, 20)) ||
                 (inEpsilonSphere(currentDegree + azimuthInDegress, 0, 20)))
             {
                 timeStamp = event.timestamp;
                 return;
             }
 
-            final RotateAnimation ra;
-            if (Math.abs(currentDegree + azimuthInDegress) > 180) {
-                if (currentDegree < -azimuthInDegress) {
-                    ra = new RotateAnimation(
-                        currentDegree,
-                        -azimuthInDegress - 360,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f);
-                } else {
-                    ra = new RotateAnimation(
-                        currentDegree,
-                        -azimuthInDegress + 360,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f);
-                }
-            } else {
-                ra = new RotateAnimation(
-                    currentDegree,
-                    -azimuthInDegress,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            }
-            ra.setDuration(350);
-            ra.setFillAfter(true);
+            final RotateAnimation rotateAnimation = prepareAnimation(azimuthInDegress);
 
-            myImageView.startAnimation(ra);
+            myImageView.startAnimation(rotateAnimation);
             currentDegree = -azimuthInDegress;
             timeStamp = event.timestamp;
         }
     }
 
-    public float getCurrentDegreeInRadian() {
-        return (float) Math.toRadians(currentDegree);
+    private float executeAzimuth() {
+        lastAccelerometerSet = false;
+        lastMagnetometerSet = false;
+        final float[] R = new float[9];
+        SensorManager.getRotationMatrix(R, null, lastAccelerometer, lastMagnetometer);
+        final float[] orientation = new float[3];
+        SensorManager.getOrientation(R, orientation);
+        final float azimuthInDegress = (float) (Math.toDegrees(orientation[0]) + 360) % 360;
+        // create a rotation animation (reverse turn degree degrees)
+        LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
+                 + " " + Math.toDegrees(orientation[2]));
+
+        //LOG.info("rotation parameters: " + currentDegree + " " + -azimuthInDegress);
+        return azimuthInDegress;
+    }
+
+    private RotateAnimation prepareAnimation(final float azimuthInDegress) {
+        final RotateAnimation rotateAnimation;
+        //noinspection MagicNumber
+        if (Math.abs(currentDegree + azimuthInDegress) > PI_IN_DEGREES / 2) {
+            if (currentDegree < -azimuthInDegress) {
+                rotateAnimation = new RotateAnimation(
+                    currentDegree,
+                    //noinspection MagicNumber
+                    -azimuthInDegress - PI_IN_DEGREES,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f);
+            } else {
+                rotateAnimation = new RotateAnimation(
+                    currentDegree,
+                    -azimuthInDegress + PI_IN_DEGREES,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f);
+            }
+        } else {
+            rotateAnimation = new RotateAnimation(
+                currentDegree,
+                -azimuthInDegress,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+        }
+
+        rotateAnimation.setDuration(350);
+        rotateAnimation.setFillAfter(true);
+
+        return rotateAnimation;
     }
 
     private boolean inEpsilonSphere(final float x, final float sphereCenter, final float delta) {
         return (Math.abs(x - sphereCenter) < delta);
+    }
+
+    public float getCurrentDegreeInRadian() {
+        return (float) Math.toRadians(currentDegree);
     }
 }
