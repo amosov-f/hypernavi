@@ -3,6 +3,7 @@ package ru.hypernavi.client.app.util;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -40,8 +41,7 @@ public class CacheWorker {
                 }
             }
         } catch (IOException e) {
-            // TODO amosov-f: ERROR log level
-            LOG.warning("can't create file for cached scheme " + e.getMessage());
+            LOG.log(Level.SEVERE, "can't create file for cached scheme " + e.getMessage());
         }
     }
 

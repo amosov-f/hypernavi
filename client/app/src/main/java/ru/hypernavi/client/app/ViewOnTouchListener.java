@@ -19,16 +19,16 @@ public class ViewOnTouchListener implements View.OnTouchListener {
     @NotNull
     private final ImageView myView;
     @NotNull
-    private final AppActivity myAppActivity;
+    private final OrientationEventListener myOrientationEventListener;
 
     float downX;
     float downY;
     int totalX;
     int totalY;
 
-    public ViewOnTouchListener(@NotNull final ImageView imageView, @NotNull final AppActivity appActivity) {
+    public ViewOnTouchListener(@NotNull final ImageView imageView, @NotNull final OrientationEventListener orientationEventListener /*@NotNull final AppActivity appActivity*/) {
         myView = imageView;
-        myAppActivity = appActivity;
+        myOrientationEventListener = orientationEventListener;
     }
 
     private int getMaxScroll(final Bitmap myScheme) {
@@ -94,10 +94,10 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         scrollByY = newScroll(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
         totalY = newTotal(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
 
-        final int realScrollByX = (int) (scrollByX * Math.cos(myAppActivity.getCurrentDegreeInRadian()) +
-                                   scrollByY * Math.sin(myAppActivity.getCurrentDegreeInRadian()));
-        final int realScrollByY = (int) (scrollByY * Math.cos(myAppActivity.getCurrentDegreeInRadian()) -
-                                   scrollByX * Math.sin(myAppActivity.getCurrentDegreeInRadian()));
+        final int realScrollByX = (int) (scrollByX * Math.cos(myOrientationEventListener.getCurrentDegreeInRadian()) +
+                                   scrollByY * Math.sin(myOrientationEventListener.getCurrentDegreeInRadian()));
+        final int realScrollByY = (int) (scrollByY * Math.cos(myOrientationEventListener.getCurrentDegreeInRadian()) -
+                                   scrollByX * Math.sin(myOrientationEventListener.getCurrentDegreeInRadian()));
         myView.scrollBy(realScrollByX, realScrollByY);
         downX = currentX;
         downY = currentY;
