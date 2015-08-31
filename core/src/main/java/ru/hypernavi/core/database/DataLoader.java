@@ -16,10 +16,10 @@ import ru.hypernavi.core.ImageHash;
  */
 public interface DataLoader {
     @Nullable
-    byte[] load(final String path);
+    byte[] load(final String service, final String name);
 
     @NotNull
-    String[] getPaths();
+    String[] getNames(final String config);
 
-    void save(final String path, final byte[] data);
+    void save(final String service, final String name, final byte[] data);
 }

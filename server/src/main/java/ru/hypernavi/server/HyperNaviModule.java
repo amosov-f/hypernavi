@@ -19,6 +19,7 @@ import ru.hypernavi.core.classify.TomallGoodsClassifier;
 import ru.hypernavi.core.database.DataLoader;
 import ru.hypernavi.core.database.FileDataLoader;
 import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.database.ImageDataBase;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -39,8 +40,14 @@ public final class HyperNaviModule extends AbstractModule {
     protected void configure() {
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
         bindTemplates();
-    //    bind(DataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
-        bindString("hypernavi.server.imagepath");
+
+        bindString("hypernavi.server.pathdata");
+        bindString("hypernavi.server.serviceimg");
+        bindString("hypernavi.server.servicemarkets");
+
+
+        bind(DataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
+        bind(FileDataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
         bindGoodsClassifier();
     }
 
@@ -62,7 +69,9 @@ public final class HyperNaviModule extends AbstractModule {
             templatesConfig.setTemplateUpdateDelayMilliseconds(0);
         }
         bind(Configuration.class).toInstance(templatesConfig);
+
         bind(HypermarketHolder.class).asEagerSingleton();
+        bind(ImageDataBase.class).asEagerSingleton();
     }
 
     private void bindGoodsClassifier() {

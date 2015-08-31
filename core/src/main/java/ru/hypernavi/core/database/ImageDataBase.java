@@ -3,12 +3,9 @@ package ru.hypernavi.core.database;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
-
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,31 +16,21 @@ public class ImageDataBase {
     private static final Log LOG = LogFactory.getLog(ImageDataBase.class);
     private final DataLoader loader;
 
-    public ImageDataBase(final DataLoader loader) {
-        nameImage = new HashSet<>();
+    @Inject
+    public ImageDataBase(@NotNull final FileDataLoader loader, @Named("hypernavi.server.serviceimg") final String service) {
         this.loader = loader;
-        final String[] paths = loader.getPaths();
+        final String[] paths = loader.getNames(service);
         for (final String path : paths) {
             LOG.info(path);
-            nameImage.add(path);
         }
     }
 
     @Nullable
     public final byte[] get(@NotNull final String service, @NotNull final String name) {
-        return loader.load(service + name);
-        /*
-        if (nameImage.contains(service + name)) {
-            return loader.load(service + name);
-        }
-        return null;*/
-    }
+        return loader.load(service, name);
+     }
 
-    public void add(@NotNull final String service, @NotNull final String name) {
-        /*if ( != null) {
-            nameImage.add(service + name);
-        }*/
+    public void add(@NotNull final String service, @NotNull final String name, final byte[] data) {
+        loader.save(service, name, data);
     }
-
-    private final Set<String> nameImage;
 }

@@ -7,22 +7,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.io.*;
 import java.net.URL;
 
-import java.nio.file.Paths;
 import java.util.Map;
 
 
 import com.google.inject.Inject;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.ImageHash;
-import ru.hypernavi.core.database.FileDataLoader;
 import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.database.ImageDataBase;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.GeoPoint;
 
@@ -34,11 +31,12 @@ public class RegisterHyperServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(RegisterHyperServlet.class);
 
     private final HypermarketHolder hypermarkets;
-
+    private final ImageDataBase images;
 
     @Inject
-    RegisterHyperServlet(@NotNull final HypermarketHolder hypermarkets) {
+    RegisterHyperServlet(@NotNull final HypermarketHolder hypermarkets, @NotNull final ImageDataBase images) {
         this.hypermarkets = hypermarkets;
+        this.images = images;
     }
 
     private boolean isRequestHaveKeys(@NotNull final HttpServletRequest req, @Nullable final String[] keys) {
@@ -70,12 +68,14 @@ public class RegisterHyperServlet extends AbstractHttpService {
         final String address = req.getParameter("address");
         final String type = req.getParameter("type");
         final String url = req.getParameter("url");
+        // TODO bakharev.k: take to another servlet
         final byte[] image = loadImage(url);
-        if (image == null)
-            LOG.error("FUCK!");
-        final String md5 = saveImage(image);
-        final Hypermarket market = new Hypermarket(maxId, location, address, type, "img/" +  md5 + ".jpg");
-        hypermarkets.addHypermarket(market, market.getId() + ".json");
+
+        images.add("/img", "/" + ImageHash.generate(image) + ".jpg", image);
+
+        final Hypermarket market = new Hypermarket(maxId, location, address, type, "/img/" + ImageHash.generate(image) + ".jpg");
+        hypermarkets.addHypermarket(market,"/" + market.getId() + ".json");
+
         LOG.info("OK!");
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.getOutputStream().print("OK");
@@ -108,18 +108,5 @@ public class RegisterHyperServlet extends AbstractHttpService {
             return null;
         }
         return image;
-    }
-
-
-    private static String saveImage(final byte[] image) {
-        final String md5;
-        try {
-            md5 = ImageHash.generate(image);
-            final FileOutputStream out = new FileOutputStream(new File("data/img/"+md5 + ".jpg"));
-            IOUtils.write(image, out);
-        } catch (IOException ignored) {
-            return null;
-        }
-        return md5;
     }
 }

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,26 +28,28 @@ public class HypermarketHolder {
     private final MapStructure<Hypermarket> markets;
 
     private final DataLoader loader;
+    private final String service;
 
     public int size() {
-        return loader.getPaths().length;
+        return loader.getNames(service).length;
     }
 
-    public HypermarketHolder() {
-        this.loader = new FileDataLoader("./data/hypermarkets/");
-        final String[] paths = loader.getPaths();
+    @Inject
+    public HypermarketHolder(@Named("hypernavi.server.servicemarkets") final String service, @NotNull final DataLoader loader) {
+        this.loader = loader;
+        this.service = service;
 
-//        Arrays.stream(paths).forEach(LOG::info);
+        final String[] paths = loader.getNames(service);
 
         final List<Hypermarket> listHyper = new ArrayList<>();
         for (int i = 0; i < paths.length; ++i) {
-            final byte[] data = loader.load(paths[i]);
+            final byte[] data = loader.load(service, paths[i]);
             if (data != null) {
                 Hypermarket market = null;
                 try {
                     final String json = IOUtils.toString(data, "UTF-8");
                     market = HypermarketSerializer.deserialize(new JSONObject(json));
-                    LOG.info("Hypermarket loaded from " + paths[i]);
+                    LOG.info("Hypermarket loaded from " + service + paths[i]);
                 } catch (JSONException | IOException e) {
                     LOG.warn(e.getMessage());
                 }
@@ -60,7 +64,7 @@ public class HypermarketHolder {
     }
 
     public void addHypermarket(@NotNull final Hypermarket hyper, @NotNull final String name) {
-        loader.save("data/hypermarkets/" + name, HypermarketSerializer.serialize(hyper).toString().getBytes(StandardCharsets.UTF_8));
+        loader.save(service, name, HypermarketSerializer.serialize(hyper).toString().getBytes(StandardCharsets.UTF_8));
         markets.add(hyper);
     }
 
