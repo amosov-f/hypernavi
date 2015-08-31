@@ -24,7 +24,7 @@ public class OrientationEventListener implements SensorEventListener {
     private final ImageView myImageView;
     private final AppActivity myAppActivity;
 
-    private float currentDegree = 0f;
+    private float currentDegree = 21f;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
