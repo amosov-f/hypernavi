@@ -2,10 +2,8 @@ package ru.hypernavi.client.app;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -16,7 +14,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Display;
@@ -34,8 +31,6 @@ import ru.hypernavi.util.GeoPoint;
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
-    // TODO amosov-f: WTF!
-    private static final int FIVETEEN_MINUTES = 15 * 1000 * 60;
 
     private Bitmap originScheme;
     private int displayWidth;
@@ -43,20 +38,15 @@ public final class AppActivity extends Activity {
 
     private ImageView imageView;
 
-    private int nThread;
     private ExecutorService executorService;
 
     private LocationManager locationManager;
-    private Long timeCorrection;
 
     private OrientationEventListener orientationEventListener;
 
     private InfoRequestHandler handler;
     private SafeLoader loader;
     private CacheWorker cache;
-
-    @Nullable
-    private volatile Location location;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -67,8 +57,7 @@ public final class AppActivity extends Activity {
         setContentView(R.layout.main);
         imageView = (ImageView) findViewById(R.id.imageView);
 
-        getProperties(PROPERTIES_SCHEME);
-        executorService = Executors.newFixedThreadPool(nThread);
+        executorService = Executors.newFixedThreadPool(getNThread(PROPERTIES_SCHEME));
 
         cache = new CacheWorker(this);
         loader = new SafeLoader(executorService, cache);
@@ -102,14 +91,6 @@ public final class AppActivity extends Activity {
         zoom.setOnZoomOutClickListener(zoomOutClickListener);
     }
 
-    private void registerBottonListener(final LocationManager locationManager, final ImageView imageView) {
-        final Button button = (Button) findViewById(R.id.button);
-
-        final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager,
-            imageView, timeCorrection, this);
-        button.setOnClickListener(buttonOnClickListener);
-    }
-
     private void registerTouchListeners(final ImageView imageView) {
         final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(imageView, orientationEventListener);
         imageView.setOnTouchListener(viewOnTouchListener);
@@ -123,13 +104,13 @@ public final class AppActivity extends Activity {
             return;
         }
         final Location cashLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if ((cashLocation != null) && (isActual(cashLocation, 0L))) {
+        if ((cashLocation != null) && (PositionUpdater.isActual(cashLocation, 0L))) {
             LOG.info("cashLocation is actual");
             processInfo(GeoPointsUtils.makeGeoPoint(cashLocation), imageView);
         } else {
             LOG.info("cashLocation is not actual");
         }
-        sendRequest(imageView);
+        sendRequest();
     }
 
     private boolean isGPSProviderEnabled() {
@@ -137,13 +118,9 @@ public final class AppActivity extends Activity {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || getIntent().getBooleanExtra("enabled", false);
     }
 
-    public void sendRequest(final ImageView imageView) {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new PositionUpdater(locationManager, imageView));
-    }
-
-    public boolean isActual(final Location location, final Long timeCorrection) {
-        LOG.info("locaction time is " + location.getTime());
-        return (location.getTime() + timeCorrection + FIVETEEN_MINUTES > (new Date()).getTime());
+    public void sendRequest() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+            new PositionUpdater(locationManager, imageView, (Button) findViewById(R.id.button), this));
     }
 
     private void drawDisplayImage(final ImageView imageView) {
@@ -154,8 +131,7 @@ public final class AppActivity extends Activity {
         LOG.info("Display high " + displayHeight);
     }
 
-    // TODO: rewrite and take to another file/class
-    private void processInfo(final GeoPoint geoPosition, final ImageView imageView) {
+    public void processInfo(final GeoPoint geoPosition, final ImageView imageView) {
         originScheme = handler.getSchemaResponce(geoPosition);
 
         if (originScheme == null) {
@@ -170,10 +146,10 @@ public final class AppActivity extends Activity {
         writeWarningMessage("GeoPosition " + geoPosition);
     }
 
-    private void getProperties(@NotNull final String path) {
+    private int getNThread(@NotNull final String path) {
         try {
             final Config config = Config.load(path);
-            nThread = config.getInt("app.request.pool.size");
+            return config.getInt("app.request.pool.size");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -195,53 +171,5 @@ public final class AppActivity extends Activity {
         super.onPause();
         // to stop the sensor listener and save battery
         orientationEventListener.onPause();
-    }
-
-    @TestOnly
-    @Nullable
-    Location getLocation() {
-        return location;
-    }
-
-    // TODO: take from here to another file
-    private final class PositionUpdater implements LocationListener {
-        @NotNull
-        private final LocationManager manager;
-        @NotNull
-        private final ImageView myView;
-
-        PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView) {
-            this.manager = manager;
-            myView = imageView;
-        }
-
-        @Override
-        public void onLocationChanged(@NotNull final Location location) {
-            AppActivity.this.location = location;
-
-            if (timeCorrection == null) {
-                timeCorrection = (new Date()).getTime() - location.getTime();
-                LOG.warning("Time correction is " + timeCorrection);
-                registerBottonListener(manager, myView);
-            }
-            LOG.info("onLocationChanged");
-
-            manager.removeUpdates(this);
-
-            final GeoPoint geoPosition = GeoPointsUtils.makeGeoPoint(location);
-            processInfo(geoPosition, myView);
-        }
-
-        @Override
-        public void onStatusChanged(@NotNull final String provider, final int status, @NotNull final Bundle extras) {
-        }
-
-        @Override
-        public void onProviderEnabled(@NotNull final String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(@NotNull final String provider) {
-        }
     }
 }

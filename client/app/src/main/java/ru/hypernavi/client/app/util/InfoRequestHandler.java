@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import android.graphics.Bitmap;
 import org.json.JSONObject;
 import ru.hypernavi.client.app.AppActivity;
-import ru.hypernavi.commons.InfoResponce;
+import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.GeoPoint;
@@ -54,12 +54,12 @@ public class InfoRequestHandler {
             return null;
         }
 
-        final InfoResponce responce = InfoResponceSerializer.deserialize(root);
-        if (responce == null || responce.getClosestMarkets() == null || responce.getClosestMarkets().size() < 1) {
+        final InfoResponse response = InfoResponceSerializer.deserialize(root);
+        if (response == null || response.getClosestMarkets() == null || response.getClosestMarkets().size() < 1) {
             LOG.warning("No markets in responce");
             return myCache.loadCachedOrDefaultScheme();
         } else {
-            final String schemaFullURL = this.schemaURL + responce.getClosestMarkets().get(0).getUrl();
+            final String schemaFullURL = this.schemaURL + response.getClosestMarkets().get(0).getUrl();
             try {
                 return myLoader.getScheme(schemaFullURL);
             } catch (MalformedURLException e) {
