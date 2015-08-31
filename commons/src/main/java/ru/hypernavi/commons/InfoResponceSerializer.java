@@ -23,7 +23,7 @@ public enum InfoResponceSerializer {
 
 
     @Nullable
-    public static JSONObject serialize(final InfoResponce responce) {
+    public static JSONObject serialize(final InfoResponse responce) {
         final JSONObject jsonResponse;
         try {
             jsonResponse = new JSONObject();
@@ -53,7 +53,7 @@ public enum InfoResponceSerializer {
     }
 
     @Nullable
-    public static InfoResponce deserialize(final JSONObject jsonObject) {
+    public static InfoResponse deserialize(final JSONObject jsonObject) {
         final GeoPoint location;
         final List<Hypermarket> markets = new ArrayList<>();
 
@@ -73,6 +73,6 @@ public enum InfoResponceSerializer {
             LOG.warn(e.getMessage());
             return null;
         }
-        return new InfoResponce(markets, location);
+        return new InfoResponse(markets, location);
     }
 }

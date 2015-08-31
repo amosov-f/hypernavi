@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.commons.InfoResponce;
+import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.server.HyperNaviServerRunner;
 
@@ -47,7 +47,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
             final String json = IOUtils.toString(resp.getEntity().getContent());
             final JSONObject obj = new JSONObject(json);
 
-            final InfoResponce inforesp = InfoResponceSerializer.deserialize(obj);
+            final InfoResponse inforesp = InfoResponceSerializer.deserialize(obj);
             if (inforesp == null || inforesp.getClosestMarkets() == null || inforesp.getClosestMarkets().size() == 0) {
                 Assert.fail("Wrong responce");
             }

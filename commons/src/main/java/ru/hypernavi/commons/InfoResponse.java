@@ -11,11 +11,11 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 15.08.2015.
  */
-public class InfoResponce {
+public class InfoResponse {
     private final List<Hypermarket> closestMarkets;
     private final GeoPoint requestLocation;
 
-    public InfoResponce(@Nullable final List<Hypermarket> closestMarkets, @NotNull final GeoPoint requestLocation) {
+    public InfoResponse(@Nullable final List<Hypermarket> closestMarkets, @NotNull final GeoPoint requestLocation) {
         this.closestMarkets = closestMarkets;
         this.requestLocation = requestLocation;
     }

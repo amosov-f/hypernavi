@@ -18,7 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.commons.InfoResponce;
+import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -66,7 +66,7 @@ public class SchemaInfoServlet extends AbstractHttpService {
             return;
         }
 
-        final JSONObject json = InfoResponceSerializer.serialize(new InfoResponce(hypermarkets, currentPosition));
+        final JSONObject json = InfoResponceSerializer.serialize(new InfoResponse(hypermarkets, currentPosition));
         if (json == null) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
