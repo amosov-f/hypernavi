@@ -18,35 +18,22 @@ public class ViewOnTouchListener implements View.OnTouchListener {
     private static final Logger LOG = Logger.getLogger(ViewOnTouchListener.class.getName());
     @NotNull
     private final ImageView myView;
+    @NotNull
+    private final AppActivity myAppActivity;
 
-    private final int myDisplayWidth;
-    private final int myDisplayHeight;
     float downX;
     float downY;
     int totalX;
     int totalY;
 
-    public ViewOnTouchListener(final int displayWidth, final int displayHeight, @NotNull final ImageView imageView) {
-        myDisplayWidth = displayWidth;
-        myDisplayHeight = displayHeight;
+    public ViewOnTouchListener(@NotNull final ImageView imageView, @NotNull final AppActivity appActivity) {
         myView = imageView;
+        myAppActivity = appActivity;
     }
 
-    // TODO amosov-f: union with getMaxYScroll
-    private int getMaxXScroll(final Bitmap myScheme) {
-        //noinspection MagicNumber
-        return (int) (2.0f * Math.abs((Math.max(myScheme.getWidth(), myScheme.getHeight()) / 2.0f) -
-                                      (Math.min(myDisplayWidth, myDisplayHeight) / myView.getScaleX() / 2.0f)));
+    private int getMaxScroll(final Bitmap myScheme) {
+        return Math.max(myScheme.getWidth(), myScheme.getHeight());
     }
-
-    // TODO amosov-f: union with getMaxXScroll
-    private int getMaxYScroll(final Bitmap myScheme) {
-        //noinspection MagicNumber
-        return (int) (2.0f * Math.abs((Math.max(myScheme.getWidth(), myScheme.getHeight()) / 2.0f) -
-                                       (Math.min(myDisplayWidth, myDisplayHeight) / myView.getScaleY() / 2.0f)));
-    }
-
-
 
     private int newScroll(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
         return inBorder ? total == max ? 0 : notReachedMax ? scroll : max - (total - scroll) : scroll;
@@ -61,13 +48,6 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         LOG.info("new Touch");
         final Bitmap myScheme = ((BitmapDrawable) myView.getDrawable()).getBitmap();
 
-        final int maxRight = getMaxXScroll(myScheme);
-        final int maxLeft = -maxRight;
-        final int maxBottom = getMaxYScroll(myScheme);
-        final int maxTop = -maxBottom;
-
-        LOG.info("maxLeft: " + maxLeft + " maxTop: " + maxTop);
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = event.getX();
@@ -75,36 +55,51 @@ public class ViewOnTouchListener implements View.OnTouchListener {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                // TODO amosov-f: move to separate method
-                final float currentX = event.getX();
-                final float currentY = event.getY();
-                int scrollByX = (int) (downX - currentX);
-                int scrollByY = (int) (downY - currentY);
-
-                // scrolling to left side of image (pic moving to the right)
-                scrollByX = newScroll(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
-                totalX = newTotal(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
-
-                // scrolling to right side of image (pic moving to the left)
-                scrollByX = newScroll(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
-                totalX = newTotal(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
-
-                // scrolling to top of image (pic moving to the bottom)
-                scrollByY = newScroll(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
-                totalY = newTotal(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
-
-                // scrolling to bottom of image (pic moving to the top)
-                scrollByY = newScroll(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
-                totalY = newTotal(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
-
-                myView.scrollBy(scrollByX, scrollByY);
-                downX = currentX;
-                downY = currentY;
+                moveActionHandler(event, myScheme);
                 break;
+
             default:
                 LOG.warning("other event");
         }
         LOG.info("End touch");
         return true;
+    }
+
+    private void moveActionHandler(final MotionEvent event, final Bitmap scheme) {
+        final int maxRight = getMaxScroll(scheme);
+        final int maxLeft = -maxRight;
+        final int maxBottom = getMaxScroll(scheme);
+        final int maxTop = -maxBottom;
+
+        LOG.info("maxLeft: " + maxLeft + " maxTop: " + maxTop);
+
+        final float currentX = event.getX();
+        final float currentY = event.getY();
+        int scrollByX = (int) (downX - currentX);
+        int scrollByY = (int) (downY - currentY);
+
+        // scrolling to left side of image (pic moving to the right)
+        scrollByX = newScroll(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
+        totalX = newTotal(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
+
+        // scrolling to right side of image (pic moving to the left)
+        scrollByX = newScroll(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
+        totalX = newTotal(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
+
+        // scrolling to top of image (pic moving to the bottom)
+        scrollByY = newScroll(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
+        totalY = newTotal(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
+
+        // scrolling to bottom of image (pic moving to the top)
+        scrollByY = newScroll(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
+        totalY = newTotal(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
+
+        final int realScrollByX = (int) (scrollByX * Math.cos(myAppActivity.getCurrentDegreeInRadian()) +
+                                   scrollByY * Math.sin(myAppActivity.getCurrentDegreeInRadian()));
+        final int realScrollByY = (int) (scrollByY * Math.cos(myAppActivity.getCurrentDegreeInRadian()) -
+                                   scrollByX * Math.sin(myAppActivity.getCurrentDegreeInRadian()));
+        myView.scrollBy(realScrollByX, realScrollByY);
+        downX = currentX;
+        downY = currentY;
     }
 }

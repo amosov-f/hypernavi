@@ -25,6 +25,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -45,7 +47,7 @@ public final class AppActivity extends Activity implements SensorEventListener {
     // TODO amosov-f: WTF?!?
     private static final long THREE_SECONDS = 300000000L;
     // TODO amosov-f: WTF?!?
-    private static final int FIVETEEN_MINUTES = 1000 * 50;
+    private static final int FIVETEEN_MINUTES = 15 * 1000 * 60;
 
     private Bitmap originScheme;
     private int displayWidth;
@@ -61,6 +63,7 @@ public final class AppActivity extends Activity implements SensorEventListener {
     private LocationManager locationManager;
     private Long timeCorrection;
 
+    private float currentDegree = 0f;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
@@ -125,12 +128,12 @@ public final class AppActivity extends Activity implements SensorEventListener {
         final Button button = (Button) findViewById(R.id.button);
 
         final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager,
-                imageView, timeCorrection, this);
+            imageView, timeCorrection, this);
         button.setOnClickListener(buttonOnClickListener);
     }
 
     private void registerTouchListeners(final ImageView imageView) {
-        final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(displayWidth, displayHeight, imageView);
+        final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(imageView, this);
         imageView.setOnTouchListener(viewOnTouchListener);
     }
 
@@ -234,7 +237,6 @@ public final class AppActivity extends Activity implements SensorEventListener {
         throw new RuntimeException("I am crashed");
     }
 
-    //
     @Override
     public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
     }
@@ -277,13 +279,46 @@ public final class AppActivity extends Activity implements SensorEventListener {
             final float azimuthInDegress = (float) (Math.toDegrees(orientation[0]) + 360) % 360;
             // create a rotation animation (reverse turn degree degrees)
             LOG.info("timeStamp is  " + event.timestamp);
-            LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
-                    + " " + Math.toDegrees(orientation[2]));
+            //LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
+            //         + " " + Math.toDegrees(orientation[2]));
             timeStamp = event.timestamp;
 
-            imageView.setRotation(-azimuthInDegress);
-            LOG.info("imageView rotation around pivot " + imageView.getRotation());
+            LOG.info("rotation parameters: " + currentDegree + " " + -azimuthInDegress);
+            RotateAnimation ra;
+            if (Math.abs(currentDegree + azimuthInDegress) > 180) {
+                if (currentDegree < -azimuthInDegress) {
+                    ra = new RotateAnimation(
+                        currentDegree,
+                        -azimuthInDegress - 360,
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF,
+                        0.5f);
+                } else {
+                    ra = new RotateAnimation(
+                        currentDegree,
+                        -azimuthInDegress + 360,
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF,
+                        0.5f);
+                }
+            } else {
+                ra = new RotateAnimation(
+                    currentDegree,
+                    -azimuthInDegress,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f);
+            }
+            ra.setDuration(250);
+            ra.setFillAfter(true);
+
+            imageView.startAnimation(ra);
+            currentDegree = -azimuthInDegress;
         }
+    }
+
+    public float getCurrentDegreeInRadian() {
+        return (float) Math.toRadians(currentDegree);
     }
 
     @TestOnly
