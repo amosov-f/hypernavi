@@ -11,7 +11,6 @@ import ru.hypernavi.util.GeoPoint;
  */
 public enum GeoPointsUtils {
     ;
-
     public static GeoPoint makeGeoPoint(@NotNull final Location location) {
         return new GeoPoint(location.getLongitude(), location.getLatitude());
     }

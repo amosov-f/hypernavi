@@ -34,7 +34,7 @@ import ru.hypernavi.util.GeoPoint;
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
-    // TODO amosov-f: WTF?!?
+    // TODO amosov-f: WTF!
     private static final int FIVETEEN_MINUTES = 15 * 1000 * 60;
 
     private Bitmap originScheme;

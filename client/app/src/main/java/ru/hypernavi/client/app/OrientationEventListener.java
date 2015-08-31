@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,13 +19,13 @@ import android.widget.ImageView;
 public class OrientationEventListener implements SensorEventListener {
     private static final Logger LOG = Logger.getLogger(OrientationEventListener.class.getName());
     private static final float PI_IN_DEGREES = (float) Math.toDegrees(Math.PI);
-    //noinspection MagicNumber
+
     private static final long HALF_A_SECOND = 500000000L;
 
     private final ImageView myImageView;
     private final AppActivity myAppActivity;
 
-    private float currentDegree = 21f;
+    private float currentDegree = 0f;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
@@ -37,7 +38,7 @@ public class OrientationEventListener implements SensorEventListener {
     public OrientationEventListener(final ImageView imageView, final AppActivity appActivity) {
         myImageView = imageView;
         myAppActivity = appActivity;
-        sensorManager = (SensorManager) myAppActivity.getSystemService(myAppActivity.SENSOR_SERVICE);
+        sensorManager = (SensorManager) myAppActivity.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         timeStamp = (new Date()).getTime();
@@ -103,7 +104,6 @@ public class OrientationEventListener implements SensorEventListener {
         LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
                  + " " + Math.toDegrees(orientation[2]));
 
-        //LOG.info("rotation parameters: " + currentDegree + " " + -azimuthInDegress);
         return azimuthInDegress;
     }
 
@@ -114,7 +114,6 @@ public class OrientationEventListener implements SensorEventListener {
             if (currentDegree < -azimuthInDegress) {
                 rotateAnimation = new RotateAnimation(
                     currentDegree,
-                    //noinspection MagicNumber
                     -azimuthInDegress - PI_IN_DEGREES,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF,
@@ -136,13 +135,13 @@ public class OrientationEventListener implements SensorEventListener {
                 0.5f);
         }
 
-        rotateAnimation.setDuration(350);
+        rotateAnimation.setDuration(450);
         rotateAnimation.setFillAfter(true);
 
         return rotateAnimation;
     }
 
-    private boolean inEpsilonSphere(final float x, final float sphereCenter, final float delta) {
+    private boolean inEpsilonSphere(float x, final float sphereCenter, final float delta) {
         return (Math.abs(x - sphereCenter) < delta);
     }
 
