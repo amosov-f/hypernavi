@@ -1,4 +1,4 @@
-package ru.hypernavi.client.app;
+package ru.hypernavi.client.app.listeners;
 
 import java.util.Date;
 import java.util.logging.Logger;
@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import ru.hypernavi.client.app.AppActivity;
 
 /**
  * Created by Acer on 31.08.2015.
@@ -48,14 +49,14 @@ public class OrientationEventListener implements SensorEventListener {
     public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
     }
 
-    protected void onResume() {
+    public void onResume() {
         //super.onResume();
         // for the system's orientation sensor registered listeners
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
-    protected void onPause() {
+    public void onPause() {
         //super.onPause();
         // to stop the listener and save battery
         sensorManager.unregisterListener(this);

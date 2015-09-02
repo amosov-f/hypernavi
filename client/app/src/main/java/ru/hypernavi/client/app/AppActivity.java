@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
+import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
 import ru.hypernavi.client.app.util.InfoRequestHandler;
@@ -72,9 +73,8 @@ public final class AppActivity extends Activity {
 
     private void registerZoomListeners(final ImageView imageView) {
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
-
-        final ZoomInClickListener zoomInClickListener = new ZoomInClickListener(imageView);
-        final ZoomOutClickListener zoomOutClickListener = new ZoomOutClickListener(imageView);
+        final ZoomClickListener zoomInClickListener = new ZoomClickListener(imageView, true);
+        final ZoomClickListener zoomOutClickListener = new ZoomClickListener(imageView, false);
 
         zoom.setOnZoomInClickListener(zoomInClickListener);
         zoom.setOnZoomOutClickListener(zoomOutClickListener);

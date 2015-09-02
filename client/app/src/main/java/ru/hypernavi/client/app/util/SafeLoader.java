@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.client.app.RequestBitmap;
-import ru.hypernavi.client.app.RequestString;
 
 /**
  * Created by Константин on 28.08.2015.

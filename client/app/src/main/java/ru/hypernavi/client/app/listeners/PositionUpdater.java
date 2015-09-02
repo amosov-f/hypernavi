@@ -1,4 +1,4 @@
-package ru.hypernavi.client.app;
+package ru.hypernavi.client.app.listeners;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import ru.hypernavi.client.app.AppActivity;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
 import ru.hypernavi.util.GeoPoint;
 
@@ -20,6 +21,7 @@ import ru.hypernavi.util.GeoPoint;
  */
 public class PositionUpdater implements LocationListener {
     private static final Logger LOG = Logger.getLogger(PositionUpdater.class.getName());
+    //noinspection MagicNumber
     private static final int FIFTEEN_MINUTES = 15 * 1000 * 60;
 
     @NotNull
@@ -31,8 +33,8 @@ public class PositionUpdater implements LocationListener {
     private final Button button;
     private final AppActivity appActivity;
 
-    PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView,
-                    @NotNull final Button button, @NotNull final AppActivity appActivity)
+    public PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView,
+                           @NotNull final Button button, @NotNull final AppActivity appActivity)
     {
         this.manager = manager;
         myView = imageView;

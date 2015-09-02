@@ -1,4 +1,4 @@
-package ru.hypernavi.client.app;
+package ru.hypernavi.client.app.listeners;
 
 import org.jetbrains.annotations.NotNull;
 

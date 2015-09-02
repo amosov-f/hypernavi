@@ -1,4 +1,4 @@
-package ru.hypernavi.client.app;
+package ru.hypernavi.client.app.listeners;
 
 import java.util.Date;
 import java.util.logging.Logger;
@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import android.location.Location;
 import android.location.LocationManager;
 import android.view.View;
+import ru.hypernavi.client.app.AppActivity;
 
 /**
  * Created by Acer on 19.08.2015.

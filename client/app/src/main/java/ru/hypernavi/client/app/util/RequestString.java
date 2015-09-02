@@ -1,4 +1,4 @@
-package ru.hypernavi.client.app;
+package ru.hypernavi.client.app.util;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -9,26 +9,25 @@ import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Created by Acer on 15.08.2015.
  */
-// TODO amosov-f: create base class for request callable
-public class RequestBitmap implements Callable<Bitmap> {
-    private static final Logger LOG = Logger.getLogger(RequestBitmap.class.getName());
-    // TODO amosov-f: @NotNull and final
-    private Uri myUri;
+//TODO: check and correct nullPointerException
+public class RequestString implements Callable<String> {
+    private static final Logger LOG = Logger.getLogger(RequestString.class.getName());
 
-    public RequestBitmap(final Uri uri) {
+    private final Uri myUri;
+
+    public RequestString(final Uri uri) {
         myUri = uri;
     }
 
     @Nullable
     @Override
-    public Bitmap call() {
+    public String call() throws InterruptedException {
         try {
             final URL url = new URL(myUri + "");
             final HttpURLConnection myConnection = (HttpURLConnection) (url.openConnection());
@@ -37,12 +36,12 @@ public class RequestBitmap implements Callable<Bitmap> {
                 LOG.warning("Response code is " + myConnection.getResponseCode());
                 return null;
             } else {
-                LOG.info("Bitmap is loaded");
-                return BitmapFactory.decodeStream(myConnection.getInputStream());
+                LOG.warning("String is loaded");
+                return IOUtils.toString(myConnection.getInputStream());
             }
         } catch (IOException e) {
             LOG.warning(e.getMessage());
-            LOG.warning("Can't read scheme from internet");
+            LOG.warning("Can't read String from internet");
             return null;
         }
     }
