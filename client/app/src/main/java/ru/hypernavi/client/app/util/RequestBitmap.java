@@ -1,5 +1,6 @@
 package ru.hypernavi.client.app.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -19,10 +20,10 @@ import android.net.Uri;
 // TODO amosov-f: create base class for request callable
 public class RequestBitmap implements Callable<Bitmap> {
     private static final Logger LOG = Logger.getLogger(RequestBitmap.class.getName());
-    // TODO amosov-f: @NotNull and final
-    private Uri myUri;
+    @NotNull
+    private final Uri myUri;
 
-    public RequestBitmap(final Uri uri) {
+    public RequestBitmap(@NotNull final Uri uri) {
         myUri = uri;
     }
 

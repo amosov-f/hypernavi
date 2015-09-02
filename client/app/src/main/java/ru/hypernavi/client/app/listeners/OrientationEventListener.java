@@ -50,16 +50,22 @@ public class OrientationEventListener implements SensorEventListener {
     }
 
     public void onResume() {
-        //super.onResume();
         // for the system's orientation sensor registered listeners
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void onPause() {
-        //super.onPause();
         // to stop the listener and save battery
         sensorManager.unregisterListener(this);
+    }
+
+    public void onStandby(final float defaultAzimuth) {
+        final RotateAnimation rotateAnimation = prepareAnimation(defaultAzimuth);
+
+        myImageView.startAnimation(rotateAnimation);
+        currentDegree = -defaultAzimuth;
+        onPause();
     }
 
     @Override

@@ -15,7 +15,6 @@ import org.apache.commons.io.IOUtils;
 /**
  * Created by Acer on 15.08.2015.
  */
-//TODO: check and correct nullPointerException
 public class RequestString implements Callable<String> {
     private static final Logger LOG = Logger.getLogger(RequestString.class.getName());
 
@@ -31,13 +30,19 @@ public class RequestString implements Callable<String> {
         try {
             final URL url = new URL(myUri + "");
             final HttpURLConnection myConnection = (HttpURLConnection) (url.openConnection());
-            myConnection.getResponseCode();
+            if (myConnection == null) {
+                return null;
+            }
             if (myConnection.getResponseCode() != myConnection.HTTP_OK) {
                 LOG.warning("Response code is " + myConnection.getResponseCode());
                 return null;
             } else {
                 LOG.warning("String is loaded");
-                return IOUtils.toString(myConnection.getInputStream());
+                final java.io.InputStream inputStream = myConnection.getInputStream();
+                if (inputStream == null) {
+                    return null;
+                }
+                return IOUtils.toString(inputStream);
             }
         } catch (IOException e) {
             LOG.warning(e.getMessage());

@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.logging.Logger;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,10 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Display;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.ZoomControls;
+import android.widget.*;
 import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
@@ -41,6 +37,9 @@ public final class AppActivity extends Activity {
     private InfoRequestHandler handler;
     private CacheWorker cache;
 
+    ToggleButton toogleButton;
+    private float currentMapAzimuthInDegrees;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +54,18 @@ public final class AppActivity extends Activity {
 
         getParametersDisplay();
         drawDisplayImage(imageView);
+        //TODO: connect with response orientation
+        currentMapAzimuthInDegrees = 0.0f;
 
         orientationEventListener = new OrientationEventListener(imageView, this);
+        orientationEventListener.onStandby(0.0f);
 
+        final CheckedChangeListener checkedChangeListener = new CheckedChangeListener(this, orientationEventListener);
+
+        toogleButton = (ToggleButton) findViewById(R.id.toggleButton1);
+
+        toogleButton.setOnCheckedChangeListener(checkedChangeListener);
+        //
         registerGPSListeners(imageView);
         registerZoomListeners(imageView);
         registerTouchListeners(imageView);
@@ -142,8 +150,10 @@ public final class AppActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // for the system's orientation sensor registered listeners
-        orientationEventListener.onResume();
+        if (toogleButton.isChecked()) {
+            // for the system's orientation sensor registered listeners
+            orientationEventListener.onResume();
+        }
     }
 
     @Override
@@ -151,5 +161,9 @@ public final class AppActivity extends Activity {
         super.onPause();
         // to stop the sensor listener and save battery
         orientationEventListener.onPause();
+    }
+
+    public float getCurrentMapAzimuthInDegrees() {
+        return currentMapAzimuthInDegrees;
     }
 }

@@ -26,9 +26,6 @@ public class SafeLoader {
     public JSONObject getJSON(final double lat, final double lon,
                               final String scheme, final String host, final String path) throws MalformedURLException
     {
-        // TODO amosov-f: use Uri.Builder
-        //final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
-
         final Uri requestURI = new Uri.Builder()
             .scheme(scheme)
             .authority(host)
