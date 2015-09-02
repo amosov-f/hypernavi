@@ -58,7 +58,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
 
     @Override
     public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        final String[] expectedParameters = {"lon", "lat", "address", "url", "type", "angle"};
+        final String[] expectedParameters = {"lon", "lat", "address", "url", "type", "angle", "page"};
         if (!isRequestHaveKeys(req, expectedParameters)) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
@@ -72,6 +72,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
         final String address = req.getParameter("address");
         final String type = req.getParameter("type");
         final String url = req.getParameter("url");
+        final String page = req.getParameter("page");
         final byte[] image = (new URLdownload()).load(url);
         final String path;
         if (image != null) {
@@ -81,7 +82,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
             path = "/img/NotFound.jpg";
         }
 
-        final Hypermarket market = new Hypermarket(maxId, location, address, type, path, url, angle);
+        final Hypermarket market = new Hypermarket(maxId, location, address, type, path, url, page, angle);
         hypermarkets.addHypermarket(market,"/" + market.getId() + ".json");
 
         LOG.info("OK!");
