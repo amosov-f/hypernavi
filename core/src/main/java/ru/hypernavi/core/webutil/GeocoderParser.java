@@ -1,6 +1,9 @@
 package ru.hypernavi.core.webutil;
 
-import com.sun.istack.internal.Nullable;
+import com.google.inject.Singleton;
+import org.jetbrains.annotations.Nullable;
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.util.GeoPoint;
@@ -9,6 +12,7 @@ import ru.hypernavi.util.GeoPoint;
  * Created by Константин on 17.08.2015.
  */
 
+@Singleton
 public class GeocoderParser {
     public GeocoderParser() {
     }
