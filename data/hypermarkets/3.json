@@ -1,1 +1,11 @@
-{"address":"default","latitude":59.796,"id":3,"type":"Okey","url":"/img/85B607598DB9CA5CEFB104D56EF9E35F.jpg","longitude":30.147}
+{
+  "angle": 0.0,
+  "page": "http://www.okmarket.ru/stores/store/90/",
+  "url": "http://www.okmarket.ru/media/gallery/2012-12-27/okey_tallinskoe_shema_magazina_b.jpg",
+  "address": "Таллинское ш., 27",
+  "latitude": 59.796,
+  "id": 3,
+  "type": "Okey",
+  "path": "/img/85B607598DB9CA5CEFB104D56EF9E35F.jpg",
+  "longitude": 30.147
+}

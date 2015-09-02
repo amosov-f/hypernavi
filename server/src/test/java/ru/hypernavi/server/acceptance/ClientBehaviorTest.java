@@ -52,7 +52,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
                 Assert.fail("Wrong responce");
             }
             final Hypermarket market = inforesp.getClosestMarkets().get(0);
-            pathSchema = market.getUrl();
+            pathSchema = market.getPath();
         } catch (IOException e) {
             Assert.fail("Can't take content from responce " + e.getMessage());
         } catch (JSONException e) {

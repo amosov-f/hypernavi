@@ -1,1 +1,11 @@
-{"address":"default","latitude":59.5836,"id":4,"type":"Okey","url":"/img/46A12CE00CE5BC974337FEC738A56CCC.jpg","longitude":30.1385}
+{
+  "address": "Гатчина, Ленинградское ш., 12",
+  "latitude": 59.5836,
+  "id": 4,
+  "url": "http://www.okmarket.ru/media/gallery/2013-12-18/Gatchina_1.jpg",
+  "page": "http://www.okmarket.ru/stores/store/93/",
+  "angle": 0.0,
+  "type": "Okey",
+  "path": "/img/46A12CE00CE5BC974337FEC738A56CCC.jpg",
+  "longitude": 30.1385
+}

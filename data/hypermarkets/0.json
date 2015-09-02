@@ -1,1 +1,11 @@
-{"address":"default","latitude":60.0383,"id":0,"type":"Okey","url":"/img/E99E1328DA759DC007C5F1A25D8DB107.jpg","longitude":30.3207}
+{
+  "angle": 0.0,
+  "page": "http://www.okmarket.ru/stores/store/59/",
+  "url": "http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_ozerki.jpg",
+  "address": "Выборгское ш., 3/1",
+  "latitude": 60.0383,
+  "id": 0,
+  "type": "Okey",
+  "path": "/img/E99E1328DA759DC007C5F1A25D8DB107.jpg",
+  "longitude": 30.3207
+}

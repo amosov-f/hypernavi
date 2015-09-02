@@ -1,1 +1,11 @@
-{"address":"default","latitude":60.0031,"id":5,"type":"Okey","url":"/img/599A49404856089294BCBEFB8959F9AC.jpg","longitude":30.2282}
+{
+  "address": "Богатырский пр-т, 42",
+  "latitude": 60.0031,
+  "id": 5,
+  "type": "Okey",
+  "angle": 0.0,
+  "url": "http://www.okmarket.ru/media/gallery/2013-12-17/Yakhtennaya.jpg",
+  "page": "http://www.okmarket.ru/stores/store/101/",
+  "path": "/img/599A49404856089294BCBEFB8959F9AC.jpg",
+  "longitude": 30.2282
+}

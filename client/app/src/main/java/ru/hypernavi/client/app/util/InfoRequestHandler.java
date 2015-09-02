@@ -59,7 +59,7 @@ public class InfoRequestHandler {
             LOG.warning("No markets in responce");
             return myCache.loadCachedOrDefaultScheme();
         } else {
-            final String schemaFullURL = this.schemaURL + response.getClosestMarkets().get(0).getUrl();
+            final String schemaFullURL = this.schemaURL + response.getClosestMarkets().get(0).getPath();
             try {
                 return myLoader.getScheme(schemaFullURL);
             } catch (MalformedURLException e) {

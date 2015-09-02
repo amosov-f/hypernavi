@@ -1,1 +1,11 @@
-{"address":"default","latitude":59.9886,"id":1,"type":"Okey","url":"/img/F1798473E1325AB830CBD5F1F11E2A5D.jpg","longitude":30.2253}
+{
+  "angle": 0.0,
+  "url": "http://www.okmarket.ru/media/gallery/2013-12-12/Savushkina.jpg",
+  "page": "http://www.okmarket.ru/stores/store/67/",
+  "address": "ул. Савушкина, 119 корп. 3А ",
+  "latitude": 59.9886,
+  "id": 1,
+  "type": "Okey",
+  "path": "/img/F1798473E1325AB830CBD5F1F11E2A5D.jpg",
+  "longitude": 30.2253
+}

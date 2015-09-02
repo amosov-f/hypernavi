@@ -1,1 +1,11 @@
-{"address":"default","latitude":60.0143,"id":2,"type":"Okey","url":"/img/44B7EE44A7015E9F71C26F988EAA195B.jpg","longitude":30.3886}
+{
+  "address": "пр-т Науки, 17",
+  "latitude": 60.0143,
+  "id": 2,
+  "url": "http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_akadem.jpg",
+  "page": "http://www.okmarket.ru/stores/store/68/",
+  "angle": 0.0,
+  "type": "Okey",
+  "path": "/img/44B7EE44A7015E9F71C26F988EAA195B.jpg",
+  "longitude": 30.3886
+}
