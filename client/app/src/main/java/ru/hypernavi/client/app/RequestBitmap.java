@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 /**
  * Created by Acer on 15.08.2015.
@@ -19,17 +20,18 @@ import android.graphics.BitmapFactory;
 public class RequestBitmap implements Callable<Bitmap> {
     private static final Logger LOG = Logger.getLogger(RequestBitmap.class.getName());
     // TODO amosov-f: @NotNull and final
-    private URL myUrl;
+    private Uri myUri;
 
-    public RequestBitmap(final URL url) {
-        myUrl = url;
+    public RequestBitmap(final Uri uri) {
+        myUri = uri;
     }
 
     @Nullable
     @Override
     public Bitmap call() {
         try {
-            final HttpURLConnection myConnection = (HttpURLConnection) (myUrl.openConnection());
+            final URL url = new URL(myUri + "");
+            final HttpURLConnection myConnection = (HttpURLConnection) (url.openConnection());
             myConnection.getResponseCode();
             if (myConnection.getResponseCode() != myConnection.HTTP_OK) {
                 LOG.warning("Response code is " + myConnection.getResponseCode());

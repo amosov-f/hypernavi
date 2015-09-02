@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 
+import android.net.Uri;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -18,17 +19,18 @@ import org.apache.commons.io.IOUtils;
 public class RequestString implements Callable<String> {
     private static final Logger LOG = Logger.getLogger(RequestString.class.getName());
 
-    private final URL myUrl;
+    private final Uri myUri;
 
-    public RequestString(final URL url) {
-        myUrl = url;
+    public RequestString(final Uri uri) {
+        myUri = uri;
     }
 
     @Nullable
     @Override
     public String call() throws InterruptedException {
         try {
-            final HttpURLConnection myConnection = (HttpURLConnection) (myUrl.openConnection());
+            final URL url = new URL(myUri + "");
+            final HttpURLConnection myConnection = (HttpURLConnection) (url.openConnection());
             myConnection.getResponseCode();
             if (myConnection.getResponseCode() != myConnection.HTTP_OK) {
                 LOG.warning("Response code is " + myConnection.getResponseCode());

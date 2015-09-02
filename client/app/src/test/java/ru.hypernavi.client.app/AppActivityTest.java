@@ -2,7 +2,6 @@ package ru.hypernavi.client.app;
 
 import org.jetbrains.annotations.NotNull;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;

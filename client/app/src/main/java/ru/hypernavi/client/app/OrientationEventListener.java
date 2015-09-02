@@ -99,12 +99,12 @@ public class OrientationEventListener implements SensorEventListener {
         SensorManager.getRotationMatrix(R, null, lastAccelerometer, lastMagnetometer);
         final float[] orientation = new float[3];
         SensorManager.getOrientation(R, orientation);
-        final float azimuthInDegress = (float) (Math.toDegrees(orientation[0]) + 360) % 360;
         // create a rotation animation (reverse turn degree degrees)
-        LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
-                 + " " + Math.toDegrees(orientation[2]));
+        //LOG.info("orientation: " + Math.toDegrees(orientation[0]) + " " + Math.toDegrees(orientation[1])
+        //         + " " + Math.toDegrees(orientation[2]));
 
-        return azimuthInDegress;
+        //noinspection MagicNumber
+        return (float) (Math.toDegrees(orientation[0]) + 360) % 360;
     }
 
     private RotateAnimation prepareAnimation(final float azimuthInDegress) {
@@ -112,6 +112,7 @@ public class OrientationEventListener implements SensorEventListener {
         //noinspection MagicNumber
         if (Math.abs(currentDegree + azimuthInDegress) > PI_IN_DEGREES / 2) {
             if (currentDegree < -azimuthInDegress) {
+                //noinspection MagicNumber
                 rotateAnimation = new RotateAnimation(
                     currentDegree,
                     -azimuthInDegress - PI_IN_DEGREES,
@@ -119,6 +120,7 @@ public class OrientationEventListener implements SensorEventListener {
                     Animation.RELATIVE_TO_SELF,
                     0.5f);
             } else {
+                //noinspection MagicNumber
                 rotateAnimation = new RotateAnimation(
                     currentDegree,
                     -azimuthInDegress + PI_IN_DEGREES,
@@ -127,6 +129,7 @@ public class OrientationEventListener implements SensorEventListener {
                     0.5f);
             }
         } else {
+            //noinspection MagicNumber
             rotateAnimation = new RotateAnimation(
                 currentDegree,
                 -azimuthInDegress,
@@ -135,13 +138,14 @@ public class OrientationEventListener implements SensorEventListener {
                 0.5f);
         }
 
+        //noinspection MagicNumber
         rotateAnimation.setDuration(450);
         rotateAnimation.setFillAfter(true);
 
         return rotateAnimation;
     }
 
-    private boolean inEpsilonSphere(float x, final float sphereCenter, final float delta) {
+    private boolean inEpsilonSphere(final float x, final float sphereCenter, final float delta) {
         return (Math.abs(x - sphereCenter) < delta);
     }
 

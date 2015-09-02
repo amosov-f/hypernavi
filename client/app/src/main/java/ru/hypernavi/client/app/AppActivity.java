@@ -3,9 +3,6 @@ package ru.hypernavi.client.app;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
@@ -24,8 +21,6 @@ import android.widget.ZoomControls;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
 import ru.hypernavi.client.app.util.InfoRequestHandler;
-import ru.hypernavi.client.app.util.SafeLoader;
-import ru.hypernavi.util.Config;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
@@ -38,14 +33,11 @@ public final class AppActivity extends Activity {
 
     private ImageView imageView;
 
-    private ExecutorService executorService;
-
     private LocationManager locationManager;
 
     private OrientationEventListener orientationEventListener;
 
     private InfoRequestHandler handler;
-    private SafeLoader loader;
     private CacheWorker cache;
 
     @Override
@@ -57,11 +49,8 @@ public final class AppActivity extends Activity {
         setContentView(R.layout.main);
         imageView = (ImageView) findViewById(R.id.imageView);
 
-        executorService = Executors.newFixedThreadPool(getNThread(PROPERTIES_SCHEME));
-
         cache = new CacheWorker(this);
-        loader = new SafeLoader(executorService, cache);
-        handler = new InfoRequestHandler(this, loader, cache);
+        handler = new InfoRequestHandler(this, cache);
 
         getParametersDisplay();
         drawDisplayImage(imageView);
@@ -144,15 +133,6 @@ public final class AppActivity extends Activity {
 
         LOG.info("GeoPosition " + geoPosition);
         writeWarningMessage("GeoPosition " + geoPosition);
-    }
-
-    private int getNThread(@NotNull final String path) {
-        try {
-            final Config config = Config.load(path);
-            return config.getInt("app.request.pool.size");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void writeWarningMessage(@NotNull final String message) {

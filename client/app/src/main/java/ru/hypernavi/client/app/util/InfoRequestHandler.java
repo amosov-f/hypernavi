@@ -4,8 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-
 
 import android.graphics.Bitmap;
 import org.json.JSONObject;
@@ -25,13 +26,18 @@ public class InfoRequestHandler {
     private final SafeLoader myLoader;
     private final CacheWorker myCache;
 
-    private String infoURL;
-    private String schemaURL;
+    private final ExecutorService myExecutorService;
 
-    public InfoRequestHandler(final AppActivity appActivity, final SafeLoader loader, final CacheWorker cache) {
+    private String scheme;
+    private String host;
+    private String path;
+
+    public InfoRequestHandler(final AppActivity appActivity, final CacheWorker cache) {
+        myExecutorService = Executors.newFixedThreadPool(getNThread(AppActivity.PROPERTIES_SCHEME));
+
         myAppActivity = appActivity;
-        myLoader = loader;
         myCache = cache;
+        myLoader = new SafeLoader(myExecutorService, myCache);
 
         getProperties(AppActivity.PROPERTIES_SCHEME);
     }
@@ -41,8 +47,9 @@ public class InfoRequestHandler {
         final double lon = geoPosition.getLongitude();
         LOG.info("GeoPoint coordinates " + "lat: " + lat + "lon: " + lon);
         final JSONObject root;
+
         try {
-            root = myLoader.getJSON(lat, lon, infoURL);
+            root = myLoader.getJSON(lat, lon, scheme, host, path);
         } catch (MalformedURLException ignored) {
             LOG.warning("Can't construct URL for info");
             myAppActivity.writeWarningMessage("Internet disabled!");
@@ -59,9 +66,8 @@ public class InfoRequestHandler {
             LOG.warning("No markets in responce");
             return myCache.loadCachedOrDefaultScheme();
         } else {
-            final String schemaFullURL = this.schemaURL + response.getClosestMarkets().get(0).getPath();
             try {
-                return myLoader.getScheme(schemaFullURL);
+                return myLoader.getScheme(scheme, host, response.getClosestMarkets().get(0).getPath());
             } catch (MalformedURLException e) {
                 LOG.warning("Can't construct url for scheme. " + e.getMessage());
                 myAppActivity.writeWarningMessage("Internet disabled!");
@@ -73,8 +79,18 @@ public class InfoRequestHandler {
     private void getProperties(@NotNull final String path) {
         try {
             final Config config = Config.load(path);
-            infoURL = config.getProperty("app.server.info.host");
-            schemaURL = config.getProperty("app.server.schema.host");
+            this.scheme = config.getProperty("app.server.info.scheme");
+            this.host = config.getProperty("app.server.info.host");
+            this.path = config.getProperty("app.server.info.path");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int getNThread(@NotNull final String path) {
+        try {
+            final Config config = Config.load(path);
+            return config.getInt("app.request.pool.size");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

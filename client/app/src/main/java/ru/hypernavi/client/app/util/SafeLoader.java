@@ -1,12 +1,11 @@
 package ru.hypernavi.client.app.util;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-
 import android.graphics.Bitmap;
+import android.net.Uri;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.client.app.RequestBitmap;
@@ -26,12 +25,22 @@ public class SafeLoader {
         this.cache = cache;
     }
 
-    public JSONObject getJSON(final double lat, final double lon, final String infoURL) throws MalformedURLException {
+    public JSONObject getJSON(final double lat, final double lon,
+                              final String scheme, final String host, final String path) throws MalformedURLException
+    {
         // TODO amosov-f: use Uri.Builder
-        final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
-        LOG.info("infoURL: " + requestURL.toString());
-        final RequestString requestString = new RequestString(requestURL);
-        LOG.info("JSON request URL" + requestURL.toString());
+        //final URL requestURL = new URL(infoURL + "?lat=" + lat + "&lon=" + lon);
+
+        final Uri requestURI = new Uri.Builder()
+            .scheme(scheme)
+            .authority(host)
+            .appendPath(path)
+            .appendQueryParameter("lat", Double.toString(lat))
+            .appendQueryParameter("lon", Double.toString(lon))
+            .build();
+        LOG.info("JSON request URI" + requestURI);
+
+        final RequestString requestString = new RequestString(requestURI);
         final Future<String> task = executorService.submit(requestString);
         String hypermarketsJSON;
         try {
@@ -43,9 +52,8 @@ public class SafeLoader {
             LOG.warning("Execution exception");
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
-            LOG.warning("Timeout exception");
-            // TODO amosov-f: remove this shit
-            throw new RuntimeException(e);
+            LOG.warning("Timeout exception " + e);
+            hypermarketsJSON = null;
         }
 
         if (hypermarketsJSON == null) {
@@ -60,8 +68,20 @@ public class SafeLoader {
         }
     }
 
-    public Bitmap getScheme(final String currentSchemeURL) throws MalformedURLException {
-        final RequestBitmap requestBitmap = new RequestBitmap(new URL(currentSchemeURL));
+    public Bitmap getScheme(final String scheme, final String host, final String path) throws MalformedURLException {
+        final StringBuilder realPath = new StringBuilder();
+        for (int i = 1; i < path.length(); ++i) {
+            realPath.append(path.charAt(i));
+        }
+
+        final Uri requestURI = new Uri.Builder()
+            .scheme(scheme)
+            .authority(host)
+            .appendPath(realPath.toString())
+            .build();
+        LOG.info("JSON request URI" + requestURI);
+
+        final RequestBitmap requestBitmap = new RequestBitmap(requestURI);
         final Future<Bitmap> task = executorService.submit(requestBitmap);
         try {
             final Bitmap answer = task.get(MAX_TIME_OUT, TimeUnit.MILLISECONDS);
