@@ -2,6 +2,7 @@
 
 HOST=hypernavi.net
 
+rsync -a data /root
 # moving jar
 FILENAME=hypernavi-dev-`stat -c %Y server/target/hypernavi-server-jar-with-dependencies.jar`.jar
 fuser -KILL -k -n tcp 80
