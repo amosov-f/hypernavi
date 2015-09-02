@@ -49,7 +49,7 @@ public class Hypermarket implements Positioned, Indexable {
         return url;
     }
 
-    double getAngle() {
+    public double getAngle() {
         return angle;
     }
 
