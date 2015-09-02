@@ -19,6 +19,7 @@ public enum HypermarketSerializer {
             obj.put("type", market.getType());
             obj.put("address", market.getAddress());
             obj.put("id", market.getId());
+            obj.put("page", market.getPage());
             obj.put("url", market.getUrl());
             obj.put("angle", market.getAngle());
         } catch (JSONException e) {
@@ -35,6 +36,7 @@ public enum HypermarketSerializer {
         final String url;
         final String path;
         final double angle;
+        final String page;
         try {
             id = jsonObject.getInt("id");
             final double longitude = jsonObject.getDouble("longitude");
@@ -45,9 +47,10 @@ public enum HypermarketSerializer {
             path = jsonObject.getString("path");
             url = jsonObject.getString("url");
             angle = jsonObject.getDouble("angle");
+            page = jsonObject.getString("page");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        return new Hypermarket(id, location, address, type, path, url, angle);
+        return new Hypermarket(id, location, address, type, path, url, page, angle);
     }
 }

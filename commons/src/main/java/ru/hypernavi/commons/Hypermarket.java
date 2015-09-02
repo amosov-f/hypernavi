@@ -20,6 +20,8 @@ public class Hypermarket implements Positioned, Indexable {
     private final GeoPoint location;
     @NotNull
     private final String url;
+    @NotNull
+    private final String page;
 
     private final double angle;
 
@@ -30,6 +32,7 @@ public class Hypermarket implements Positioned, Indexable {
                        @NotNull final String type,
                        @NotNull final String path,
                        @NotNull final String url,
+                       @NotNull final String page,
                        final double angle) {
         this.id = id;
         this.location = location;
@@ -38,6 +41,7 @@ public class Hypermarket implements Positioned, Indexable {
         this.path = path;
         this.url = url;
         this.angle = angle;
+        this.page = page;
     }
 
     @NotNull
@@ -73,5 +77,10 @@ public class Hypermarket implements Positioned, Indexable {
     @NotNull
     public String getAddress() {
         return address;
+    }
+
+    @NotNull
+    public String getPage() {
+        return page;
     }
 }
