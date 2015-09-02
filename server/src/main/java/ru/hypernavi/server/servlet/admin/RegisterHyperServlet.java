@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.ImageHash;
+import ru.hypernavi.core.URLdownload;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.database.ImageDataBase;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -62,51 +63,28 @@ public class RegisterHyperServlet extends AbstractHttpService {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+
         final GeoPoint location = new GeoPoint(Double.parseDouble(req.getParameter("lon")),
                 Double.parseDouble(req.getParameter("lat")));
+
         final int maxId = hypermarkets.size();
         final String address = req.getParameter("address");
         final String type = req.getParameter("type");
         final String url = req.getParameter("url");
-        // TODO bakharev.k: take to another servlet
-        final byte[] image = loadImage(url);
+        final byte[] image = (new URLdownload()).load(url);
+        final String path;
+        if (image != null) {
+            images.add("/img", "/" + ImageHash.generate(image) + ".jpg", image);
+            path = "/img/" + ImageHash.generate(image) + ".jpg";
+        } else {
+            path = "/img/NotFound.jpg";
+        }
 
-        images.add("/img", "/" + ImageHash.generate(image) + ".jpg", image);
-
-        final Hypermarket market = new Hypermarket(maxId, location, address, type, "/img/" + ImageHash.generate(image) + ".jpg");
+        final Hypermarket market = new Hypermarket(maxId, location, address, type, path);
         hypermarkets.addHypermarket(market,"/" + market.getId() + ".json");
 
         LOG.info("OK!");
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.getOutputStream().print("OK");
-    }
-
-    private static byte[] loadImage(final String pathurl) {
-        final byte[] image;
-        try {
-            final URL url = new URL(pathurl);
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            InputStream is = null;
-            try {
-                is = url.openStream();
-                final byte[] byteChunk = new byte[4096];
-                int n;
-
-                while ( (n = is.read(byteChunk)) > 0 ) {
-                    baos.write(byteChunk, 0, n);
-                }
-            }
-            catch (IOException e) {
-                // Perform any other exception handling that's appropriate.
-            }
-            finally {
-                if (is != null) { is.close(); }
-            }
-            image = baos.toByteArray();
-
-        } catch (IOException ignored) {
-            return null;
-        }
-        return image;
     }
 }
