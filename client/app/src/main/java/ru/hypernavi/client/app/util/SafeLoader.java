@@ -69,15 +69,10 @@ public class SafeLoader {
     }
 
     public Bitmap getScheme(final String scheme, final String host, final String path) throws MalformedURLException {
-        final StringBuilder realPath = new StringBuilder();
-        for (int i = 1; i < path.length(); ++i) {
-            realPath.append(path.charAt(i));
-        }
-
         final Uri requestURI = new Uri.Builder()
             .scheme(scheme)
             .authority(host)
-            .appendPath(realPath.toString())
+            .appendPath(path.substring(1))
             .build();
         LOG.info("JSON request URI" + requestURI);
 
