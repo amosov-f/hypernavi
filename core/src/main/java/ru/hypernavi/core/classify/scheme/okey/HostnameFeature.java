@@ -1,5 +1,8 @@
 package ru.hypernavi.core.classify.scheme.okey;
 
+import org.jetbrains.annotations.NotNull;
+
+
 import ru.hypernavi.core.classify.scheme.Picture;
 import ru.hypernavi.ml.factor.BinaryFactor;
 
@@ -12,7 +15,7 @@ public final class HostnameFeature extends BinaryFactor<Picture> {
     }
 
     @Override
-    public boolean test(final Picture picture) {
+    public boolean test(@NotNull final Picture picture) {
         return picture.getUrl().getHost().contains("okmarket");
     }
 }

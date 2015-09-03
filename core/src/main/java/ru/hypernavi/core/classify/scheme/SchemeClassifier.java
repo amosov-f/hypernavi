@@ -10,7 +10,6 @@ import org.apache.commons.io.IOUtils;
 import ru.hypernavi.core.classify.scheme.okey.HostnameFeature;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
-import ru.hypernavi.ml.factor.Factors;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
 import weka.core.Instances;
@@ -20,7 +19,7 @@ import weka.core.Instances;
  */
 public final class SchemeClassifier extends WekaClassifier<Picture> implements BinaryClassifier<Picture> {
     public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new SMO(), new Factors<>(Collections.singletonList(new HostnameFeature()), new SchemeAnswer()), dataset);
+        super(new SMO(), Collections.singletonList(new HostnameFeature()), new SchemeAnswer(), dataset);
     }
 
     @Override

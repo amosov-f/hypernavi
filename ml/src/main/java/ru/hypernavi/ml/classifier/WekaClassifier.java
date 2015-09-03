@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 
 import ru.hypernavi.ml.factor.Factor;
-import ru.hypernavi.ml.factor.Factors;
+import ru.hypernavi.ml.factor.ClassFactor;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -22,7 +22,9 @@ public class WekaClassifier<T> implements Classifier<T> {
     @NotNull
     private final weka.classifiers.Classifier classifier;
     @NotNull
-    private final List<Factor<T>> factors;
+    private final List<? extends Factor<T>> features;
+    @NotNull
+    private final ClassFactor<T> answer;
     @NotNull
     private final ArrayList<Attribute> attributes;
     @NotNull
@@ -31,20 +33,21 @@ public class WekaClassifier<T> implements Classifier<T> {
     private final Instances instances;
 
     public WekaClassifier(@NotNull final weka.classifiers.Classifier classifier,
-                          @NotNull final Factors<T> factors,
+                          @NotNull final List<? extends Factor<T>> features,
+                          @NotNull final ClassFactor<T> answer,
                           @NotNull final T... dataset)
     {
         this.classifier = classifier;
-        this.factors = factors.getFactors();
-        attributes = new ArrayList<>(factors.getFeatures().stream()
+        this.features = features;
+        this.answer = answer;
+        attributes = new ArrayList<>(features.stream()
                 .map(feature -> new Attribute(feature.getName()))
                 .collect(Collectors.toList()));
-        final Factor<? super T> answer = factors.getAnswer();
         classAttribute = new Attribute(
                 answer.getName(),
                 Arrays.stream(dataset)
-                        .mapToDouble(answer::applyAsDouble)
-                        .mapToObj(WekaClassifier::toIntString)
+                        .mapToInt(answer::applyAsInt)
+                        .mapToObj(String::valueOf)
                         .sorted()
                         .distinct()
                         .collect(Collectors.toList())
@@ -77,19 +80,13 @@ public class WekaClassifier<T> implements Classifier<T> {
     }
 
     @NotNull
-    public Instance toInstance(@NotNull final T object, final boolean classIsMissing) {
+    private Instance toInstance(@NotNull final T object, final boolean classIsMissing) {
         final Instance instance = new DenseInstance(attributes.size());
-        for (int i = 0; i < factors.size(); i++) {
-            final Attribute attribute = attributes.get(i);
-            if (attribute.isNominal() && classIsMissing) {
-                continue;
-            }
-            final double value = factors.get(i).applyAsDouble(object);
-            if (attribute.isNominal()) {
-                instance.setValue(attribute, toIntString(value));
-            } else {
-                instance.setValue(attribute, value);
-            }
+        for (int i = 0; i < features.size(); i++) {
+            instance.setValue(attributes.get(i), features.get(i).applyAsDouble(object));
+        }
+        if (!classIsMissing) {
+            instance.setValue(classAttribute, String.valueOf(answer.applyAsInt(object)));
         }
         instance.setDataset(instances);
         return instance;
@@ -98,10 +95,5 @@ public class WekaClassifier<T> implements Classifier<T> {
     @NotNull
     public weka.classifiers.Classifier getWekaClassifier() {
         return classifier;
-    }
-
-    @NotNull
-    private static <T> String toIntString(final double d) {
-        return String.valueOf(Math.round(d));
     }
 }
