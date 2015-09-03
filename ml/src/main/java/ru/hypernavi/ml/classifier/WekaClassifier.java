@@ -71,7 +71,7 @@ public class WekaClassifier<T> implements Classifier<T> {
     public Instances toInstances(@NotNull final T... dataset) {
         //noinspection LocalVariableHidesMemberVariable
         final Instances instances = new Instances("dataset", attributes, dataset.length);
-        Arrays.stream(dataset).forEach(x -> instances.add(toInstance(x, false)));
+        Arrays.stream(dataset).forEach(object -> instances.add(toInstance(object, false)));
         instances.setClass(classAttribute);
         return instances;
     }

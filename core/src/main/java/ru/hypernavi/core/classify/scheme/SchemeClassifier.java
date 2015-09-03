@@ -31,7 +31,7 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     public static void main(@NotNull final String[] args) throws Exception {
         final Picture[] pictures = IOUtils.readLines(SchemeClassifier.class.getResourceAsStream("/dataset/okey.txt")).stream()
                 .map(line -> line.split("\t"))
-                .map(parts -> Picture.download(parts[0], "1".equals(parts[1])))
+                .map(parts -> Picture.download(parts[1], "1".equals(parts[0])))
                 .toArray(Picture[]::new);
         final SchemeClassifier classifier = new SchemeClassifier(pictures);
         final Instances instances = classifier.toInstances(pictures);
