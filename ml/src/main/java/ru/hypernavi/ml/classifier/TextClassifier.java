@@ -1,4 +1,4 @@
-package ru.hypernavi.ml;
+package ru.hypernavi.ml.classifier;
 
 import org.jetbrains.annotations.NotNull;
 

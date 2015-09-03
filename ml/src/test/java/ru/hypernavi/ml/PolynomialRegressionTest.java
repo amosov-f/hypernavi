@@ -3,6 +3,7 @@ package ru.hypernavi.ml;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
+import ru.hypernavi.ml.regression.PolynomialRegression;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;

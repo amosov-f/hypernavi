@@ -1,4 +1,4 @@
-package ru.hypernavi.core.classify;
+package ru.hypernavi.core.classify.goods;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

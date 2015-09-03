@@ -1,4 +1,4 @@
-package ru.hypernavi.ml;
+package ru.hypernavi.ml.regression;
 
 import org.jetbrains.annotations.NotNull;
 import weka.classifiers.AbstractClassifier;

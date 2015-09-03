@@ -1,7 +1,7 @@
-package ru.hypernavi.core.classify;
+package ru.hypernavi.core.classify.goods;
 
 import ru.hypernavi.core.Category;
-import ru.hypernavi.ml.TextClassifier;
+import ru.hypernavi.ml.classifier.TextClassifier;
 
 /**
  * User: amosov-f

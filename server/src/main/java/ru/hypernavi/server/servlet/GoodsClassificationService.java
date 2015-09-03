@@ -14,7 +14,7 @@ import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.Category;
-import ru.hypernavi.core.classify.GoodsClassifier;
+import ru.hypernavi.core.classify.goods.GoodsClassifier;
 
 /**
  * User: amosov-f
