@@ -28,7 +28,7 @@ public class CheckedChangeListener implements CompoundButton.OnCheckedChangeList
             myOrientationEventListener.onResume();
             myAppActivity.writeWarningMessage("Карта сориентирована");
         } else {
-            myOrientationEventListener.onStandby(0.0f);
+            myOrientationEventListener.onStandby();
             myAppActivity.writeWarningMessage("Ориентация отключена");
         }
     }

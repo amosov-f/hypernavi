@@ -94,11 +94,11 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         scrollByY = newScroll(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
         totalY = newTotal(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
 
-        final int realScrollByX = (int) (scrollByX * Math.cos(myOrientationEventListener.getCurrentDegreeInRadian()) +
-                                         scrollByY * Math.sin(myOrientationEventListener.getCurrentDegreeInRadian())
+        final int realScrollByX = (int) (scrollByX * Math.cos(myOrientationEventListener.getMarketUserAngle()) +
+                                         scrollByY * Math.sin(myOrientationEventListener.getMarketUserAngle())
         );
-        final int realScrollByY = (int) (scrollByY * Math.cos(myOrientationEventListener.getCurrentDegreeInRadian()) -
-                                         scrollByX * Math.sin(myOrientationEventListener.getCurrentDegreeInRadian())
+        final int realScrollByY = (int) (scrollByY * Math.cos(myOrientationEventListener.getMarketUserAngle()) -
+                                         scrollByX * Math.sin(myOrientationEventListener.getMarketUserAngle())
         );
         myView.scrollBy(realScrollByX, realScrollByY);
         downX = currentX;

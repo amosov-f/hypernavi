@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+
 import android.graphics.Bitmap;
 import org.json.JSONObject;
 import ru.hypernavi.client.app.AppActivity;
@@ -42,7 +43,7 @@ public class InfoRequestHandler {
         getProperties(AppActivity.PROPERTIES_SCHEME);
     }
 
-    public Bitmap getSchemaResponce(final GeoPoint geoPosition) {
+    public InfoResponse getInfoResponse(final GeoPoint geoPosition) {
         final double lat = geoPosition.getLatitude();
         final double lon = geoPosition.getLongitude();
         LOG.info("GeoPoint coordinates " + "lat: " + lat + "lon: " + lon);
@@ -60,16 +61,21 @@ public class InfoRequestHandler {
             LOG.warning("Can't construct URL for info");
             return null;
         }
+        LOG.info("keep response");
+        return InfoResponceSerializer.deserialize(root);
+    }
 
-        final InfoResponse response = InfoResponceSerializer.deserialize(root);
-        if (response == null || response.getClosestMarkets() == null || response.getClosestMarkets().size() < 1) {
+    public Bitmap getClosestSchema(final InfoResponse infoResponse) {
+        if (infoResponse == null || infoResponse.getClosestMarkets() == null ||
+            infoResponse.getClosestMarkets().size() < 1)
+        {
             LOG.warning("No markets in responce");
             return myCache.loadCachedOrDefaultScheme();
         } else {
             try {
-                return myLoader.getScheme(scheme, host, response.getClosestMarkets().get(0).getPath());
+                return myLoader.getScheme(scheme, host, infoResponse.getClosestMarkets().get(0).getPath());
             } catch (MalformedURLException e) {
-                LOG.warning("Can't construct url for scheme. " + e.getMessage());
+                LOG.warning("Can't construct uri for scheme. " + e.getMessage());
                 myAppActivity.writeWarningMessage("Internet disabled!");
                 return null;
             }

@@ -26,7 +26,7 @@ public class OrientationEventListener implements SensorEventListener {
     private final ImageView myImageView;
     private final AppActivity myAppActivity;
 
-    private float currentDegree = 0f;
+    private float userAzimuthInDegrees;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
@@ -36,6 +36,9 @@ public class OrientationEventListener implements SensorEventListener {
     private final float[] lastMagnetometer = new float[3];
     private long timeStamp;
 
+    private boolean isFirstSensorChangedWithThisMarket;
+    private float mapAzimuthInDegrees;
+
     public OrientationEventListener(final ImageView imageView, final AppActivity appActivity) {
         myImageView = imageView;
         myAppActivity = appActivity;
@@ -43,6 +46,7 @@ public class OrientationEventListener implements SensorEventListener {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         timeStamp = (new Date()).getTime();
+        isFirstSensorChangedWithThisMarket = true;
     }
 
     @Override
@@ -53,6 +57,7 @@ public class OrientationEventListener implements SensorEventListener {
         // for the system's orientation sensor registered listeners
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+        isFirstSensorChangedWithThisMarket = true;
     }
 
     public void onPause() {
@@ -60,11 +65,13 @@ public class OrientationEventListener implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
-    public void onStandby(final float defaultAzimuth) {
-        final RotateAnimation rotateAnimation = prepareAnimation(defaultAzimuth);
+    public void onStandby() {
+        if (!isFirstSensorChangedWithThisMarket) {
+            final RotateAnimation rotateAnimation = prepareAnimation(userAzimuthInDegrees - mapAzimuthInDegrees, 0);
 
-        myImageView.startAnimation(rotateAnimation);
-        currentDegree = -defaultAzimuth;
+            myImageView.startAnimation(rotateAnimation);
+        }
+
         onPause();
     }
 
@@ -82,24 +89,40 @@ public class OrientationEventListener implements SensorEventListener {
             lastMagnetometerSet = true;
         }
         if (lastAccelerometerSet && lastMagnetometerSet) {
-            final float azimuthInDegress = executeAzimuth();
-            //noinspection MagicNumber
-            if ((inEpsilonSphere(currentDegree + azimuthInDegress, PI_IN_DEGREES, 20)) ||
-                (inEpsilonSphere(currentDegree + azimuthInDegress, 0, 20)))
-            {
+            final float marketAzimuthInDegrees = myAppActivity.getCurrentMarketAzimuthInDegrees();
+            if (isFirstSensorChangedWithThisMarket) {
+                LOG.info("first orientation");
+                isFirstSensorChangedWithThisMarket = false;
+                mapAzimuthInDegrees = executeUserAzimuthInDegrees();
+                //noinspection MagicNumber
+                if (inEpsilonSphere(mapAzimuthInDegrees, marketAzimuthInDegrees, 20)) {
+                    timeStamp = event.timestamp;
+                    return;
+                }
+                final RotateAnimation rotateAnimation = prepareAnimation(0, marketAzimuthInDegrees - mapAzimuthInDegrees);
+
+                myImageView.startAnimation(rotateAnimation);
                 timeStamp = event.timestamp;
-                return;
+                userAzimuthInDegrees = mapAzimuthInDegrees;
+            } else {
+                final float newUserAzimuthInDegrees = executeUserAzimuthInDegrees();
+                //noinspection MagicNumber
+                if ((inEpsilonSphere(userAzimuthInDegrees, newUserAzimuthInDegrees, 20))) {
+                    timeStamp = event.timestamp;
+                    return;
+                }
+
+                final RotateAnimation rotateAnimation = prepareAnimation(marketAzimuthInDegrees - userAzimuthInDegrees,
+                    marketAzimuthInDegrees - newUserAzimuthInDegrees);
+
+                myImageView.startAnimation(rotateAnimation);
+                timeStamp = event.timestamp;
+                userAzimuthInDegrees = newUserAzimuthInDegrees;
             }
-
-            final RotateAnimation rotateAnimation = prepareAnimation(azimuthInDegress);
-
-            myImageView.startAnimation(rotateAnimation);
-            currentDegree = -azimuthInDegress;
-            timeStamp = event.timestamp;
         }
     }
 
-    private float executeAzimuth() {
+    private float executeUserAzimuthInDegrees() {
         lastAccelerometerSet = false;
         lastMagnetometerSet = false;
         final float[] R = new float[9];
@@ -114,23 +137,23 @@ public class OrientationEventListener implements SensorEventListener {
         return (float) (Math.toDegrees(orientation[0]) + 360) % 360;
     }
 
-    private RotateAnimation prepareAnimation(final float azimuthInDegress) {
+    private RotateAnimation prepareAnimation(final float azimuthFrom, final float azimuthTo) {
         final RotateAnimation rotateAnimation;
         //noinspection MagicNumber
-        if (Math.abs(currentDegree + azimuthInDegress) > PI_IN_DEGREES / 2) {
-            if (currentDegree < -azimuthInDegress) {
+        if (Math.abs(azimuthTo - azimuthFrom) > PI_IN_DEGREES) {
+            if (azimuthFrom < azimuthTo) {
                 //noinspection MagicNumber
                 rotateAnimation = new RotateAnimation(
-                    currentDegree,
-                    -azimuthInDegress - PI_IN_DEGREES,
+                    azimuthFrom,
+                    azimuthTo - 2 * PI_IN_DEGREES,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF,
                     0.5f);
             } else {
                 //noinspection MagicNumber
                 rotateAnimation = new RotateAnimation(
-                    currentDegree,
-                    -azimuthInDegress + PI_IN_DEGREES,
+                    azimuthFrom - 2 * PI_IN_DEGREES,
+                    azimuthTo,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF,
                     0.5f);
@@ -138,15 +161,15 @@ public class OrientationEventListener implements SensorEventListener {
         } else {
             //noinspection MagicNumber
             rotateAnimation = new RotateAnimation(
-                currentDegree,
-                -azimuthInDegress,
+                azimuthFrom,
+                azimuthTo,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF,
                 0.5f);
         }
 
         //noinspection MagicNumber
-        rotateAnimation.setDuration(450);
+        rotateAnimation.setDuration(500);
         rotateAnimation.setFillAfter(true);
 
         return rotateAnimation;
@@ -156,7 +179,16 @@ public class OrientationEventListener implements SensorEventListener {
         return (Math.abs(x - sphereCenter) < delta);
     }
 
-    public float getCurrentDegreeInRadian() {
-        return (float) Math.toRadians(currentDegree);
+    public float getMarketUserAngle() {
+        if (isFirstSensorChangedWithThisMarket) {
+            return 0;
+        } else {
+            return (float) Math.toRadians(myAppActivity.getCurrentMarketAzimuthInDegrees() - userAzimuthInDegrees);
+        }
     }
+
+    public void setFlag(final boolean flag) {
+        isFirstSensorChangedWithThisMarket = flag;
+    }
+
 }

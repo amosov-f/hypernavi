@@ -3,6 +3,7 @@ package ru.hypernavi.client.app;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import android.app.Activity;
@@ -18,12 +19,15 @@ import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
 import ru.hypernavi.client.app.util.InfoRequestHandler;
+import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.util.GeoPoint;
 
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
 
+    private InfoResponse infoResponse;
     private Bitmap originScheme;
     private int displayWidth;
     private int displayHeight;
@@ -55,10 +59,10 @@ public final class AppActivity extends Activity {
         getParametersDisplay();
         drawDisplayImage(imageView);
         //TODO: connect with response orientation
-        currentMapAzimuthInDegrees = 0.0f;
+        currentMapAzimuthInDegrees = 0;
 
         orientationEventListener = new OrientationEventListener(imageView, this);
-        orientationEventListener.onStandby(0.0f);
+        orientationEventListener.onStandby();
 
         final CheckedChangeListener checkedChangeListener = new CheckedChangeListener(this, orientationEventListener);
 
@@ -69,6 +73,8 @@ public final class AppActivity extends Activity {
         registerGPSListeners(imageView);
         registerZoomListeners(imageView);
         registerTouchListeners(imageView);
+
+        LOG.info("onCreate finished");
     }
 
     private void getParametersDisplay() {
@@ -118,6 +124,7 @@ public final class AppActivity extends Activity {
     public void sendRequest() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
             new PositionUpdater(locationManager, imageView, (Button) findViewById(R.id.button), this));
+        LOG.info("request to update location is sent");
     }
 
     private void drawDisplayImage(final ImageView imageView) {
@@ -129,7 +136,20 @@ public final class AppActivity extends Activity {
     }
 
     public void processInfo(final GeoPoint geoPosition, final ImageView imageView) {
-        originScheme = handler.getSchemaResponce(geoPosition);
+
+        infoResponse = handler.getInfoResponse(geoPosition);
+        if (infoResponse != null) {
+            LOG.warning("infoResponse is null !!!");
+            final ArrayList<Hypermarket> hypermarkets = (ArrayList<Hypermarket>) infoResponse.getClosestMarkets();
+            if (hypermarkets == null) {
+                currentMapAzimuthInDegrees = 0;
+            } else {
+                currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getAngle();
+            }
+        }
+        originScheme = handler.getClosestSchema(infoResponse);
+
+        LOG.info("schema and azimuth is loaded");
 
         if (originScheme == null) {
             originScheme = cache.loadCachedOrDefaultScheme();
@@ -163,7 +183,7 @@ public final class AppActivity extends Activity {
         orientationEventListener.onPause();
     }
 
-    public float getCurrentMapAzimuthInDegrees() {
+    public float getCurrentMarketAzimuthInDegrees() {
         return currentMapAzimuthInDegrees;
     }
 }
