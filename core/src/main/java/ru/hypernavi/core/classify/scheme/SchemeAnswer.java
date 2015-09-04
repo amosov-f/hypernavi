@@ -2,9 +2,6 @@ package ru.hypernavi.core.classify.scheme;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-import java.util.Optional;
-
 
 import ru.hypernavi.ml.factor.BinaryFactor;
 
@@ -18,6 +15,6 @@ public final class SchemeAnswer extends BinaryFactor<Picture> {
 
     @Override
     public boolean test(@NotNull final Picture picture) {
-        return Optional.ofNullable(!Objects.equals(picture.typeScheme(), "None")).orElseThrow(() -> new IllegalStateException("No scheme info about this picture!"));
+        return picture.getChain() != null;
     }
 }

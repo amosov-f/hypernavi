@@ -5,11 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 
-import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.ml.factor.ClassFactor;
+import ru.hypernavi.ml.factor.Factor;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -26,6 +27,8 @@ public class WekaClassifier<T> implements Classifier<T> {
     @NotNull
     private final ClassFactor<T> answer;
     @NotNull
+    private final IntFunction<String> class2string;
+    @NotNull
     private final ArrayList<Attribute> attributes;
     @NotNull
     private final Attribute classAttribute;
@@ -35,11 +38,13 @@ public class WekaClassifier<T> implements Classifier<T> {
     public WekaClassifier(@NotNull final weka.classifiers.Classifier classifier,
                           @NotNull final List<? extends Factor<T>> features,
                           @NotNull final ClassFactor<T> answer,
+                          @NotNull final IntFunction<String> class2string,
                           @NotNull final T... dataset)
     {
         this.classifier = classifier;
         this.features = features;
         this.answer = answer;
+        this.class2string = class2string;
         attributes = new ArrayList<>(features.stream()
                 .map(feature -> new Attribute(feature.getName()))
                 .collect(Collectors.toList()));
@@ -47,9 +52,9 @@ public class WekaClassifier<T> implements Classifier<T> {
                 answer.getName(),
                 Arrays.stream(dataset)
                         .mapToInt(answer::applyAsInt)
-                        .mapToObj(String::valueOf)
                         .sorted()
                         .distinct()
+                        .mapToObj(class2string::apply)
                         .collect(Collectors.toList())
         );
         attributes.add(classAttribute);
@@ -86,7 +91,7 @@ public class WekaClassifier<T> implements Classifier<T> {
             instance.setValue(attributes.get(i), features.get(i).applyAsDouble(object));
         }
         if (!classIsMissing) {
-            instance.setValue(classAttribute, String.valueOf(answer.applyAsInt(object)));
+            instance.setValue(classAttribute, class2string.apply(answer.applyAsInt(object)));
         }
         instance.setDataset(instances);
         return instance;
