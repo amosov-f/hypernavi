@@ -57,12 +57,12 @@ public class OrientationEventListener implements SensorEventListener {
         // for the system's orientation sensor registered listeners
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-        isFirstSensorChangedWithThisMarket = true;
     }
 
     public void onPause() {
         // to stop the listener and save battery
         sensorManager.unregisterListener(this);
+        isFirstSensorChangedWithThisMarket = true;
     }
 
     public void onStandby() {
@@ -71,7 +71,6 @@ public class OrientationEventListener implements SensorEventListener {
 
             myImageView.startAnimation(rotateAnimation);
         }
-
         onPause();
     }
 
@@ -134,7 +133,7 @@ public class OrientationEventListener implements SensorEventListener {
         //         + " " + Math.toDegrees(orientation[2]));
 
         //noinspection MagicNumber
-        return (float) (Math.toDegrees(orientation[0]) + 360) % 360;
+        return (float) (Math.toDegrees(orientation[0]) + 180) % 360;
     }
 
     private RotateAnimation prepareAnimation(final float azimuthFrom, final float azimuthTo) {
