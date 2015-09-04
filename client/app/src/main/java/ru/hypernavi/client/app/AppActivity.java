@@ -102,7 +102,7 @@ public final class AppActivity extends Activity {
     private void registerGPSListeners(final ImageView imageView) {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         if (!isGPSProviderEnabled()) {
-            writeWarningMessage("GPS disabled!");
+            writeWarningMessage("Включите определение местоположения по GPS");
             LOG.warning("No GPS module finded.");
             return;
         }
