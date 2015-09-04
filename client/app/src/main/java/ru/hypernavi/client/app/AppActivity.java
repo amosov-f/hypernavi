@@ -58,7 +58,7 @@ public final class AppActivity extends Activity {
 
         getParametersDisplay();
         drawDisplayImage(imageView);
-        //TODO: connect with response orientation
+
         currentMapAzimuthInDegrees = 0;
 
         orientationEventListener = new OrientationEventListener(imageView, this);
@@ -69,7 +69,7 @@ public final class AppActivity extends Activity {
         toogleButton = (ToggleButton) findViewById(R.id.toggleButton1);
 
         toogleButton.setOnCheckedChangeListener(checkedChangeListener);
-        //
+
         registerGPSListeners(imageView);
         registerZoomListeners(imageView);
         registerTouchListeners(imageView);
