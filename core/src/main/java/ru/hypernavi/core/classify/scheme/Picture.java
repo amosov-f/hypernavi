@@ -18,7 +18,7 @@ public final class Picture {
     @NotNull
     private final byte[] bytes;
     @Nullable
-    private Boolean scheme;
+    private String scheme;
 
     public Picture(@NotNull final URL url, @NotNull final byte[] bytes) {
         this.url = url;
@@ -36,16 +36,16 @@ public final class Picture {
     }
 
     @Nullable
-    public Boolean isScheme() {
+    public String typeScheme() {
         return scheme;
     }
 
-    public void setScheme(final boolean scheme) {
+    public void setScheme(@NotNull final String scheme) {
         this.scheme = scheme;
     }
 
     @NotNull
-    public static Picture download(@NotNull final String url, final boolean scheme) {
+    public static Picture download(@NotNull final String url, @NotNull final String scheme) {
         final Picture picture = download(url);
         picture.setScheme(scheme);
         return picture;
