@@ -66,9 +66,15 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
+        <!-- OpenIMAJ -->
         <dependency>
             <groupId>org.openimaj</groupId>
             <artifactId>image-processing</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openimaj</groupId>
+            <artifactId>image-feature-extraction</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
