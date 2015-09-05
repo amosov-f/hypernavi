@@ -15,6 +15,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import ru.hypernavi.commons.Chain;
 import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
 import ru.hypernavi.core.classify.scheme.feature.AuchanHostnameFeature;
+import ru.hypernavi.core.classify.scheme.feature.OkeyHistogramFeature;
 import ru.hypernavi.core.classify.scheme.feature.OkeyHostnameFeature;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
@@ -31,7 +32,7 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     private static final Log LOG = LogFactory.getLog(SchemeClassifier.class);
 
     public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new SMO(), Arrays.asList(new OkeyHostnameFeature(), new AuchanHostnameFeature()), new ChainAnswer(), SchemeClassifier::toString, dataset);
+        super(new SMO(), Arrays.asList(new OkeyHostnameFeature(), new OkeyHistogramFeature(), new AuchanHostnameFeature()), new ChainAnswer(), SchemeClassifier::toString, dataset);
     }
 
     @Override
