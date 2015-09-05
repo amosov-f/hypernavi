@@ -7,8 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.*;
-import java.net.URL;
 
 import java.util.Map;
 
@@ -17,7 +15,7 @@ import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.core.ImageHash;
+import ru.hypernavi.util.MD5;
 import ru.hypernavi.core.URLdownload;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.database.ImageDataBase;
@@ -76,8 +74,8 @@ public class RegisterHyperServlet extends AbstractHttpService {
         final byte[] image = (new URLdownload()).load(url);
         final String path;
         if (image != null) {
-            images.add("/img", "/" + ImageHash.generate(image) + ".jpg", image);
-            path = "/img/" + ImageHash.generate(image) + ".jpg";
+            images.add("/img", "/" + MD5.generate(image) + ".jpg", image);
+            path = "/img/" + MD5.generate(image) + ".jpg";
         } else {
             path = "/img/NotFound.jpg";
         }
