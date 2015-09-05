@@ -1,6 +1,5 @@
 okey	http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg
 okey	http://www.okmarket.ru/media/gallery/2013-01-15/okey_ekat_raduga_shema.jpg
-okey	http://www.okmarket.ru/media/gallery/2013-01-15/okey_ekat_raduga_shema.jpg
 okey	http://www.okmarket.ru/media/gallery/2012-12-27/okey_tallinskoe_shema_magazina_b.jpg
 okey	http://tc-shop.ru/UserFiles/Image/Image%201/1/Новости/Колумбус%20(план%20О%20КЕЙ).jpg
 none	http://www.okmarket.ru/media/gallery/2013-04-30/okey_novosib_malinka_map.jpg
@@ -114,3 +113,19 @@ none	http://depts.washington.edu/icylands/projects/dry/research/Ice1full.jpg
 none	http://www.kdi-applications.com/images/architecture.gif
 none	http://img.weiku.com/a/011/613/2012_hot_EPS_sandwich_wall_panel_production_line_3244_7.JPG
 none	http://www.intechopen.com/source/html/32591/media/image11.jpg
+okey	http://www.iapress-line.ru/images/25-12/zal_krasnoyarsk_sibir.jpg
+okey	http://www.cher-city.ru/sites/default/files/images/20141126_gipermarket_okey_cherepovets_plan.preview.jpg
+none	http://25mb.ru/img/picture/Sep/28/7256ef385dcd5dd0697dbf023d8c94d2/1.jpg
+none	http://hz00.i.aliimg.com/img/pb/308/929/638/638929308_419.jpg
+okey	http://tc-shop.ru/content/images/tradecenters/555_4946.jpg
+okey	http://gatchina24.ru/netcat_files/Image/Gatchina_1.jpg
+okey	http://www.okmarket.ru/media/gallery/2013-12-18/Syktyvkar.jpg
+okey	http://storage7.static.itmages.ru/i/15/0107/h_1420634506_9750853_c5c3d5a31e.jpg
+okey	http://www.okmarket.ru/media/gallery/2014-03-04/Orenburg.jpg
+none	http://www.limonreklamevi.com/site/8428/uploads/sized/2015/05/4285fdfb97e2fc806e4532253054d490-800x9000.jpg
+none	http://www.beton57.ru/images/stories/statyes/penobeton_2/image033.jpg
+none	http://3.bp.blogspot.com/-31Rhw8lpc58/TmEEBwknIoI/AAAAAAAAGf8/YFrWhbIKlRI/s1600/coupled_oscillation_graphs.png
+okey	http://www.okmarket.ru/media/gallery/2015-01-13/Irkutsk.jpg
+none	http://anytos.ru/public/images/uploads/products/111/IMG_20bcddf56611.jpg
+other	http://p1281.phpnet.org/joomla/images/stories/plan_copie.png
+none	http://futurebright.com.tr/img/media/infomag/kapak_agustos/09_l.jpg
