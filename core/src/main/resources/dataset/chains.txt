@@ -129,3 +129,9 @@ okey	http://www.okmarket.ru/media/gallery/2015-01-13/Irkutsk.jpg
 none	http://anytos.ru/public/images/uploads/products/111/IMG_20bcddf56611.jpg
 other	http://p1281.phpnet.org/joomla/images/stories/plan_copie.png
 none	http://futurebright.com.tr/img/media/infomag/kapak_agustos/09_l.jpg
+none	http://www.qstheory.cn/kj/ywcz/201404/W020140430323264543577.jpg
+auchan	http://womanshoping.ru/wp-content/uploads/ashan_v_zaporozhe_02.jpg
+auchan	http://www.auchan.ru/uploaded/img/about/shops/regions/omsk/info/plan-omsk.jpg
+auchan	http://www.auchan.ru/uploaded/img/about/shops/regions/novosibirsk/info/Plan_Auchan-Novosibirsk.jpg
+auchan	http://www.auchan.ru/uploaded/img/about/shops/moscow/gagarinsky/info/plan-gagarinsky-small.jpg
+auchan	http://www.auchan.ru/uploaded/img/about/shops/moscow/altufievo/info/plan-altufievo.jpg
