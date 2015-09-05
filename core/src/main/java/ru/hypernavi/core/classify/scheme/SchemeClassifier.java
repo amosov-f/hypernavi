@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -51,12 +50,7 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
 
     public static void main(@NotNull final String[] args) throws Exception {
         DOMConfigurator.configure(MoreIOUtils.toURL("classpath:/log4j.xml"));
-        final Picture[] pictures = IOUtils.readLines(SchemeClassifier.class.getResourceAsStream("/dataset/chains.txt")).stream()
-                .map(line -> line.split("\t"))
-                .map(parts -> Picture.download(parts[1], Chain.parse(parts[0])))
-                .filter(Objects::nonNull)
-                .toArray(Picture[]::new);
-        final SchemeClassifier classifier = new SchemeClassifier(pictures);
+        final SchemeClassifier classifier = new SchemeClassifier(Picture.download());
         final Instances instances = classifier.getInstances();
         final Evaluation evaluation = new Evaluation(instances);
         evaluation.crossValidateModel(classifier.getWekaClassifier(), instances, instances.size(), new Random(0));

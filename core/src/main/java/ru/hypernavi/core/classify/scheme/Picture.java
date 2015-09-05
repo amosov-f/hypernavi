@@ -12,6 +12,7 @@ import java.util.Objects;
 
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openimaj.image.ImageUtilities;
@@ -102,6 +103,19 @@ public final class Picture implements HugeObject {
 //        }
         LOG.info("Picture loaded: " + url);
         return picture;
+    }
+
+    @NotNull
+    public static Picture[] download() {
+        try {
+            return IOUtils.readLines(MoreIOUtils.getInputStream("classpath:/dataset/chains.txt")).stream()
+                    .map(line -> line.split("\t"))
+                    .map(parts -> download(parts[1], Chain.parse(parts[0])))
+                    .filter(Objects::nonNull)
+                    .toArray(Picture[]::new);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static boolean cache(@NotNull final String url) {
