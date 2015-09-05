@@ -17,7 +17,7 @@ public enum ImajTest {
     ;
 
     public static void main(@NotNull final String[] args) throws IOException {
-        final MBFImage image = ImageUtilities.readMBF(new File("img/4A1D07D7CF511735F7683FB681EA52DA.jpg"));
+        final MBFImage image = ImageUtilities.readMBF(new File("data/img/4A1D07D7CF511735F7683FB681EA52DA.jpg"));
         System.out.println(image.colourSpace);
         DisplayUtilities.display(image);
         DisplayUtilities.display(image.getBand(0), "Red Channel");

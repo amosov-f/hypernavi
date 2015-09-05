@@ -1,4 +1,4 @@
-package ru.hypernavi.core.classify.scheme.okey;
+package ru.hypernavi.core.classify.scheme.feature;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,8 +9,8 @@ import ru.hypernavi.ml.factor.BinaryFactor;
 /**
  * Created by amosov-f on 03.09.15.
  */
-public final class HostnameFeature extends BinaryFactor<Picture> {
-    public HostnameFeature() {
+public final class OkeyHostnameFeature extends BinaryFactor<Picture> {
+    public OkeyHostnameFeature() {
         super("okey_hostname");
     }
 

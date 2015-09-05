@@ -2,14 +2,16 @@ package ru.hypernavi.core.classify.scheme;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 
 
 import org.apache.commons.io.IOUtils;
 import ru.hypernavi.commons.Chain;
-import ru.hypernavi.core.classify.scheme.okey.HostnameFeature;
+import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
+import ru.hypernavi.core.classify.scheme.feature.AuchanHostnameFeature;
+import ru.hypernavi.core.classify.scheme.feature.OkeyHostnameFeature;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
 import ru.hypernavi.util.EnumUtils;
@@ -22,7 +24,7 @@ import weka.core.Instances;
  */
 public final class SchemeClassifier extends WekaClassifier<Picture> implements BinaryClassifier<Picture> {
     public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new SMO(), Collections.singletonList(new HostnameFeature()), new ChainAnswer(), SchemeClassifier::toString, dataset);
+        super(new SMO(), Arrays.asList(new OkeyHostnameFeature(), new AuchanHostnameFeature()), new ChainAnswer(), SchemeClassifier::toString, dataset);
     }
 
     @Override
@@ -36,7 +38,7 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     }
 
     public static void main(@NotNull final String[] args) throws Exception {
-        final Picture[] pictures = IOUtils.readLines(SchemeClassifier.class.getResourceAsStream("/dataset/okey.txt")).stream()
+        final Picture[] pictures = IOUtils.readLines(SchemeClassifier.class.getResourceAsStream("/dataset/chains.txt")).stream()
                 .map(line -> line.split("\t"))
                 .map(parts -> Picture.download(parts[1], Chain.parse(parts[0])))
                 .toArray(Picture[]::new);
