@@ -9,6 +9,7 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 
+import ru.hypernavi.ml.HugeObject;
 import ru.hypernavi.ml.factor.ClassFactor;
 import ru.hypernavi.ml.factor.Factor;
 import weka.core.Attribute;
@@ -19,7 +20,7 @@ import weka.core.Instances;
 /**
  * Created by amosov-f on 03.09.15.
  */
-public class WekaClassifier<T> implements Classifier<T> {
+public class WekaClassifier<T extends HugeObject> implements Classifier<T> {
     @NotNull
     private final weka.classifiers.Classifier classifier;
     @NotNull
@@ -86,6 +87,7 @@ public class WekaClassifier<T> implements Classifier<T> {
 
     @NotNull
     private Instance toInstance(@NotNull final T object, final boolean classIsMissing) {
+        object.fill();
         final Instance instance = new DenseInstance(attributes.size());
         for (int i = 0; i < features.size(); i++) {
             instance.setValue(attributes.get(i), features.get(i).applyAsDouble(object));
@@ -94,11 +96,17 @@ public class WekaClassifier<T> implements Classifier<T> {
             instance.setValue(classAttribute, class2string.apply(answer.applyAsInt(object)));
         }
         instance.setDataset(instances);
+        object.empty();
         return instance;
     }
 
     @NotNull
     public weka.classifiers.Classifier getWekaClassifier() {
         return classifier;
+    }
+
+    @NotNull
+    public Instances getInstances() {
+        return instances;
     }
 }
