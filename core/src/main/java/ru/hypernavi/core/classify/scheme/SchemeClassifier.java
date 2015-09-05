@@ -13,6 +13,7 @@ import ru.hypernavi.commons.Chain;
 import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
 import ru.hypernavi.core.classify.scheme.feature.AuchanHostnameFeature;
 import ru.hypernavi.core.classify.scheme.feature.OkeyHistogramFeature;
+import ru.hypernavi.core.classify.scheme.feature.OkeyHostnameFeature;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
 import ru.hypernavi.ml.factor.Factor;
@@ -29,6 +30,7 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     private static final Log LOG = LogFactory.getLog(SchemeClassifier.class);
 
     private static final List<? extends Factor<Picture>> FEATURES = Arrays.asList(
+            new OkeyHostnameFeature(),
             new OkeyHistogramFeature(),
             new AuchanHostnameFeature()
     );
