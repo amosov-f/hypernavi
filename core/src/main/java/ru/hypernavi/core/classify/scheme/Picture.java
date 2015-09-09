@@ -159,4 +159,10 @@ public final class Picture implements HugeObject {
     private static File cacheFile(@NotNull final String url) {
         return new File("data/cache", MD5.generate(url.getBytes(StandardCharsets.UTF_8)));
     }
+
+    @Override
+    @NotNull
+    public String toString() {
+        return url.toString();
+    }
 }

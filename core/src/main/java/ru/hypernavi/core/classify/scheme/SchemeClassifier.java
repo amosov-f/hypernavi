@@ -9,17 +9,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
 import ru.hypernavi.commons.Chain;
-import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
-import ru.hypernavi.core.classify.scheme.feature.AuchanHostnameFeature;
-import ru.hypernavi.core.classify.scheme.feature.OkeyHistogramFeature;
-import ru.hypernavi.core.classify.scheme.feature.OkeyHostnameFeature;
+import ru.hypernavi.core.classify.scheme.answer.SchemeAnswer;
+import ru.hypernavi.core.classify.scheme.feature.AreaFeature;
+import ru.hypernavi.core.classify.scheme.feature.OkeyCannySummaryFactor;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
 import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.util.EnumUtils;
 import ru.hypernavi.util.MoreIOUtils;
 import weka.classifiers.Evaluation;
-import weka.classifiers.functions.SMO;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
 /**
@@ -29,13 +28,15 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     private static final Log LOG = LogFactory.getLog(SchemeClassifier.class);
 
     private static final List<? extends Factor<Picture>> FEATURES = Arrays.asList(
-            new OkeyHostnameFeature(),
-            new OkeyHistogramFeature(),
-            new AuchanHostnameFeature()
+          //  new OkeyHostnameFeature(),
+          //  new OkeyHistogramFeature(),
+          //  new AuchanHostnameFeature(),
+            new OkeyCannySummaryFactor(),
+            new AreaFeature(true)
     );
 
     public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new SMO(), FEATURES, new ChainAnswer(), SchemeClassifier::toString, dataset);
+        super(new RandomForest(), FEATURES, new SchemeAnswer(), SchemeClassifier::toString, dataset);
     }
 
     @Override
