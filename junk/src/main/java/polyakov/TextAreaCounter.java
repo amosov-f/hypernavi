@@ -26,27 +26,22 @@ public enum TextAreaCounter {
     ;
 
     public static void main(@NotNull final String[] args) throws IOException {
-        try {
-            final InputStream fromResourcesStream = MoreIOUtils.getInputStream("classpath:/urls.txt");
-
-            final List<String> strings = IOUtils.readLines(fromResourcesStream);
-            final List<String> answer = new ArrayList<>();
-            for (final String str : strings) {
-                final FImage testImage = ImageUtilities.readF(new URL(str)).normalise().process(new ResizeProcessor(620));
-                final FImage copyOfTestImage = testImage.clone();
-                final LiuSamarabanduTextExtractorBasic te = new LiuSamarabanduTextExtractorBasic();
-                te.processImage(testImage);
-                te.processFeatureMap(testImage, copyOfTestImage);
-                final Map<Rectangle, IndependentPair<FImage, String>> rectangles = te.getText();
-                answer.add(rectangles.size() + "\t" + str);
-                System.out.println(rectangles.size());
-                System.out.println(str);
-            }
-            final File outputFile = new File("data/urlsRectangles.txt");
-            FileUtils.writeLines(outputFile, answer);
+        final InputStream fromResourcesStream = MoreIOUtils.getInputStream("classpath:/urls.txt");
+        final List<String> strings = IOUtils.readLines(fromResourcesStream);
+        final List<String> answer = new ArrayList<>();
+        for (final String str : strings) {
+            final FImage testImage = ImageUtilities.readF(new URL(str)).normalise().process(new ResizeProcessor(620));
+            final FImage copyOfTestImage = testImage.clone();
+            final LiuSamarabanduTextExtractorBasic te = new LiuSamarabanduTextExtractorBasic();
+            te.processImage(testImage);
+            te.processFeatureMap(testImage, copyOfTestImage);
+            final Map<Rectangle, IndependentPair<FImage, String>> rectangles = te.getText();
+            answer.add(rectangles.size() + "\t" + str);
+        }
+        final File outputFile = new File("data/urlsRectangles.txt");
+        FileUtils.writeLines(outputFile, answer);
+        if (fromResourcesStream != null) {
             fromResourcesStream.close();
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException(e.getMessage());
         }
     }
 }
