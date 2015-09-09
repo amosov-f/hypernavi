@@ -4,8 +4,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.processing.resize.ResizeProcessor;
@@ -23,26 +28,25 @@ public enum TextAreaCounter {
     public static void main(@NotNull final String[] args) throws IOException {
         try {
             final InputStream fromResourcesStream = MoreIOUtils.getInputStream("classpath:/urls.txt");
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(fromResourcesStream));
-            String str;
 
-            final PrintStream outputStream = new PrintStream(new File("data/urlsRectangles.txt"));
-            while ((str = reader.readLine()) != null) {
+            final List<String> strings = IOUtils.readLines(fromResourcesStream);
+            final List<String> answer = new ArrayList<>();
+            for (final String str : strings) {
                 final FImage testImage = ImageUtilities.readF(new URL(str)).normalise().process(new ResizeProcessor(620));
                 final FImage copyOfTestImage = testImage.clone();
                 final LiuSamarabanduTextExtractorBasic te = new LiuSamarabanduTextExtractorBasic();
                 te.processImage(testImage);
                 te.processFeatureMap(testImage, copyOfTestImage);
                 final Map<Rectangle, IndependentPair<FImage, String>> rectangles = te.getText();
-
+                answer.add(rectangles.size() + "\t" + str);
                 System.out.println(rectangles.size());
-                outputStream.println(rectangles.size() + "   " + str);
                 System.out.println(str);
             }
-            outputStream.close();
+            final File outputFile = new File("data/urlsRectangles.txt");
+            FileUtils.writeLines(outputFile, answer);
             fromResourcesStream.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new FileNotFoundException(e.getMessage());
         }
     }
 }
