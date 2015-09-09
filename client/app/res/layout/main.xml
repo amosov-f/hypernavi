@@ -9,25 +9,16 @@
                     android:layout_height="match_parent"
 
                     android:id="@+id/imageView"/>
-    <ZoomControls android:id="@+id/zoomControls1"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1.17"
-                  android:layout_gravity="center_horizontal"
-                  android:layout_alignParentTop="true"
-                  android:layout_alignParentLeft="true"
-                  android:singleLine="false"
-                  android:text="This is an example of a switch with a lot of text in it. It may end up wrapping to another line. The switch will be pinned at the top."
-                  android:layout_alignParentStart="true">
-    </ZoomControls>
     <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="update position"
             android:id="@+id/button"
-            android:layout_alignBottom="@+id/zoomControls1" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignBottom="@+id/zoomControls1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:singleLine="false"/>
     <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,6 +27,14 @@
             android:textOff="Off"
             android:textOn="On"
             android:layout_alignParentStart="true"/>
+    <ZoomControls android:id="@+id/zoomControls1"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1.17"
+                  android:orientation="vertical"
+                  android:gravity="right"
+                  android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:layout_alignParentEnd="true">
+    </ZoomControls>
 
     <!-- <RelativeLayout
              android:layout_width="fill_parent"
@@ -49,6 +48,7 @@
 
 
 <!--
+android:layout_alignParentEnd="true"
         <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/LinearLayout1"
