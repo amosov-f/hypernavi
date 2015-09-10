@@ -11,8 +11,8 @@ import ru.hypernavi.ml.factor.CachedFactor;
 /**
  * Created by Константин on 09.09.2015.
  */
-public class OkeyCannySummaryFactor extends CachedFactor<Picture> {
-    public OkeyCannySummaryFactor() {
+public class CannySummaryFactor extends CachedFactor<Picture> {
+    public CannySummaryFactor() {
         super("canny_summary", true);
     }
 

@@ -18,7 +18,7 @@ import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.util.EnumUtils;
 import ru.hypernavi.util.MoreIOUtils;
 import weka.classifiers.Evaluation;
-import weka.classifiers.functions.SMO;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
 /**
@@ -29,16 +29,17 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
 
     private static final List<? extends Factor<Picture>> FEATURES = Arrays.asList(
            // new OkeyHostnameFeature(),
-            new OkeyHistogramFeature(DoubleFVComparison.CHI_SQUARE),
-            new OkeyHistogramFeature(DoubleFVComparison.HAMMING),
+            new HistogramFeature(DoubleFVComparison.CHI_SQUARE),
+            new HistogramFeature(DoubleFVComparison.HAMMING),
           //  new AuchanHostnameFeature(),
+            new TextRectangleFeature(),
             new DiagonalFeature(),
-            new OkeyCannySummaryFactor(),
+            new CannySummaryFactor(),
             new AreaFeature()
     );
 
     public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new SMO(), FEATURES, new SchemeAnswer(), SchemeClassifier::toString, dataset);
+        super(new RandomForest(), FEATURES, new SchemeAnswer(), SchemeClassifier::toString, dataset);
     }
 
     @Override

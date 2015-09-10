@@ -19,13 +19,13 @@ import ru.hypernavi.ml.factor.Factor;
 /**
  * Created by Acer on 05.09.2015.
  */
-public class OkeyHistogramFeature extends Factor<Picture>{
-    private static final Logger LOG = Logger.getLogger(OkeyHistogramFeature.class.getName());
+public class HistogramFeature extends Factor<Picture>{
+    private static final Logger LOG = Logger.getLogger(HistogramFeature.class.getName());
     private final MBFImage okeySupportImage;
     private final MultidimensionalHistogram okeySupportHistogram;
     private final DoubleFVComparison metric;
 
-    public OkeyHistogramFeature(final DoubleFVComparison metric) {
+    public HistogramFeature(final DoubleFVComparison metric) {
         super("okey_histogram_with" + metric.toString());
         this.metric = metric;
         okeySupportImage = extractSupportOkey();
