@@ -23,9 +23,11 @@ public class OkeyHistogramFeature extends Factor<Picture>{
     private static final Logger LOG = Logger.getLogger(OkeyHistogramFeature.class.getName());
     private final MBFImage okeySupportImage;
     private final MultidimensionalHistogram okeySupportHistogram;
+    private final DoubleFVComparison metric;
 
-    public OkeyHistogramFeature() {
-        super("okey_histogram");
+    public OkeyHistogramFeature(final DoubleFVComparison metric) {
+        super("okey_histogram_with" + metric.toString());
+        this.metric = metric;
         okeySupportImage = extractSupportOkey();
         if (okeySupportImage != null) {
             final HistogramModel model = new HistogramModel(4, 4, 4);
@@ -57,6 +59,6 @@ public class OkeyHistogramFeature extends Factor<Picture>{
         model.estimateModel(value.getImage());
         final MultidimensionalHistogram valueImageHistogram = model.histogram;
 
-        return okeySupportHistogram.compare(valueImageHistogram, DoubleFVComparison.EUCLIDEAN);
+        return okeySupportHistogram.compare(valueImageHistogram, metric);//DoubleFVComparison.CHI_SQUARE);
     }
 }
