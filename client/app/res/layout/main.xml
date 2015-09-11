@@ -37,7 +37,7 @@
             android:paddingTop="0dp"/>
     <ZoomButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/zoomButton1"
                 android:src="@android:drawable/btn_plus"
-                android:scaleType="centerInside" android:paddingRight="-15dp" android:layout_above="@+id/zoomButton"
+                android:scaleType="centerInside" android:paddingRight="-17dp" android:layout_above="@+id/zoomButton"
                 android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:paddingBottom="20dp"/>
 
     <!-- <RelativeLayout
