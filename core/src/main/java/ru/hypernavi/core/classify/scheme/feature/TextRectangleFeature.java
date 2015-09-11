@@ -1,41 +1,30 @@
 package ru.hypernavi.core.classify.scheme.feature;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 import org.openimaj.image.FImage;
-import org.openimaj.image.ImageUtilities;
-import org.openimaj.image.processing.resize.ResizeProcessor;
 import org.openimaj.image.text.extraction.LiuSamarabanduTextExtractorBasic;
 import org.openimaj.math.geometry.shape.Rectangle;
 import org.openimaj.util.pair.IndependentPair;
 import ru.hypernavi.core.classify.scheme.Picture;
-import ru.hypernavi.ml.factor.CachedFactor;
+import ru.hypernavi.ml.factor.Factor;
 
 /**
  * Created by Acer on 08.09.2015.
  */
-public class TextRectangleFeature extends CachedFactor<Picture> {
+public class TextRectangleFeature extends Factor<Picture> {
     private static final Logger LOG = Logger.getLogger(TextRectangleFeature.class.getName());
 
     public TextRectangleFeature() {
-        super("text_rectangle", true);
+        super("text_rectangle");
     }
 
+
     @Override
-    public double applyCachedDouble(@NotNull final Picture value) {
-        final FImage testImage;
-        try {
-            testImage = ImageUtilities.readF(value.getUrl()).normalise().process(new ResizeProcessor(620));
-        } catch (IOException e) {
-            LOG.log(Level.WARNING, "can't read image from URL\n" + e.getMessage());
-            return 0;
-        }
+    public double applyAsDouble(final Picture value) {
+        final FImage testImage = value.getImage().flatten();
         final FImage copyOfTestImage = testImage.clone();
         final LiuSamarabanduTextExtractorBasic te = new LiuSamarabanduTextExtractorBasic();
         te.processImage(testImage);

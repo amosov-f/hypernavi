@@ -15,40 +15,40 @@ import java.util.Map;
 
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Created by Константин on 09.09.2015.
  */
-public abstract class CachedFactor<T> extends Factor<T> {
-    protected CachedFactor(@NotNull final String name, boolean usingCache) {
-        super(name);
-        path = "data/cache_feature/" + name + ".txt";
+public class CachedFactor<T extends CacheableObject> extends Factor<T> {
+    private static final Log LOG = LogFactory.getLog(CachedFactor.class);
+
+    public CachedFactor(final Factor<T> factor) {
+        super("cached_" + factor.getName());
+        path = "data/cache_feature/" + factor.getName() + ".txt";
         cache = new HashMap<>();
-        lazy = usingCache;
         loadCache(path);
+        this.factor = factor;
     }
 
     private final String path;
     private final Map<String, Double> cache;
-    private final boolean lazy;
+    private final Factor<T> factor;
 
     @Override
     public double applyAsDouble(@NotNull final T value) {
-        if (lazy) {
-            if (!cache.containsKey(value.toString())) {
-                final double result = applyCachedDouble(value);
-                cache.put(value.toString(), result);
-                save(value.toString(), result);
-            }
-            return cache.get(value.toString());
+        if (!cache.containsKey(value.hash())) {
+            final double result = factor.applyAsDouble(value);
+            cache.put(value.hash(), result);
+            save(value.hash(), result);
         }
-        return applyCachedDouble(value);
+        return cache.get(value.hash());
     }
 
-    public abstract double applyCachedDouble(@NotNull final T value);
 
     private void loadCache(@NotNull final String path) {
-        System.out.println("Loading cache...");
+        LOG.info("Loading cache...");
         try {
             final InputStream in = new FileInputStream(path);
             final List<String> lines = IOUtils.readLines(in);
@@ -60,10 +60,13 @@ public abstract class CachedFactor<T> extends Factor<T> {
                 cache.put(parts[0], Double.parseDouble(parts[1]));
             }
 
-        } catch (IOException ignored) {
-            System.out.println("FUCK" + ignored.getMessage());
+        } catch (IOException e) {
+            LOG.warn(e.getMessage());
+            LOG.info("Cache not loaded.");
+            return;
         }
-        System.out.println("Cache loaded!\nAmount elements added " + cache.size());
+        LOG.info("Cache loaded!");
+        LOG.info("Amount elements added " + cache.size());
     }
 
     private void save(@NotNull final String value, final double result) {
@@ -74,8 +77,9 @@ public abstract class CachedFactor<T> extends Factor<T> {
             } else {
                 Files.write(Paths.get(path), (value + "\t" + result + "\n").getBytes(), StandardOpenOption.APPEND);
             }
-        } catch (IOException ignored) {
-            System.out.println("FUCK2 " + ignored.getMessage());
+        } catch (IOException e) {
+            LOG.warn(e.getMessage());
+            LOG.info("Info not added");
         }
     }
 }

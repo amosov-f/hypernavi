@@ -1,23 +1,20 @@
 package ru.hypernavi.core.classify.scheme.feature;
 
-import org.jetbrains.annotations.NotNull;
-
-
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.processing.edges.CannyEdgeDetector;
 import ru.hypernavi.core.classify.scheme.Picture;
-import ru.hypernavi.ml.factor.CachedFactor;
+import ru.hypernavi.ml.factor.Factor;
 
 /**
  * Created by Константин on 09.09.2015.
  */
-public class CannySummaryFactor extends CachedFactor<Picture> {
+public class CannySummaryFactor extends Factor<Picture> {
     public CannySummaryFactor() {
-        super("canny_summary", true);
+        super("canny_summary");
     }
 
     @Override
-    public double applyCachedDouble(@NotNull final Picture value) {
+    public double applyAsDouble(final Picture value) {
         final MBFImage image = value.getImage().clone();
         image.processInplace(new CannyEdgeDetector());
         final float[][] imageData = image.getPixelVectorNative(new float[image.getWidth() * image.getHeight()][3]);

@@ -19,13 +19,14 @@ import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import ru.hypernavi.commons.Chain;
 import ru.hypernavi.ml.HugeObject;
+import ru.hypernavi.ml.factor.CacheableObject;
 import ru.hypernavi.util.MD5;
 import ru.hypernavi.util.MoreIOUtils;
 
 /**
  * Created by amosov-f on 03.09.15.
  */
-public final class Picture implements HugeObject {
+public final class Picture implements HugeObject, CacheableObject {
     private static final Log LOG = LogFactory.getLog(Picture.class);
 
     @NotNull
@@ -163,6 +164,12 @@ public final class Picture implements HugeObject {
     @Override
     @NotNull
     public String toString() {
+        return url.toString();
+    }
+
+    @NotNull
+    @Override
+    public String hash() {
         return url.toString();
     }
 }

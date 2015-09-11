@@ -10,10 +10,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openimaj.feature.DoubleFVComparison;
 import ru.hypernavi.commons.Chain;
-import ru.hypernavi.core.classify.scheme.answer.SchemeAnswer;
+import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
 import ru.hypernavi.core.classify.scheme.feature.*;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
+import ru.hypernavi.ml.factor.CachedFactor;
 import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.util.EnumUtils;
 import ru.hypernavi.util.MoreIOUtils;
@@ -32,14 +33,14 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
             new HistogramFeature(DoubleFVComparison.CHI_SQUARE),
             new HistogramFeature(DoubleFVComparison.HAMMING),
           //  new AuchanHostnameFeature(),
-            new TextRectangleFeature(),
+            new CachedFactor<>(new TextRectangleFeature()),
             new DiagonalFeature(),
-            new CannySummaryFactor(),
+            new CachedFactor<>(new CannySummaryFactor()),
             new AreaFeature()
     );
 
     public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new RandomForest(), FEATURES, new SchemeAnswer(), SchemeClassifier::toString, dataset);
+        super(new RandomForest(), FEATURES, new ChainAnswer(), SchemeClassifier::toString, dataset);
     }
 
     @Override
