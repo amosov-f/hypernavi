@@ -215,7 +215,6 @@
 58	http://www.okmarket.ru/media/gallery/2015-04-24/Tyumen-plan.jpg
 4	http://www.okmarket.ru/media/gallery/2015-06-04/%D0%92%D0%95%D0%A2%D0%95%D0%A0%D0%90%D0%9D%D0%9E%D0%92.jpg
 9	http://www.okmarket.ru/media/gallery/2015-06-04/%D0%93%D0%9E%D0%A0%D0%95%D0%9B%D0%9E%D0%92%D0%9E.jpg
-
 68	http://tc-shop.ru/UserFiles/Image/Image%201/1/Новости/Колумбус%20(план%20О%20КЕЙ).jpg
 11	http://www.stranaskidok.ru/media/profiles/57/000057/map1.jpg
 14	http://www.auchan.ru/uploaded/img/about/shops/regions/leto/info/plan-leto.jpg

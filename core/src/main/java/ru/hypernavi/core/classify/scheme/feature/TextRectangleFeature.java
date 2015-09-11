@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 
 import org.openimaj.image.FImage;
+import org.openimaj.image.processing.resize.ResizeProcessor;
 import org.openimaj.image.text.extraction.LiuSamarabanduTextExtractorBasic;
 import org.openimaj.math.geometry.shape.Rectangle;
 import org.openimaj.util.pair.IndependentPair;
@@ -24,7 +25,7 @@ public class TextRectangleFeature extends Factor<Picture> {
 
     @Override
     public double applyAsDouble(final Picture value) {
-        final FImage testImage = value.getImage().flatten();
+        final FImage testImage = value.getImage().flatten().normalise().process(new ResizeProcessor(620));
         final FImage copyOfTestImage = testImage.clone();
         final LiuSamarabanduTextExtractorBasic te = new LiuSamarabanduTextExtractorBasic();
         te.processImage(testImage);
