@@ -86,12 +86,13 @@ public final class AppActivity extends Activity {
     }
 
     private void registerZoomListeners(final ImageView imageView) {
-        final ZoomControls zoom = (ZoomControls) findViewById(R.id.zoomControls1);
+        final ZoomButton zoomPlus = (ZoomButton) findViewById(R.id.zoomButton1);
+        final ZoomButton zoomMinus = (ZoomButton) findViewById(R.id.zoomButton);
         final ZoomClickListener zoomInClickListener = new ZoomClickListener(imageView, true);
         final ZoomClickListener zoomOutClickListener = new ZoomClickListener(imageView, false);
 
-        zoom.setOnZoomInClickListener(zoomInClickListener);
-        zoom.setOnZoomOutClickListener(zoomOutClickListener);
+        zoomPlus.setOnClickListener(zoomInClickListener);
+        zoomMinus.setOnClickListener(zoomOutClickListener);
     }
 
     private void registerTouchListeners(final ImageView imageView) {

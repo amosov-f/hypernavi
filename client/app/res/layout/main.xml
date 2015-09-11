@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:text="update position"
             android:id="@+id/button"
-            android:layout_alignBottom="@+id/zoomControls1"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" android:singleLine="false"/>
@@ -27,14 +26,19 @@
             android:textOff="Off"
             android:textOn="On"
             android:layout_alignParentStart="true"/>
-    <ZoomControls android:id="@+id/zoomControls1"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1.17"
-                  android:orientation="vertical"
-                  android:gravity="right"
-                  android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:layout_alignParentEnd="true">
-    </ZoomControls>
+    <ZoomButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/zoomButton"
+            android:src="@android:drawable/btn_minus"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:scaleType="centerInside" android:paddingRight="15dp"
+            android:paddingTop="0dp"/>
+    <ZoomButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/zoomButton1"
+                android:src="@android:drawable/btn_plus"
+                android:scaleType="centerInside" android:paddingRight="-15dp" android:layout_above="@+id/zoomButton"
+                android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:paddingBottom="20dp"/>
 
     <!-- <RelativeLayout
              android:layout_width="fill_parent"
