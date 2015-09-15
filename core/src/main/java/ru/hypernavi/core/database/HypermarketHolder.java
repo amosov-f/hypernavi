@@ -16,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.commons.HypermarketSerializer;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -48,15 +47,20 @@ public class HypermarketHolder {
                 Hypermarket market = null;
                 try {
                     final String json = IOUtils.toString(data, "UTF-8");
-                    market = HypermarketSerializer.deserialize(new JSONObject(json));
-                    LOG.info("Hypermarket loaded from " + service + paths[i]);
+                    market = Hypermarket.construct(new JSONObject(json));
+                    if (market != null)
+                        LOG.info("Hypermarket loaded from " + service + paths[i]);
                 } catch (JSONException | IOException e) {
                     LOG.warn(e.getMessage());
                 }
                 if (market != null) {
                     listHyper.add(market);
+                    //LOG.info(paths[i] + " : " +  market.toJSON().toString());
+                    loader.save(service, paths[i], market.toJSON().toString().getBytes(StandardCharsets.UTF_8));
                 }
             }
+
+
         }
 
         final Hypermarket[] copyList = new Hypermarket[listHyper.size()];
@@ -64,7 +68,7 @@ public class HypermarketHolder {
     }
 
     public void addHypermarket(@NotNull final Hypermarket hyper, @NotNull final String name) {
-        loader.save(service, name, HypermarketSerializer.serialize(hyper).toString().getBytes(StandardCharsets.UTF_8));
+        loader.save(service, name, hyper.toJSON().toString().getBytes(StandardCharsets.UTF_8));
         markets.add(hyper);
     }
 

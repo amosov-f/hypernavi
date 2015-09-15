@@ -1,11 +1,1 @@
-{
-  "address": "Лахтинский пр-т, 85 корп. 2 ",
-  "angle": 0.0,
-  "page": "http://www.okmarket.ru/stores/store/110/",
-  "latitude": 59.9935,
-  "id": 6,
-  "type": "Okey",
-  "url": "http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg",
-  "path": "/img/4A1D07D7CF511735F7683FB681EA52DA.jpg",
-  "longitude": 30.1515
-}
+{"web":{"path":"/img/4A1D07D7CF511735F7683FB681EA52DA.jpg","page":"http://www.okmarket.ru/stores/store/110/","url":"http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg"},"build":{"address":"Лахтинский пр-т, 85 корп. 2 ","location":{"lon":30.1515,"lat":59.9935}},"id":6,"type":"Okey"}

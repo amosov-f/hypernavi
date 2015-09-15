@@ -24,6 +24,6 @@ public class CannySummaryFactor extends Factor<Picture> {
                 if (pixel > 0)
                     sum += 1;
         }
-        return sum / imageData.length;
+        return sum / imageData.length / 3;
     }
 }

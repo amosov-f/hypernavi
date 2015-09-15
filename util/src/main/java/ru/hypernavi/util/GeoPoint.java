@@ -3,12 +3,19 @@ package ru.hypernavi.util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 /**
  * User: amosov-f
  * Date: 26.11.14
  * Time: 23:33
  */
 public final class GeoPoint {
+    private static final Log LOG = LogFactory.getLog(GeoPoint.class);
+
     private static final double EARTH_RADIUS = 6371.0d;
     private final double latitude;
     private final double longitude;
@@ -35,7 +42,7 @@ public final class GeoPoint {
 
         //noinspection MagicNumber
         final double answer = Math.pow(Math.sin((aLatitude - bLatitude) / 2), 2) + Math.cos(aLatitude) * Math.cos(bLatitude)
-                      * Math.pow(Math.sin((aLongitude - bLongitude) / 2), 2);
+                * Math.pow(Math.sin((aLongitude - bLongitude) / 2), 2);
         return 2 * EARTH_RADIUS * Math.asin(Math.sqrt(answer));
     }
 
@@ -58,5 +65,27 @@ public final class GeoPoint {
     @Override
     public String toString() {
         return "GeoPoint(" + longitude + ", " + latitude + ")";
+    }
+
+    @Nullable
+    public static GeoPoint construct(@NotNull final JSONObject obj) {
+        try {
+            return new GeoPoint(obj.getDouble("lon"), obj.getDouble("lat"));
+        } catch (JSONException e) {
+            LOG.info(e.getMessage());
+            return null;
+        }
+    }
+
+
+    public JSONObject toJSON() {
+        final JSONObject obj = new JSONObject();
+        try {
+            obj.put("lon", getLongitude());
+            obj.put("lat", getLatitude());
+        } catch (JSONException ignored) {
+            return null;
+        }
+        return obj;
     }
 }

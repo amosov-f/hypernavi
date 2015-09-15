@@ -14,7 +14,9 @@ import java.util.Map;
 import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import ru.hypernavi.commons.Building;
 import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.WebInfo;
 import ru.hypernavi.util.MD5;
 import ru.hypernavi.core.URLdownload;
 import ru.hypernavi.core.database.HypermarketHolder;
@@ -79,8 +81,8 @@ public class RegisterHyperServlet extends AbstractHttpService {
         } else {
             path = "/img/NotFound.jpg";
         }
-
-        final Hypermarket market = new Hypermarket(maxId, location, address, type, path, url, page, angle);
+        final Hypermarket market = new Hypermarket(maxId, new Building(location, address), type, new WebInfo(path, url, page));
+        //final Hypermarket market = new Hypermarket(maxId, location, address, type, path, url, page, angle);
         hypermarkets.addHypermarket(market,"/" + market.getId() + ".json");
 
         LOG.info("OK!");

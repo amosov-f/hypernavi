@@ -30,7 +30,7 @@ public enum InfoResponceSerializer {
             final JSONArray hypermarkets = new JSONArray();
             if (responce.getClosestMarkets() != null) {
                 for (int i = 0; i < responce.getClosestMarkets().size(); ++i) {
-                    hypermarkets.put(HypermarketSerializer.serialize(responce.getClosestMarkets().get(i)));
+                    hypermarkets.put(responce.getClosestMarkets().get(i).toJSON());
                 }
             }
             final JSONObject metainfo = new JSONObject();
@@ -38,7 +38,6 @@ public enum InfoResponceSerializer {
 
             metainfo.put("longitude", responce.getLocation().getLongitude());
             metainfo.put("latitude", responce.getLocation().getLatitude());
-            metainfo.put("iscorrect", true);
 
             data.put("hypermarkets", hypermarkets);
 
@@ -63,7 +62,7 @@ public enum InfoResponceSerializer {
 
             final JSONArray jsonMarkets = data.getJSONArray("hypermarkets");
             for (int i = 0; i < jsonMarkets.length(); ++i) {
-                markets.add(HypermarketSerializer.deserialize(jsonMarkets.getJSONObject(i)));
+                markets.add(Hypermarket.construct(jsonMarkets.getJSONObject(i)));
             }
 
             final double longitude = meta.getDouble("longitude");
