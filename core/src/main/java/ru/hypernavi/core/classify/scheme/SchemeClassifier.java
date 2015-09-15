@@ -29,14 +29,14 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     private static final Log LOG = LogFactory.getLog(SchemeClassifier.class);
 
     private static final List<? extends Factor<Picture>> FEATURES = Arrays.asList(
-           // new OkeyHostnameFeature(),
-            new HistogramFeature(DoubleFVComparison.CHI_SQUARE),
-            new HistogramFeature(DoubleFVComparison.HAMMING),
-          //  new AuchanHostnameFeature(),
-            new CachedFactor<>(new TextRectangleFeature()),
-            new DiagonalFeature(),
-            new CachedFactor<>(new CannySummaryFactor()),
-            new AreaFeature()
+        // new OkeyHostnameFeature(),
+        new HistogramFeature(DoubleFVComparison.CHI_SQUARE),
+        new HistogramFeature(DoubleFVComparison.HAMMING),
+        //  new AuchanHostnameFeature(),
+        new CachedFactor<>(new TextRectangleFeature()),
+        new DiagonalFeature(),
+        new CachedFactor<>(new CannySummaryFactor()),
+        new AreaFeature()
     );
 
     public SchemeClassifier(@NotNull final Picture... dataset) {
@@ -56,9 +56,38 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     public static void main(@NotNull final String[] args) throws Exception {
         DOMConfigurator.configure(MoreIOUtils.toURL("classpath:/log4j.xml"));
         final SchemeClassifier classifier = new SchemeClassifier(Picture.download());
-        final Instances instances = classifier.getInstances();
-        final Evaluation evaluation = new Evaluation(instances);
-        evaluation.crossValidateModel(classifier.getWekaClassifier(), instances, instances.size(), new Random(0));
+        final Evaluation evaluation = classifier.learning();
+
+        final Picture[] newPictures = Picture.downloadFromFile("urls.txt");
+        final int[][] matrix = new int[7][7];
+        int correct = 0;
+        int fail = 0;
+        for (final Picture picture : newPictures) {
+            final int i = picture.getChain() == null ? 0 : picture.getChain().ordinal() + 1;
+            final int j = classifier.classify(picture);
+            if (i == j) {
+                correct++;
+            } else {
+                fail++;
+            }
+            matrix[i][j]++;
+        }
+        final int total = correct + fail;
+
+        for (int i = 0; i < 7; ++i) {
+            String row = "";
+            for (int j = 0; j < 7; ++j) {
+                row = row + String.format("%3s ", matrix[i][j]);
+            }
+            LOG.info(row);
+        }
+
+        //noinspection MagicNumber
+        LOG.info(String.format("%-35s\t\t%d\t\t%.4f\tprocents", "Correctly Classified Instances",  correct, 100.0 * correct / total));
+        //noinspection MagicNumber
+        LOG.info(String.format("%-35s\t\t%d\t\t%.4f\tprocents", "Incorrectly Classified Instances", fail, 100.0 * fail / total));
+
+
         final String tpUrl = "http://www.okmarket.ru/media/gallery/2012-07-27/plan_zala_big.jpg";
         final String tnUrl = "http://cs5134.vk.me/v5134803/12d4/h9q-y0sO6Ko.jpg";
         final Picture tpPicture = Objects.requireNonNull(Picture.download(tpUrl));
@@ -69,4 +98,16 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
         LOG.info(evaluation.toClassDetailsString());
         LOG.info(evaluation.toSummaryString());
     }
+
+    public Evaluation learning() throws Exception {
+        final Instances instances = this.getInstances();
+        final Evaluation evaluation = new Evaluation(instances);
+        evaluation.crossValidateModel(this.getWekaClassifier(), instances, instances.size(), new Random(0));
+        return evaluation;
+    }
+
+    public void manyClassify(final String fileName) {
+
+    }
 }
+

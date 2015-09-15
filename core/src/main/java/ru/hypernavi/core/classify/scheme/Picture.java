@@ -119,9 +119,10 @@ public final class Picture implements HugeObject, CacheableObject {
         }
     }
 
-    @NotNull static Picture[] downloadOkeyDataSet() {
+    @NotNull
+    public static Picture[] downloadFromFile(final String fileName) {
         try {
-            return IOUtils.readLines(MoreIOUtils.getInputStream("classpath:/dataset/urls.txt")).stream()
+            return IOUtils.readLines(MoreIOUtils.getInputStream("classpath:/dataset/" + fileName)).stream()
                 .map(line -> line.split("\t"))
                 .map(parts -> download(parts[1], Chain.parse(parts[0])))
                 .filter(Objects::nonNull)
