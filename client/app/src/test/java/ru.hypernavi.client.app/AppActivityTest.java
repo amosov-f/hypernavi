@@ -62,7 +62,7 @@ public final class AppActivityTest {
         assertNotNull(imageView);
     }
 
-    //@Test
+    @Test
     public void shouldReturnTheLatestLocation() {
         final LocationManager locationManager = (LocationManager) RuntimeEnvironment.application.getSystemService(Context.LOCATION_SERVICE);
         final ShadowLocationManager shadowLocationManager = invoke(Shadows.class, "shadowOf", locationManager);
