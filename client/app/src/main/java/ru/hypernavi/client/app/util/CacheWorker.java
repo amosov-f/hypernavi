@@ -26,11 +26,12 @@ public class CacheWorker {
 
     public void saveSchemeToCache(final Bitmap originScheme) {
         final File file = new File(appActivity.getFilesDir(), LOCAL_FILE_NAME);
+        LOG.info("Want to cached here: " + file.getAbsolutePath());
         try {
-            if (file.createNewFile()) {
+            if (file.createNewFile() || file.exists()) {
                 try {
                     final FileOutputStream out = new FileOutputStream(file);
-                    LOG.warning("file where we write: " + file.toString());
+                    LOG.info("file where we write: " + file.toString());
                     originScheme.compress(Bitmap.CompressFormat.PNG, 100, out);
                     out.close();
                     LOG.info("scheme is cached");
@@ -40,6 +41,9 @@ public class CacheWorker {
                     LOG.warning("can't close outputStream " + e.getMessage());
                 }
             }
+            else {
+                LOG.warning("Can't reate file for caching and it not already exists.");
+            }
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "can't create file for cached scheme " + e.getMessage());
         }
@@ -48,7 +52,7 @@ public class CacheWorker {
     @NotNull
     public Bitmap loadCachedOrDefaultScheme() {
         final File file = new File(appActivity.getFilesDir(), LOCAL_FILE_NAME);
-        LOG.warning(file.getAbsolutePath());
+        LOG.info(file.getAbsolutePath());
         if (file.exists()) {
             try {
                 final Bitmap cachedScheme = BitmapFactory.decodeStream(new FileInputStream(file));

@@ -9,11 +9,9 @@ import java.util.logging.Logger;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Display;
 import android.widget.*;
 import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
@@ -29,12 +27,11 @@ public final class AppActivity extends Activity {
 
     private InfoResponse infoResponse;
     private Bitmap originScheme;
-    private int displayWidth;
-    private int displayHeight;
 
     private ImageView imageView;
 
     private LocationManager locationManager;
+    private PositionUpdater positionUpdater;
 
     private OrientationEventListener orientationEventListener;
 
@@ -56,7 +53,6 @@ public final class AppActivity extends Activity {
         cache = new CacheWorker(this);
         handler = new InfoRequestHandler(this, cache);
 
-        getParametersDisplay();
         drawDisplayImage(imageView);
 
         currentMapAzimuthInDegrees = 0;
@@ -77,14 +73,6 @@ public final class AppActivity extends Activity {
         LOG.info("onCreate finished");
     }
 
-    private void getParametersDisplay() {
-        final Display display = getWindowManager().getDefaultDisplay();
-        final Point displaySize = new Point();
-        display.getSize(displaySize);
-        displayWidth = displaySize.x;
-        displayHeight = displaySize.y;
-    }
-
     private void registerZoomListeners(final ImageView imageView) {
         final ZoomButton zoomPlus = (ZoomButton) findViewById(R.id.zoomButton1);
         final ZoomButton zoomMinus = (ZoomButton) findViewById(R.id.zoomButton);
@@ -102,6 +90,7 @@ public final class AppActivity extends Activity {
 
     private void registerGPSListeners(final ImageView imageView) {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+        positionUpdater = new PositionUpdater(locationManager, imageView, (Button) findViewById(R.id.button), this);
         if (!isGPSProviderEnabled()) {
             writeWarningMessage("Включите определение местоположения по GPS");
             LOG.warning("No GPS module finded.");
@@ -123,17 +112,13 @@ public final class AppActivity extends Activity {
     }
 
     public void sendRequest() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-            new PositionUpdater(locationManager, imageView, (Button) findViewById(R.id.button), this));
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, positionUpdater);
         LOG.info("request to update location is sent");
     }
 
     private void drawDisplayImage(final ImageView imageView) {
         originScheme = cache.loadCachedOrDefaultScheme();
         imageView.setImageBitmap(originScheme);
-        LOG.info("Image XScale " + imageView.getScaleX());
-        LOG.info("Display width " + displayWidth);
-        LOG.info("Display high " + displayHeight);
     }
 
     public void processInfo(final GeoPoint geoPosition, final ImageView imageView) {
