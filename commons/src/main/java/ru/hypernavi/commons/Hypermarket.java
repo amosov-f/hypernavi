@@ -65,7 +65,11 @@ public class Hypermarket implements Positioned, Indexable {
         return web.getUrl();
     }
 
-    public double getAngle() {
+    public boolean hasOrientation() {
+        return build.hasAngle();
+    }
+
+    public double getOrientation() {
         return build.getAngle();
     }
 

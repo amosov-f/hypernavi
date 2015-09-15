@@ -130,7 +130,7 @@ public final class AppActivity extends Activity {
             if (hypermarkets == null) {
                 currentMapAzimuthInDegrees = 0;
             } else {
-                currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getAngle();
+                currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
             }
         }
         originScheme = handler.getClosestSchema(infoResponse);
