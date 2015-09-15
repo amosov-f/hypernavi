@@ -40,10 +40,27 @@
                 android:scaleType="centerInside" android:paddingRight="-17dp" android:layout_above="@+id/zoomButton"
                 android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:paddingBottom="20dp"/>
 
+    <TextView
+            android:id="@+id/textView"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:autoLink="web"
+            android:singleLine="false"
+            android:textSize="20sp"
+            android:linksClickable="true"
+            android:textColor="#007FEE"
+            android:text="Открыть карту"
+            android:layout_toStartOf="@+id/zoomButton1" android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/toggleButton1" android:layout_toEndOf="@+id/toggleButton1"
+            android:layout_toLeftOf="@+id/zoomButton1"/>
+
+
     <!-- <RelativeLayout
              android:layout_width="fill_parent"
              android:layout_height="fill_parent">
-     </RelativeLayout> -->
+     </RelativeLayout>
+      https://maps.yandex.ru/2/saint-petersburg/?ll=30.324877%2C59.980714&z=16&text=%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F%2C%20%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3%2C%20%D0%9A%D0%B0%D0%BD%D1%82%D0%B5%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%2C%202&sll=30.341228%2C59.984922&sspn=0.054331%2C0.011676&ol=geo&oll=30.325049%2C59.980983
+      -->
 </RelativeLayout>
 
 

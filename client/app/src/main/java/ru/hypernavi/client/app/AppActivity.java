@@ -29,11 +29,14 @@ public final class AppActivity extends Activity {
     private Bitmap originScheme;
 
     private ImageView imageView;
+    private TextView textView;
 
     private LocationManager locationManager;
     private PositionUpdater positionUpdater;
 
     private OrientationEventListener orientationEventListener;
+
+    private AdressListener adressListener;
 
     private InfoRequestHandler handler;
     private CacheWorker cache;
@@ -53,7 +56,7 @@ public final class AppActivity extends Activity {
         cache = new CacheWorker(this);
         handler = new InfoRequestHandler(this, cache);
 
-        drawDisplayImage(imageView);
+        drawDisplayImage();
 
         currentMapAzimuthInDegrees = 0;
 
@@ -66,14 +69,15 @@ public final class AppActivity extends Activity {
 
         toogleButton.setOnCheckedChangeListener(checkedChangeListener);
 
-        registerGPSListeners(imageView);
-        registerZoomListeners(imageView);
-        registerTouchListeners(imageView);
+        registerGPSListeners();
+        registerZoomListeners();
+        registerTouchListeners();
+        registerAdressListeners();
 
         LOG.info("onCreate finished");
     }
 
-    private void registerZoomListeners(final ImageView imageView) {
+    private void registerZoomListeners() {
         final ZoomButton zoomPlus = (ZoomButton) findViewById(R.id.zoomButton1);
         final ZoomButton zoomMinus = (ZoomButton) findViewById(R.id.zoomButton);
         final ZoomClickListener zoomInClickListener = new ZoomClickListener(imageView, true);
@@ -83,12 +87,12 @@ public final class AppActivity extends Activity {
         zoomMinus.setOnClickListener(zoomOutClickListener);
     }
 
-    private void registerTouchListeners(final ImageView imageView) {
+    private void registerTouchListeners() {
         final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(imageView, orientationEventListener);
         imageView.setOnTouchListener(viewOnTouchListener);
     }
 
-    private void registerGPSListeners(final ImageView imageView) {
+    private void registerGPSListeners() {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         positionUpdater = new PositionUpdater(locationManager, imageView, (Button) findViewById(R.id.button), this);
         if (!isGPSProviderEnabled()) {
@@ -96,7 +100,10 @@ public final class AppActivity extends Activity {
             LOG.warning("No GPS module finded.");
             return;
         }
-        final Location cashLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location cashLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (cashLocation == null) {
+            cashLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
         if ((cashLocation != null) && (PositionUpdater.isActual(cashLocation, 0L))) {
             LOG.info("cashLocation is actual");
             processInfo(GeoPointsUtils.makeGeoPoint(cashLocation), imageView);
@@ -106,6 +113,13 @@ public final class AppActivity extends Activity {
         sendRequest();
     }
 
+    private void registerAdressListeners() {
+        adressListener = new AdressListener(this);
+
+        textView = (TextView) findViewById(R.id.textView);
+        textView.setOnClickListener(adressListener);
+    }
+
     private boolean isGPSProviderEnabled() {
         // TODO amosov-f: remove intent checking
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || getIntent().getBooleanExtra("enabled", false);
@@ -113,10 +127,11 @@ public final class AppActivity extends Activity {
 
     public void sendRequest() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, positionUpdater);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, positionUpdater);
         LOG.info("request to update location is sent");
     }
 
-    private void drawDisplayImage(final ImageView imageView) {
+    private void drawDisplayImage() {
         originScheme = cache.loadCachedOrDefaultScheme();
         imageView.setImageBitmap(originScheme);
     }
@@ -127,11 +142,16 @@ public final class AppActivity extends Activity {
         if (infoResponse != null) {
             LOG.warning("infoResponse is null !!!");
             final ArrayList<Hypermarket> hypermarkets = (ArrayList<Hypermarket>) infoResponse.getClosestMarkets();
-            if (hypermarkets == null) {
-                currentMapAzimuthInDegrees = 0;
-            } else {
-                currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
+            //
+            LOG.info("Distances from hypermarkets");
+            final GeoPoint mylocation = infoResponse.getLocation();
+            for (final Hypermarket hypermarket: hypermarkets) {
+                final GeoPoint marketLocation = hypermarket.getLocation();
+                LOG.info(hypermarket.getAddress());
+                LOG.info(Double.toString(GeoPoint.distance(mylocation, marketLocation)));
             }
+            //
+            currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
         }
         originScheme = handler.getClosestSchema(infoResponse);
 
@@ -167,6 +187,18 @@ public final class AppActivity extends Activity {
         super.onPause();
         // to stop the sensor listener and save battery
         orientationEventListener.onPause();
+    }
+
+    public GeoPoint getClosestMarketLocation() {
+        if (infoResponse == null) {
+            return null;
+        }
+        final ArrayList<Hypermarket> hypermarkets = (ArrayList<Hypermarket>) infoResponse.getClosestMarkets();
+        if(hypermarkets == null) {
+            return null;
+        } else {
+            return hypermarkets.get(0).getLocation();
+        }
     }
 
     public float getCurrentMarketAzimuthInDegrees() {
