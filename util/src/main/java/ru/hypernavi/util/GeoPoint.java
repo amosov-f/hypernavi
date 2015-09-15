@@ -64,7 +64,7 @@ public final class GeoPoint {
     @NotNull
     @Override
     public String toString() {
-        return "GeoPoint(" + longitude + ", " + latitude + ")";
+        return "(" + longitude + ", " + latitude + ")";
     }
 
     @Nullable
