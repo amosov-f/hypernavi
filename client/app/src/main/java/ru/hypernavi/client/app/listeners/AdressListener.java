@@ -28,6 +28,7 @@ public class AdressListener implements View.OnClickListener {
     public void onClick(final View v) {
         final GeoPoint closestMarketLocation = myAppActivity.getClosestMarketLocation();
         if (closestMarketLocation == null) {
+            myAppActivity.writeWarningMessage("Схема не актуальна");
             return;
         }
         final Uri requestToYandex = new Uri.Builder()

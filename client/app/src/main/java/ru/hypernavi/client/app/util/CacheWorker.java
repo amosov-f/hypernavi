@@ -62,7 +62,7 @@ public class CacheWorker {
                     //this.deleteFile(file.getPath());
                 } else {
                     LOG.info("cached scheme is returned");
-                    appActivity.writeWarningMessage("Cached map is loaded!");
+                    appActivity.writeWarningMessage("Загружена закэшированная схема");
                     return cachedScheme;
                 }
             } catch (FileNotFoundException e) {
@@ -75,7 +75,7 @@ public class CacheWorker {
             throw new RuntimeException("No default scheme founded");
         }
         LOG.info("default scheme is returned");
-        appActivity.writeWarningMessage("Default image is loaded!");
+        appActivity.writeWarningMessage("Схем не найдено");
         return defaultScheme;
     }
 }

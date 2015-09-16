@@ -22,7 +22,7 @@ import ru.hypernavi.util.GeoPoint;
 public class PositionUpdater implements LocationListener {
     private static final Logger LOG = Logger.getLogger(PositionUpdater.class.getName());
     //noinspection MagicNumber
-    private static final int FIFTEEN_MINUTES = 15 * 1000 * 60;
+    private static final int FIVE_MINUTES = 5 * 1000 * 60;
 
     @NotNull
     private final LocationManager manager;
@@ -78,6 +78,6 @@ public class PositionUpdater implements LocationListener {
 
     public static boolean isActual(final Location location, final Long timeCorrection) {
         LOG.info("locaction time is " + location.getTime());
-        return (location.getTime() + timeCorrection + FIFTEEN_MINUTES > (new Date()).getTime());
+        return (location.getTime() + timeCorrection + FIVE_MINUTES > (new Date()).getTime());
     }
 }

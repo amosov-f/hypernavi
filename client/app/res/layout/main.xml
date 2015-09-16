@@ -48,7 +48,7 @@
             android:singleLine="false"
             android:textSize="20sp"
             android:linksClickable="true"
-            android:textColor="#007FEE"
+            android:textColor="#007FCC"
             android:text="Открыть карту"
             android:layout_toStartOf="@+id/zoomButton1" android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/toggleButton1" android:layout_toEndOf="@+id/toggleButton1"

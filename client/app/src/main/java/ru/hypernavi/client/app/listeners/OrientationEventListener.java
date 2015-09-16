@@ -133,7 +133,7 @@ public class OrientationEventListener implements SensorEventListener {
         //         + " " + Math.toDegrees(orientation[2]));
 
         //noinspection MagicNumber
-        return (float) (Math.toDegrees(orientation[0]) + 180) % 360;
+        return (float) Math.toDegrees(orientation[0]);
     }
 
     private RotateAnimation prepareAnimation(final float azimuthFrom, final float azimuthTo) {
