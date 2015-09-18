@@ -109,7 +109,7 @@ public final class AppActivity extends Activity {
         } else {
             LOG.info("cashLocation is not actual");
         }
-        sendRequest();
+        sendLocationRequest();
     }
 
     private void registerAdressListeners() {
@@ -124,7 +124,7 @@ public final class AppActivity extends Activity {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || getIntent().getBooleanExtra("enabled", false);
     }
 
-    public void sendRequest() {
+    public void sendLocationRequest() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, positionUpdater);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, positionUpdater);
         LOG.info("request to update location is sent");
