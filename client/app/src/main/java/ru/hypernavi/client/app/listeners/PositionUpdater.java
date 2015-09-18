@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 import ru.hypernavi.client.app.AppActivity;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
@@ -23,6 +23,7 @@ public class PositionUpdater implements LocationListener {
     private static final Logger LOG = Logger.getLogger(PositionUpdater.class.getName());
     //noinspection MagicNumber
     private static final int FIVE_MINUTES = 5 * 1000 * 60;
+    private static final String POINT_PATH = "/location_icon.png";
 
     @NotNull
     private final LocationManager manager;
@@ -30,15 +31,16 @@ public class PositionUpdater implements LocationListener {
     private final ImageView myView;
     private Long timeCorrection;
 
-    private final Button button;
+    private final ImageView pointButton;
     private final AppActivity appActivity;
 
     public PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView,
-                           @NotNull final Button button, @NotNull final AppActivity appActivity)
+                           @NotNull final ImageView pointButton, @NotNull final AppActivity appActivity)
     {
         this.manager = manager;
         myView = imageView;
-        this.button = button;
+        this.pointButton = pointButton;
+        this.pointButton.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(POINT_PATH)));
         this.appActivity = appActivity;
         this.timeCorrection = null;
     }
@@ -73,7 +75,7 @@ public class PositionUpdater implements LocationListener {
 
     private void registerButtonListener(final LocationManager locationManager) {
         final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager, timeCorrection, appActivity);
-        button.setOnClickListener(buttonOnClickListener);
+        pointButton.setOnClickListener(buttonOnClickListener);
     }
 
     public static boolean isActual(final Location location, final Long timeCorrection) {

@@ -2,11 +2,11 @@ package ru.hypernavi.client.app;
 
 import org.jetbrains.annotations.NotNull;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ZoomButton;
 import org.junit.Before;
@@ -55,11 +55,15 @@ public final class AppActivityTest {
         final ZoomButton zoomOut = (ZoomButton) appActivity.findViewById(R.id.zoomButton);
         assertNotNull(zoomOut);
 
-        final Button button = (Button) appActivity.findViewById(R.id.button);
-        assertNotNull(button);
-
         final ImageView imageView = (ImageView) appActivity.findViewById(R.id.imageView);
         assertNotNull(imageView);
+
+        final ImageView orientationButton = (ImageView) appActivity.findViewById(R.id.imageView2);
+        assertNotNull(orientationButton);
+
+        final ImageView pointButton = (ImageView) appActivity.findViewById(R.id.imageView3);
+        assertNotNull(pointButton);
+
     }
 
     @Test

@@ -35,13 +35,14 @@ public final class AppActivity extends Activity {
     private PositionUpdater positionUpdater;
 
     private OrientationEventListener orientationEventListener;
+    private CompasOnClickListener compasOnClickListener;
 
     private AdressListener adressListener;
 
     private InfoRequestHandler handler;
     private CacheWorker cache;
 
-    ToggleButton toogleButton;
+    ToggleButton toggleButton;
     private float currentMapAzimuthInDegrees;
 
     @Override
@@ -63,17 +64,15 @@ public final class AppActivity extends Activity {
         orientationEventListener = new OrientationEventListener(imageView, this);
         orientationEventListener.onStandby();
 
-        final CheckedChangeListener checkedChangeListener = new CheckedChangeListener(this, orientationEventListener);
-
-        toogleButton = (ToggleButton) findViewById(R.id.toggleButton1);
-
-        toogleButton.setOnCheckedChangeListener(checkedChangeListener);
+        final ImageView imageButton = (ImageView) findViewById(R.id.imageView2);
+        compasOnClickListener = new CompasOnClickListener(this, orientationEventListener, imageButton);
+        imageButton.setOnClickListener(compasOnClickListener);
 
         registerGPSListeners();
         registerZoomListeners();
         registerTouchListeners();
         registerAdressListeners();
-
+        //
         LOG.info("onCreate finished");
     }
 
@@ -94,7 +93,7 @@ public final class AppActivity extends Activity {
 
     private void registerGPSListeners() {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-        positionUpdater = new PositionUpdater(locationManager, imageView, (Button) findViewById(R.id.button), this);
+        positionUpdater = new PositionUpdater(locationManager, imageView, (ImageView) findViewById(R.id.imageView3), this);
         if (!isGPSProviderEnabled()) {
             writeWarningMessage("Включите определение местоположения по GPS");
             LOG.warning("No GPS module finded.");
@@ -176,7 +175,7 @@ public final class AppActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (toogleButton.isChecked()) {
+        if (compasOnClickListener.getClicked()) {
             // for the system's orientation sensor registered listeners
             orientationEventListener.onResume();
         }

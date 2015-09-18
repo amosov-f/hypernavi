@@ -9,23 +9,6 @@
                     android:layout_height="match_parent"
 
                     android:id="@+id/imageView"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="update position"
-            android:id="@+id/button"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:singleLine="false"/>
-    <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ToggleButton"
-            android:id="@+id/toggleButton1" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-            android:textOff="Off"
-            android:textOn="On"
-            android:layout_alignParentStart="true"/>
     <ZoomButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,11 +16,11 @@
             android:src="@android:drawable/btn_minus"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:scaleType="centerInside" android:paddingRight="15dp"
+            android:layout_alignParentEnd="true" android:scaleType="centerInside" android:paddingRight="27dp"
             android:paddingTop="0dp"/>
     <ZoomButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/zoomButton1"
                 android:src="@android:drawable/btn_plus"
-                android:scaleType="centerInside" android:paddingRight="-17dp" android:layout_above="@+id/zoomButton"
+                android:scaleType="centerInside" android:paddingRight="-5dp" android:layout_above="@+id/zoomButton"
                 android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:paddingBottom="20dp"/>
 
     <TextView
@@ -50,9 +33,21 @@
             android:linksClickable="true"
             android:textColor="#007FCC"
             android:text="Открыть карту"
-            android:layout_toStartOf="@+id/zoomButton1" android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/toggleButton1" android:layout_toEndOf="@+id/toggleButton1"
-            android:layout_toLeftOf="@+id/zoomButton1"/>
+            android:layout_toStartOf="@+id/zoomButton1"
+            android:layout_alignParentTop="true" android:layout_toRightOf="@+id/imageView2" android:layout_toEndOf="@+id/imageView2"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:padding="25dp"
+            android:scaleType="fitXY" android:maxHeight="25dp" android:maxWidth="25dp" android:longClickable="false"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:maxWidth="25dp" android:minHeight="25dp"
+            android:padding="25dp" android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
 
 
     <!-- <RelativeLayout
