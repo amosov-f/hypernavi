@@ -79,7 +79,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
 
     @Test
     public void testImgOkStatus() {
-        final HttpResponse resp = execute("/img/44B7EE44A7015E9F71C26F988EAA195B.jpg");
+        final HttpResponse resp = execute("/img/4A1D07D7CF511735F7683FB681EA52DA.jpg");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
     }
 
