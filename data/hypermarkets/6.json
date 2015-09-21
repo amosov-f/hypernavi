@@ -1,1 +1,16 @@
-{"web":{"path":"/img/4A1D07D7CF511735F7683FB681EA52DA.jpg","page":"http://www.okmarket.ru/stores/store/110/","url":"http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg"},"build":{"address":"Лахтинский пр-т, 85 корп. 2 ","angle":90,"location":{"lon":30.1515,"lat":59.9935}},"id":6,"type":"Okey"}
+{
+  "web": {
+    "path": "/img/A5E01D15C827D7423B188B55E4CF7E86.jpg",
+    "page": "http://www.okmarket.ru/stores/store/68/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_akadem.jpg"
+  },
+  "build": {
+    "address": "Санкт-Петербург, проспект Науки, 17",
+    "location": {
+      "lon": 30.388548,
+      "lat": 60.014561
+    }
+  },
+  "id": 6,
+  "type": "Okey"
+}

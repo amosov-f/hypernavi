@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/D087E6894FA2B396CB3B6F923148D578.jpg",
+    "page": "http://www.okmarket.ru/stores/store/86/",
+    "url": "http://www.okmarket.ru/media/gallery/2012-11-16/shema_citymall.jpg"
+  },
+  "build": {
+    "address": "ХМАО, Сургут, Югорский тракт, 40",
+    "location": {
+      "lon": 73.377915,
+      "lat": 61.237953
+    }
+  },
+  "id": 11,
+  "type": "Okey"
+}

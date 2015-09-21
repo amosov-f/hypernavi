@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/F2756DBB53D237622EB796338432D2BF.jpg",
+    "page": "http://www.okmarket.ru/stores/store/97/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-12-23/ivanovo.jpg"
+  },
+  "build": {
+    "address": "Иваново, Лежневская улица, 55",
+    "location": {
+      "lon": 40.981422,
+      "lat": 56.982338
+    }
+  },
+  "id": 19,
+  "type": "Okey"
+}

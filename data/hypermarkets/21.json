@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/9B5E6EDDAA82C9911D0339A622C06EB3.jpg",
+    "page": "http://www.okmarket.ru/stores/store/99/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-12-19/zal_krasnoyarsk_sibir.jpg"
+  },
+  "build": {
+    "address": "Красноярск, Сибирский переулок, 5А",
+    "location": {
+      "lon": 92.95375,
+      "lat": 56.015615
+    }
+  },
+  "id": 21,
+  "type": "Okey"
+}

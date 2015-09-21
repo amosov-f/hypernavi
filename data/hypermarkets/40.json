@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/E9A8D94F62A0F3AB79B0A22C56A71539.jpg",
+    "page": "http://www.okmarket.ru/stores/store/124/",
+    "url": "http://www.okmarket.ru/media/gallery/2015-01-16/Columbus.jpg"
+  },
+  "build": {
+    "address": "Москва, Варшавское шоссе, 140",
+    "location": {
+      "lon": 37.607125,
+      "lat": 55.61236
+    }
+  },
+  "id": 40,
+  "type": "Okey"
+}

@@ -25,6 +25,9 @@ public final class ImgServlet extends AbstractHttpService {
 
     private final String serviceImg;
 
+    @NotNull
+    private final ImageDataBase images;
+
     @Inject
     public ImgServlet(@Named("hypernavi.server.serviceimg") @NotNull final String serviceImg, @NotNull final ImageDataBase images) {
         this.serviceImg = serviceImg;
@@ -47,7 +50,4 @@ public final class ImgServlet extends AbstractHttpService {
         response.setContentType("image/jpeg");
         response.getOutputStream().write(schema);
     }
-
-    @NotNull
-    private final ImageDataBase images;
 }

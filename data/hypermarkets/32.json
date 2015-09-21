@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/2803436CE66ACFF1EC63AC311DA9E818.jpg",
+    "page": "http://www.okmarket.ru/stores/store/111/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-10-13/voronezh.jpg"
+  },
+  "build": {
+    "address": "Воронеж, улица Маршала Жукова, 15",
+    "location": {
+      "lon": 39.171388,
+      "lat": 51.715398
+    }
+  },
+  "id": 32,
+  "type": "Okey"
+}

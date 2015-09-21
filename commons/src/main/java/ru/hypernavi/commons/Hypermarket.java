@@ -26,28 +26,6 @@ public class Hypermarket implements Positioned, Indexable {
     @NotNull
     private final WebInfo web;
 
-    /*public Hypermarket(final int id,
-                       @NotNull final GeoPoint location,
-                       @NotNull final String address,
-                       @NotNull final String type,
-                       @NotNull final String path,
-                       @NotNull final String url,
-                       @NotNull final String page,
-                       final double angle) {
-        this.build = new Building(location, address);
-        this.web = new WebInfo(path, url, page);
-
-        this.id = id;
-        this.type = type;
-
-        this.location = location;
-        this.address = address;
-        this.path = path;
-        this.url = url;
-        this.angle = angle;
-        this.page = page;
-    }
-*/
     public Hypermarket(final int id,
                        @NotNull final Building build,
                        @NotNull final String type,

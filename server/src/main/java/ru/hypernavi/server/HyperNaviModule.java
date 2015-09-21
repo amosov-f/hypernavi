@@ -2,7 +2,6 @@ package ru.hypernavi.server;
 
 import org.jetbrains.annotations.NotNull;
 
-
 import java.io.File;
 import java.io.IOException;
 
@@ -16,10 +15,7 @@ import ru.hypernavi.commons.Platform;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.goods.TomallGoodsClassifier;
-import ru.hypernavi.core.database.DataLoader;
-import ru.hypernavi.core.database.FileDataLoader;
-import ru.hypernavi.core.database.HypermarketHolder;
-import ru.hypernavi.core.database.ImageDataBase;
+import ru.hypernavi.core.database.*;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -72,6 +68,8 @@ public final class HyperNaviModule extends AbstractModule {
 
         bind(HypermarketHolder.class).asEagerSingleton();
         bind(ImageDataBase.class).asEagerSingleton();
+        requestStaticInjection(RegisterHypermarket.class);
+
     }
 
     private void bindGoodsClassifier() {

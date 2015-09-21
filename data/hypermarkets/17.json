@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/46A12CE00CE5BC974337FEC738A56CCC.jpg",
+    "page": "http://www.okmarket.ru/stores/store/93/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-12-18/Gatchina_1.jpg"
+  },
+  "build": {
+    "address": "Ленинградская область, Гатчина, Ленинградское шоссе, 10А",
+    "location": {
+      "lon": 30.139027,
+      "lat": 59.583344
+    }
+  },
+  "id": 17,
+  "type": "Okey"
+}

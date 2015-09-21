@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/2E0CF6A143981C7FC878BAA8762A0E88.jpg",
+    "page": "http://www.okmarket.ru/stores/store/120/",
+    "url": "http://www.okmarket.ru/media/gallery/2015-03-02/Chelyabinsk-plan.jpg"
+  },
+  "build": {
+    "address": "Челябинск, Курчатовский район",
+    "location": {
+      "lon": 61.377413,
+      "lat": 55.227426
+    }
+  },
+  "id": 39,
+  "type": "Okey"
+}

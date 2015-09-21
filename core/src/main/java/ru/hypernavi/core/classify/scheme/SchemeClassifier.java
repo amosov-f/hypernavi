@@ -53,10 +53,20 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
         return Optional.ofNullable(EnumUtils.instance(Chain.class, chainOrdinal)).map(Enum::name).orElse("none").toLowerCase();
     }
 
-    public static void main(@NotNull final String[] args) throws Exception {
+    public static SchemeClassifier getClassifier() throws Exception {
         DOMConfigurator.configure(MoreIOUtils.toURL("classpath:/log4j.xml"));
         final SchemeClassifier classifier = new SchemeClassifier(Picture.download());
         final Evaluation evaluation = classifier.learning();
+
+        LOG.info(evaluation.toMatrixString());
+        LOG.info(evaluation.toClassDetailsString());
+        LOG.info(evaluation.toSummaryString());
+
+        return classifier;
+    }
+
+    public static void main(@NotNull final String[] args) throws Exception {
+        final SchemeClassifier classifier = getClassifier();
 
         final Picture[] newPictures = Picture.downloadFromFile("urls.txt");
         final int[][] matrix = new int[7][7];
@@ -94,9 +104,6 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
         final Picture tnPicture = Objects.requireNonNull(Picture.download(tnUrl));
         LOG.info(tpUrl + " -> " + toString(classifier.classify(tpPicture)) + ", " + classifier.isClass(tpPicture));
         LOG.info(tnUrl + " -> " + toString(classifier.classify(tnPicture)) + ", " + classifier.isClass(tnPicture));
-        LOG.info(evaluation.toMatrixString());
-        LOG.info(evaluation.toClassDetailsString());
-        LOG.info(evaluation.toSummaryString());
     }
 
     public Evaluation learning() throws Exception {

@@ -1,1 +1,16 @@
-{"web":{"path":"/img/F1798473E1325AB830CBD5F1F11E2A5D.jpg","page":"http://www.okmarket.ru/stores/store/67/","url":"http://www.okmarket.ru/media/gallery/2013-12-12/Savushkina.jpg"},"build":{"address":"ул. Савушкина, 119 корп. 3А ","angle":-45,"location":{"lon":30.2253,"lat":59.9886}},"id":1,"type":"Okey"}
+{
+  "web": {
+    "path": "/img/92EB2914422D595F6B616CB85BD0C49F.jpg",
+    "page": "http://www.okmarket.ru/stores/store/37/",
+    "url": "http://www.okmarket.ru/media/gallery/2015-02-09/Moscow.jpg"
+  },
+  "build": {
+    "address": "Москва, МКАД, 71-й километр, 1",
+    "location": {
+      "lon": 37.397389,
+      "lat": 55.864469
+    }
+  },
+  "id": 1,
+  "type": "Okey"
+}

@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/84986778EA98F47B015478FC1FA0FD53.jpg",
+    "page": "http://www.okmarket.ru/stores/store/127/",
+    "url": "http://www.okmarket.ru/media/gallery/2015-01-13/Irkutsk.jpg"
+  },
+  "build": {
+    "address": "Иркутск, Верхняя набережная, 10",
+    "location": {
+      "lon": 104.28914,
+      "lat": 52.267653
+    }
+  },
+  "id": 42,
+  "type": "Okey"
+}

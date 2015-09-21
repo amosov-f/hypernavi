@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/4A1D07D7CF511735F7683FB681EA52DA.jpg",
+    "page": "http://www.okmarket.ru/stores/store/110/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg"
+  },
+  "build": {
+    "address": "Санкт-Петербург, Лахтинский проспект, 85",
+    "location": {
+      "lon": 30.147668,
+      "lat": 59.994211
+    }
+  },
+  "id": 31,
+  "type": "Okey"
+}

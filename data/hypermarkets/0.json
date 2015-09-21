@@ -1,1 +1,16 @@
-{"web":{"path":"/img/E99E1328DA759DC007C5F1A25D8DB107.jpg","page":"http://www.okmarket.ru/stores/store/59/","url":"http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_ozerki.jpg"},"build":{"address":"Выборгское ш., 3/1","angle":0,"location":{"lon":30.3207,"lat":60.0383}},"id":0,"type":"Okey"}
+{
+  "web": {
+    "path": "/img/2B8109C97007E3C16DDDFF1A18876566.jpg",
+    "page": "http://www.okmarket.ru/stores/store/29/",
+    "url": "http://www.okmarket.ru/media/gallery/2012-08-10/Yfa_shema.gif"
+  },
+  "build": {
+    "address": "Республика Башкортостан, Уфа, Комсомольская улица, 112",
+    "location": {
+      "lon": 56.007926,
+      "lat": 54.752527
+    }
+  },
+  "id": 0,
+  "type": "Okey"
+}

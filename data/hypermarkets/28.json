@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/FE6C32337E77D2882B297AABA08E0A93.jpg",
+    "page": "http://www.okmarket.ru/stores/store/107/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-08-06/plan.jpg"
+  },
+  "build": {
+    "address": "Волгоградская область, Волжский, Оломоуцкая улица, 30А",
+    "location": {
+      "lon": 44.804741,
+      "lat": 48.763921
+    }
+  },
+  "id": 28,
+  "type": "Okey"
+}

@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/D80FF945FC315491133909840D7B303C.jpg",
+    "page": "http://www.okmarket.ru/stores/store/118/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-12-25/Volgograd-plan.jpg"
+  },
+  "build": {
+    "address": "Волгоград, Пролетарская улица, 8",
+    "location": {
+      "lon": 44.53407,
+      "lat": 48.518
+    }
+  },
+  "id": 37,
+  "type": "Okey"
+}

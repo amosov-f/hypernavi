@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/B989A3EE7F9F7AA154E81D10F22EA103.jpg",
+    "page": "http://www.okmarket.ru/stores/store/115/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-11-13/Tcherepovets-plan.jpg"
+  },
+  "build": {
+    "address": "Вологодская область, Череповец, улица Раахе, 2",
+    "location": {
+      "lon": 37.91,
+      "lat": 59.104
+    }
+  },
+  "id": 35,
+  "type": "Okey"
+}

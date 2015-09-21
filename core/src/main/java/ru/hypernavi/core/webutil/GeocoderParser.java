@@ -1,9 +1,9 @@
 package ru.hypernavi.core.webutil;
 
-import com.google.inject.Singleton;
 import org.jetbrains.annotations.Nullable;
 
 
+import com.google.inject.Singleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.util.GeoPoint;
@@ -16,6 +16,11 @@ import ru.hypernavi.util.GeoPoint;
 public class GeocoderParser {
     public GeocoderParser() {
     }
+
+    public GeocoderParser(@Nullable final JSONObject response) {
+        this.response = response;
+    }
+
 
     @Nullable
     private JSONObject response = null;
@@ -37,7 +42,9 @@ public class GeocoderParser {
                         .getJSONObject("GeoObject")
                         .getJSONObject("metaDataProperty")
                         .getJSONObject("GeocoderMetaData")
-                        .getString("text");
+                        .getJSONObject("AddressDetails")
+                        .getJSONObject("Country")
+                        .getString("AddressLine");
             }
             address = location;
         } catch (JSONException ignored) {

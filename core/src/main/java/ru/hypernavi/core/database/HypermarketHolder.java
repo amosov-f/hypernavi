@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,8 +22,9 @@ import ru.hypernavi.util.GeoPoint;
  */
 public class HypermarketHolder {
     private static final Log LOG = LogFactory.getLog(HypermarketHolder.class);
+
     @NotNull
-    private final MapStructure<Hypermarket> markets;
+    private final MapStructure<Hypermarket> markets = new ArrayMapStructure<>();
 
     private final DataLoader loader;
     private final String service;
@@ -38,42 +38,35 @@ public class HypermarketHolder {
         this.loader = loader;
         this.service = service;
 
-        final String[] paths = loader.getNames(service);
-
-        final List<Hypermarket> listHyper = new ArrayList<>();
-        for (int i = 0; i < paths.length; ++i) {
-            final byte[] data = loader.load(service, paths[i]);
+        for (final String path: loader.getNames(service)) {
+            final byte[] data = loader.load(service, path);
             if (data != null) {
-                Hypermarket market = null;
                 try {
-                    final String json = IOUtils.toString(data, "UTF-8");
-                    market = Hypermarket.construct(new JSONObject(json));
-                    if (market != null)
-                        LOG.info("Hypermarket loaded from " + service + paths[i]);
+                    final Hypermarket market = Hypermarket.construct(new JSONObject(IOUtils.toString(data, "UTF-8")));
+
+                    if (market != null) {
+                        addHypermarket(market, path);
+                        LOG.info("Hypermarket loaded from " + service + path);
+                    } else {
+                        LOG.warn("Can't load from " + service + path);
+                    }
                 } catch (JSONException | IOException e) {
                     LOG.warn(e.getMessage());
                 }
-                if (market != null) {
-                    listHyper.add(market);
-                    //LOG.info(paths[i] + " : " +  market.toJSON().toString());
-                    loader.save(service, paths[i], market.toJSON().toString().getBytes(StandardCharsets.UTF_8));
-                }
             }
-
-
         }
-
-        final Hypermarket[] copyList = new Hypermarket[listHyper.size()];
-        markets = new ArrayMapStructure<>(listHyper.toArray(copyList));
     }
 
     public void addHypermarket(@NotNull final Hypermarket hyper, @NotNull final String name) {
-        loader.save(service, name, hyper.toJSON().toString().getBytes(StandardCharsets.UTF_8));
-        markets.add(hyper);
+        final JSONObject hypermarket = hyper.toJSON();
+        if (hypermarket != null) {
+            loader.save(service, name, hypermarket.toString().getBytes(StandardCharsets.UTF_8));
+            markets.add(hyper);
+        }
     }
 
     @NotNull
-    public List<Hypermarket> getClosest(final GeoPoint possition, final int k) {
-        return markets.find(possition, k);
+    public List<Hypermarket> getClosest(final GeoPoint position, final int k) {
+        return markets.find(position, k);
     }
 }

@@ -41,8 +41,8 @@ public class HypermarketsInfoServlet extends AbstractHttpService {
         in.write(bytes);
         for (int i = 0; i < list.size(); ++i) {
             final Hypermarket market = list.get(i);
-            final String info = String.format("Hypermarket #%d:\n"+"Coordinates(lon, lat): %s\n"+"Address %s\n" +
-                    "Angle: %f\n"+"type: %s\n" + "id %d\n\n", i + 1, market.getLocation(),
+            final String info = String.format("Hypermarket #%d:\n"+"Coordinates(lon, lat): %s\n" + "Path: %s\n" +"Address %s\n" +
+                    "Angle: %f\n"+"type: %s\n" + "id %d\n\n", i + 1, market.getLocation(), market.getPath(),
                     market.getAddress(), market.getOrientation(), market.getType(), market.getId());
             bytes = info.getBytes();
             in.write(bytes);

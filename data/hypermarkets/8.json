@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/CCC6F3461F3A932DA642300D56C858F6.jpg",
+    "page": "http://www.okmarket.ru/stores/store/83/",
+    "url": "http://www.okmarket.ru/media/gallery/2012-09-20/big_panfilova_shema.png"
+  },
+  "build": {
+    "address": "Москва, Зеленоград, Панфиловский проспект, 6А",
+    "location": {
+      "lon": 37.2,
+      "lat": 56.009
+    }
+  },
+  "id": 8,
+  "type": "Okey"
+}

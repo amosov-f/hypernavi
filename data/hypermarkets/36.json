@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/46F880F2DE8407A9A4BDA1F014322E8F.jpg",
+    "page": "http://www.okmarket.ru/stores/store/117/",
+    "url": "http://www.okmarket.ru/media/gallery/2015-01-23/lipetsk-plan.jpg"
+  },
+  "build": {
+    "address": "Липецк, улица Петра Смородина, 13А",
+    "location": {
+      "lon": 39.535619,
+      "lat": 52.5885
+    }
+  },
+  "id": 36,
+  "type": "Okey"
+}

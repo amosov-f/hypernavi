@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/97F44FA945E8C03CC1A3D63CA67D9D85.jpg",
+    "page": "http://www.okmarket.ru/stores/store/103/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-02-05/Altufievo-plan.jpg"
+  },
+  "build": {
+    "address": "Москва, МКАД, 84-й километр, 1",
+    "location": {
+      "lon": 37.585824,
+      "lat": 55.913142
+    }
+  },
+  "id": 25,
+  "type": "Okey"
+}

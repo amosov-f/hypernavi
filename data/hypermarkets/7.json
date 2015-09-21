@@ -1,1 +1,16 @@
-{"web":{"path":"/img/F0F06BA0C0015AE2558D6DA1B1D06496.jpg","page":"http://www.okmarket.ru/stores/store/126/","url":"http://www.okmarket.ru/media/gallery/2015-01-21/Shuvalovsky-plan.jpg"},"build":{"address":"ул. Парашютная, 46А","angle":0,"location":{"lon":30.2482,"lat":60.0324}},"id":7,"type":"Okey"}
+{
+  "web": {
+    "path": "/img/550554C3A0E9C2252E86C928AD9EFE5C.jpg",
+    "page": "http://www.okmarket.ru/stores/store/82/",
+    "url": "http://www.okmarket.ru/media/gallery/2012-07-27/plan_zala_big.jpg"
+  },
+  "build": {
+    "address": "Свердловская область, Екатеринбург, микрорайон Эльмаш, улица Бабушкина, 2А",
+    "location": {
+      "lon": 60.63156,
+      "lat": 56.882159
+    }
+  },
+  "id": 7,
+  "type": "Okey"
+}

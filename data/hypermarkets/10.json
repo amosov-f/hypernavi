@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/63F281F7F9A5554FC4FBB986427041E6.jpg",
+    "page": "http://www.okmarket.ru/stores/store/85/",
+    "url": "http://www.okmarket.ru/media/gallery/2012-11-16/okey_moremoll_shema_magazina.jpg"
+  },
+  "build": {
+    "address": "Краснодарский край, Сочи, микрорайон Донская, улица Новая Заря, 7",
+    "location": {
+      "lon": 39.732001,
+      "lat": 43.604556
+    }
+  },
+  "id": 10,
+  "type": "Okey"
+}

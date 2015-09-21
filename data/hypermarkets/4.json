@@ -1,1 +1,16 @@
-{"web":{"path":"/img/46A12CE00CE5BC974337FEC738A56CCC.jpg","page":"http://www.okmarket.ru/stores/store/93/","url":"http://www.okmarket.ru/media/gallery/2013-12-18/Gatchina_1.jpg"},"build":{"address":"Гатчина, Ленинградское ш., 12","angle":45,"location":{"lon":30.1385,"lat":59.5836}},"id":4,"type":"Okey"}
+{
+  "web": {
+    "path": "/img/E99E1328DA759DC007C5F1A25D8DB107.jpg",
+    "page": "http://www.okmarket.ru/stores/store/59/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_ozerki.jpg"
+  },
+  "build": {
+    "address": "Санкт-Петербург, Выборгское шоссе, 3к1",
+    "location": {
+      "lon": 30.320776,
+      "lat": 60.038103
+    }
+  },
+  "id": 4,
+  "type": "Okey"
+}

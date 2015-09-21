@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/599A49404856089294BCBEFB8959F9AC.jpg",
+    "page": "http://www.okmarket.ru/stores/store/101/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-12-17/Yakhtennaya.jpg"
+  },
+  "build": {
+    "address": "Санкт-Петербург, Богатырский проспект, 42",
+    "location": {
+      "lon": 30.22703,
+      "lat": 60.003571
+    }
+  },
+  "id": 23,
+  "type": "Okey"
+}

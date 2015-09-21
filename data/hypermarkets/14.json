@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/EA9E1E5E800CA24AB5CAA6EAF7360CA2.jpg",
+    "page": "http://www.okmarket.ru/stores/store/89/",
+    "url": "http://www.okmarket.ru/media/gallery/2013-04-30/okey_novosib_malinka_shema-zala_b.jpg"
+  },
+  "build": {
+    "address": "Новосибирск, улица Дуси Ковальчук, 1Ак1",
+    "location": {
+      "lon": 82.882467,
+      "lat": 55.049226
+    }
+  },
+  "id": 14,
+  "type": "Okey"
+}

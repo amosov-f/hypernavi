@@ -1,0 +1,16 @@
+{
+  "web": {
+    "path": "/img/ADDAE729AF311E371224B92547560EF1.jpg",
+    "page": "http://www.okmarket.ru/stores/store/108/",
+    "url": "http://www.okmarket.ru/media/gallery/2014-10-10/Tambov.jpg"
+  },
+  "build": {
+    "address": "Тамбов, Базарная улица, 115Б",
+    "location": {
+      "lon": 41.444494,
+      "lat": 52.728266
+    }
+  },
+  "id": 29,
+  "type": "Okey"
+}

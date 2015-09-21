@@ -1,6 +1,5 @@
 package ru.hypernavi.core.database;
 
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,10 +34,9 @@ public class FileDataLoader implements DataLoader {
         LOG.info("Loading data from path" + path);
         byte[] result = null;
         try {
-            final InputStream in = new FileInputStream(new File(path));
-            result = IOUtils.toByteArray(in);
-        } catch (FileNotFoundException ignored) {
-            LOG.warn("No such file");
+            result = IOUtils.toByteArray(new FileInputStream(new File(path)));
+        } catch (FileNotFoundException e) {
+            LOG.warn(e.getMessage());
             return null;
         } catch (IOException e) {
             LOG.error(e.getMessage());
@@ -54,17 +52,16 @@ public class FileDataLoader implements DataLoader {
 
     public String[] getFileFromDirectory(@NotNull final String pathDirectory) {
         LOG.info(dataPath + pathDirectory);
-        final List<String> pathsFiles = new ArrayList<>();
-        final File folder = new File(dataPath + pathDirectory);
 
-        final File[] listOfFiles = folder.listFiles();
+        final List<String> pathsFiles = new ArrayList<>();
+
+        final File[] listOfFiles = new File(dataPath + pathDirectory).listFiles();
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
-                    pathsFiles.add("/"+listOfFiles[i].getName());
+                    pathsFiles.add("/" + listOfFiles[i].getName());
                 }
             }
-            pathsFiles.forEach(LOG::info);
         } else {
             LOG.warn("No files in directory");
         }

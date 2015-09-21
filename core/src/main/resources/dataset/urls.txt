@@ -102,7 +102,7 @@ none	http://www.okmarket.ru/media/gallery/2012-11-27/surgut_aura.jpg
 none	http://www.okmarket.ru/media/gallery/2012-11-27/surgut_citymall.jpg
 none	http://www.okmarket.ru/media/gallery/2012-11-28/okey_aura_map.jpg
 none	http://www.okmarket.ru/media/gallery/2012-12-27/okey_tallinskoe.jpg
-none	http://www.okmarket.ru/media/gallery/2012-12-27/okey_tallinskoe_shema_magazina_b.jpg
+okey	http://www.okmarket.ru/media/gallery/2012-12-27/okey_tallinskoe_shema_magazina_b.jpg
 none	http://www.okmarket.ru/media/gallery/2013-01-15/%D0%95%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B1%D1%83%D1%80%D0%B3_%D0%A0%D0%B0%D0%B4%D1%83%D0%B3%D0%B0_11_12_12_172.JPG
 none	http://www.okmarket.ru/media/gallery/2013-01-15/%D0%95%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B1%D1%83%D1%80%D0%B3_%D0%A0%D0%B0%D0%B4%D1%83%D0%B3%D0%B0_11_12_12_30.JPG
 none	http://www.okmarket.ru/media/gallery/2013-01-15/%D0%95%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B1%D1%83%D1%80%D0%B3_%D0%A0%D0%B0%D0%B4%D1%83%D0%B3%D0%B0_11_12_12_517.JPG
