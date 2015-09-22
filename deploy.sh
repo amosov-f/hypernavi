@@ -22,7 +22,7 @@ mv -v ${JAR_PATH} ~/${FILENAME}
 rsync -a data /root
 
 # starting server
-nohup java -jar ~/${FILENAME} -port 80 -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
+nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar ~/${FILENAME} -port 80 -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
 
 # checking server start
 LOADED=-1
