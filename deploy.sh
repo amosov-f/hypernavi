@@ -5,7 +5,7 @@ JAR_PATH=server/target/hypernavi-server-jar-with-dependencies.jar
 FAILED_MESSAGE="##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
 
 # checking jar
-if [ ! -f server/target/hypernavi-server-jar-with-dependencies.jar ]; then
+if [ ! -f ${JAR_PATH} ]; then
     echo "Jar not found!"
     echo ${FAILED_MESSAGE}
     exit 1
