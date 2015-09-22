@@ -2,12 +2,12 @@
 
 HOST=hypernavi.net
 JAR_PATH=server/target/hypernavi-server-jar-with-dependencies.jar
-FAILED_MESSAGE="##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
+FAIL_MESSAGE="##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
 
 # checking jar
 if [ ! -f ${JAR_PATH} ]; then
     echo "Jar not found!"
-    echo ${FAILED_MESSAGE}
+    echo ${FAIL_MESSAGE}
     exit 1
 fi
 
@@ -36,7 +36,7 @@ done
 
 if [ ${LOADED} -ne 0 ]; then
 	echo "Server is not responding!"
-	echo ${FAILED_MESSAGE}
+	echo ${FAIL_MESSAGE}
 	exit 1
 else
 	echo "Server is started"
