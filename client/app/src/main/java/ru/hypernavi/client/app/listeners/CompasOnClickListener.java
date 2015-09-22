@@ -41,12 +41,14 @@ public class CompasOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(final View v) {
-        if (!isClicked) {
+        if ((!isClicked) && (myAppActivity.getHasOrientation())) {
             myOrientationEventListener.onResume();
             myAppActivity.writeWarningMessage("Карта сориентирована");
             myCompasButton.setImageBitmap(onOrientationBitmap);
             isClicked = true;
             LOG.info("Orientation on");
+        } else if (!myAppActivity.getHasOrientation()) {
+            myAppActivity.writeWarningMessage("Ориентация отсутвует");
         } else {
             myOrientationEventListener.onStandby();
             myAppActivity.writeWarningMessage("Ориентация отключена");

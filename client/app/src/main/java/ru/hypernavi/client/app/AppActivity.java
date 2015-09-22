@@ -48,6 +48,7 @@ public final class AppActivity extends Activity {
     private CacheWorker cache;
 
     private float currentMapAzimuthInDegrees;
+    private boolean hasOrientation;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public final class AppActivity extends Activity {
         drawDisplayImage(true);
 
         currentMapAzimuthInDegrees = 0;
+        hasOrientation = false;
 
         orientationEventListener = new OrientationEventListener(marketImageView, this);
         orientationEventListener.onStandby();
@@ -166,7 +168,11 @@ public final class AppActivity extends Activity {
                 LOG.info(Double.toString(GeoPoint.distance(mylocation, marketLocation)));
             }
             //
-            currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
+            final Hypermarket closestMarket = infoResponse.getClosestMarkets().get(0);
+            hasOrientation = closestMarket.hasOrientation();
+            if (hasOrientation) {
+                currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
+            }
         }
         originScheme = handler.getClosestSchema(infoResponse);
 
@@ -220,6 +226,10 @@ public final class AppActivity extends Activity {
 
     public float getCurrentMarketAzimuthInDegrees() {
         return currentMapAzimuthInDegrees;
+    }
+
+    public boolean getHasOrientation() {
+        return hasOrientation;
     }
 
     public void moveImageToStartPoint() {
