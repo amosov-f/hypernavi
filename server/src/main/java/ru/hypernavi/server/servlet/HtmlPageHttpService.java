@@ -37,7 +37,7 @@ public abstract class HtmlPageHttpService extends AbstractHttpService {
 
     @Override
     public final void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        final Template template = templatesConfig.getTemplate(pathInBundle);
+        final Template template = templatesConfig.getTemplate(pathInBundle, StandardCharsets.UTF_8.name());
         final ByteArrayOutputStream pageBytes = new ByteArrayOutputStream();
         try {
             template.process(getDataModel(req), new OutputStreamWriter(pageBytes, StandardCharsets.UTF_8));
