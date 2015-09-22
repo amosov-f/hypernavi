@@ -1,13 +1,22 @@
 #!/bin/bash
 
 HOST=hypernavi.net
+JAR_PATH=server/target/hypernavi-server-jar-with-dependencies.jar
+FAILED_MESSAGE="##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
+
+# checking jar
+if [ ! -f server/target/hypernavi-server-jar-with-dependencies.jar ]; then
+    echo "Jar not found!"
+    echo ${FAILED_MESSAGE}
+    exit 1
+fi
 
 rsync -a data /root
 # moving jar
-FILENAME=hypernavi-dev-`stat -c %Y server/target/hypernavi-server-jar-with-dependencies.jar`.jar
+FILENAME=hypernavi-dev-`stat -c %Y ${JAR_PATH}`.jar
 fuser -KILL -k -n tcp 80
 rm -r ~/hypernavi-dev-*
-mv -v server/target/hypernavi-server-jar-with-dependencies.jar ~/${FILENAME}
+mv -v ${JAR_PATH} ~/${FILENAME}
 
 # moving data
 rsync -a data /root
@@ -27,7 +36,7 @@ done
 
 if [ ${LOADED} -ne 0 ]; then
 	echo "Server is not responding!"
-	echo "##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
+	echo ${FAILED_MESSAGE}
 	exit 1
 else
 	echo "Server is started"
