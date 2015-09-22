@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -24,15 +25,19 @@ import ru.hypernavi.util.GeoPoint;
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
+    private static final String POINT_PATH = "/location_icon.png";
 
     private InfoResponse infoResponse;
     private Bitmap originScheme;
 
-    private ImageView imageView;
+    private ImageView marketImageView;
     private TextView textView;
 
     private LocationManager locationManager;
     private PositionUpdater positionUpdater;
+
+    private ImageView pointButton;
+    private ButtonOnClickListener buttonOnClickListener;
 
     private OrientationEventListener orientationEventListener;
     private CompasOnClickListener compasOnClickListener;
@@ -42,7 +47,6 @@ public final class AppActivity extends Activity {
     private InfoRequestHandler handler;
     private CacheWorker cache;
 
-    ToggleButton toggleButton;
     private float currentMapAzimuthInDegrees;
 
     @Override
@@ -52,48 +56,56 @@ public final class AppActivity extends Activity {
         LOG.info("onCreate start");
 
         setContentView(R.layout.main);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        marketImageView = (ImageView) findViewById(R.id.imageView);
 
         cache = new CacheWorker(this);
         handler = new InfoRequestHandler(this, cache);
 
-        drawDisplayImage();
+        drawDisplayImage(true);
 
         currentMapAzimuthInDegrees = 0;
 
-        orientationEventListener = new OrientationEventListener(imageView, this);
+        orientationEventListener = new OrientationEventListener(marketImageView, this);
         orientationEventListener.onStandby();
 
-        final ImageView imageButton = (ImageView) findViewById(R.id.imageView2);
-        compasOnClickListener = new CompasOnClickListener(this, orientationEventListener, imageButton);
-        imageButton.setOnClickListener(compasOnClickListener);
+        final ImageView compasButton = (ImageView) findViewById(R.id.imageView2);
+        compasOnClickListener = new CompasOnClickListener(this, orientationEventListener, compasButton);
+        compasButton.setOnClickListener(compasOnClickListener);
 
         registerGPSListeners();
         registerZoomListeners();
+
         registerTouchListeners();
         registerAdressListeners();
         //
         LOG.info("onCreate finished");
     }
 
+    private void registerButtonListener() {
+        buttonOnClickListener = new ButtonOnClickListener(locationManager, this);
+        pointButton = (ImageView) findViewById(R.id.imageView3);
+        pointButton.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(POINT_PATH)));
+        pointButton.setOnClickListener(buttonOnClickListener);
+    }
+
     private void registerZoomListeners() {
         final ZoomButton zoomPlus = (ZoomButton) findViewById(R.id.zoomButton1);
         final ZoomButton zoomMinus = (ZoomButton) findViewById(R.id.zoomButton);
-        final ZoomClickListener zoomInClickListener = new ZoomClickListener(imageView, true);
-        final ZoomClickListener zoomOutClickListener = new ZoomClickListener(imageView, false);
+        final ZoomClickListener zoomInClickListener = new ZoomClickListener(marketImageView, true);
+        final ZoomClickListener zoomOutClickListener = new ZoomClickListener(marketImageView, false);
 
         zoomPlus.setOnClickListener(zoomInClickListener);
         zoomMinus.setOnClickListener(zoomOutClickListener);
     }
 
     private void registerTouchListeners() {
-        final ViewOnTouchListener viewOnTouchListener = new ViewOnTouchListener(imageView, orientationEventListener);
-        imageView.setOnTouchListener(viewOnTouchListener);
+        marketImageView.setOnTouchListener(new ViewOnTouchListener(marketImageView, orientationEventListener));
     }
 
     private void registerGPSListeners() {
         locationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-        positionUpdater = new PositionUpdater(locationManager, imageView, (ImageView) findViewById(R.id.imageView3), this);
+        registerButtonListener();
+        positionUpdater = new PositionUpdater(locationManager, marketImageView, buttonOnClickListener, this);
         if (!isGPSProviderEnabled()) {
             writeWarningMessage("Включите определение местоположения по GPS");
             LOG.warning("No GPS module finded.");
@@ -105,11 +117,24 @@ public final class AppActivity extends Activity {
         }
         if ((cashLocation != null) && (PositionUpdater.isActual(cashLocation, 0L))) {
             LOG.info("cashLocation is actual");
-            processInfo(GeoPointsUtils.makeGeoPoint(cashLocation), imageView);
+            processInfo(GeoPointsUtils.makeGeoPoint(cashLocation), marketImageView);
         } else {
             LOG.info("cashLocation is not actual");
         }
         sendLocationRequest();
+    }
+
+    private boolean isGPSProviderEnabled() {
+        // TODO amosov-f: remove intent checking
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+               locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+               getIntent().getBooleanExtra("enabled", false);
+    }
+
+    public void sendLocationRequest() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, positionUpdater);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, positionUpdater);
+        LOG.info("request to update location is sent");
     }
 
     private void registerAdressListeners() {
@@ -119,24 +144,15 @@ public final class AppActivity extends Activity {
         textView.setOnClickListener(adressListener);
     }
 
-    private boolean isGPSProviderEnabled() {
-        // TODO amosov-f: remove intent checking
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || getIntent().getBooleanExtra("enabled", false);
+    private void drawDisplayImage(final boolean takeItFromCache) {
+        if (takeItFromCache) {
+            originScheme = cache.loadCachedOrDefaultScheme();
+        }
+        marketImageView.setImageBitmap(originScheme);
     }
 
-    public void sendLocationRequest() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, positionUpdater);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, positionUpdater);
-        LOG.info("request to update location is sent");
-    }
-
-    private void drawDisplayImage() {
-        originScheme = cache.loadCachedOrDefaultScheme();
-        imageView.setImageBitmap(originScheme);
-    }
-
-    public void processInfo(final GeoPoint geoPosition, final ImageView imageView) {
-
+    public void processInfo(final GeoPoint geoPosition, final ImageView marketImageView) {
+        final Bitmap oldScheme = originScheme.copy(originScheme.getConfig(), true);
         infoResponse = handler.getInfoResponse(geoPosition);
         if (infoResponse != null) {
             LOG.warning("infoResponse is null !!!");
@@ -160,8 +176,10 @@ public final class AppActivity extends Activity {
             originScheme = cache.loadCachedOrDefaultScheme();
             LOG.warning("Problems with scheme above");
         }
-
-        imageView.setImageBitmap(originScheme);
+        if (!oldScheme.sameAs(originScheme)) {
+            moveImageToStartPoint();
+        }
+        marketImageView.setImageBitmap(originScheme);
         cache.saveSchemeToCache(originScheme);
 
         LOG.info("GeoPosition " + geoPosition);
@@ -202,5 +220,14 @@ public final class AppActivity extends Activity {
 
     public float getCurrentMarketAzimuthInDegrees() {
         return currentMapAzimuthInDegrees;
+    }
+
+    public void moveImageToStartPoint() {
+        compasOnClickListener.moveImageToStratPoint();
+        marketImageView.scrollTo(0, 0);
+        marketImageView.setScaleX(1);
+        marketImageView.setScaleY(1);
+        //marketImageView.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream("/file_not_found.jpg")));
+        LOG.info("image have moved to start point. 1488");
     }
 }

@@ -20,22 +20,22 @@ public class CompasOnClickListener implements View.OnClickListener {
     private final AppActivity myAppActivity;
     private final OrientationEventListener myOrientationEventListener;
 
-    private final ImageView myImageButton;
+    private final ImageView myCompasButton;
     private boolean isClicked;
 
     private final Bitmap offOrientationBitmap;
     private final Bitmap onOrientationBitmap;
 
     public CompasOnClickListener (final AppActivity appActivity, final OrientationEventListener orientationEventListener,
-                                  final ImageView imageButton)
+                                  final ImageView compasButton)
     {
         myAppActivity = appActivity;
         myOrientationEventListener = orientationEventListener;
-        myImageButton = imageButton;
+        myCompasButton = compasButton;
         isClicked = false;
         offOrientationBitmap = BitmapFactory.decodeStream(getClass().getResourceAsStream(OFF_PATH));
         onOrientationBitmap = BitmapFactory.decodeStream(getClass().getResourceAsStream(ON_PATH));
-        myImageButton.setImageBitmap(offOrientationBitmap);
+        myCompasButton.setImageBitmap(offOrientationBitmap);
     }
 
 
@@ -44,13 +44,22 @@ public class CompasOnClickListener implements View.OnClickListener {
         if (!isClicked) {
             myOrientationEventListener.onResume();
             myAppActivity.writeWarningMessage("Карта сориентирована");
-            myImageButton.setImageBitmap(onOrientationBitmap);
+            myCompasButton.setImageBitmap(onOrientationBitmap);
             isClicked = true;
             LOG.info("Orientation on");
         } else {
             myOrientationEventListener.onStandby();
             myAppActivity.writeWarningMessage("Ориентация отключена");
-            myImageButton.setImageBitmap(offOrientationBitmap);
+            myCompasButton.setImageBitmap(offOrientationBitmap);
+            isClicked = false;
+            LOG.info("Orientation off");
+        }
+    }
+
+    public void moveImageToStratPoint() {
+        if (isClicked){
+            myOrientationEventListener.onStandby();
+            myCompasButton.setImageBitmap(offOrientationBitmap);
             isClicked = false;
             LOG.info("Orientation off");
         }

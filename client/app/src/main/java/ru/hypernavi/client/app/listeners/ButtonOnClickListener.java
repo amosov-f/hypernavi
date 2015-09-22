@@ -15,19 +15,27 @@ public class ButtonOnClickListener implements View.OnClickListener {
 
     private static final Logger LOG = Logger.getLogger(ButtonOnClickListener.class.getName());
     private final LocationManager myLocationManager;
-    private final Long myTimeCorrection;
+    private Long myTimeCorrection;
     private final AppActivity myAppActivity;
 
-    public ButtonOnClickListener(final LocationManager locationManager, final Long timeCorrection,
+    public ButtonOnClickListener(final LocationManager locationManager,
                                  final AppActivity appActivity)
     {
         myLocationManager = locationManager;
-        myTimeCorrection = timeCorrection;
+        myTimeCorrection = null;
         myAppActivity = appActivity;
+    }
+
+    public void setTimeCorrection(final Long timeCorrection) {
+        myTimeCorrection = timeCorrection;
     }
 
     @Override
     public void onClick(final View v) {
+        myAppActivity.moveImageToStartPoint();
+        if (myTimeCorrection == null) {
+            return;
+        }
         // TODO amosov-f: move location request code to one place
         Location location = myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (!PositionUpdater.isActual(location, myTimeCorrection)) {
@@ -40,6 +48,4 @@ public class ButtonOnClickListener implements View.OnClickListener {
         LOG.info("location time is " + (location.getTime() + myTimeCorrection));
         LOG.info("util time is     " + (new Date()).getTime());
     }
-
-
 }

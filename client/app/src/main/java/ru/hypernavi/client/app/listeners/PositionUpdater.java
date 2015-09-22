@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,7 +22,6 @@ public class PositionUpdater implements LocationListener {
     private static final Logger LOG = Logger.getLogger(PositionUpdater.class.getName());
     //noinspection MagicNumber
     private static final int FIVE_MINUTES = 5 * 1000 * 60;
-    private static final String POINT_PATH = "/location_icon.png";
 
     @NotNull
     private final LocationManager manager;
@@ -31,27 +29,25 @@ public class PositionUpdater implements LocationListener {
     private final ImageView myView;
     private Long timeCorrection;
 
-    private final ImageView pointButton;
+    private final ButtonOnClickListener buttonOnClickListener;
     private final AppActivity appActivity;
 
     public PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView,
-                           @NotNull final ImageView pointButton, @NotNull final AppActivity appActivity)
+                           @NotNull final ButtonOnClickListener pointButtonListener, @NotNull final AppActivity appActivity)
     {
         this.manager = manager;
         myView = imageView;
-        this.pointButton = pointButton;
-        this.pointButton.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(POINT_PATH)));
+        buttonOnClickListener = pointButtonListener;
         this.appActivity = appActivity;
         this.timeCorrection = null;
     }
 
     @Override
     public void onLocationChanged(@NotNull final Location location) {
-
         if (timeCorrection == null) {
             timeCorrection = (new Date()).getTime() - location.getTime();
             LOG.warning("Time correction is " + timeCorrection);
-            registerButtonListener(manager);
+            buttonOnClickListener.setTimeCorrection(timeCorrection);
         }
         LOG.info("onLocationChanged");
 
@@ -71,11 +67,6 @@ public class PositionUpdater implements LocationListener {
 
     @Override
     public void onProviderDisabled(@NotNull final String provider) {
-    }
-
-    private void registerButtonListener(final LocationManager locationManager) {
-        final ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener(locationManager, timeCorrection, appActivity);
-        pointButton.setOnClickListener(buttonOnClickListener);
     }
 
     public static boolean isActual(final Location location, final Long timeCorrection) {
