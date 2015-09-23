@@ -29,7 +29,9 @@ public class PositionUpdater implements LocationListener {
     private final ImageView myView;
     private Long timeCorrection;
 
+    @NotNull
     private final ButtonOnClickListener buttonOnClickListener;
+    @NotNull
     private final AppActivity appActivity;
 
     public PositionUpdater(@NotNull final LocationManager manager, @NotNull final ImageView imageView,

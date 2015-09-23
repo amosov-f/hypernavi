@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import ru.hypernavi.client.app.AppActivity;
 
 /**
  * Created by Acer on 14.08.2015.
@@ -20,15 +21,20 @@ public class ViewOnTouchListener implements View.OnTouchListener {
     private final ImageView myView;
     @NotNull
     private final OrientationEventListener myOrientationEventListener;
+    @NotNull
+    private final AppActivity myAppActivity;
 
     float downX;
     float downY;
     int totalX;
     int totalY;
 
-    public ViewOnTouchListener(@NotNull final ImageView imageView, @NotNull final OrientationEventListener orientationEventListener /*@NotNull final AppActivity appActivity*/) {
+    public ViewOnTouchListener(@NotNull final ImageView imageView, @NotNull final OrientationEventListener orientationEventListener,
+                               @NotNull final AppActivity appActivity)
+    {
         myView = imageView;
         myOrientationEventListener = orientationEventListener;
+        myAppActivity = appActivity;
     }
 
     private int getMaxScroll(final Bitmap myScheme) {
@@ -46,6 +52,9 @@ public class ViewOnTouchListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
         LOG.info("new Touch");
+
+        myAppActivity.setOffPointButton();
+
         final Bitmap myScheme = ((BitmapDrawable) myView.getDrawable()).getBitmap();
 
         switch (event.getAction()) {

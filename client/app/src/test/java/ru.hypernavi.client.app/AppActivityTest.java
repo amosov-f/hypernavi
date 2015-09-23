@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.widget.ImageView;
-import android.widget.ZoomButton;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,19 +48,19 @@ public final class AppActivityTest {
     public void shouldNotBeNull() {
         assertNotNull(appActivity);
 
-        final ZoomButton zoomIn = (ZoomButton) appActivity.findViewById(R.id.zoomButton1);
+        final ImageView zoomIn = (ImageView) appActivity.findViewById(R.id.zoomInButton);
         assertNotNull(zoomIn);
 
-        final ZoomButton zoomOut = (ZoomButton) appActivity.findViewById(R.id.zoomButton);
+        final ImageView zoomOut = (ImageView) appActivity.findViewById(R.id.zoomOutButton);
         assertNotNull(zoomOut);
 
         final ImageView imageView = (ImageView) appActivity.findViewById(R.id.imageView);
         assertNotNull(imageView);
 
-        final ImageView orientationButton = (ImageView) appActivity.findViewById(R.id.imageView2);
+        final ImageView orientationButton = (ImageView) appActivity.findViewById(R.id.compasButton);
         assertNotNull(orientationButton);
 
-        final ImageView pointButton = (ImageView) appActivity.findViewById(R.id.imageView3);
+        final ImageView pointButton = (ImageView) appActivity.findViewById(R.id.pointButton);
         assertNotNull(pointButton);
 
     }

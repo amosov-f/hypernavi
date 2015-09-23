@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:weightSum="1" android:orientation="vertical" style="@android:style/Theme.NoTitleBar">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="1" android:orientation="vertical" style="@android:style/Theme.NoTitleBar">
 
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-                    android:id="@+id/imageView"/>
-    <ZoomButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/zoomButton"
-            android:src="@android:drawable/btn_minus"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:scaleType="centerInside" android:paddingRight="27dp"
-            android:paddingTop="0dp"/>
-    <ZoomButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/zoomButton1"
-                android:src="@android:drawable/btn_plus"
-                android:scaleType="centerInside" android:paddingRight="-5dp" android:layout_above="@+id/zoomButton"
-                android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:paddingBottom="20dp"/>
+            android:id="@+id/imageView"/>
 
     <TextView
             android:id="@+id/textView"
@@ -29,25 +16,41 @@
             android:layout_width="match_parent"
             android:autoLink="web"
             android:singleLine="false"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:linksClickable="true"
             android:textColor="#007FCC"
             android:text="Открыть карту"
-            android:layout_toStartOf="@+id/zoomButton1"
-            android:layout_alignParentTop="true" android:layout_toRightOf="@+id/imageView2" android:layout_toEndOf="@+id/imageView2"/>
+            android:layout_alignParentTop="true" android:layout_toRightOf="@+id/compasButton"
+            android:layout_toEndOf="@+id/compasButton"/>
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView2" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:id="@+id/compasButton" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:padding="25dp"
-            android:scaleType="fitXY" android:maxHeight="25dp" android:maxWidth="25dp" android:longClickable="false"/>
+            android:scaleType="centerInside"
+            android:longClickable="false"/>
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
-            android:maxWidth="25dp" android:minHeight="25dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/pointButton"
             android:padding="25dp" android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="false" android:scaleType="centerInside"
+            android:src="@drawable/ic_launcher"/>
+    <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:id="@+id/zoomOutButton"
+            android:layout_centerVertical="true" android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+             android:scaleType="centerInside"
+             android:src="@drawable/ic_launcher" android:paddingBottom="3dp" android:paddingRight="24dp"/>
+    <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:id="@+id/zoomInButton"
+            android:src="@drawable/ic_launcher"
+            android:layout_above="@+id/zoomOutButton" android:layout_alignRight="@+id/zoomOutButton"
+            android:layout_alignEnd="@+id/zoomOutButton"
+            android:scaleType="centerInside" android:paddingTop="3dp" android:paddingRight="24dp"/>
 
 
     <!-- <RelativeLayout
@@ -59,38 +62,34 @@
 </RelativeLayout>
 
 
-
-
-
-
-<!--
-android:layout_alignParentEnd="true"
-        <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/LinearLayout1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="5dp" >
-    <!-
-    <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:id="@+id/scrollView" android:layout_alignParentLeft="true" android:layout_marginLeft="0dp"
-            android:layout_alignParentTop="true" android:layout_marginTop="0dp" android:layout_alignParentBottom="true">
-
-            <ImageView
+        <!--
+        android:layout_alignParentEnd="true"
+                <?xml version="1.0" encoding="utf-8"?>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/LinearLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="5dp" >
+            <!-
+            <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:id="@+id/imageView"/>
+                    android:layout_height="500dp"
+                    android:id="@+id/scrollView" android:layout_alignParentLeft="true" android:layout_marginLeft="0dp"
+                    android:layout_alignParentTop="true" android:layout_marginTop="0dp" android:layout_alignParentBottom="true">
 
-    </ScrollView>
+                    <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerInside"
+                            android:id="@+id/imageView"/>
 
-    <ZoomControls android:id="@+id/zoomControls1" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:layout_weight="1.17" android:layout_gravity="center_horizontal"
-                  android:layout_alignParentTop="true" android:layout_alignParentLeft="true" android:layout_alignParentStart="true">
-    </ZoomControls>
+            </ScrollView>
 
-</RelativeLayout>
--->
+            <ZoomControls android:id="@+id/zoomControls1" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:layout_weight="1.17" android:layout_gravity="center_horizontal"
+                          android:layout_alignParentTop="true" android:layout_alignParentLeft="true" android:layout_alignParentStart="true">
+            </ZoomControls>
+
+        </RelativeLayout>
+        -->

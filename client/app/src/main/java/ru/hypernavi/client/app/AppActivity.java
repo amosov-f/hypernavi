@@ -25,7 +25,8 @@ import ru.hypernavi.util.GeoPoint;
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
-    private static final String POINT_PATH = "/location_icon.png";
+    public static final String ZOOM_IN_PATH = "/zoom_in.png";
+    public static final String ZOOM_OUT_PATH = "/zoom_out.png";
 
     private InfoResponse infoResponse;
     private Bitmap originScheme;
@@ -36,7 +37,6 @@ public final class AppActivity extends Activity {
     private LocationManager locationManager;
     private PositionUpdater positionUpdater;
 
-    private ImageView pointButton;
     private ButtonOnClickListener buttonOnClickListener;
 
     private OrientationEventListener orientationEventListener;
@@ -70,7 +70,7 @@ public final class AppActivity extends Activity {
         orientationEventListener = new OrientationEventListener(marketImageView, this);
         orientationEventListener.onStandby();
 
-        final ImageView compasButton = (ImageView) findViewById(R.id.imageView2);
+        final ImageView compasButton = (ImageView) findViewById(R.id.compasButton);
         compasOnClickListener = new CompasOnClickListener(this, orientationEventListener, compasButton);
         compasButton.setOnClickListener(compasOnClickListener);
 
@@ -85,23 +85,22 @@ public final class AppActivity extends Activity {
 
     private void registerButtonListener() {
         buttonOnClickListener = new ButtonOnClickListener(locationManager, this);
-        pointButton = (ImageView) findViewById(R.id.imageView3);
-        pointButton.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(POINT_PATH)));
-        pointButton.setOnClickListener(buttonOnClickListener);
     }
 
     private void registerZoomListeners() {
-        final ZoomButton zoomPlus = (ZoomButton) findViewById(R.id.zoomButton1);
-        final ZoomButton zoomMinus = (ZoomButton) findViewById(R.id.zoomButton);
-        final ZoomClickListener zoomInClickListener = new ZoomClickListener(marketImageView, true);
-        final ZoomClickListener zoomOutClickListener = new ZoomClickListener(marketImageView, false);
+        final ImageView zoomIn = (ImageView) findViewById(R.id.zoomInButton);
+        zoomIn.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(ZOOM_IN_PATH)));
+        final ImageView zoomOut = (ImageView) findViewById(R.id.zoomOutButton);
+        zoomOut.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(ZOOM_OUT_PATH)));
+        final ZoomClickListener zoomInClickListener = new ZoomClickListener(marketImageView, true, this);
+        final ZoomClickListener zoomOutClickListener = new ZoomClickListener(marketImageView, false, this);
 
-        zoomPlus.setOnClickListener(zoomInClickListener);
-        zoomMinus.setOnClickListener(zoomOutClickListener);
+        zoomIn.setOnClickListener(zoomInClickListener);
+        zoomOut.setOnClickListener(zoomOutClickListener);
     }
 
     private void registerTouchListeners() {
-        marketImageView.setOnTouchListener(new ViewOnTouchListener(marketImageView, orientationEventListener));
+        marketImageView.setOnTouchListener(new ViewOnTouchListener(marketImageView, orientationEventListener, this));
     }
 
     private void registerGPSListeners() {
@@ -170,6 +169,7 @@ public final class AppActivity extends Activity {
             //
             final Hypermarket closestMarket = infoResponse.getClosestMarkets().get(0);
             hasOrientation = closestMarket.hasOrientation();
+            LOG.info("is oriented? " + hasOrientation);
             if (hasOrientation) {
                 currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
             }
@@ -238,6 +238,10 @@ public final class AppActivity extends Activity {
         marketImageView.setScaleX(1);
         marketImageView.setScaleY(1);
         //marketImageView.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream("/file_not_found.jpg")));
-        LOG.info("image have moved to start point. 1488");
+        LOG.info("image have moved to start point");
+    }
+
+    public void setOffPointButton() {
+        buttonOnClickListener.setOffPointButton();
     }
 }

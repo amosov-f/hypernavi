@@ -1,5 +1,7 @@
 package ru.hypernavi.client.app.listeners;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -23,7 +25,9 @@ public class OrientationEventListener implements SensorEventListener {
 
     private static final long HALF_A_SECOND = 500000000L;
 
+    @NotNull
     private final ImageView myImageView;
+    @NotNull
     private final AppActivity myAppActivity;
 
     private float userAzimuthInDegrees;
@@ -39,7 +43,7 @@ public class OrientationEventListener implements SensorEventListener {
     private boolean isFirstSensorChangedWithThisMarket;
     private float mapAzimuthInDegrees;
 
-    public OrientationEventListener(final ImageView imageView, final AppActivity appActivity) {
+    public OrientationEventListener(@NotNull final ImageView imageView, @NotNull final AppActivity appActivity) {
         myImageView = imageView;
         myAppActivity = appActivity;
         sensorManager = (SensorManager) myAppActivity.getSystemService(Context.SENSOR_SERVICE);
