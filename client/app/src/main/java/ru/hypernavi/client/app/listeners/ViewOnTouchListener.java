@@ -41,14 +41,6 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         return Math.max(myScheme.getWidth(), myScheme.getHeight());
     }
 
-    private int newScroll(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
-        return inBorder ? total == max ? 0 : notReachedMax ? scroll : max - (total - scroll) : scroll;
-    }
-
-    private int newTotal(final boolean inBorder, final boolean notReachedMax, final int max, final int total, final int scroll) {
-        return inBorder ? total == max ? total : notReachedMax ? total + scroll : max : total;
-    }
-
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
         LOG.info("new Touch");
@@ -86,22 +78,6 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         final float currentY = event.getY();
         int scrollByX = (int) (downX - currentX);
         int scrollByY = (int) (downY - currentY);
-
-        // scrolling to left side of image (pic moving to the right)
-        scrollByX = newScroll(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
-        totalX = newTotal(currentX > downX, totalX > maxLeft, maxLeft, totalX, scrollByX);
-
-        // scrolling to right side of image (pic moving to the left)
-        scrollByX = newScroll(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
-        totalX = newTotal(currentX < downX, totalX < maxRight, maxRight, totalX, scrollByX);
-
-        // scrolling to top of image (pic moving to the bottom)
-        scrollByY = newScroll(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
-        totalY = newTotal(currentY > downY, totalY > maxTop, maxTop, totalY, scrollByY);
-
-        // scrolling to bottom of image (pic moving to the top)
-        scrollByY = newScroll(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
-        totalY = newTotal(currentY < downY, totalY < maxBottom, maxBottom, totalY, scrollByY);
 
         final int realScrollByX = (int) (scrollByX * Math.cos(myOrientationEventListener.getMarketUserAngle()) +
                                          scrollByY * Math.sin(myOrientationEventListener.getMarketUserAngle())
