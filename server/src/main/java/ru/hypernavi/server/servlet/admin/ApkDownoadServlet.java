@@ -16,7 +16,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 /**
  * Created by Константин on 23.09.2015.
  */
-@WebServlet(name = "apk download", value = "/hyperhavi.apk")
+@WebServlet(name = "apk download", value = "/hypernavi.apk")
 public class ApkDownoadServlet extends AbstractHttpService {
     @Override
     public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
