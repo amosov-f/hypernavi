@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:autoLink="web"
             android:singleLine="false"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:linksClickable="true"
             android:textColor="#007FCC"
             android:text="Открыть карту"
