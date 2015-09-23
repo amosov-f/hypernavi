@@ -5,8 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.logging.Logger;
 
 
-import android.graphics.*;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,17 +35,11 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         myAppActivity = appActivity;
     }
 
-    private int getMaxScroll(final Bitmap myScheme) {
-        return Math.max(myScheme.getWidth(), myScheme.getHeight());
-    }
-
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
         LOG.info("new Touch");
 
         myAppActivity.setOffPointButton();
-
-        final Bitmap myScheme = ((BitmapDrawable) myView.getDrawable()).getBitmap();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -56,7 +48,7 @@ public class ViewOnTouchListener implements View.OnTouchListener {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                moveActionHandler(event, myScheme);
+                moveActionHandler(event);
                 break;
 
             default:
@@ -66,18 +58,12 @@ public class ViewOnTouchListener implements View.OnTouchListener {
         return true;
     }
 
-    private void moveActionHandler(final MotionEvent event, final Bitmap scheme) {
-        final int maxRight = getMaxScroll(scheme);
-        final int maxLeft = -maxRight;
-        final int maxBottom = getMaxScroll(scheme);
-        final int maxTop = -maxBottom;
-
-        LOG.info("maxLeft: " + maxLeft + " maxTop: " + maxTop);
+    private void moveActionHandler(final MotionEvent event) {
 
         final float currentX = event.getX();
         final float currentY = event.getY();
-        int scrollByX = (int) (downX - currentX);
-        int scrollByY = (int) (downY - currentY);
+        final int scrollByX = (int) (downX - currentX);
+        final int scrollByY = (int) (downY - currentY);
 
         final int realScrollByX = (int) (scrollByX * Math.cos(myOrientationEventListener.getMarketUserAngle()) +
                                          scrollByY * Math.sin(myOrientationEventListener.getMarketUserAngle())
