@@ -7,6 +7,9 @@
 <body>
     Server initialization time: ${server_init_time}<br>
     Попробуйте нашу пиццу!<br>
-    <a href="http://hypernavi.net:8111/repository/download/Hypernavi_ReleaseToDev/.lastSuccessful/app-1.0-SNAPSHOT.apk">hypernavi.apk</a>
+
+    <form name="loginForm" method="get" action="/hypernavi.apk">
+        <input type="submit" value="Download Hypernavi.apk"/> <br/>
+    </form>
 </body>
 </html>
