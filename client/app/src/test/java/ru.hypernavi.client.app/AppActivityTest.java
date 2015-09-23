@@ -41,7 +41,7 @@ public final class AppActivityTest {
 
     @Test
     public void shouldHaveCorrectAppName() {
-        assertThat(appActivity.getResources().getString(R.string.app_name), equalTo("app"));
+        assertThat(appActivity.getResources().getString(R.string.app_name), equalTo("Hypernavi"));
     }
 
     @Test
