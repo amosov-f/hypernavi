@@ -27,9 +27,9 @@ public class TestServlet extends AbstractHttpService {
         resp.setStatus(HttpStatus.SC_OK);
         resp.setContentType(MediaType.ANY_TEXT_TYPE.type());
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        final String example = "Тестовый текст.";
+        final String example = "Русский язык.";
         LOG.info(example);
-        IOUtils.write(example.getBytes(StandardCharsets.UTF_8.name()), resp.getOutputStream());
+        IOUtils.write(example, resp.getOutputStream(), StandardCharsets.UTF_8.name());
     }
 
 }
