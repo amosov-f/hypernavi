@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 
 import com.google.common.net.MediaType;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
@@ -29,7 +28,8 @@ public class TestServlet extends AbstractHttpService {
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
         final String example = "Русский язык.";
         LOG.info(example);
-        IOUtils.write(example, resp.getOutputStream(), StandardCharsets.UTF_8.name());
+        //IOUtils.write(example,
+        resp.getOutputStream().write(example.getBytes());//, StandardCharsets.UTF_8.name());
     }
 
 }
