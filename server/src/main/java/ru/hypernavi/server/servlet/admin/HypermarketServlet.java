@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
 import org.apache.commons.io.IOUtils;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
@@ -20,6 +21,6 @@ public class HypermarketServlet extends AbstractHttpService {
     @Override
     public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
-        resp.getOutputStream().write(IOUtils.toByteArray(HypermarketServlet.class.getResourceAsStream("/hypermarket.html")));
+        IOUtils.copy(HypermarketServlet.class.getResourceAsStream("/hypermarket.html"), resp.getOutputStream());
     }
 }

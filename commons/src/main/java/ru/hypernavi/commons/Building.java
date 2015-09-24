@@ -91,7 +91,6 @@ public class Building {
         }
 
         if (location == null || address == null) {
-            LOG.warn("O_o");
             return null;
         }
 

@@ -5,21 +5,20 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.net.MediaType;
+
 import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.entity.ContentType;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
-import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.commons.InfoResponceSerializer;
+import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.GeoPoint;
@@ -73,8 +72,8 @@ public class SchemaInfoServlet extends AbstractHttpService {
         }
 
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.JSON_UTF_8.type());
-        final OutputStream out = response.getOutputStream();
-        out.write(json.toString().getBytes());
+        response.setContentType(ContentType.APPLICATION_JSON.getMimeType());
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.getOutputStream().write(json.toString().getBytes(StandardCharsets.UTF_8.name()));
     }
 }

@@ -25,6 +25,6 @@ public class ApkDownoadServlet extends AbstractHttpService {
         final String myCookie = "RememberMe=3506402^1#-7804521650216415278";
         urlConn.setRequestProperty("Cookie", myCookie);
         urlConn.connect();
-        resp.getOutputStream().write(IOUtils.toByteArray(urlConn.getInputStream()));
+        IOUtils.copy(urlConn.getInputStream(), resp.getOutputStream());
     }
 }
