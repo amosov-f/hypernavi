@@ -29,7 +29,7 @@ public class TestServlet extends AbstractHttpService {
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
         final String example = "Тестовый текст.";
         LOG.info(example);
-        IOUtils.write(example.getBytes(), resp.getOutputStream());
+        IOUtils.write(example.getBytes(StandardCharsets.UTF_8.name()), resp.getOutputStream());
     }
 
 }
