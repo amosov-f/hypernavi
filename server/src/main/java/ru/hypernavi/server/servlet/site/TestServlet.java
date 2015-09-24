@@ -6,14 +6,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 
-import com.google.common.net.MediaType;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.entity.ContentType;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
@@ -26,17 +24,17 @@ public class TestServlet extends AbstractHttpService {
     @Override
     public final void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpStatus.SC_OK);
-        resp.setContentType(MediaType.ANY_TEXT_TYPE.type());
+        resp.setContentType(ContentType.TEXT_PLAIN.getMimeType());
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
         final String example = "Русский язык.\n";
         LOG.info(example);
-        final OutputStream out = resp.getOutputStream();
+        /*final OutputStream out = resp.getOutputStream();
         out.write(example.getBytes(StandardCharsets.UTF_8.name()));
         out.write(example.getBytes());
         IOUtils.write(example.getBytes(StandardCharsets.UTF_8.name()), out);
         IOUtils.write(example, out, StandardCharsets.UTF_8.name());
-        IOUtils.write(example, out);
-
+        IOUtils.write(example, out);*/
+        resp.getWriter().print(example);//.write(example);
     }
 
 }
