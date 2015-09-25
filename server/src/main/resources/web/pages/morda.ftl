@@ -33,7 +33,7 @@
 
                     <div class="carousel-inner">
                         <div class="item active">
-                            <img src="http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg"
+                            <img src="http://hypernavi.net/img/page1.jpg"
                                  alt="Screen 1">
 
                             <div class="carousel-caption">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="item">
-                            <img src="https://psv4.vk.me/c612419/u87570609/docs/df764c1b12ea/Screenshot_2015-09-25-16-27-04.jpg"
+                            <img src="http://hypernavi.net/img/page2.jpg"
                                  alt="Screen 2">
 
                             <div class="carousel-caption">
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <div class="item">
-                            <img src="https://cs7062.vk.me/c610719/u87570609/docs/9107da58f22a/Screenshot_2015-09-25-16-41-30.jpg"
+                            <img src="http://hypernavi.net/img/page3.jpg"
                                  alt="Screen 3">
 
                             <div class="carousel-caption">
