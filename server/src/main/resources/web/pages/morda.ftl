@@ -12,34 +12,92 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-<div class="container">
-    <div class="page-header" align="center">
-        <h1>
-            HyperNavi<br>
-            <small>навигатор по гипермаркетам</small>
-        </h1>
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <div align="center">
+                    <h1>
+                        HyperNavi<br>
+                        <small>навигатор по гипермаркетам</small>
+                    </h1>
+                </div>
+                <div>
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                    </ol>
 
-    </div>
-    <div class="col-sm-6 col-xs-12" align="center">
-        <h4>Сервер стартанул ${server_init_time}</h4>
 
-        <div class="col-md-5 col-sm-12 col-xs-5 form-group">
-            <div align="center">
-                <a class="btn btn-default" href="https://github.com/amosov-f/hypernavi">Проект на гитхабе</a>
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg"
+                                 alt="Screen 1">
+
+                            <div class="carousel-caption">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div align="center">
+                                            <a class="btn btn-default" href="https://github.com/amosov-f/hypernavi">Link to GitHub</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6"></div>
+                                    <div class="col-sm-3">
+                                        <a class="btn btn-primary  btn-lg" href="/hypernavi.apk">Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="https://psv4.vk.me/c612419/u87570609/docs/df764c1b12ea/Screenshot_2015-09-25-16-27-04.jpg"
+                                 alt="Screen 2">
+
+                            <div class="carousel-caption">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div align="center">
+                                            <a class="btn btn-default" href="https://github.com/amosov-f/hypernavi">Link to GitHub</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6"></div>
+                                    <div class="col-sm-3">
+                                        <a class="btn btn-primary  btn-lg" href="/hypernavi.apk">Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="https://cs7062.vk.me/c610719/u87570609/docs/9107da58f22a/Screenshot_2015-09-25-16-41-30.jpg"
+                                 alt="Screen 3">
+
+                            <div class="carousel-caption">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div align="center">
+                                            <a class="btn btn-default" href="https://github.com/amosov-f/hypernavi">Link to GitHub</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6"></div>
+                                    <div class="col-sm-3">
+                                        <a class="btn btn-primary  btn-lg" href="/hypernavi.apk">Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <div class="col-md-5 col-sm-12 col-xs-7 form-group">
-            <a class="btn btn-primary  btn-lg" href="/hypernavi.apk">Скачать свежачок!</a>
-        </div>
-    </div>
-    <div id="report" class="col-sm-6 col-xs-12">
-        <div class="col-xs-8">
-            <img src="http://www.okmarket.ru/static/core/images/okey-main-logo-ru.png" class="img-responsive img-rounded">
-            <img src="http://toplogos.ru/images/logo-lenta.jpg" class="img-responsive img-rounded">
-        </div>
-        <div class="col-xs-4">
-            <img src="http://toplogos.ru/images/logo-auchan.png" class="img-responsive img-rounded">
         </div>
     </div>
 </div>
