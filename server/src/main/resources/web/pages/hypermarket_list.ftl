@@ -12,38 +12,39 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-In database ${number} hypermarkets.
+<h3>In database ${number} hypermarkets.</h3>
 
-<table border="0" style="width:100%">
-    <tr>
-        <th>Поле:</th>
-        <th>Значение:</th>
-    </tr>
+<div class="panel-group" id="accordion">
 <#list hypermarkets as hypermarket>
-    <tr>
-        <td>ID</td>
-        <td>${hypermarket.id}</td>
-    </tr>
-    <tr>
-        <td>Адрес</td>
-        <td>${hypermarket.address}</td>
-    </tr>
-    <tr>
-        <td>Координаты(долгота, широта)</td>
-        <td>${hypermarket.location}</td>
-    </tr>
-    <tr>
-        <td>Картинка</td>
-        <td><a href="${hypermarket.path}">link</a></td>
-    </tr>
-    <tr>
-        <td>-------------------------------------------------------</td>
-        <td>-------------------------------------------------------</td>
-    </tr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#${hypermarket.id}">
+                    Гипермаркет #${hypermarket.id}
+                </a>
+            </h4>
+        </div>
+        <div id="${hypermarket.id}" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table-striped" style="width:100%">
+                    <tr>
+                        <td>Адрес</td>
+                        <td>${hypermarket.address}</td>
+                    </tr>
+                    <tr>
+                        <td>Координаты(долгота, широта)</td>
+                        <td>${hypermarket.location}</td>
+                    </tr>
+                    <tr>
+                        <td>Картинка</td>
+                        <td><a href="${hypermarket.path}">link</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </#list>
-
-</table>
-
+</div>
 
 </body>
 </html>
