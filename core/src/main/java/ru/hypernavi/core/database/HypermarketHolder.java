@@ -69,4 +69,10 @@ public class HypermarketHolder {
     public List<Hypermarket> getClosest(final GeoPoint position, final int k) {
         return markets.find(position, k);
     }
+
+    @NotNull
+    public List<Hypermarket> getAll() {
+        return markets.getAll();
+    }
+
 }

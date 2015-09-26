@@ -1,13 +1,10 @@
 package ru.hypernavi.core.database;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 
 import java.util.List;
 
 
-import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
 
@@ -23,6 +20,8 @@ public interface MapStructure<T extends Positioned> {
         }
         return closest.get(0);
     }
+
+    List<T> getAll();
 
     @NotNull
     default List<T> findAll(final GeoPoint possition) {

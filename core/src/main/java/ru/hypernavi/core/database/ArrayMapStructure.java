@@ -27,6 +27,12 @@ public class ArrayMapStructure<T extends Positioned> implements MapStructure<T> 
 
     @NotNull
     @Override
+    public List<T> getAll() {
+        return listPoints;
+    }
+
+    @NotNull
+    @Override
     public List<T> find(final GeoPoint position, final int number) {
         final int k = number > size() ? size() : number;
 
