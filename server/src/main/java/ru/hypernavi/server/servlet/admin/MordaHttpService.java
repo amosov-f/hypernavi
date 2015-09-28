@@ -14,17 +14,8 @@ import ru.hypernavi.server.servlet.HtmlPageHttpService;
  */
 @WebServlet(name = "morda", value = "/")
 public final class MordaHttpService extends HtmlPageHttpService {
-//    @NotNull
-//    private final LocalDateTime serverInitTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
-
     @Inject
     public MordaHttpService(@NotNull final Configuration templatesConfig) {
         super(templatesConfig, "morda.ftl");
     }
-
-//    @NotNull
-//    @Override
-//    public Object getDataModel(@NotNull final HttpServletRequest req) {
-//        return ImmutableMap.of("server_init_time", serverInitTime);
-//    }
 }

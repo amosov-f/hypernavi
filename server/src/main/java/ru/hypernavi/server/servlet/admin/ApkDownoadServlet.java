@@ -22,8 +22,7 @@ public class ApkDownoadServlet extends AbstractHttpService {
     public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
         final URL myUrl = new URL("http://hypernavi.net:8111/repository/download/Hypernavi_ReleaseToDev/.lastSuccessful/app-1.0-SNAPSHOT.apk");
         final URLConnection urlConn = myUrl.openConnection();
-        final String myCookie = "RememberMe=3506402^1#-7804521650216415278";
-        urlConn.setRequestProperty("Cookie", myCookie);
+        urlConn.setRequestProperty("Cookie", "RememberMe=3506402^1#-7804521650216415278");
         urlConn.connect();
         IOUtils.copy(urlConn.getInputStream(), resp.getOutputStream());
     }
