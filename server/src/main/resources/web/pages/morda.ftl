@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
+<style type="text/css">
+    img.fit {
+        max-width: 1000px;
+        max-height: 500px;
+    }
+</style>
 <body>
 
 <div class="site-wrapper">
@@ -17,8 +23,11 @@
                 HyperNavi<br>
                 <small>навигатор по гипермаркетам</small>
             </h1>
-            <a class="btn btn-primary  btn-default" href="/hypernavi.apk">Download</a>
-            <a class="btn btn-default" href="https://github.com/amosov-f/hypernavi">Link to GitHub</a>
+            <a class="btn btn-primary  btn-default bth-lg" href="/hypernavi.apk"><b>Download</b></a>
+            <a class="btn btn-default bth-lg" href="https://github.com/amosov-f/hypernavi"><img src="https://github.com/fluidicon.png"
+                                                                                                height="18" width="18"
+                                                                                                alt="Logo GitHub"><b> Link to
+                GitHub</b></a>
         </div>
         <br>
 
@@ -33,19 +42,16 @@
 
 
                     <div class="carousel-inner">
-                        <div class="item active">
-                            <img src="http://hypernavi.net/img/page1.jpg"
-                                 alt="Screen 1">
+                        <div class="item active" align="center">
+                            <img src="http://hypernavi.net/img/page1.jpg" class="fit" alt="Screen 1">
                         </div>
 
-                        <div class="item">
-                            <img src="http://hypernavi.net/img/page2.jpg"
-                                 alt="Screen 2">
+                        <div class="item" align="center">
+                            <img src="http://hypernavi.net/img/page2.jpg" class="fit" alt="Screen 2">
                         </div>
 
-						<div class="item">
-                            <img src="http://hypernavi.net/img/page3.jpg"
-                                 alt="Screen 3">
+                        <div class="item" align="center">
+                            <img src="http://hypernavi.net/img/page3.jpg" class="fit" alt="Screen 3">
                         </div>
                     </div>
 
