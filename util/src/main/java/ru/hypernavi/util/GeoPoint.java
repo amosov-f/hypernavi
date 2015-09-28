@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 /**
  * User: amosov-f
  * Date: 26.11.14
@@ -42,7 +43,7 @@ public final class GeoPoint {
 
         //noinspection MagicNumber
         final double answer = Math.pow(Math.sin((aLatitude - bLatitude) / 2), 2) + Math.cos(aLatitude) * Math.cos(bLatitude)
-                * Math.pow(Math.sin((aLongitude - bLongitude) / 2), 2);
+                                                                             * Math.pow(Math.sin((aLongitude - bLongitude) / 2), 2);
         return 2 * EARTH_RADIUS * Math.asin(Math.sqrt(answer));
     }
 

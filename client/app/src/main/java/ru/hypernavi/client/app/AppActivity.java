@@ -3,6 +3,7 @@ package ru.hypernavi.client.app;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -18,6 +19,7 @@ import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
 import ru.hypernavi.client.app.util.InfoRequestHandler;
+import ru.hypernavi.client.app.util.LogoLoader;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.util.GeoPoint;
@@ -27,12 +29,15 @@ public final class AppActivity extends Activity {
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";
     public static final String ZOOM_IN_PATH = "/zoom_in.png";
     public static final String ZOOM_OUT_PATH = "/zoom_out.png";
+    public static final String YANDEX_PATH = "/yandex_button.png";
 
     private InfoResponse infoResponse;
     private Bitmap originScheme;
 
     private ImageView marketImageView;
-    private TextView textView;
+    private ImageView logoImageView;
+    private TextView distanceText;
+    private ImageView yandexButton;
 
     private LocationManager locationManager;
     private PositionUpdater positionUpdater;
@@ -58,6 +63,9 @@ public final class AppActivity extends Activity {
 
         setContentView(R.layout.main);
         marketImageView = (ImageView) findViewById(R.id.imageView);
+        logoImageView = (ImageView) findViewById(R.id.logoView);
+        yandexButton = (ImageView) findViewById(R.id.yandexButton);
+        distanceText = (TextView) findViewById(R.id.distanceView);
 
         cache = new CacheWorker(this);
         handler = new InfoRequestHandler(this, cache);
@@ -140,9 +148,8 @@ public final class AppActivity extends Activity {
 
     private void registerAdressListeners() {
         adressListener = new AdressListener(this);
-
-        textView = (TextView) findViewById(R.id.textView);
-        textView.setOnClickListener(adressListener);
+        yandexButton.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream(YANDEX_PATH)));
+        yandexButton.setOnClickListener(adressListener);
     }
 
     private void drawDisplayImage(final boolean takeItFromCache) {
@@ -166,8 +173,11 @@ public final class AppActivity extends Activity {
                 LOG.info(hypermarket.getAddress());
                 LOG.info(Double.toString(GeoPoint.distance(mylocation, marketLocation)));
             }
-            //
             final Hypermarket closestMarket = infoResponse.getClosestMarkets().get(0);
+            final GeoPoint marketLocation = closestMarket.getLocation();
+            distanceText.setText(new DecimalFormat("#.#").format(GeoPoint.distance(mylocation, marketLocation)) + "км");
+            //distanceText.setVisibility(distanceText.INVISIBLE);
+            //
             hasOrientation = closestMarket.hasOrientation();
             LOG.info("is oriented? " + hasOrientation);
             if (hasOrientation) {
@@ -181,6 +191,8 @@ public final class AppActivity extends Activity {
         if (originScheme == null) {
             originScheme = cache.loadCachedOrDefaultScheme();
             LOG.warning("Problems with scheme above");
+        } else {
+            (new LogoLoader()).loadLogo(infoResponse.getClosestMarkets().get(0).getType(), logoImageView);
         }
         if (!oldScheme.sameAs(originScheme)) {
             moveImageToStartPoint();
@@ -237,7 +249,6 @@ public final class AppActivity extends Activity {
         marketImageView.scrollTo(0, 0);
         marketImageView.setScaleX(1);
         marketImageView.setScaleY(1);
-        //marketImageView.setImageBitmap(BitmapFactory.decodeStream(getClass().getResourceAsStream("/file_not_found.jpg")));
         LOG.info("image have moved to start point");
     }
 

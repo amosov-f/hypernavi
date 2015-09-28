@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,6 +64,14 @@ public final class AppActivityTest {
         final ImageView pointButton = (ImageView) appActivity.findViewById(R.id.pointButton);
         assertNotNull(pointButton);
 
+        final ImageView logoView = (ImageView) appActivity.findViewById(R.id.logoView);
+        assertNotNull(logoView);
+
+        final ImageView yandexView = (ImageView) appActivity.findViewById(R.id.yandexButton);
+        assertNotNull(yandexView);
+
+        final TextView distanceView = (TextView) appActivity.findViewById(R.id.distanceView);
+        assertNotNull(distanceView);
     }
 
     @Test
