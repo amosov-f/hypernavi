@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-10-10/Tambov.jpg"
   },
   "build": {
+    "number": "115Б",
     "address": "Тамбов, Базарная улица, 115Б",
+    "city": "городской округ Тамбов",
+    "line": "Базарная улица",
     "location": {
       "lon": 41.444494,
       "lat": 52.728266

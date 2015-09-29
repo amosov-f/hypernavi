@@ -54,6 +54,90 @@ public class GeocoderParser {
     }
 
     @Nullable
+    public String getCity() {
+        String address;
+        try {
+            String location = "";
+            if (response != null) {
+                location = response.getJSONObject("response")
+                        .getJSONObject("GeoObjectCollection")
+                        .getJSONArray("featureMember")
+                        .getJSONObject(0)
+                        .getJSONObject("GeoObject")
+                        .getJSONObject("metaDataProperty")
+                        .getJSONObject("GeocoderMetaData")
+                        .getJSONObject("AddressDetails")
+                        .getJSONObject("Country")
+                        .getJSONObject("AdministrativeArea")
+                        .getJSONObject("SubAdministrativeArea")
+                        .getString("SubAdministrativeAreaName");
+            }
+            address = location;
+        } catch (JSONException ignored) {
+            address = null;
+        }
+        return address;
+    }
+
+    @Nullable
+    public String getLine() {
+        String address;
+        try {
+            String location = "";
+            if (response != null) {
+                location = response.getJSONObject("response")
+                        .getJSONObject("GeoObjectCollection")
+                        .getJSONArray("featureMember")
+                        .getJSONObject(0)
+                        .getJSONObject("GeoObject")
+                        .getJSONObject("metaDataProperty")
+                        .getJSONObject("GeocoderMetaData")
+                        .getJSONObject("AddressDetails")
+                        .getJSONObject("Country")
+                        .getJSONObject("AdministrativeArea")
+                        .getJSONObject("SubAdministrativeArea")
+                        .getJSONObject("Locality")
+                        .getJSONObject("Thoroughfare")
+                        .getString("ThoroughfareName");
+            }
+            address = location;
+        } catch (JSONException ignored) {
+            address = null;
+        }
+        return address;
+    }
+
+    @Nullable
+    public String getNumber() {
+        String address;
+        try {
+            String location = "";
+            if (response != null) {
+                location = response.getJSONObject("response")
+                        .getJSONObject("GeoObjectCollection")
+                        .getJSONArray("featureMember")
+                        .getJSONObject(0)
+                        .getJSONObject("GeoObject")
+                        .getJSONObject("metaDataProperty")
+                        .getJSONObject("GeocoderMetaData")
+                        .getJSONObject("AddressDetails")
+                        .getJSONObject("Country")
+                        .getJSONObject("AdministrativeArea")
+                        .getJSONObject("SubAdministrativeArea")
+                        .getJSONObject("Locality")
+                        .getJSONObject("Thoroughfare")
+                        .getJSONObject("Premise")
+                        .getString("PremiseNumber");
+            }
+            address = location;
+        } catch (JSONException ignored) {
+            address = null;
+        }
+        return address;
+    }
+
+
+    @Nullable
     public GeoPoint getLocation() {
         final GeoPoint position;
         try {

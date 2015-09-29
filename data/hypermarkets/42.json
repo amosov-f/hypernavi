@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2015-01-13/Irkutsk.jpg"
   },
   "build": {
+    "number": "10",
     "address": "Иркутск, Верхняя набережная, 10",
+    "city": "городской округ Иркутск",
+    "line": "Верхняя набережная",
     "location": {
       "lon": 104.28914,
       "lat": 52.267653

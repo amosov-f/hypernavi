@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-11-13/Sterlitamak-plan.jpg"
   },
   "build": {
+    "number": "120",
     "address": "Республика Башкортостан, Стерлитамак, улица Худайбердина, 120",
+    "city": "городской округ Стерлитамак",
+    "line": "улица Худайбердина",
     "location": {
       "lon": 55.94015,
       "lat": 53.628213

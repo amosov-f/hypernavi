@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-04-30/okey_novosib_malinka_shema-zala_b.jpg"
   },
   "build": {
+    "number": "1Ак1",
     "address": "Новосибирск, улица Дуси Ковальчук, 1Ак1",
+    "city": "городской округ Новосибирск",
+    "line": "улица Дуси Ковальчук",
     "location": {
       "lon": 82.882467,
       "lat": 55.049226

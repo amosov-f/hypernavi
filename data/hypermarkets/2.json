@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2012-08-10/shem_big.jpg"
   },
   "build": {
+    "number": "152А",
     "address": "Москва, Варшавское шоссе, 152А",
+    "city": "Москва",
+    "line": "Варшавское шоссе",
     "location": {
       "lon": 37.599107,
       "lat": 55.59446

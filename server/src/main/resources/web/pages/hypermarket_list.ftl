@@ -21,7 +21,7 @@
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#${hypermarket.id}">
                     <div>
-                        Гипермаркет #${hypermarket.id} - ${hypermarket.type}
+                        Гипермаркет #${hypermarket.id} - ${hypermarket.type} : ${hypermarket.city}
                     </div>
                 </a>
             </h4>
@@ -33,7 +33,7 @@
                         <table class="table-striped" style="width:100%">
                             <tr>
                                 <td>Адрес</td>
-                                <td>${hypermarket.address}</td>
+                                <td>${hypermarket.line}, ${hypermarket.number}</td>
                             </tr>
                             <tr>
                                 <td>Координаты(долгота, широта)</td>

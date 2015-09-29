@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-12-12/okey_omas_70let_shema_b.jpg"
   },
   "build": {
+    "number": "7",
     "address": "Омск, улица 70 лет Октября, 7",
+    "city": "городской округ Омск",
+    "line": "улица 70 лет Октября",
     "location": {
       "lon": 73.310801,
       "lat": 54.985354

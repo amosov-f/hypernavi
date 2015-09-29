@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-12-23/ivanovo.jpg"
   },
   "build": {
+    "number": "55",
     "address": "Иваново, Лежневская улица, 55",
+    "city": "городской округ Иваново",
+    "line": "Лежневская улица",
     "location": {
       "lon": 40.981422,
       "lat": 56.982338

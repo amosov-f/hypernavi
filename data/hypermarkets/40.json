@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2015-01-16/Columbus.jpg"
   },
   "build": {
+    "number": "140",
     "address": "Москва, Варшавское шоссе, 140",
+    "city": "Москва",
+    "line": "Варшавское шоссе",
     "location": {
       "lon": 37.607125,
       "lat": 55.61236

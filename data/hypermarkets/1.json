@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2015-02-09/Moscow.jpg"
   },
   "build": {
+    "number": "1",
     "address": "Москва, МКАД, 71-й километр, 1",
+    "city": "Москва",
+    "line": "МКАД, 71-й километр",
     "location": {
       "lon": 37.397389,
       "lat": 55.864469

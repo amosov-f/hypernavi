@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-10-03/Orenburg_.jpg"
   },
   "build": {
+    "number": "71",
     "address": "Оренбург, Салмышская улица, 71",
+    "city": "городской округ Оренбург",
+    "line": "Салмышская улица",
     "location": {
       "lon": 55.1825,
       "lat": 51.813

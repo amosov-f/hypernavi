@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-12-19/zal_krasnoyarsk_sibir.jpg"
   },
   "build": {
+    "number": "5А",
     "address": "Красноярск, Сибирский переулок, 5А",
+    "city": "городской округ Красноярск",
+    "line": "Сибирский переулок",
     "location": {
       "lon": 92.95375,
       "lat": 56.015615

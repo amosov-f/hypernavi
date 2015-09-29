@@ -38,6 +38,26 @@ public class Hypermarket implements Positioned, Indexable {
     }
 
 
+    @Nullable
+    public String getCity() {
+        return build.getCity();
+    }
+
+    @Nullable
+    public String getNumber() {
+        if (build.getNumber() == null)
+            return "";
+        return build.getNumber();
+    }
+
+    @Nullable
+    public String getLine() {
+        if (build.getLine() == null)
+            return getAddress();
+        return build.getLine();
+    }
+
+
     @NotNull
     public String getUrl() {
         return web.getUrl();
@@ -97,7 +117,7 @@ public class Hypermarket implements Positioned, Indexable {
         final JSONObject obj = new JSONObject();
         try {
             obj.put("web", getWeb().toJSON());
-            obj.put("build",  getBuild().toJSON());
+            obj.put("build", getBuild().toJSON());
             obj.put("id", getId());
             obj.put("type", getType());
         } catch (JSONException e) {

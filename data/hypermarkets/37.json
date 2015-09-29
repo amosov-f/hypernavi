@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-12-25/Volgograd-plan.jpg"
   },
   "build": {
+    "number": "8",
     "address": "Волгоград, Пролетарская улица, 8",
+    "city": "городской округ Волгоград",
+    "line": "Пролетарская улица",
     "location": {
       "lon": 44.53407,
       "lat": 48.518

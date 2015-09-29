@@ -56,7 +56,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
         final String url = req.getParameter("url");
         final String page = req.getParameter("page");
 
-        RegisterHypermarket.register(new Building(location, address), type, url, page);
+        RegisterHypermarket.register(new Building(location, address, null, null, null), type, url, page);
 
         LOG.info("OK!");
         resp.setStatus(HttpServletResponse.SC_OK);

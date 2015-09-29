@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-10-13/voronezh.jpg"
   },
   "build": {
+    "number": "15",
     "address": "Воронеж, улица Маршала Жукова, 15",
+    "city": "городской округ Воронеж",
+    "line": "улица Маршала Жукова",
     "location": {
       "lon": 39.171388,
       "lat": 51.715398

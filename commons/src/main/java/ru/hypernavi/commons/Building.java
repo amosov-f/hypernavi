@@ -25,21 +25,37 @@ public class Building {
     @NotNull
     private final Boolean hasAngle;
 
+    private final String number;
+    private final String line;
+    private final String city;
+
     public Building(@NotNull final GeoPoint location,
                     @NotNull final String address,
-                    @NotNull final Double angle) {
+                    @NotNull final Double angle,
+                    @Nullable final String city,
+                    @Nullable final String line,
+                    @Nullable final String number) {
         this.location = location;
         this.address = address;
         this.angle = angle;
         this.hasAngle = true;
+        this.number = number;
+        this.city = city;
+        this.line = line;
     }
 
     public Building(@NotNull final GeoPoint location,
-                    @NotNull final String address) {
+                    @NotNull final String address,
+                    @Nullable final String city,
+                    @Nullable final String line,
+                    @Nullable final String number) {
         this.location = location;
         this.address = address;
         this.angle = 0.0;
         this.hasAngle = false;
+        this.number = number;
+        this.city = city;
+        this.line = line;
     }
 
     @NotNull
@@ -51,6 +67,25 @@ public class Building {
     public String getAddress() {
         return address;
     }
+
+
+    @Nullable
+    public String getCity() {
+        return city;
+    }
+
+
+    @Nullable
+    public String getLine() {
+        return line;
+    }
+
+
+    @Nullable
+    public String getNumber() {
+        return number;
+    }
+
 
     @NotNull
     public Double getAngle() {
@@ -68,6 +103,9 @@ public class Building {
         try {
             obj.put("location", location.toJSON());
             obj.put("address", getAddress());
+            obj.put("line", getLine());
+            obj.put("city", getCity());
+            obj.put("number", getNumber());
             if (hasAngle) {
                 obj.put("angle", getAngle());
             }
@@ -76,6 +114,15 @@ public class Building {
             return null;
         }
         return obj;
+    }
+
+
+    private static String getParametr(final String name, final JSONObject obj) {
+        try {
+            return obj.getString(name);
+        } catch (JSONException ignored) {
+            return null;
+        }
     }
 
     @Nullable
@@ -94,17 +141,24 @@ public class Building {
             return null;
         }
 
-        Double angle;
-        try {
-            angle = obj.getDouble("angle");
-        } catch (JSONException e) {
-            LOG.warn(e.getMessage());
+        final Double angle;
+        if (getParametr("angle", obj) != null) {
+            angle = Double.parseDouble(getParametr("angle", obj));
+        } else{
             angle = null;
         }
+        final String city = getParametr("city", obj);
+        final String number = getParametr("number", obj);
+        final String line = getParametr("line", obj);
+
+
         if (angle != null) {
-            return new Building(location, address, angle);
+            return new Building(location, address, angle, city, line, number);
         } else {
-            return new Building(location, address);
+            return new Building(location, address, city, line, number);
         }
+
+
+
     }
 }

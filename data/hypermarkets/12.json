@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2012-11-16/okey_aura_plan.jpg"
   },
   "build": {
+    "number": "1",
     "address": "ХМАО, Сургут, Нефтеюганское шоссе, 1",
+    "city": "городской округ Сургут",
+    "line": "Нефтеюганское шоссе",
     "location": {
       "lon": 73.365329,
       "lat": 61.277248

@@ -30,7 +30,7 @@ public final class RegisterHypermarket {
             path = "/img/NotFound.jpg";
         }
 
-        final Hypermarket market = new Hypermarket(maxId, new Building(build.getLocation(), address), type, new WebInfo(path, url, page));
+        final Hypermarket market = new Hypermarket(maxId, new Building(build.getLocation(), address, null, null, null), type, new WebInfo(path, url, page));
         hypermarkets.addHypermarket(market, "/" + market.getId() + ".json");
     }
 }

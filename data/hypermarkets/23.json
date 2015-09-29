@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-12-17/Yakhtennaya.jpg"
   },
   "build": {
+    "number": "42",
     "address": "Санкт-Петербург, Богатырский проспект, 42",
+    "city": "Санкт-Петербург",
+    "line": "Богатырский проспект",
     "angle": 30,
     "location": {
       "lon": 30.22703,

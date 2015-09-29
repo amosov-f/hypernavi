@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-06-20/okey_rio_msk_shema-zala.jpg"
   },
   "build": {
+    "number": "163А",
     "address": "Москва, Дмитровское шоссе, 163А",
+    "city": "Москва",
+    "line": "Дмитровское шоссе",
     "location": {
       "lon": 37.539997,
       "lat": 55.908909

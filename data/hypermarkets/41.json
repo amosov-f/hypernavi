@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2015-01-21/Shuvalovsky-plan.jpg"
   },
   "build": {
+    "number": "46",
     "address": "Санкт-Петербург, Парашютная улица, 46",
+    "city": "Санкт-Петербург",
+    "line": "Парашютная улица",
     "angle": 0,
     "location": {
       "lon": 30.249,

@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2012-11-16/shema_citymall.jpg"
   },
   "build": {
+    "number": "40",
     "address": "ХМАО, Сургут, Югорский тракт, 40",
+    "city": "городской округ Сургут",
+    "line": "Югорский тракт",
     "location": {
       "lon": 73.377915,
       "lat": 61.237953

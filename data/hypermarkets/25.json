@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-02-05/Altufievo-plan.jpg"
   },
   "build": {
+    "number": "1",
     "address": "Москва, МКАД, 84-й километр, 1",
+    "city": "Москва",
+    "line": "МКАД, 84-й километр",
     "location": {
       "lon": 37.585824,
       "lat": 55.913142

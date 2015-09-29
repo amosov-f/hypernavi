@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-11-13/Tcherepovets-plan.jpg"
   },
   "build": {
+    "number": "2",
     "address": "Вологодская область, Череповец, улица Раахе, 2",
+    "city": "городской округ Череповец",
+    "line": "улица Раахе",
     "location": {
       "lon": 37.91,
       "lat": 59.104

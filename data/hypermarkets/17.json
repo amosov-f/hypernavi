@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-12-18/Gatchina_1.jpg"
   },
   "build": {
+    "number": "10А",
     "address": "Ленинградская область, Гатчина, Ленинградское шоссе, 10А",
+    "city": "Гатчинский район",
+    "line": "Ленинградское шоссе",
     "angle": 45,
     "location": {
       "lon": 30.139027,

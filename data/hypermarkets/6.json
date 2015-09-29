@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_akadem.jpg"
   },
   "build": {
+    "number": "17",
     "address": "Санкт-Петербург, проспект Науки, 17",
+    "city": "Санкт-Петербург",
+    "line": "проспект Науки",
     "angle": -50,
     "location": {
       "lon": 30.388548,

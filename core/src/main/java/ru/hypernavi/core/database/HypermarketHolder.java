@@ -33,6 +33,14 @@ public class HypermarketHolder {
         return loader.getNames(service).length;
     }
 
+    public void edit(final int id, @NotNull final Hypermarket hypermarket) {
+        final JSONObject hypermarketJSON = hypermarket.toJSON();
+        if (hypermarketJSON != null) {
+            loader.save(service, "/" + id + ".json", hypermarketJSON.toString().getBytes(StandardCharsets.UTF_8));
+            markets.add(hypermarket);
+        }
+    }
+
     @Inject
     public HypermarketHolder(@Named("hypernavi.server.servicemarkets") final String service, @NotNull final DataLoader loader) {
         this.loader = loader;

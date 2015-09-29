@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-09-02/Vodny.jpg"
   },
   "build": {
+    "number": "5",
     "address": "Москва, Головинское шоссе, 5",
+    "city": "Москва",
+    "line": "Головинское шоссе",
     "location": {
       "lon": 37.491676,
       "lat": 55.840087

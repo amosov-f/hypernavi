@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-01-23/okey_spb_ozerki.jpg"
   },
   "build": {
+    "number": "3к1",
     "address": "Санкт-Петербург, Выборгское шоссе, 3к1",
+    "city": "Санкт-Петербург",
+    "line": "Выборгское шоссе",
     "angle": 0,
     "location": {
       "lon": 30.320776,

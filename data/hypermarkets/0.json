@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2012-08-10/Yfa_shema.gif"
   },
   "build": {
+    "number": "112",
     "address": "Республика Башкортостан, Уфа, Комсомольская улица, 112",
+    "city": "городской округ Уфа",
+    "line": "Комсомольская улица",
     "location": {
       "lon": 56.007926,
       "lat": 54.752527

@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2014-10-07/Lakhta.jpg"
   },
   "build": {
+    "number": "85",
     "address": "Санкт-Петербург, Лахтинский проспект, 85",
+    "city": "Санкт-Петербург",
+    "line": "Лахтинский проспект",
     "angle": 90,
     "location": {
       "lon": 30.147668,

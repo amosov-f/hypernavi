@@ -5,7 +5,10 @@
     "url": "http://www.okmarket.ru/media/gallery/2013-01-15/okey_ekat_raduga_shema.jpg"
   },
   "build": {
+    "number": "94",
     "address": "Свердловская область, Екатеринбург, улица Репина, 94",
+    "city": "городской округ Екатеринбург",
+    "line": "улица Репина",
     "location": {
       "lon": 60.538507,
       "lat": 56.817558
