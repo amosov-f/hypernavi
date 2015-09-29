@@ -18,7 +18,9 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static ru.hypernavi.util.MoreReflectionUtils.invoke;
 
 /**
@@ -40,10 +42,10 @@ public final class AppActivityTest {
 
     @Test
     public void shouldHaveCorrectAppName() {
-      //  assertThat(appActivity.getResources().getString(R.string.app_name), equalTo("Hypernavi"));
+        assertThat(appActivity.getResources().getString(R.string.app_name), equalTo("Hypernavi"));
     }
 
-   // @Test
+    @Test
     public void shouldNotBeNull() {
         assertNotNull(appActivity);
 
@@ -72,7 +74,7 @@ public final class AppActivityTest {
         assertNotNull(distanceView);
     }
 
- //   @Test
+    @Test
     public void shouldReturnTheLatestLocation() {
         final LocationManager locationManager = (LocationManager) RuntimeEnvironment.application.getSystemService(Context.LOCATION_SERVICE);
         final ShadowLocationManager shadowLocationManager = invoke(Shadows.class, "shadowOf", locationManager);
