@@ -10,8 +10,7 @@
 </head>
 <style type="text/css">
     img.fit {
-        max-width: 1000px;
-        max-height: 500px;
+
     }
 </style>
 <body>
@@ -44,11 +43,11 @@
 
                     <div class="carousel-inner">
                         <div class="item active" align="center">
-                            <img src="http://hypernavi.net/img/page1.jpg" class="fit" alt="Screen 1">
+                            <img src="http://hypernavi.net/img/page2.jpg" class="fit" alt="Screen 1">
                         </div>
 
                         <div class="item" align="center">
-                            <img src="http://hypernavi.net/img/page2.png" class="fit" alt="Screen 2">
+                            <img src="http://hypernavi.net/img/page1.png" class="fit" alt="Screen 2">
                         </div>
 
                         <div class="item" align="center">
