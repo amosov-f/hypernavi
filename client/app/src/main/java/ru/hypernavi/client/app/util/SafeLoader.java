@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 /**
  * Created by Константин on 28.08.2015.
+ * Class for obtain InfoResponse and Bitmap from server using ExecutorService
  */
 public class SafeLoader {
     private static final Logger LOG = Logger.getLogger(SafeLoader.class.getName());

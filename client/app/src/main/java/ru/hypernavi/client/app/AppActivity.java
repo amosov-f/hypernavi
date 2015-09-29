@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +15,9 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
@@ -32,7 +35,10 @@ public final class AppActivity extends Activity {
     public static final String YANDEX_PATH = "/yandex_button.png";
 
     private InfoResponse infoResponse;
+
     private Bitmap originScheme;
+    private float currentMapAzimuthInDegrees;
+    private boolean hasOrientation;
 
     private ImageView marketImageView;
     private ImageView logoImageView;
@@ -51,9 +57,6 @@ public final class AppActivity extends Activity {
 
     private InfoRequestHandler handler;
     private CacheWorker cache;
-
-    private float currentMapAzimuthInDegrees;
-    private boolean hasOrientation;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -159,49 +162,41 @@ public final class AppActivity extends Activity {
         marketImageView.setImageBitmap(originScheme);
     }
 
-    public void processInfo(final GeoPoint geoPosition, final ImageView marketImageView) {
+    public void processInfo(final GeoPoint geoPosition, @NotNull final ImageView marketImageView) {
         final Bitmap oldScheme = originScheme.copy(originScheme.getConfig(), true);
         infoResponse = handler.getInfoResponse(geoPosition);
         if (infoResponse != null) {
-            LOG.warning("infoResponse is null !!!");
             final ArrayList<Hypermarket> hypermarkets = (ArrayList<Hypermarket>) infoResponse.getClosestMarkets();
-            //
-            LOG.info("Distances from hypermarkets");
-            final GeoPoint mylocation = infoResponse.getLocation();
-            for (final Hypermarket hypermarket: hypermarkets) {
-                final GeoPoint marketLocation = hypermarket.getLocation();
-                LOG.info(hypermarket.getAddress());
-                LOG.info(Double.toString(GeoPoint.distance(mylocation, marketLocation)));
-            }
-            final Hypermarket closestMarket = infoResponse.getClosestMarkets().get(0);
-            final GeoPoint marketLocation = closestMarket.getLocation();
-            distanceText.setText(new DecimalFormat("#.#").format(GeoPoint.distance(mylocation, marketLocation)) + "км");
-            //distanceText.setVisibility(distanceText.INVISIBLE);
-            //
-            hasOrientation = closestMarket.hasOrientation();
-            LOG.info("is oriented? " + hasOrientation);
-            if (hasOrientation) {
-                currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
+            if (hypermarkets != null) {
+                cache.saveInfoResponseToCache(infoResponse);
+                final GeoPoint mylocation = infoResponse.getLocation();
+                final Hypermarket closestMarket = hypermarkets.get(0);
+                final GeoPoint marketLocation = closestMarket.getLocation();
+                distanceText.setText(new DecimalFormat("#.#").format(GeoPoint.distance(mylocation, marketLocation)) + " км");
+                //distanceText.setVisibility(distanceText.INVISIBLE);
+                hasOrientation = closestMarket.hasOrientation();
+                LOG.info("is oriented? " + hasOrientation);
+                if (hasOrientation) {
+                    currentMapAzimuthInDegrees = (float) infoResponse.getClosestMarkets().get(0).getOrientation();
+                    LOG.info("azimuth is loaded");
+                }
+
+                originScheme = handler.getClosestSchema(infoResponse);
+                if (!oldScheme.sameAs(originScheme)) {
+                    moveImageToStartPoint();
+                    marketImageView.setImageBitmap(originScheme);
+                    cache.saveSchemeToCache(originScheme);
+                }
+                LOG.info("schema is loaded");
+
+                (new LogoLoader()).loadLogo(closestMarket.getType(), logoImageView);
+            } else {
+                LOG.warning("infoResponse is not null, but hypermarkets is null");
+                writeWarningMessage("Can't load info from Internet");
             }
         }
+
         originScheme = handler.getClosestSchema(infoResponse);
-
-        LOG.info("schema and azimuth is loaded");
-
-        if (originScheme == null) {
-            originScheme = cache.loadCachedOrDefaultScheme();
-            LOG.warning("Problems with scheme above");
-        } else {
-            (new LogoLoader()).loadLogo(infoResponse.getClosestMarkets().get(0).getType(), logoImageView);
-        }
-        if (!oldScheme.sameAs(originScheme)) {
-            moveImageToStartPoint();
-        }
-        marketImageView.setImageBitmap(originScheme);
-        cache.saveSchemeToCache(originScheme);
-
-        LOG.info("GeoPosition " + geoPosition);
-        writeWarningMessage("GeoPosition " + geoPosition);
     }
 
     public void writeWarningMessage(@NotNull final String message) {

@@ -23,6 +23,7 @@ import ru.hypernavi.util.GeoPoint;
 public class InfoRequestHandler {
     private static final Logger LOG = Logger.getLogger(InfoRequestHandler.class.getName());
 
+    @NotNull
     private final AppActivity myAppActivity;
     private final SafeLoader myLoader;
     private final CacheWorker myCache;
@@ -33,7 +34,7 @@ public class InfoRequestHandler {
     private String host;
     private String path;
 
-    public InfoRequestHandler(final AppActivity appActivity, final CacheWorker cache) {
+    public InfoRequestHandler(@NotNull final AppActivity appActivity, final CacheWorker cache) {
         myExecutorService = Executors.newFixedThreadPool(getNThread(AppActivity.PROPERTIES_SCHEME));
 
         myAppActivity = appActivity;
@@ -47,19 +48,23 @@ public class InfoRequestHandler {
         final double lat = geoPosition.getLatitude();
         final double lon = geoPosition.getLongitude();
         LOG.info("GeoPoint coordinates " + "lat: " + lat + "lon: " + lon);
-        final JSONObject root;
+        JSONObject root;
 
         try {
             root = myLoader.getJSON(lat, lon, scheme, host, path);
         } catch (MalformedURLException ignored) {
             LOG.warning("Can't construct URL for info");
-            myAppActivity.writeWarningMessage("Internet disabled!");
-            return null;
+            myAppActivity.writeWarningMessage("Can't load info from Internet");
+            root = myCache.loadCachedInfo();
         }
 
         if (root == null) {
-            LOG.warning("Can't construct URL for info");
-            return null;
+            root = myCache.loadCachedInfo();
+            if(root == null) {
+                LOG.warning("Can't construct URL for info");
+                myAppActivity.writeWarningMessage("Don't have cached info");
+                return null;
+            }
         }
         LOG.info("keep response");
         return InfoResponceSerializer.deserialize(root);
