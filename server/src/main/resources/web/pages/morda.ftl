@@ -48,11 +48,11 @@
                         </div>
 
                         <div class="item" align="center">
-                            <img src="http://hypernavi.net/img/page2.jpg" class="fit" alt="Screen 2">
+                            <img src="http://hypernavi.net/img/page2.png" class="fit" alt="Screen 2">
                         </div>
 
                         <div class="item" align="center">
-                            <img src="http://hypernavi.net/img/page3.jpg" class="fit" alt="Screen 3">
+                            <img src="http://hypernavi.net/img/page3.png" class="fit" alt="Screen 3">
                         </div>
                     </div>
 
