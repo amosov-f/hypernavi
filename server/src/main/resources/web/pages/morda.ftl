@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>HyperNavi</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -24,10 +24,11 @@
                 <small>навигатор по гипермаркетам</small>
             </h1>
             <a class="btn btn-primary  btn-default bth-lg" href="/hypernavi.apk"><b>Download</b></a>
-            <a class="btn btn-default bth-lg" href="https://github.com/amosov-f/hypernavi"><img src="https://github.com/fluidicon.png"
-                                                                                                height="18" width="18"
-                                                                                                alt="Logo GitHub"><b> Link to
-                GitHub</b></a>
+            <a class="btn btn-default bth-lg" href="https://github.com/amosov-f/hypernavi">
+                <img src="https://github.com/fluidicon.png"
+                     height="18" width="18"
+                     alt="Logo GitHub"><b> Link to GitHub</b></a>
+
         </div>
         <br>
 
