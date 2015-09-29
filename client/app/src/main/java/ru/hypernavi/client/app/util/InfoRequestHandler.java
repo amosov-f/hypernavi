@@ -62,7 +62,7 @@ public class InfoRequestHandler {
             root = myCache.loadCachedInfo();
             if(root == null) {
                 LOG.warning("Can't construct URL for info");
-                myAppActivity.writeWarningMessage("Don't have cached info");
+                myAppActivity.writeWarningMessage("Can't load info from Internet");
                 return null;
             }
         }

@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public final class AppActivity extends Activity {
     private ImageView marketImageView;
     private ImageView logoImageView;
     private TextView distanceText;
+    private TextView adressText;
     private ImageView yandexButton;
 
     private LocationManager locationManager;
@@ -69,6 +71,9 @@ public final class AppActivity extends Activity {
         logoImageView = (ImageView) findViewById(R.id.logoView);
         yandexButton = (ImageView) findViewById(R.id.yandexButton);
         distanceText = (TextView) findViewById(R.id.distanceView);
+        distanceText.setVisibility(View.INVISIBLE);
+        adressText = (TextView) findViewById(R.id.adressView);
+        adressText.setVisibility(View.INVISIBLE);
 
         cache = new CacheWorker(this);
         handler = new InfoRequestHandler(this, cache);
@@ -173,7 +178,13 @@ public final class AppActivity extends Activity {
                 final Hypermarket closestMarket = hypermarkets.get(0);
                 final GeoPoint marketLocation = closestMarket.getLocation();
                 distanceText.setText(new DecimalFormat("#.#").format(GeoPoint.distance(mylocation, marketLocation)) + " км");
-                //distanceText.setVisibility(distanceText.INVISIBLE);
+                distanceText.setVisibility(distanceText.VISIBLE);
+                if (closestMarket.getAddress().equals(closestMarket.getLine())) {
+                    adressText.setText(closestMarket.getAddress());
+                } else {
+                    adressText.setText(closestMarket.getLine() + ", " + closestMarket.getNumber());
+                }
+                adressText.setVisibility(View.VISIBLE);
                 hasOrientation = closestMarket.hasOrientation();
                 LOG.info("is oriented? " + hasOrientation);
                 if (hasOrientation) {
@@ -237,6 +248,10 @@ public final class AppActivity extends Activity {
 
     public boolean getHasOrientation() {
         return hasOrientation;
+    }
+
+    public boolean haveInfoResponse() {
+        return infoResponse != null;
     }
 
     public void moveImageToStartPoint() {

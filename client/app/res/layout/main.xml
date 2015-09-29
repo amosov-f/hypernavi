@@ -9,7 +9,8 @@
             android:layout_height="match_parent"
 
             android:id="@+id/imageView"
-            android:layout_alignParentTop="true" android:background="@android:drawable/editbox_background"/>
+            android:layout_alignParentTop="true" android:adjustViewBounds="false" android:baselineAlignBottom="false"
+            android:clickable="false" android:cropToPadding="false" android:focusable="false" android:focusableInTouchMode="false"/>
 
     <!--android:autoLink="web"-->
     <ImageView
@@ -42,8 +43,8 @@
             android:layout_alignEnd="@+id/zoomOutButton"
             android:scaleType="centerInside" android:paddingTop="3dp" android:paddingRight="24dp"/>
     <ImageView
-            android:layout_width="115dp"
-            android:layout_height="115dp"
+            android:layout_width="115sp"
+            android:layout_height="115sp"
             android:id="@+id/logoView" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:scaleType="fitXY"
             android:padding="10dp"/>
@@ -53,13 +54,27 @@
                android:scaleType="fitXY" android:src="@drawable/ic_launcher" android:layout_alignParentTop="true"
                android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/editbox_background"
+            android:layout_width="105sp"
+            android:layout_height="30sp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/distanceView"
-            android:layout_below="@+id/logoView" android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/compasButton" android:layout_alignEnd="@+id/compasButton" android:autoText="false"/>
+            android:textSize="18sp"
+            android:gravity="center"
+            android:autoText="false"
+            android:password="false" android:background="#ffc8c8c8"
+            android:singleLine="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_below="@+id/logoView"
+            android:layout_marginLeft="5sp" android:layout_alignRight="@+id/logoView" android:layout_alignEnd="@+id/logoView"
+            android:layout_marginRight="5sp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="30sp" android:textAppearance="?android:attr/textAppearanceSmall"
+              android:id="@+id/adressView" android:textSize="18sp" android:gravity="center" android:autoText="false"
+              android:password="false" android:background="#ffc8c8c8" android:singleLine="false"
+              android:layout_alignWithParentIfMissing="false"
+              android:layout_toEndOf="@+id/logoView"
+              android:layout_toStartOf="@+id/yandexButton"
+              android:layout_marginTop="10sp" android:layout_alignParentTop="true" android:layout_toRightOf="@+id/logoView"
+              android:layout_toLeftOf="@+id/yandexButton"/>
 
 
     <!-- <RelativeLayout

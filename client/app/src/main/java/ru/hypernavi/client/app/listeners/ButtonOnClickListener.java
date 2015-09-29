@@ -62,8 +62,16 @@ public class ButtonOnClickListener implements View.OnClickListener {
             if (!PositionUpdater.isActual(location, myTimeCorrection)) {
                 LOG.info("send new request to update position");
                 myAppActivity.sendLocationRequest();
+            } else if (!myAppActivity.haveInfoResponse()) {
+                myAppActivity.writeWarningMessage("Internet disabled!");
+                myAppActivity.sendLocationRequest();
+
             }
+        } else if (!myAppActivity.haveInfoResponse()) {
+            myAppActivity.writeWarningMessage("Internet disabled!");
+            myAppActivity.sendLocationRequest();
         }
+
         LOG.info("location time is " + (location.getTime() + myTimeCorrection));
         LOG.info("util time is     " + (new Date()).getTime());
     }
