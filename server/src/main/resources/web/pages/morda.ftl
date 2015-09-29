@@ -43,15 +43,15 @@
 
                     <div class="carousel-inner">
                         <div class="item active" align="center">
-                            <img src="http://hypernavi.net/img/page2.jpg" class="fit" alt="Screen 1">
+                            <img src="img/page2.png" class="fit" alt="Screen 1">
                         </div>
 
                         <div class="item" align="center">
-                            <img src="http://hypernavi.net/img/page1.png" class="fit" alt="Screen 2">
+                            <img src="img/page1.jpg" class="fit" alt="Screen 2">
                         </div>
 
                         <div class="item" align="center">
-                            <img src="http://hypernavi.net/img/page3.png" class="fit" alt="Screen 3">
+                            <img src="img/page3.png" class="fit" alt="Screen 3">
                         </div>
                     </div>
 
