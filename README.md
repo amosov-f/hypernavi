@@ -8,7 +8,7 @@ Hypermarket Navigator
 
 ###About
 
-about: TBD
+[hypernavi.net](http://hypernavi.net)
 
 ###System requirements
 
