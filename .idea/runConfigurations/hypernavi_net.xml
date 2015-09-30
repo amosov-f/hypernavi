@@ -7,6 +7,7 @@
     <option name="PORT" value="5005" />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="5005" />
+      <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="false" />
     </RunnerSettings>
     <method />

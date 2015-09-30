@@ -17,7 +17,7 @@ import org.json.JSONObject;
 public class SafeLoader {
     private static final Logger LOG = Logger.getLogger(SafeLoader.class.getName());
     private final ExecutorService executorService;
-    private static final long MAX_TIME_OUT = 5000L;
+    private static final long MAX_TIME_OUT = 10000L;
     private final CacheWorker cache;
 
     public SafeLoader(final ExecutorService executorService, final CacheWorker cache) {
