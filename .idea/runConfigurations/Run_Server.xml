@@ -8,7 +8,7 @@
     </extension>
     <option name="MAIN_CLASS_NAME" value="ru.hypernavi.server.HyperNaviServer" />
     <option name="VM_PARAMETERS" value="" />
-    <option name="PROGRAM_PARAMETERS" value="-port 8080 -cfg classpath:/common.properties classpath:/debug.properties -logcfg classpath:/log4j-console.xml -logdir ./hypernavi/out/log" />
+    <option name="PROGRAM_PARAMETERS" value="-port 8080 -cfg classpath:/common.properties classpath:/debug.properties classpath:/local.properties -logcfg classpath:/log4j-console.xml -logdir ./hypernavi/out/log" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />

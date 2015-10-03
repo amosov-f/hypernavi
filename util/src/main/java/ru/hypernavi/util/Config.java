@@ -35,6 +35,26 @@ public final class Config extends Properties {
         return config;
     }
 
+    @NotNull
+    public static Config of(@NotNull final String... keyValues) {
+        final Config config = new Config();
+        for (int i = 0; i < keyValues.length - 1; i += 2) {
+            config.setProperty(keyValues[i], keyValues[i + 1]);
+        }
+        return config;
+    }
+
+    @NotNull
+    public Config subConfig(@NotNull final String node) {
+        final Config config = new Config();
+        for (final String key : stringPropertyNames()) {
+            if (key.startsWith(node + ".")) {
+                config.setProperty(key.substring(node.length() + 1), getProperty(key));
+            }
+        }
+        return config;
+    }
+
     public int getInt(@NotNull final String key) {
         return Integer.parseInt(getProperty(key));
     }

@@ -4,13 +4,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Objects;
 
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import com.mysql.fabric.jdbc.FabricMySQLDriver;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Platform;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
@@ -25,6 +33,8 @@ import ru.hypernavi.util.MoreIOUtils;
  * Time: 0:19
  */
 public final class HyperNaviModule extends AbstractModule {
+    private static final Log LOG = LogFactory.getLog(HyperNaviModule.class);
+
     @NotNull
     private final Config config;
 
@@ -41,9 +51,10 @@ public final class HyperNaviModule extends AbstractModule {
         bindString("hypernavi.server.serviceimg");
         bindString("hypernavi.server.servicemarkets");
 
-
-        bind(DataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
+        bindDataSource();
+        // TODO: remove
         bind(FileDataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
+
         bindGoodsClassifier();
     }
 
@@ -80,5 +91,36 @@ public final class HyperNaviModule extends AbstractModule {
             goodsClassifierClass = RandomGoodsClassifier.class;
         }
         bind(GoodsClassifier.class).to(goodsClassifierClass);
+    }
+
+    private void bindDataSource() {
+        final String dataSource = Objects.requireNonNull(config.getProperty("hypernavi.data.source"), "No data source in config!");
+        switch (dataSource) {
+            case "file":
+                final String dataPath = config.getProperty("hypernavi.server.pathdata");
+                bind(DataLoader.class).toInstance(new FileDataLoader(dataPath));
+                LOG.info("Data storage is file system: " + dataPath);
+                return;
+            case "mysql":
+                final String url = config.getProperty("hypernavi.data.mysql.database");
+                final Statement statement;
+                try {
+                    DriverManager.registerDriver(new FabricMySQLDriver());
+                    // TODO: policy about reconnect
+                    final Connection connection = DriverManager.getConnection(url, config.subConfig("hypernavi.data.mysql"));
+                    try {
+                        statement = connection.createStatement();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                bind(DataLoader.class).toInstance(new SQLDataLoader(statement));
+                LOG.info("Data storage is MySQL database: " + url);
+                return;
+            default:
+                throw new UnsupportedOperationException("Unknown data source: " + dataSource);
+        }
     }
 }
