@@ -1,6 +1,7 @@
 #!/bin/bash
 
 HOST=hypernavi.net
+PORT=10001
 JAR_PATH=server/target/hypernavi-server-jar-with-dependencies.jar
 FAIL_MESSAGE="##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
 
@@ -14,7 +15,7 @@ fi
 rsync -a data /root
 # moving jar
 FILENAME=hypernavi-dev-`stat -c %Y ${JAR_PATH}`.jar
-fuser -KILL -k -n tcp 80
+fuser -KILL -k -n tcp ${PORT}
 rm -r ~/hypernavi-dev-*
 mv -v ${JAR_PATH} ~/${FILENAME}
 
@@ -22,14 +23,14 @@ mv -v ${JAR_PATH} ~/${FILENAME}
 rsync -a data /root
 
 # starting server
-nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar ~/${FILENAME} -port 80 -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
+nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar ~/${FILENAME} -port ${PORT} -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
 
 # checking server start
 LOADED=-1
 ATTEMPTS=3
 while [ ${LOADED} -ne 0 ] && [ ${ATTEMPTS} -gt 0 ]; do
 	sleep 30
-	nc -z -w 1 ${HOST} 80
+	nc -z -w 1 ${HOST} ${PORT}
 	LOADED=$?
 	ATTEMPTS=$(( ATTEMPTS-1 ))
 done
