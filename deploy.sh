@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOST=hypernavi.net
-PORT=10001
+PORT=7340
 JAR_PATH=server/target/hypernavi-server-jar-with-dependencies.jar
 FAIL_MESSAGE="##teamcity[buildStatus status='FAILED' text='Failed do deploy on $HOST']"
 
