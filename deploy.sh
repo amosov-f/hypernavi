@@ -25,6 +25,10 @@ rsync -a data /root
 # starting server
 nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar ~/${FILENAME} -port ${PORT} -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log 2>> /dev/null >> /dev/null &
 
+# reloading nginx
+mv -v nginx.conf /etc/nginx/sites-available/hypernavi.net
+service nginx reload
+
 # checking server start
 LOADED=-1
 ATTEMPTS=3
