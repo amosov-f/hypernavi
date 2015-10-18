@@ -25,6 +25,7 @@ import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.reflections.Reflections;
+import ru.hypernavi.core.telegram.HyperNaviBot;
 import ru.hypernavi.server.handler.AfterRequestHandler;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
 import ru.hypernavi.util.Config;
@@ -114,6 +115,8 @@ public final class HyperNaviServer {
 
         Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
         DOMConfigurator.configure(MoreIOUtils.toURL(cmd.getOptionValue(OPT_LOG_CFG)));
+
+        new HyperNaviBot().start();
 
         final HyperNaviServer server = new HyperNaviServer(port, config);
         try {
