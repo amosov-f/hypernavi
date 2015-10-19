@@ -84,7 +84,7 @@ public final class HyperNaviBot {
                         sendMessage(message.getChat().getId(), "Сейчас покажу его схему...");
                         sendPhoto(message.getChat().getId(), hypermarket.getUrl());
                     } else {
-                        sendMessage(message.getChat().getId(), "Здравствуйте! Отправьте мне свою геопозицию, и я покажу ближайший к Вам гипермаркет.");
+                        sendMessage(message.getChat().getId(), "Здравствуйте! Отправьте мне свою геопозицию \uD83D\uDCCE, и я покажу ближайший к Вам гипермаркет.");
                     }
                 } catch (IOException | RuntimeException e) {
                     LOG.error("Error occured during sending request", e);
