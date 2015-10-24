@@ -19,8 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
 import ru.hypernavi.client.app.listeners.*;
 import ru.hypernavi.client.app.util.CacheWorker;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
@@ -30,13 +28,7 @@ import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.util.GeoPoint;
 
-@ReportsCrashes(
-        httpMethod = HttpSender.Method.PUT,
-        reportType = HttpSender.Type.JSON,
-        formUri = "http://hypernavi.net:5984/acra-hypernavi/_design/acra-storage/_update/report",
-        formUriBasicAuthLogin = "hypernavi",
-        formUriBasicAuthPassword = "hypernavi"
-)
+
 public final class AppActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(AppActivity.class.getName());
     public static final String PROPERTIES_SCHEME = "classpath:/app-common.properties";

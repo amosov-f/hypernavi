@@ -8,7 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <application android:label="@string/app_name"
+    <application android:name=".HyperNaviApplication"
+                 android:label="@string/app_name"
                  android:icon="@drawable/hypernavi"
                  android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <activity android:name=".AppActivity"
