@@ -3,7 +3,6 @@ package ru.hypernavi.server.servlet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +14,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.Category;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.Session;
 
 /**
  * User: amosov-f
@@ -34,9 +35,8 @@ public final class GoodsClassificationService extends AbstractHttpService {
     }
 
     @Override
-    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        // request reading
-        final String text = req.getParameter("text");
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+        final String text = session.get(Property.TEXT);
 
         // business logic
         final Category category = text != null ? classifier.classify(text) : null;

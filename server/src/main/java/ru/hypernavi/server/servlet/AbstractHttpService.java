@@ -15,6 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.util.HttpTools;
 
 /**
@@ -57,5 +60,19 @@ public abstract class AbstractHttpService extends HttpServlet {
         ));
     }
 
-    public abstract void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException ;
+    @NotNull
+    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
+        return new RequestReader(req);
+    }
+
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+    }
+
+    @Deprecated
+    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
+        final SessionInitializer initializer = getInitializer(req);
+        final Session session = new Session();
+        initializer.initialize(session);
+        service(session, resp);
+    }
 }
