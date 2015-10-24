@@ -1,17 +1,1 @@
-{
-  "web": {
-    "path": "/img/623ACFF67D1FD657895A4F631A55F9C2.jpg",
-    "page": "http://www.okmarket.ru/stores/store/100/",
-    "url": "http://www.okmarket.ru/media/gallery/2013-12-12/zal_tolyatty_sport_malina.jpg"
-  },
-  "build": {
-    "address": "Самарская область, Тольятти, Автозаводский район, Спортивная улица, 4В",
-    "city": "городской округ Тольятти",
-    "location": {
-      "lon": 49.28773,
-      "lat": 53.499192
-    }
-  },
-  "id": 22,
-  "type": "Okey"
-}
+{"web":{"path":"/img/623ACFF67D1FD657895A4F631A55F9C2.jpg","page":"http://www.okmarket.ru/stores/store/100/","url":"http://www.okmarket.ru/media/gallery/2013-12-12/zal_tolyatty_sport_malina.jpg"},"build":{"address":"Самарская область, Тольятти, Автозаводский район, Спортивная улица, 4В","city":"городской округ Тольятти","location":{"lon":49.28773,"lat":53.499192}},"id":22,"type":"Okey"}

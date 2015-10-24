@@ -1,18 +1,1 @@
-{
-  "web": {
-    "path": "/img/7778645D352E21403D9CB6B2947671C7.jpg",
-    "page": "http://www.okmarket.ru/stores/store/114/",
-    "url": "http://www.okmarket.ru/media/gallery/2014-11-12/Barnaul_plan.jpg"
-  },
-  "build": {
-    "address": "Алтайский край, Барнаул, Балтийская улица",
-    "city": "городской округ Барнаул",
-    "line": "Балтийская улица",
-    "location": {
-      "lon": 83.6833,
-      "lat": 53.335
-    }
-  },
-  "id": 34,
-  "type": "Okey"
-}
+{"web":{"path":"/img/7778645D352E21403D9CB6B2947671C7.jpg","page":"http://www.okmarket.ru/stores/store/114/","url":"http://www.okmarket.ru/media/gallery/2014-11-12/Barnaul_plan.jpg"},"build":{"address":"Алтайский край, Барнаул, Балтийская улица","city":"городской округ Барнаул","line":"Балтийская улица","location":{"lon":83.6833,"lat":53.335}},"id":34,"type":"Okey"}

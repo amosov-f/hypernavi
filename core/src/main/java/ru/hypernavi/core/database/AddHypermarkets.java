@@ -56,13 +56,10 @@ public final class AddHypermarkets {
             try {
                 data = MoreIOUtils.read(page);
             } catch (IOException e) {
-        //        LOG.warn(e.getMessage());
-        //        locations.add(null);
                 urls.add(null);
                 continue;
             }
             final String html = new String(data, StandardCharsets.UTF_8);
-        //    locations.add(position(html));
             urls.add(urls(html));
         }
 
