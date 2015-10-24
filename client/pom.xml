@@ -38,12 +38,16 @@
         </dependency>
 
         <dependency>
+            <groupId>ch.acra</groupId>
+            <artifactId>acra</artifactId>
+            <version>4.6.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.robolectric</groupId>
             <artifactId>robolectric</artifactId>
             <version>3.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
