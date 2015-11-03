@@ -33,6 +33,7 @@ import org.apache.http.util.EntityUtils;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreIOUtils;
+import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 
 /**
  * Created by amosov-f on 17.10.15.
@@ -55,8 +56,8 @@ public final class HyperNaviBot {
     @NotNull
     private final HttpClient httpClient = HttpClientBuilder.create().build();
 
-    public void start() {
-        Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
+    public void start(final boolean inBackground) {
+        Executors.newSingleThreadScheduledExecutor(new LoggingThreadFactory("BOT", inBackground)).scheduleWithFixedDelay(() -> {
             try {
                 processUpdates();
             } catch (IOException | RuntimeException e) {
@@ -156,6 +157,6 @@ public final class HyperNaviBot {
     }
 
     public static void main(@NotNull final String[] args) {
-        new HyperNaviBot().start();
+        new HyperNaviBot().start(false);
     }
 }

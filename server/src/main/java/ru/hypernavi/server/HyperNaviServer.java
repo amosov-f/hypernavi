@@ -116,7 +116,7 @@ public final class HyperNaviServer {
         Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
         DOMConfigurator.configure(MoreIOUtils.toURL(cmd.getOptionValue(OPT_LOG_CFG)));
 
-        new HyperNaviBot().start();
+        new HyperNaviBot().start(true);
 
         final HyperNaviServer server = new HyperNaviServer(port, config);
         try {
