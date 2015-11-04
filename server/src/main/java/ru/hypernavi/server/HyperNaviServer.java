@@ -129,7 +129,7 @@ public final class HyperNaviServer {
 
 
         final HyperNaviServer server = new HyperNaviServer(port, config);
-        server.injector.getInstance(HyperNaviBot.class).start(true);
+        server.getInjector().getInstance(HyperNaviBot.class).start(true);
         try {
             server.start();
         } catch (Exception e) {
