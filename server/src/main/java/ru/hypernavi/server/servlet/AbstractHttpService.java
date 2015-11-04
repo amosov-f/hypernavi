@@ -18,7 +18,7 @@ import org.eclipse.jetty.server.Request;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
-import ru.hypernavi.server.util.HttpTools;
+import ru.hypernavi.core.http.HttpTools;
 
 /**
  * User: amosov-f

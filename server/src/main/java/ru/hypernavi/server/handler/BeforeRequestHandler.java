@@ -15,7 +15,7 @@ import org.apache.http.HttpHeaders;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import ru.hypernavi.server.util.HttpTools;
+import ru.hypernavi.core.http.HttpTools;
 
 /**
  * User: amosov-f

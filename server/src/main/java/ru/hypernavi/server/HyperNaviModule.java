@@ -19,6 +19,8 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import ru.hypernavi.commons.Platform;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
@@ -46,19 +48,22 @@ public final class HyperNaviModule extends AbstractModule {
     protected void configure() {
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
         bindTemplates();
+        bindHttpClient();
 
-        bindString("hypernavi.server.pathdata");
-        bindString("hypernavi.server.serviceimg");
-        bindString("hypernavi.server.servicemarkets");
+        bindProperty("hypernavi.server.pathdata");
+        bindProperty("hypernavi.server.serviceimg");
+        bindProperty("hypernavi.server.servicemarkets");
 
         bindDataSource();
         // TODO: remove
         bind(FileDataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
 
+        bindTelegramBot();
+
         bindGoodsClassifier();
     }
 
-    private <T> void bindString(@NotNull final String key) {
+    private <T> void bindProperty(@NotNull final String key) {
         bind(String.class).annotatedWith(Names.named(key)).toInstance(config.getProperty(key));
     }
 
@@ -80,7 +85,10 @@ public final class HyperNaviModule extends AbstractModule {
         bind(HypermarketHolder.class).asEagerSingleton();
         bind(ImageDataBase.class).asEagerSingleton();
         requestStaticInjection(RegisterHypermarket.class);
+    }
 
+    private void bindHttpClient() {
+        bind(HttpClient.class).toInstance(HttpClientBuilder.create().build());
     }
 
     private void bindGoodsClassifier() {
@@ -122,5 +130,9 @@ public final class HyperNaviModule extends AbstractModule {
             default:
                 throw new UnsupportedOperationException("Unknown data source: " + dataSource);
         }
+    }
+
+    private void bindTelegramBot() {
+        bindProperty("hypernavi.telegram.bot.auth_token");
     }
 }

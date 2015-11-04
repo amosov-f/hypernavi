@@ -15,7 +15,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.RequestLog;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
-import ru.hypernavi.server.util.HttpTools;
+import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.util.function.MoreFunctions;
 
 /**

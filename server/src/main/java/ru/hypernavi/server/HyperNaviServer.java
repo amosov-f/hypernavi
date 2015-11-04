@@ -53,14 +53,20 @@ public final class HyperNaviServer {
 
     @NotNull
     private final Server server;
+    @NotNull
+    private final Injector injector;
 
     HyperNaviServer(final int port, @NotNull final Config config) {
+        injector = Guice.createInjector(new HyperNaviModule(config));
+
         final HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(new BeforeRequestHandler());
-        handlers.addHandler(servlets(config));
+        handlers.addHandler(createServlets());
+
         final RequestLogHandler requestLogHandler = new RequestLogHandler();
         requestLogHandler.setRequestLog(new AfterRequestHandler());
         handlers.addHandler(requestLogHandler);
+
         server = new Server(port);
         server.setHandler(handlers);
     }
@@ -79,13 +85,17 @@ public final class HyperNaviServer {
         }
     }
 
+    @NotNull
+    Injector getInjector() {
+        return injector;
+    }
+
     private int getPort() {
         return ((ServerConnector) server.getConnectors()[0]).getLocalPort();
     }
 
     @NotNull
-    private static ServletContextHandler servlets(@NotNull final Config config) {
-        final Injector injector = Guice.createInjector(new HyperNaviModule(config));
+    private ServletContextHandler createServlets() {
         final ServletContextHandler context = new ServletContextHandler();
         for (final Class<? extends HttpServlet> servletClass : servletClasses()) {
             final HttpServlet service = injector.getInstance(servletClass);
@@ -108,6 +118,7 @@ public final class HyperNaviServer {
 
     public static void main(@NotNull final String[] args) throws Exception {
         // TODO: use DefaultParser
+        //noinspection deprecation
         final CommandLine cmd = new GnuParser().parse(OPTIONS, args);
         System.setProperty("PORT", cmd.getOptionValue(OPT_PORT));
         final int port = Integer.parseInt(cmd.getOptionValue(OPT_PORT));
@@ -116,9 +127,9 @@ public final class HyperNaviServer {
         Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
         DOMConfigurator.configure(MoreIOUtils.toURL(cmd.getOptionValue(OPT_LOG_CFG)));
 
-        new HyperNaviBot().start(true);
 
         final HyperNaviServer server = new HyperNaviServer(port, config);
+        server.injector.getInstance(HyperNaviBot.class).start(true);
         try {
             server.start();
         } catch (Exception e) {
