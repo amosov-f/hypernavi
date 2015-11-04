@@ -23,6 +23,10 @@ public final class LoggingThreadFactory implements ThreadFactory {
     @NotNull
     private final AtomicInteger threadNumber = new AtomicInteger(1);
 
+    public LoggingThreadFactory(@NotNull final String name) {
+        this(name, true);
+    }
+
     public LoggingThreadFactory(@NotNull final String name, final boolean daemon) {
         this.name = name;
         this.daemon = daemon;
