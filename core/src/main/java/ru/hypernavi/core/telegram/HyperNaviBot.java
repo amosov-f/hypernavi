@@ -104,7 +104,10 @@ public final class HyperNaviBot {
 
     @Nullable
     private SearchResponse search(@NotNull final GeoPoint location) {
-        final URI uri = new URIBuilder("http://hypernavi.net/schemainfo").addParameter("lon", location.getLongitude()).build();
+        final URI uri = new URIBuilder("http://hypernavi.net/schemainfo")
+                .addParameter("lon", location.getLongitude())
+                .addParameter("lat", location.getLatitude())
+                .build();
         return httpClient.execute(new HttpGet(uri), SearchResponse.class);
     }
 
@@ -134,9 +137,9 @@ public final class HyperNaviBot {
         return TELEGRAM_API_URL + authToken + method;
     }
 
-    public static void main(@NotNull final String[] args) {
+    public static void main(@NotNull final String... args) {
         new HyperNaviBot(
-                "147907463:AAHOtdiREu8lGaqklAtidkfqaYD9XhAXhwc",
+                "139192271:AAGD6kiaoiiJEBxnquWOdu2WTVLisAqAWPE",
                 new HyperHttpClient(HttpClientBuilder.create().build())
         ).start(false);
     }
