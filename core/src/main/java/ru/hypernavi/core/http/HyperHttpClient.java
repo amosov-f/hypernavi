@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
+import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -27,6 +28,7 @@ import ru.hypernavi.util.TextUtils;
 /**
  * Created by amosov-f on 04.11.15.
  */
+@ThreadSafe
 public final class HyperHttpClient {
     private static final Log LOG = LogFactory.getLog(HyperHttpClient.class);
 
