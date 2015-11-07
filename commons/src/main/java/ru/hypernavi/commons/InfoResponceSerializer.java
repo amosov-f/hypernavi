@@ -17,6 +17,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 15.08.2015.
  */
+@Deprecated
 public enum InfoResponceSerializer {
     ;
     private static final Log LOG = LogFactory.getLog(InfoResponceSerializer.class);

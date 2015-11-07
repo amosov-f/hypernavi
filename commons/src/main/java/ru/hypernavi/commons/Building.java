@@ -13,6 +13,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 14.09.2015.
  */
+@Deprecated
 public class Building {
     private static final Log LOG = LogFactory.getLog(Building.class);
 

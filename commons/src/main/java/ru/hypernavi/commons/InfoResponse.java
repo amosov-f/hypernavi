@@ -11,6 +11,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 15.08.2015.
  */
+@Deprecated
 public class InfoResponse {
     private final List<Hypermarket> closestMarkets;
     private final GeoPoint requestLocation;

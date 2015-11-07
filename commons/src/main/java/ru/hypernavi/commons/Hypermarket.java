@@ -13,6 +13,7 @@ import ru.hypernavi.util.GeoPoint;
 /**
  * Created by Константин on 28.07.2015.
  */
+@Deprecated
 public class Hypermarket implements Positioned, Indexable {
     private static final Log LOG = LogFactory.getLog(Hypermarket.class);
 

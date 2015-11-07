@@ -10,6 +10,7 @@ import org.json.JSONObject;
 /**
  * Created by Константин on 15.09.2015.
  */
+@Deprecated
 public class WebInfo {
     @NotNull
     private final String path;
