@@ -13,6 +13,7 @@ import ru.hypernavi.util.GeoPoint;
  */
 
 @Singleton
+@Deprecated
 public class GeocoderParser {
     public GeocoderParser() {
     }

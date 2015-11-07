@@ -21,6 +21,7 @@ import org.json.JSONObject;
 /**
  * Created by Константин on 28.09.2015.
  */
+@Deprecated
 public final class GeocoderSender {
 
     @NotNull
