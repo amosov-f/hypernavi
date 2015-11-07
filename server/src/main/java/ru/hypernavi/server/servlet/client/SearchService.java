@@ -27,15 +27,15 @@ import ru.hypernavi.util.GeoPoint;
  * Created by Константин on 06.08.2015.
  */
 
-@WebServlet(name = "schemainfo", value = "/schemainfo")
-public class SchemaInfoServlet extends AbstractHttpService {
-    private static final Log LOG = LogFactory.getLog(SchemaInfoServlet.class);
+@WebServlet(name = "search", value = {"/search", "/schemainfo"})
+public class SearchService extends AbstractHttpService {
+    private static final Log LOG = LogFactory.getLog(SearchService.class);
 
     @NotNull
     private final HypermarketHolder markets;
 
     @Inject
-    public SchemaInfoServlet(@NotNull final HypermarketHolder markets) {
+    public SearchService(@NotNull final HypermarketHolder markets) {
         this.markets = markets;
     }
 
