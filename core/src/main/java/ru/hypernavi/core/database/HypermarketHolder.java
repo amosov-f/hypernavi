@@ -24,7 +24,7 @@ public class HypermarketHolder {
     private static final Log LOG = LogFactory.getLog(HypermarketHolder.class);
 
     @NotNull
-    private final MapStructure<Hypermarket> markets = new ArrayMapStructure<>();
+    private final GeoIndex<Hypermarket> markets = new DummyGeoIndex<>();
 
     private final DataLoader loader;
     private final String service;
@@ -75,7 +75,7 @@ public class HypermarketHolder {
 
     @NotNull
     public List<Hypermarket> getClosest(final GeoPoint position, final int k) {
-        return markets.find(position, k);
+        return markets.getKNN(position, k);
     }
 
     @NotNull

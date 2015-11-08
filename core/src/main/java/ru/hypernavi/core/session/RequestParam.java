@@ -7,11 +7,21 @@ import javax.servlet.ServletRequest;
 import java.util.Optional;
 import java.util.function.Function;
 
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Created by amosov-f on 24.10.15.
  */
 public abstract class RequestParam<T> {
+    private static final Log LOG = LogFactory.getLog(RequestParam.class);
+
     public static final RequestParam<String> PRAM_TEXT = new RequestParam.StringParam("text");
+
+
+    public static final RequestParam<Double> PARAM_LON = new RequestParam.DoubleParam("lon");
+    public static final RequestParam<Double> PARAM_LAT = new RequestParam.DoubleParam("lat");
 
     @NotNull
     private final String name;
@@ -21,12 +31,18 @@ public abstract class RequestParam<T> {
     }
 
     @Nullable
-    public T getValue(@NotNull final ServletRequest req) {
-        return Optional.ofNullable(req.getParameter(name)).map(this::parse).orElse(null);
+    public final T getValue(@NotNull final ServletRequest req) {
+        final String value = req.getParameter(name);
+        try {
+            return Optional.ofNullable(value).map(this::parse).orElse(null);
+        } catch (RuntimeException e) {
+            LOG.warn("Invalid request param '" + name + "=" + value + "'", e);
+            return null;
+        }
     }
 
     @Nullable
-    public abstract T parse(@NotNull final String value);
+    abstract T parse(@NotNull final String value);
 
     public static class Lambda<T> extends RequestParam<T> {
         @NotNull
@@ -39,7 +55,7 @@ public abstract class RequestParam<T> {
 
         @Nullable
         @Override
-        public T parse(@NotNull final String value) {
+        T parse(@NotNull final String value) {
             return parser.apply(value);
         }
     }
@@ -47,6 +63,12 @@ public abstract class RequestParam<T> {
     public static final class StringParam extends Lambda<String> {
         public StringParam(@NotNull final String name) {
             super(name, Function.<String>identity());
+        }
+    }
+
+    public static final class DoubleParam extends Lambda<Double> {
+        public DoubleParam(@NotNull final String name) {
+            super(name, Double::parseDouble);
         }
     }
 }

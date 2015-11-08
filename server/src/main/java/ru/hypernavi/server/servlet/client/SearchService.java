@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 
 import com.google.inject.Inject;
@@ -20,6 +19,9 @@ import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.GeoPoint;
 
@@ -39,24 +41,15 @@ public class SearchService extends AbstractHttpService {
         this.markets = markets;
     }
 
+    @NotNull
     @Override
-    public void process(@NotNull final HttpServletRequest request,
-                        @NotNull final HttpServletResponse response) throws IOException {
-        final Map<String, String[]> parameterMap = request.getParameterMap();
-        if (!parameterMap.containsKey("lon") || !parameterMap.containsKey("lat")) {
-            response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
-            return;
-        }
-        final GeoPoint currentPosition;
-        try {
-            final Double longitude = Double.parseDouble(request.getParameter("lon"));
-            final Double latitude = Double.parseDouble(request.getParameter("lat"));
-            currentPosition = new GeoPoint(longitude, latitude);
-        } catch (NumberFormatException e) {
-            LOG.warn("Invalid format" + e.getMessage());
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
+        return new SearchRequestReader(req);
+    }
+
+    @Override
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse response) throws IOException {
+        final GeoPoint currentPosition = session.get(Property.GEO_LOCATION);
 
         final List<Hypermarket> hypermarkets = markets.getClosest(currentPosition, 5);
 

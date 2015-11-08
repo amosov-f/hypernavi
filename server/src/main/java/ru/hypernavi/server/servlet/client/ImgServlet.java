@@ -3,17 +3,18 @@ package ru.hypernavi.server.servlet.client;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.database.ImageDataBase;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.AbstractHttpService;
-import com.google.inject.Inject;
 
 /**
  * Created by Константин on 19.07.2015.
@@ -35,9 +36,8 @@ public final class ImgServlet extends AbstractHttpService {
     }
 
     @Override
-    public void process(@NotNull final HttpServletRequest request,
-                        @NotNull final HttpServletResponse response) throws IOException {
-        final String name = request.getPathInfo();
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse response) throws IOException {
+        final String name = session.demand(Property.HTTP_PATH_INFO);
         LOG.info(serviceImg + name);
         final byte[] schema = images.get(serviceImg, name);
 

@@ -13,10 +13,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpStatus;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializationException;
 import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.core.http.HttpTools;
 
@@ -50,7 +52,17 @@ public abstract class AbstractHttpService extends HttpServlet {
         MDC.put("reqid", generateRequestId());
         LOG.info("Started processing: " + HttpTools.curl(req));
 
-        process(req, resp);
+        final SessionInitializer initializer = getInitializer(req);
+        final Session session = new Session();
+        initializer.initialize(session);
+        try {
+            initializer.validate(session);
+        } catch (SessionInitializationException e) {
+            resp.sendError(HttpStatus.SC_BAD_REQUEST, e.getMessage());
+            return;
+        }
+
+        service(session, resp);
 
         req.setAttribute(HttpTools.SERVICE, getServiceConfig().name());
         LOG.info(String.format(
@@ -65,14 +77,5 @@ public abstract class AbstractHttpService extends HttpServlet {
         return new RequestReader(req);
     }
 
-    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-    }
-
-    @Deprecated
-    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        final SessionInitializer initializer = getInitializer(req);
-        final Session session = new Session();
-        initializer.initialize(session);
-        service(session, resp);
-    }
+    public abstract void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException;
 }

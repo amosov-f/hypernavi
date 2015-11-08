@@ -1,60 +1,73 @@
 package ru.hypernavi.server.servlet.admin;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Building;
 import ru.hypernavi.core.database.RegisterHypermarket;
+import ru.hypernavi.core.session.*;
 import ru.hypernavi.server.servlet.AbstractHttpService;
+import ru.hypernavi.server.servlet.client.SearchRequestReader;
 import ru.hypernavi.util.GeoPoint;
 
 /**
  * Created by Константин on 21.08.2015.
  */
+@Deprecated
 @WebServlet(name = "register hypermarket", value = "/register/hypermarket")
 public class RegisterHyperServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(RegisterHyperServlet.class);
 
-    private static boolean isRequestHaveKeys(@NotNull final HttpServletRequest req, @Nullable final String[] keys) {
-        if (keys == null) {
-            return true;
-        }
-        final Map<String, String[]> parameters = req.getParameterMap();
-        if (parameters == null) {
-            return false;
-        }
-        for (int i = 0; i < keys.length; ++i) {
-            if (!parameters.containsKey(keys[i])) {
-                return false;
+    private static final RequestParam<String> PARAM_ADDRESS = new RequestParam.StringParam("address");
+    private static final RequestParam<String> PARAM_TYPE = new RequestParam.StringParam("type");
+    private static final RequestParam<String> PARAM_URL = new RequestParam.StringParam("url");
+    private static final RequestParam<String> PARAM_PAGE = new RequestParam.StringParam("page");
+
+    private static final Property<String> ADDRESS = new Property<>("address");
+    private static final Property<String> TYPE = new Property<>("type");
+    private static final Property<String> URL = new Property<>("url");
+    private static final Property<String> PAGE = new Property<>("page");
+
+    @NotNull
+    @Override
+    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
+        return new SearchRequestReader(req) {
+            @Override
+            public void initialize(@NotNull final Session session) {
+                super.initialize(session);
+                setPropertyIfPresent(session, ADDRESS, PARAM_ADDRESS);
+                setPropertyIfPresent(session, TYPE, PARAM_TYPE);
+                setPropertyIfPresent(session, URL, PARAM_URL);
+                setPropertyIfPresent(session, PAGE, PARAM_PAGE);
             }
-        }
-        return true;
+
+            @Override
+            public void validate(@NotNull final Session session) throws SessionInitializationException {
+                super.validate(session);
+                if (session.has(ADDRESS) && session.has(TYPE) && session.has(URL) && session.has(PAGE)) {
+                    return;
+                }
+                throw new SessionInitializationException("Request hasn't required params!");
+            }
+        };
     }
 
     @Override
-    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        final String[] expectedParameters = {"lon", "lat", "address", "url", "type", "page"};
-        if (!isRequestHaveKeys(req, expectedParameters)) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
 
-        final GeoPoint location = new GeoPoint(Double.parseDouble(req.getParameter("lon")),
-                Double.parseDouble(req.getParameter("lat")));
+        final GeoPoint location = session.demand(Property.GEO_LOCATION);
 
-        final String address = req.getParameter("address");
-        final String type = req.getParameter("type");
-        final String url = req.getParameter("url");
-        final String page = req.getParameter("page");
+        final String address = session.demand(ADDRESS);
+        final String type = session.demand(TYPE);
+        final String url = session.demand(URL);
+        final String page = session.demand(PAGE);
 
         RegisterHypermarket.register(new Building(location, address, null, null, null), type, url, page);
 

@@ -3,12 +3,12 @@ package ru.hypernavi.server.servlet.admin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
 import org.apache.commons.io.IOUtils;
+import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
@@ -19,7 +19,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 public class HypermarketServlet extends AbstractHttpService {
 
     @Override
-    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
         IOUtils.copy(HypermarketServlet.class.getResourceAsStream("/hypermarket.html"), resp.getOutputStream());
     }

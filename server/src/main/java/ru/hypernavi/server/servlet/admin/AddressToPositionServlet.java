@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.logging.Logger;
 
 
 import org.apache.http.entity.ContentType;
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.webutil.GeocoderParser;
 import ru.hypernavi.core.webutil.GeocoderSender;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -28,15 +28,26 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 public class AddressToPositionServlet extends AbstractHttpService {
     private static final Logger LOG = Logger.getLogger(AddressToPositionServlet.class.getName());
 
+    private static final RequestParam<String> PARAM_GEOCODE = new RequestParam.StringParam("geocode");
+    private static final Property<String> GEOCODE = new Property<>("geocode");
 
-    private boolean isRequestCorrect(@NotNull final HttpServletRequest req) {
-        final Map<String, String[]> parameters = req.getParameterMap();
-        LOG.info(parameters.keySet().toString());
-        return parameters.containsKey("geocode");
+    @NotNull
+    @Override
+    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
+        return new RequestReader(req) {
+            @Override
+            public void initialize(@NotNull final Session session) {
+                setPropertyIfPresent(session, GEOCODE, PARAM_GEOCODE);
+            }
+
+            @Override
+            public void validate(@NotNull final Session session) throws SessionInitializationException {
+                if (!session.has(GEOCODE)) {
+                    throw new SessionInitializationException("No geocode in request!");
+                }
+            }
+        };
     }
-
-
-
 
     @Nullable
     final JSONObject getAddressPosition(@NotNull final String request) {
@@ -63,17 +74,8 @@ public class AddressToPositionServlet extends AbstractHttpService {
     }
 
     @Override
-    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        if (!isRequestCorrect(req)) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        final String request = req.getParameter("geocode");
-        if (request == null) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+        final String request = session.demand(GEOCODE);
 
         final JSONObject obj = getAddressPosition(request);
         

@@ -3,7 +3,6 @@ package ru.hypernavi.server.servlet.admin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import org.json.JSONObject;
 import ru.hypernavi.commons.Building;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.webutil.GeocoderParser;
 import ru.hypernavi.core.webutil.GeocoderSender;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -38,7 +38,7 @@ public class MigrateServlet extends AbstractHttpService {
     }
 
     @Override
-    public void process(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         migrate();
     }
 
