@@ -33,10 +33,11 @@ public class AcceptanceTest {
             .disableContentCompression()
             .setMaxConnPerRoute(100)
             .setMaxConnTotal(100)
+            .disableRedirectHandling()
             .build();
 
     @NotNull
-    protected HttpResponse execute(@NotNull final String uri) {
+    protected final HttpResponse execute(@NotNull final String uri) {
         try {
             return client.execute(LOCALHOST, new HttpGet(uri));
         } catch (IOException e) {
