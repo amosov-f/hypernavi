@@ -17,11 +17,10 @@ import org.apache.commons.logging.LogFactory;
 public abstract class RequestParam<T> {
     private static final Log LOG = LogFactory.getLog(RequestParam.class);
 
-    public static final RequestParam<String> PRAM_TEXT = new RequestParam.StringParam("text");
+    public static final RequestParam<String> PRAM_TEXT = new StringParam("text");
 
-
-    public static final RequestParam<Double> PARAM_LON = new RequestParam.DoubleParam("lon");
-    public static final RequestParam<Double> PARAM_LAT = new RequestParam.DoubleParam("lat");
+    public static final RequestParam<Double> PARAM_LON = new DoubleParam("lon");
+    public static final RequestParam<Double> PARAM_LAT = new DoubleParam("lat");
 
     @NotNull
     private final String name;
@@ -44,11 +43,11 @@ public abstract class RequestParam<T> {
     @Nullable
     abstract T parse(@NotNull final String value);
 
-    public static class Lambda<T> extends RequestParam<T> {
+    public static class LambdaParam<T> extends RequestParam<T> {
         @NotNull
         private final Function<String, T> parser;
 
-        public Lambda(@NotNull final String name, @NotNull final Function<String, T> parser) {
+        public LambdaParam(@NotNull final String name, @NotNull final Function<String, T> parser) {
             super(name);
             this.parser = parser;
         }
@@ -60,13 +59,19 @@ public abstract class RequestParam<T> {
         }
     }
 
-    public static final class StringParam extends Lambda<String> {
+    public static final class StringParam extends LambdaParam<String> {
         public StringParam(@NotNull final String name) {
             super(name, Function.<String>identity());
         }
     }
 
-    public static final class DoubleParam extends Lambda<Double> {
+    public static final class IntegerParam extends LambdaParam<Integer> {
+        public IntegerParam(@NotNull final String name) {
+            super(name, Integer::parseInt);
+        }
+    }
+
+    public static final class DoubleParam extends LambdaParam<Double> {
         public DoubleParam(@NotNull final String name) {
             super(name, Double::parseDouble);
         }

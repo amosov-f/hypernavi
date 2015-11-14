@@ -3,6 +3,7 @@ package ru.hypernavi.core.session;
 import org.jetbrains.annotations.NotNull;
 
 
+import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -13,6 +14,8 @@ public final class Property<T> {
 
     public static final Property<String> TEXT = new Property<>("text");
     public static final Property<GeoPoint> GEO_LOCATION = new Property<>("geo_location");
+    
+    public static final Property<VkUser> VK_USER = new Property<>("vk_user");
 
     @NotNull
     private final String name;

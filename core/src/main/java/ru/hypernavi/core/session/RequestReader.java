@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 
 import ru.hypernavi.util.GeoPoint;
@@ -14,7 +13,7 @@ import ru.hypernavi.util.GeoPoint;
  */
 public class RequestReader implements SessionInitializer {
     @NotNull
-    private final HttpServletRequest req;
+    protected final HttpServletRequest req;
 
     public RequestReader(@NotNull final HttpServletRequest req) {
         this.req = req;
@@ -25,7 +24,7 @@ public class RequestReader implements SessionInitializer {
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
 
         setPropertyIfPresent(session, Property.TEXT, RequestParam.PRAM_TEXT);
-        Optional.ofNullable(getGeoLocation()).ifPresent(location -> session.set(Property.GEO_LOCATION, location));
+        session.setIfNotNull(Property.GEO_LOCATION, getGeoLocation());
     }
 
     @Override

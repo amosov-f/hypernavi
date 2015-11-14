@@ -16,11 +16,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
+import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializationException;
 import ru.hypernavi.core.session.SessionInitializer;
-import ru.hypernavi.core.http.HttpTools;
 
 /**
  * User: amosov-f
@@ -58,8 +58,17 @@ public abstract class AbstractHttpService extends HttpServlet {
         try {
             initializer.validate(session);
         } catch (SessionInitializationException e) {
-            resp.sendError(HttpStatus.SC_BAD_REQUEST, e.getMessage());
-            return;
+            switch (e.getError()) {
+                case BAD_REQUEST:
+                    resp.sendError(HttpStatus.SC_BAD_REQUEST, e.getMessage());
+                    return;
+                case UNAUTHORIZED:
+                    resp.sendRedirect("/auth?url=" + req.getRequestURI());
+                    return;
+                case FORBIDDEN:
+                    resp.sendError(HttpStatus.SC_FORBIDDEN, e.getMessage());
+                    return;
+            }
         }
 
         service(session, resp);
