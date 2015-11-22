@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.database.ImageDataBase;
 import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
@@ -30,7 +31,11 @@ public final class ImgServlet extends AbstractHttpService {
     private final ImageDataBase images;
 
     @Inject
-    public ImgServlet(@Named("hypernavi.server.serviceimg") @NotNull final String serviceImg, @NotNull final ImageDataBase images) {
+    public ImgServlet(@Named("hypernavi.server.serviceimg") @NotNull final String serviceImg,
+                      @NotNull final ImageDataBase images,
+                      @NotNull final RequestReader.Factory<?> initFactory)
+    {
+        super(initFactory);
         this.serviceImg = serviceImg;
         this.images = images;
     }

@@ -10,7 +10,7 @@ import java.util.Optional;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.util.function.Optionals;
 
-import static ru.hypernavi.core.session.SessionInitializationException.Error.*;
+import static ru.hypernavi.core.session.SessionValidationException.Error.*;
 
 /**
  * Created by amosov-f on 14.11.15.
@@ -42,14 +42,14 @@ public class VkAuthRequestReader extends RequestReader {
     }
 
     @Override
-    public void validate(@NotNull final Session session) throws SessionInitializationException {
+    public void validate(@NotNull final Session session) throws SessionValidationException {
         super.validate(session);
         final VkUser user = Optional.ofNullable(session.get(Property.VK_USER))
-                .orElseThrow(() -> new SessionInitializationException(UNAUTHORIZED, "Not enough vk auth parameters!"));
+                .orElseThrow(() -> new SessionValidationException(UNAUTHORIZED, "Not enough vk auth parameters!"));
         final String hash = Optional.ofNullable(session.get(HASH))
-                .orElseThrow(() -> new SessionInitializationException(UNAUTHORIZED, "No 'hash' parameter in request!"));
+                .orElseThrow(() -> new SessionValidationException(UNAUTHORIZED, "No 'hash' parameter in request!"));
         if (!validator.validate(user, hash)) {
-            throw new SessionInitializationException(UNAUTHORIZED, "Invalid request digest!");
+            throw new SessionValidationException(UNAUTHORIZED, "Invalid request digest!");
         }
     }
 

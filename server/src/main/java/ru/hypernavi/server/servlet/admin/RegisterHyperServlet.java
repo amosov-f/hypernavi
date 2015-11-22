@@ -35,28 +35,32 @@ public class RegisterHyperServlet extends AbstractHttpService {
     private static final Property<String> URL = new Property<>("url");
     private static final Property<String> PAGE = new Property<>("page");
 
-    @NotNull
-    @Override
-    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
-        return new SearchRequestReader(req) {
+    public RegisterHyperServlet() {
+        super(new RequestReader.Factory<SearchRequestReader>() {
+            @NotNull
             @Override
-            public void initialize(@NotNull final Session session) {
-                super.initialize(session);
-                setPropertyIfPresent(session, ADDRESS, PARAM_ADDRESS);
-                setPropertyIfPresent(session, TYPE, PARAM_TYPE);
-                setPropertyIfPresent(session, URL, PARAM_URL);
-                setPropertyIfPresent(session, PAGE, PARAM_PAGE);
-            }
+            public SearchRequestReader create(@NotNull final HttpServletRequest req) {
+                return new SearchRequestReader(req) {
+                    @Override
+                    public void initialize(@NotNull final Session session) {
+                        super.initialize(session);
+                        setPropertyIfPresent(session, ADDRESS, PARAM_ADDRESS);
+                        setPropertyIfPresent(session, TYPE, PARAM_TYPE);
+                        setPropertyIfPresent(session, URL, PARAM_URL);
+                        setPropertyIfPresent(session, PAGE, PARAM_PAGE);
+                    }
 
-            @Override
-            public void validate(@NotNull final Session session) throws SessionInitializationException {
-                super.validate(session);
-                if (session.has(ADDRESS) && session.has(TYPE) && session.has(URL) && session.has(PAGE)) {
-                    return;
-                }
-                throw new SessionInitializationException("Request hasn't required params!");
+                    @Override
+                    public void validate(@NotNull final Session session) throws SessionValidationException {
+                        super.validate(session);
+                        if (session.has(ADDRESS) && session.has(TYPE) && session.has(URL) && session.has(PAGE)) {
+                            return;
+                        }
+                        throw new SessionValidationException("Request hasn't required params!");
+                    }
+                };
             }
-        };
+        });
     }
 
     @Override

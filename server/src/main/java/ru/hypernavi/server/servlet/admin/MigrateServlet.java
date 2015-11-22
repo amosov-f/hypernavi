@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import ru.hypernavi.commons.Building;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.webutil.GeocoderParser;
 import ru.hypernavi.core.webutil.GeocoderSender;
@@ -33,7 +34,8 @@ public class MigrateServlet extends AbstractHttpService {
     private final HypermarketHolder markets;
 
     @Inject
-    public MigrateServlet(@NotNull final HypermarketHolder markets) {
+    public MigrateServlet(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<?> readerFactory) {
+        super(readerFactory);
         this.markets = markets;
     }
 

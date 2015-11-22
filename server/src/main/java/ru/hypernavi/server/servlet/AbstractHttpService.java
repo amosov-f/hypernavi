@@ -1,6 +1,7 @@
 package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,16 +12,14 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 
+import com.google.inject.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
 import ru.hypernavi.core.http.HttpTools;
-import ru.hypernavi.core.session.RequestReader;
-import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.session.SessionInitializationException;
-import ru.hypernavi.core.session.SessionInitializer;
+import ru.hypernavi.core.session.*;
 
 /**
  * User: amosov-f
@@ -29,6 +28,16 @@ import ru.hypernavi.core.session.SessionInitializer;
  */
 public abstract class AbstractHttpService extends HttpServlet {
     private static final Log LOG = LogFactory.getLog(AbstractHttpService.class);
+
+    @NotNull
+    private final RequestReader.Factory<?> initFactory;
+    @Inject
+    @Nullable
+    private Provider<Session> sessionFactory;
+
+    protected AbstractHttpService(@NotNull final RequestReader.Factory<?> initFactory) {
+        this.initFactory = initFactory;
+    }
 
     @NotNull
     private static String generateRequestId() {
@@ -52,12 +61,12 @@ public abstract class AbstractHttpService extends HttpServlet {
         MDC.put("reqid", generateRequestId());
         LOG.info("Started processing: " + HttpTools.curl(req));
 
-        final SessionInitializer initializer = getInitializer(req);
-        final Session session = new Session();
+        final SessionInitializer initializer = initFactory.create(req);
+        final Session session = Objects.requireNonNull(sessionFactory).get();
         initializer.initialize(session);
         try {
             initializer.validate(session);
-        } catch (SessionInitializationException e) {
+        } catch (SessionValidationException e) {
             switch (e.getError()) {
                 case BAD_REQUEST:
                     resp.sendError(HttpStatus.SC_BAD_REQUEST, e.getMessage());
@@ -79,11 +88,6 @@ public abstract class AbstractHttpService extends HttpServlet {
                 System.currentTimeMillis() - timeStamp,
                 System.currentTimeMillis() - ((Request) req).getTimeStamp()
         ));
-    }
-
-    @NotNull
-    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
-        return new RequestReader(req);
     }
 
     public abstract void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException;

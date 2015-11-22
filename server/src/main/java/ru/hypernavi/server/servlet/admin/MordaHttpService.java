@@ -6,7 +6,7 @@ import javax.servlet.annotation.WebServlet;
 
 
 import com.google.inject.Inject;
-import freemarker.template.Configuration;
+import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.server.servlet.HtmlPageHttpService;
 
 /**
@@ -15,7 +15,7 @@ import ru.hypernavi.server.servlet.HtmlPageHttpService;
 @WebServlet(name = "morda", value = "")
 public final class MordaHttpService extends HtmlPageHttpService {
     @Inject
-    public MordaHttpService(@NotNull final Configuration templatesConfig) {
-        super(templatesConfig, "morda.ftl");
+    public MordaHttpService(@NotNull final RequestReader.Factory<?> initFactory) {
+        super("morda.ftl", initFactory);
     }
 }

@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +23,7 @@ import ru.hypernavi.core.webutil.GeocoderSender;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 
+@Deprecated
 @WebServlet(name = "geoloc", value = "/geoloc")
 public class AddressToPositionServlet extends AbstractHttpService {
     private static final Logger LOG = Logger.getLogger(AddressToPositionServlet.class.getName());
@@ -31,22 +31,20 @@ public class AddressToPositionServlet extends AbstractHttpService {
     private static final RequestParam<String> PARAM_GEOCODE = new RequestParam.StringParam("geocode");
     private static final Property<String> GEOCODE = new Property<>("geocode");
 
-    @NotNull
-    @Override
-    public SessionInitializer getInitializer(@NotNull final HttpServletRequest req) {
-        return new RequestReader(req) {
+    public AddressToPositionServlet() {
+        super(req -> new RequestReader(req) {
             @Override
             public void initialize(@NotNull final Session session) {
                 setPropertyIfPresent(session, GEOCODE, PARAM_GEOCODE);
             }
 
             @Override
-            public void validate(@NotNull final Session session) throws SessionInitializationException {
+            public void validate(@NotNull final Session session) throws SessionValidationException {
                 if (!session.has(GEOCODE)) {
-                    throw new SessionInitializationException("No geocode in request!");
+                    throw new SessionValidationException("No geocode in request!");
                 }
             }
-        };
+        });
     }
 
     @Nullable

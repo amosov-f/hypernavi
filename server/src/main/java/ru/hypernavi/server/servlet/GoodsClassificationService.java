@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.Category;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 
 /**
@@ -30,7 +31,8 @@ public final class GoodsClassificationService extends AbstractHttpService {
     private final GoodsClassifier classifier;
 
     @Inject
-    public GoodsClassificationService(@NotNull final GoodsClassifier classifier) {
+    public GoodsClassificationService(@NotNull final GoodsClassifier classifier, @NotNull final RequestReader.Factory<?> initFactory) {
+        super(initFactory);
         this.classifier = classifier;
     }
 

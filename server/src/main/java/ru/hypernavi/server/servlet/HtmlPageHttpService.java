@@ -10,10 +10,12 @@ import java.nio.charset.StandardCharsets;
 
 
 import com.google.common.net.MediaType;
+import com.google.inject.Inject;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.http.HttpStatus;
+import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 
 /**
@@ -22,11 +24,11 @@ import ru.hypernavi.core.session.Session;
 public abstract class HtmlPageHttpService extends AbstractHttpService {
     @NotNull
     private final String pathInBundle;
-    @NotNull
-    private final Configuration templatesConfig;
+    @Inject
+    private Configuration templatesConfig;
 
-    protected HtmlPageHttpService(@NotNull final Configuration templatesConfig, @NotNull final String pathInBundle) {
-        this.templatesConfig = templatesConfig;
+    protected HtmlPageHttpService(@NotNull final String pathInBundle, @NotNull final RequestReader.Factory<?> initFactory) {
+        super(initFactory);
         this.pathInBundle = pathInBundle;
     }
 

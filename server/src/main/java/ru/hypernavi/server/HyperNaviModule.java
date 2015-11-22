@@ -22,11 +22,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import ru.hypernavi.commons.Platform;
+import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.auth.VkAuthValidator;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.goods.TomallGoodsClassifier;
 import ru.hypernavi.core.database.*;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.server.servlet.client.SearchRequestReader;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -47,6 +50,10 @@ public final class HyperNaviModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(RequestReader.module());
+        install(SearchRequestReader.module());
+        install(AdminRequestReader.module());
+
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
         bindTemplates();
         bindHttpClient();

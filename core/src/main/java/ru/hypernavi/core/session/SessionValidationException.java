@@ -5,15 +5,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by amosov-f on 08.11.15.
  */
-public final class SessionInitializationException extends Exception {
+public final class SessionValidationException extends Exception {
     @NotNull
     private final Error error;
 
-    public SessionInitializationException(@NotNull final String detailMessage) {
+    public SessionValidationException(@NotNull final String detailMessage) {
         this(Error.BAD_REQUEST, detailMessage);
     }
 
-    public SessionInitializationException(@NotNull final Error error, @NotNull final String detailMessage) {
+    public SessionValidationException(@NotNull final Error error, @NotNull final String detailMessage) {
         super(detailMessage);
         this.error = error;
     }

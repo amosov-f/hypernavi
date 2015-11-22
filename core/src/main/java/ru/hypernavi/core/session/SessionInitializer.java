@@ -8,5 +8,5 @@ import org.jetbrains.annotations.NotNull;
 public interface SessionInitializer {
     void initialize(@NotNull Session session);
 
-    void validate(@NotNull final Session session) throws SessionInitializationException;
+    void validate(@NotNull final Session session) throws SessionValidationException;
 }
