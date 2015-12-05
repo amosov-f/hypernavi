@@ -1,11 +1,13 @@
-package ru.hypernavi.core.database.provider;
+package ru.hypernavi.core.database.provider.sql;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -24,14 +26,14 @@ public final class SiteSqlProvider extends SqlProvider<Site> {
     private static final Log LOG = LogFactory.getLog(SiteSqlProvider.class);
 
     @NotNull
-    private final DatabaseProvider<GeoObject> geoObjectProvider;
+    private final SqlProvider<GeoObject> geoObjectProvider;
     @NotNull
-    private final DatabaseProvider<Plan> planProvider;
+    private final SqlProvider<Plan> planProvider;
 
     @Inject
     public SiteSqlProvider(@NotNull final Connection conn,
-                           @NotNull final DatabaseProvider<Plan> planProvider,
-                           @NotNull final DatabaseProvider<GeoObject> geoObjectProvider)
+                           @NotNull final SqlProvider<Plan> planProvider,
+                           @NotNull final SqlProvider<GeoObject> geoObjectProvider)
     {
         super(conn);
         this.geoObjectProvider = geoObjectProvider;
@@ -45,12 +47,13 @@ public final class SiteSqlProvider extends SqlProvider<Site> {
         if (geoObjectId == null) {
             return null;
         }
-        final GeoObject position = geoObjectProvider.get(geoObjectId);
+        final GeoObject position = geoObjectProvider.select(geoObjectId);
         if (position == null) {
             return null;
         }
         final Plan[] plans = SqlUtils.intStream(statement.executeQuery("SELECT plan_id FROM site_plan WHERE site_id = " + id))
-                .mapToObj(planProvider::get)
+                .mapToObj(String::valueOf)
+                .map(planProvider::get)
                 .toArray(Plan[]::new);
         return new Site(position, plans);
     }
@@ -59,13 +62,13 @@ public final class SiteSqlProvider extends SqlProvider<Site> {
     @Override
     public Integer insert(@NotNull final Site site) throws SQLException {
         final GeoObject geoObject = site.getPosition();
-        final Integer geoObjectId = geoObjectProvider.add(geoObject);
+        final Integer geoObjectId = geoObjectProvider.insert(geoObject);
         if (geoObjectId == null) {
             return null;
         }
         final List<Integer> planIds = new ArrayList<>();
         for (final Plan plan : site.getPlans()) {
-            final Integer planId = planProvider.add(plan);
+            final Integer planId = planProvider.insert(plan);
             if (planId == null) {
                 return null;
             }
@@ -97,8 +100,10 @@ public final class SiteSqlProvider extends SqlProvider<Site> {
         final int[] planIds = SqlUtils.intStream(statement.executeQuery("SELECT plan_id FROM site_plan WHERE site_id = " + id)).toArray();
 
         statement.execute("DELETE site, site_plan FROM site, site_plan WHERE site.id = " + id + " AND site_plan.site_id = " + id);
-        geoObjectProvider.remove(positionId);
-        Arrays.stream(planIds).forEach(planProvider::remove);
+        geoObjectProvider.delete(positionId);
+        for (final int planId : planIds) {
+            planProvider.delete(planId);
+        }
 
         return null;
     }

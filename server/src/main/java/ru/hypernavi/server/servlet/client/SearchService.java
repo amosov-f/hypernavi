@@ -28,7 +28,7 @@ import ru.hypernavi.util.GeoPoint;
  * Created by Константин on 06.08.2015.
  */
 
-@WebServlet(name = "search", value = {"/search", "/schemainfo"})
+@WebServlet(name = "schemainfo", value = "/schemainfo")
 public class SearchService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(SearchService.class);
 

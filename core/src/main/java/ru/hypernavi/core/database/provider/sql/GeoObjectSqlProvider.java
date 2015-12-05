@@ -1,4 +1,4 @@
-package ru.hypernavi.core.database.provider;
+package ru.hypernavi.core.database.provider.sql;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,10 +15,10 @@ import ru.hypernavi.util.GeoPoint;
  */
 public class GeoObjectSqlProvider extends SqlProvider<GeoObject> {
     @NotNull
-    private final DatabaseProvider<GeoPoint> geoPointProvider;
+    private final SqlProvider<GeoPoint> geoPointProvider;
 
     @Inject
-    public GeoObjectSqlProvider(@NotNull final Connection conn, @NotNull final DatabaseProvider<GeoPoint> geoPointProvider) {
+    public GeoObjectSqlProvider(@NotNull final Connection conn, @NotNull final SqlProvider<GeoPoint> geoPointProvider) {
         super(conn);
         this.geoPointProvider = geoPointProvider;
     }
@@ -33,14 +33,14 @@ public class GeoObjectSqlProvider extends SqlProvider<GeoObject> {
         final String name = select.getString("name");
         final String description = select.getString("description");
         final int geoPointId = select.getInt("geo_point_id");
-        final GeoPoint geoPoint = geoPointProvider.get(geoPointId);
+        final GeoPoint geoPoint = geoPointProvider.select(geoPointId);
         return geoPoint != null ? new GeoObject(name, description, geoPoint) : null;
     }
 
     @Nullable
     @Override
     public Integer insert(@NotNull final GeoObject geoObject) throws SQLException {
-        final Integer geoPointId = geoPointProvider.add(geoObject.getLocation());
+        final Integer geoPointId = geoPointProvider.insert(geoObject.getLocation());
         if (geoPointId == null) {
             return null;
         }

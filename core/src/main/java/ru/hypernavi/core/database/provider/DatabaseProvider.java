@@ -11,16 +11,16 @@ import java.util.stream.Stream;
  */
 public interface DatabaseProvider<T> {
     @Nullable
-    T get(int id);
+    T get(@NotNull String id);
 
     @NotNull
-    default Stream<T> get(@NotNull final int[] ids) {
-        return Arrays.stream(ids).mapToObj(this::get);
+    default Stream<T> get(@NotNull final String[] ids) {
+        return Arrays.stream(ids).map(this::get);
     }
 
     @Nullable
-    Integer add(@NotNull T obj);
+    String add(@NotNull T obj);
 
     @Nullable
-    T remove(int id);
+    T remove(String id);
 }

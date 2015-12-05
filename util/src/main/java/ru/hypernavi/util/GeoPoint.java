@@ -18,12 +18,18 @@ public final class GeoPoint {
     private static final Log LOG = LogFactory.getLog(GeoPoint.class);
 
     private static final double EARTH_RADIUS = 6371.0d;
-    private final double latitude;
-    private final double longitude;
+
+    @NotNull
+    private final String type = "Point";
+    private final transient double longitude;
+    private final transient double latitude;
+    @NotNull
+    private final double[] coordinates;
 
     public GeoPoint(final double longitude, final double latitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+        coordinates = new double[]{longitude, latitude};
     }
 
     public double getLatitude() {
@@ -60,6 +66,11 @@ public final class GeoPoint {
             return null;
         }
         return result;
+    }
+
+    @NotNull
+    public double[] getCoordinates() {
+        return coordinates;
     }
 
     @NotNull

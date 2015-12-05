@@ -42,7 +42,8 @@ public final class DummyGeoIndex<T extends Positioned> implements GeoIndex<T> {
 
     @Override
     @Deprecated
-    public void add(@NotNull final T point) {
+    public String add(@NotNull final T point) {
         points.add(point);
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package ru.hypernavi.core.database.provider;
+package ru.hypernavi.core.database.provider.sql;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,9 +11,11 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 
 import org.apache.commons.io.IOUtils;
+import ru.hypernavi.core.database.provider.DatabaseProvider;
 
 /**
  * Created by amosov-f on 27.11.15.
@@ -46,9 +48,9 @@ public abstract class SqlProvider<T> implements DatabaseProvider<T> {
 
     @Nullable
     @Override
-    public T get(final int id) {
+    public T get(@NotNull final String id) {
         try {
-            return select(id);
+            return select(Integer.parseInt(id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -56,9 +58,9 @@ public abstract class SqlProvider<T> implements DatabaseProvider<T> {
 
     @Nullable
     @Override
-    public Integer add(@NotNull final T obj) {
+    public String add(@NotNull final T obj) {
         try {
-            return insert(obj);
+            return Objects.toString(insert(obj), null);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -66,9 +68,9 @@ public abstract class SqlProvider<T> implements DatabaseProvider<T> {
 
     @Nullable
     @Override
-    public T remove(final int id) {
+    public T remove(@NotNull final String id) {
         try {
-            return delete(id);
+            return delete(Integer.parseInt(id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -31,7 +31,7 @@ public interface GeoIndex<T extends Positioned> {
     }
 
     @Deprecated
-    default void add(@NotNull final T hyper) {
+    default String add(@NotNull final T hyper) {
         throw new UnsupportedOperationException();
     }
 }

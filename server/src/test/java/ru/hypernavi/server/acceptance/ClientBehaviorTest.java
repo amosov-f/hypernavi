@@ -32,7 +32,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
     public void testSchemaInfoOkStatus() {
         final double lon = 30;
         final double lat = 60;
-        final HttpResponse resp = execute("/search?lon=" + lon + "&lat=" + lat);
+        final HttpResponse resp = execute("/schemainfo?lon=" + lon + "&lat=" + lat);
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
     }
 
@@ -40,7 +40,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
     public void testHypermarketSchemaSend() {
         final double lon = 30;
         final double lat = 60;
-        HttpResponse resp = execute("/search?lon=" + lon + "&lat=" + lat);
+        HttpResponse resp = execute("/schemainfo?lon=" + lon + "&lat=" + lat);
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
         String pathSchema = null;
         try {

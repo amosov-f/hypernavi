@@ -36,7 +36,7 @@ public final class DummySiteSqlGeoIndex implements SqlGeoIndex<Site> {
     @NotNull
     @Override
     public List<Site> selectNN(@NotNull final GeoPoint location, final int offset, final int count) throws SQLException {
-        final int[] ids = SqlUtils.intStream(statement.executeQuery()).toArray();
+        final String[] ids = SqlUtils.intStream(statement.executeQuery()).mapToObj(String::valueOf).toArray(String[]::new);
         final Site[] sites = siteProvider.get(ids).toArray(Site[]::new);
         return new DummyGeoIndex<>(sites).getNN(location, offset, count);
     }
