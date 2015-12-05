@@ -1,0 +1,1 @@
+DELETE geo_object, geo_point FROM geo_object, geo_point WHERE geo_object.id = %d AND geo_point.id = geo_object.geo_point_id

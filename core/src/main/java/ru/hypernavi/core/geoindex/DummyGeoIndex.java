@@ -1,4 +1,4 @@
-package ru.hypernavi.core.database;
+package ru.hypernavi.core.geoindex;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,10 +25,11 @@ public final class DummyGeoIndex<T extends Positioned> implements GeoIndex<T> {
 
     @NotNull
     @Override
-    public List<T> getKNN(@NotNull final GeoPoint location, final int k) {
+    public List<T> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
         return points.stream()
                 .sorted(Comparator.comparing(point -> GeoPoint.distance(location, point.getLocation())))
-                .limit(k)
+                .skip(offset)
+                .limit(count)
                 .collect(Collectors.toList());
     }
 

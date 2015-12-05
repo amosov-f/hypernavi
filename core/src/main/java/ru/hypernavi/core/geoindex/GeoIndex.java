@@ -1,4 +1,4 @@
-package ru.hypernavi.core.database;
+package ru.hypernavi.core.geoindex;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -13,16 +13,25 @@ import ru.hypernavi.util.GeoPoint;
  */
 public interface GeoIndex<T extends Positioned> {
     @NotNull
+    List<T> getNN(@NotNull final GeoPoint location, final int offset, final int count);
+
+    @NotNull
     default T getNN(@NotNull final GeoPoint location) {
         return getKNN(location, 1).stream().findFirst().orElseThrow(() -> new IllegalStateException("No points in geo index!"));
     }
 
     @NotNull
-    List<T> getKNN(@NotNull final GeoPoint location, final int k);
+    default List<T> getKNN(@NotNull final GeoPoint location, final int k) {
+        return getNN(location, 0, k);
+    }
 
     @Deprecated
-    List<T> getAll();
+    default List<T> getAll() {
+        throw new UnsupportedOperationException();
+    }
 
     @Deprecated
-    void add(@NotNull final T hyper);
+    default void add(@NotNull final T hyper) {
+        throw new UnsupportedOperationException();
+    }
 }

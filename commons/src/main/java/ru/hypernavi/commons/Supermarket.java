@@ -16,8 +16,8 @@ public final class Supermarket extends Site {
     @Nullable
     private final String chain;
 
-    public Supermarket(final int id, @NotNull final GeoObject position, @NotNull final Plan[] plans, @Nullable final String chain) {
-        super(id, position, plans);
+    public Supermarket(@NotNull final GeoObject position, @NotNull final Plan[] plans, @Nullable final String chain) {
+        super(position, plans);
         this.chain = chain;
     }
 

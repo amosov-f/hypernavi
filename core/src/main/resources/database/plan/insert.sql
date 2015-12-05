@@ -1,0 +1,1 @@
+INSERT INTO plan (link, azimuth) VALUES ('%s', %f) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)

@@ -39,4 +39,9 @@ public final class GeoObject implements Positioned {
     public GeoPoint getLocation() {
         return location;
     }
+
+    @Override
+    public String toString() {
+        return "GeoObject{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", location=" + location + '}';
+    }
 }

@@ -1,0 +1,1 @@
+INSERT INTO geo_point (latitude, longitude) VALUES (%f, %f) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)

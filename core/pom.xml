@@ -51,6 +51,11 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.7.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.fracpete</groupId>
             <artifactId>snowball-stemmers-weka-package</artifactId>
             <version>1.0.0</version>

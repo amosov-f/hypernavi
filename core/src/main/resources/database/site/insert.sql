@@ -1,0 +1,1 @@
+INSERT INTO site (geo_object_id) VALUES (%d) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)

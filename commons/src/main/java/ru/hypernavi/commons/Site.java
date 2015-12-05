@@ -10,22 +10,15 @@ import ru.hypernavi.util.GeoPoint;
  * Created by amosov-f on 07.11.15.
  */
 @Immutable
-public class Site implements Indexable, Positioned {
-    private final int id;
+public class Site implements Positioned {
     @NotNull
     private final GeoObject position;
     @NotNull
     private final Plan[] plans;
 
-    public Site(final int id, @NotNull final GeoObject position, @NotNull final Plan... plans) {
-        this.id = id;
+    public Site(@NotNull final GeoObject position, @NotNull final Plan... plans) {
         this.position = position;
         this.plans = plans;
-    }
-
-    @Override
-    public final int getId() {
-        return id;
     }
 
     @NotNull

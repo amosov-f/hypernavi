@@ -12,8 +12,8 @@ public final class SearchResponseTest {
     @Test
     public void testSerialization() throws Exception {
         final SearchResponse.Data data = new SearchResponse.Data(
-                new Site(0, new GeoObject("site", "site", new GeoPoint(30, 60))),
-                new Supermarket(1, new GeoObject("hyper", "hyper", new GeoPoint(30, 60)), Plan.EMPTY_ARRAY, "okey")
+                new Site(new GeoObject("site", "site", new GeoPoint(30, 60))),
+                new Supermarket(new GeoObject("hyper", "hyper", new GeoPoint(30, 60)), Plan.EMPTY_ARRAY, "okey")
         );
         final String json = GsonUtil.gson().toJson(new SearchResponse(new SearchResponse.Meta(new GeoPoint(30, 60)), data));
         final SearchResponse response = GsonUtil.gson().fromJson(json, SearchResponse.class);

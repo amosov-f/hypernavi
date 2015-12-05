@@ -1,0 +1,1 @@
+INSERT INTO geo_object (name, description, geo_point_id) VALUES ('%s', '%s', %d) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)

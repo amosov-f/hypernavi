@@ -15,6 +15,8 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.core.geoindex.DummyGeoIndex;
+import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -75,7 +77,7 @@ public class HypermarketHolder {
 
     @NotNull
     public List<Hypermarket> getClosest(final GeoPoint position, final int k) {
-        return markets.getKNN(position, k);
+        return markets.getNN(position, 0, k);
     }
 
     @NotNull
