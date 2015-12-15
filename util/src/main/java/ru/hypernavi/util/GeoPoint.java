@@ -21,8 +21,8 @@ public final class GeoPoint {
 
     @NotNull
     private final String type = "Point";
-    private final transient double longitude;
-    private final transient double latitude;
+    private final double longitude;
+    private final double latitude;
     @NotNull
     private final double[] coordinates;
 

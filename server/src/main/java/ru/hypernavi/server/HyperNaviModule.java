@@ -143,6 +143,7 @@ public final class HyperNaviModule extends AbstractModule {
 
     private void bindTelegramBot() {
         bindProperty("hypernavi.telegram.bot.auth_token");
+        bindProperty("hypernavi.telegram.bot.search_host");
     }
 
     private void bindVkAuthValidator() {

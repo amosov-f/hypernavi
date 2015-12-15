@@ -46,14 +46,20 @@ public final class HyperNaviBot {
     private final ExecutorService service = Executors.newCachedThreadPool(new LoggingThreadFactory("SENDER"));
 
     @NotNull
+    private final String searchHost;
+    @NotNull
     private final HyperHttpClient httpClient;
 
     @NotNull
     private final String authToken;
 
     @Inject
-    public HyperNaviBot(@Named("hypernavi.telegram.bot.auth_token") @NotNull final String authToken, @NotNull final HyperHttpClient httpClient) {
+    public HyperNaviBot(@Named("hypernavi.telegram.bot.auth_token") @NotNull final String authToken,
+                        @Named("hypernavi.telegram.bot.search_host") @NotNull final String searchHost,
+                        @NotNull final HyperHttpClient httpClient)
+    {
         this.authToken = authToken;
+        this.searchHost = searchHost;
         this.httpClient = httpClient;
     }
 
@@ -91,7 +97,7 @@ public final class HyperNaviBot {
                 final Hypermarket hypermarket = searchResponse.getData().getHypermarkets()[0];
                 sendMessage(chatId, "Ближайший гипермаркет: " + hypermarket.getAddress());
                 sendMessage(chatId, "Сейчас покажу его схему...");
-                sendPhoto(chatId, hypermarket.getUrl());
+                sendPhoto(chatId, "http://" + searchHost + hypermarket.getPath());
             });
         }
     }
@@ -104,7 +110,7 @@ public final class HyperNaviBot {
 
     @Nullable
     private SearchResponse search(@NotNull final GeoPoint location) {
-        final URI uri = new URIBuilder("http://hypernavi.net/schemainfo")
+        final URI uri = new URIBuilder("http://" + searchHost + "/schemainfo")
                 .addParameter("lon", location.getLongitude())
                 .addParameter("lat", location.getLatitude())
                 .build();
@@ -140,6 +146,7 @@ public final class HyperNaviBot {
     public static void main(@NotNull final String... args) {
         new HyperNaviBot(
                 "139192271:AAGD6kiaoiiJEBxnquWOdu2WTVLisAqAWPE",
+                "hypernavi.net",
                 new HyperHttpClient(HttpClientBuilder.create().build())
         ).start(false);
     }
