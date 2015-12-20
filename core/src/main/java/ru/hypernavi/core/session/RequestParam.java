@@ -4,12 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletRequest;
+import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.function.Function;
 
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import ru.hypernavi.util.json.GsonUtils;
 
 /**
  * Created by amosov-f on 24.10.15.
@@ -24,16 +26,25 @@ public abstract class RequestParam<T> {
 
     @NotNull
     private final String name;
+    @Nullable
+    private T defaultValue;
 
     protected RequestParam(@NotNull final String name) {
         this.name = name;
+        this.defaultValue = null;
+    }
+
+    @NotNull
+    public RequestParam<T> defaultValue(@NotNull final T defaultValue) {
+        this.defaultValue = defaultValue;
+        return this;
     }
 
     @Nullable
     public final T getValue(@NotNull final ServletRequest req) {
         final String value = req.getParameter(name);
         try {
-            return Optional.ofNullable(value).map(this::parse).orElse(null);
+            return Optional.ofNullable(value).map(this::parse).orElse(defaultValue);
         } catch (RuntimeException e) {
             LOG.warn("Invalid request param '" + name + "=" + value + "'", e);
             return null;
@@ -74,6 +85,22 @@ public abstract class RequestParam<T> {
     public static final class DoubleParam extends LambdaParam<Double> {
         public DoubleParam(@NotNull final String name) {
             super(name, Double::parseDouble);
+        }
+    }
+
+    public static final class EnumParam<T extends Enum<T>> extends LambdaParam<T> {
+        public EnumParam(@NotNull final Class<T> enumType) {
+            this(enumType.getSimpleName().toLowerCase(), enumType);
+        }
+
+        public EnumParam(@NotNull final String name, @NotNull final Class<T> enumType) {
+            super(name, value -> Enum.valueOf(enumType, value.toUpperCase()));
+        }
+    }
+
+    public static final class ObjectParam<T> extends LambdaParam<T> {
+        public ObjectParam(@NotNull final String name, @NotNull final Type clazz) {
+            super(name, value -> GsonUtils.gson().fromJson(value, clazz));
         }
     }
 }

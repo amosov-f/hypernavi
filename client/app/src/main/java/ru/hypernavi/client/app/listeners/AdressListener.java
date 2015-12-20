@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import ru.hypernavi.client.app.AppActivity;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Acer on 15.09.2015.
@@ -26,7 +26,7 @@ public class AdressListener implements View.OnClickListener {
 
     @Override
     public void onClick(final View v) {
-        final GeoPoint closestMarketLocation = myAppActivity.getClosestMarketLocation();
+        final GeoPointImpl closestMarketLocation = myAppActivity.getClosestMarketLocation();
         if (closestMarketLocation == null) {
             myAppActivity.writeWarningMessage("Схема не актуальна");
             return;

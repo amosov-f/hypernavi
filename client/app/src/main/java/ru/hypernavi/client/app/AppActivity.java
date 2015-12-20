@@ -27,6 +27,7 @@ import ru.hypernavi.client.app.util.LogoLoader;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 
 public final class AppActivity extends Activity {
@@ -168,7 +169,7 @@ public final class AppActivity extends Activity {
         marketImageView.setImageBitmap(originScheme);
     }
 
-    public void processInfo(final GeoPoint geoPosition, @NotNull final ImageView marketImageView) {
+    public void processInfo(final GeoPointImpl geoPosition, @NotNull final ImageView marketImageView) {
         final Bitmap oldScheme = originScheme.copy(originScheme.getConfig(), true);
         infoResponse = handler.getInfoResponse(geoPosition);
         if (infoResponse != null) {
@@ -178,7 +179,7 @@ public final class AppActivity extends Activity {
                 final GeoPoint mylocation = infoResponse.getLocation();
                 final Hypermarket closestMarket = hypermarkets.get(0);
                 final GeoPoint marketLocation = closestMarket.getLocation();
-                distanceText.setText(new DecimalFormat("#.#").format(GeoPoint.distance(mylocation, marketLocation)) + " км");
+                distanceText.setText(new DecimalFormat("#.#").format(GeoPointImpl.distance(mylocation, marketLocation)) + " км");
                 distanceText.setVisibility(distanceText.VISIBLE);
                 if (closestMarket.getAddress().equals(closestMarket.getLine())) {
                     adressText.setText(closestMarket.getAddress());
@@ -231,7 +232,7 @@ public final class AppActivity extends Activity {
         orientationEventListener.onPause();
     }
 
-    public GeoPoint getClosestMarketLocation() {
+    public GeoPointImpl getClosestMarketLocation() {
         if (infoResponse == null) {
             return null;
         }

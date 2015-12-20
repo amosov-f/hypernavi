@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import ru.hypernavi.client.app.AppActivity;
 import ru.hypernavi.client.app.util.GeoPointsUtils;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Acer on 31.08.2015.
@@ -55,7 +55,7 @@ public class PositionUpdater implements LocationListener {
 
         manager.removeUpdates(this);
 
-        final GeoPoint geoPosition = GeoPointsUtils.makeGeoPoint(location);
+        final GeoPointImpl geoPosition = GeoPointsUtils.makeGeoPoint(location);
         appActivity.processInfo(geoPosition, myView);
     }
 

@@ -15,7 +15,7 @@ import ru.hypernavi.client.app.AppActivity;
 import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.util.Config;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Acer on 31.08.2015.
@@ -44,7 +44,7 @@ public class InfoRequestHandler {
         getProperties(AppActivity.PROPERTIES_SCHEME);
     }
 
-    public InfoResponse getInfoResponse(final GeoPoint geoPosition) {
+    public InfoResponse getInfoResponse(final GeoPointImpl geoPosition) {
         final double lat = geoPosition.getLatitude();
         final double lon = geoPosition.getLongitude();
         LOG.info("GeoPoint coordinates " + "lat: " + lat + "lon: " + lon);

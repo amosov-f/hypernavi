@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,10 +17,12 @@ import com.google.inject.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
+import org.apache.http.entity.ContentType;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
 import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.session.*;
+import ru.hypernavi.util.json.GsonUtils;
 
 /**
  * User: amosov-f
@@ -91,4 +94,11 @@ public abstract class AbstractHttpService extends HttpServlet {
     }
 
     public abstract void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException;
+
+    protected final void write(@NotNull final Object obj, @NotNull final HttpServletResponse resp) throws IOException {
+        resp.setStatus(HttpStatus.SC_OK);
+        resp.setContentType(ContentType.APPLICATION_JSON.getMimeType());
+        resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        GsonUtils.gson().toJson(obj, resp.getWriter());
+    }
 }

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import android.location.Location;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Acer on 22.08.2015.
@@ -12,7 +12,7 @@ import ru.hypernavi.util.GeoPoint;
 public enum GeoPointsUtils {
     ;
 
-    public static GeoPoint makeGeoPoint(@NotNull final Location location) {
-        return new GeoPoint(location.getLongitude(), location.getLatitude());
+    public static GeoPointImpl makeGeoPoint(@NotNull final Location location) {
+        return new GeoPointImpl(location.getLongitude(), location.getLatitude());
     }
 }

@@ -22,6 +22,7 @@ import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.AbstractHttpService;
+import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -32,15 +33,12 @@ import ru.hypernavi.util.GeoPoint;
 public class SchemaInfoService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(SchemaInfoService.class);
 
-    @NotNull
-    private final HypermarketHolder markets;
+    @Inject
+    private HypermarketHolder markets;
 
     @Inject
-    public SchemaInfoService(@NotNull final HypermarketHolder markets,
-                             @NotNull final RequestReader.Factory<SearchRequestReader> initFactory)
-    {
+    public SchemaInfoService(@NotNull final RequestReader.Factory<SearchRequest> initFactory) {
         super(initFactory);
-        this.markets = markets;
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 import ru.hypernavi.util.MoreIOUtils;
 
 /**
@@ -60,11 +60,11 @@ public enum OkeySearch {
     }
 
     @NotNull
-    private static GeoPoint position(@NotNull final String html) {
+    private static GeoPointImpl position(@NotNull final String html) {
         final Pattern pattern = Pattern.compile("new ymaps.Placemark\\(\\[([^\\]]+)\\]");
         final Matcher matcher = pattern.matcher(html);
         matcher.find();
         final String[] parts = matcher.group(1).split("\\s*,\\s*");
-        return new GeoPoint(Double.parseDouble(parts[1]), Double.parseDouble(parts[0]));
+        return new GeoPointImpl(Double.parseDouble(parts[1]), Double.parseDouble(parts[0]));
     }
 }

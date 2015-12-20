@@ -2,10 +2,12 @@ package ru.hypernavi.commons;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 
 import net.jcip.annotations.Immutable;
 import ru.hypernavi.util.GeoPoint;
-import ru.hypernavi.util.json.GsonUtil;
+import ru.hypernavi.util.json.GsonUtils;
 import ru.hypernavi.util.json.RuntimeTypeAdapterFactory;
 
 /**
@@ -51,20 +53,20 @@ public final class SearchResponse {
     @Immutable
     public static final class Data {
         static {
-            GsonUtil.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Site.class, "type")
+            GsonUtils.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Site.class, "type")
                     .registerSubtype(Site.class, "site")
                     .registerSubtype(Supermarket.class, "supermarket"));
         }
 
         @NotNull
-        private final Site[] sites;
+        private final List<Index<? extends Site>> sites;
 
-        public Data(@NotNull final Site... sites) {
+        public Data(@NotNull final List<Index<? extends Site>> sites) {
             this.sites = sites;
         }
 
         @NotNull
-        public Site[] getSites() {
+        public List<Index<? extends Site>> getSites() {
             return sites;
         }
     }

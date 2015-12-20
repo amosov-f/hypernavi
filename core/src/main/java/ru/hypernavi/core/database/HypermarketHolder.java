@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import com.google.inject.Inject;
@@ -15,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.Index;
 import ru.hypernavi.core.geoindex.DummyGeoIndex;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.util.GeoPoint;
@@ -77,7 +79,7 @@ public class HypermarketHolder {
 
     @NotNull
     public List<Hypermarket> getClosest(final GeoPoint position, final int k) {
-        return markets.getNN(position, 0, k);
+        return markets.getNN(position, 0, k).stream().map(Index::get).collect(Collectors.toList());
     }
 
     @NotNull

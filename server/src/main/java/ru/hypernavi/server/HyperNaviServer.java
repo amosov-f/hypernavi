@@ -98,11 +98,13 @@ public final class HyperNaviServer {
     private ServletContextHandler createServlets() {
         final ServletContextHandler context = new ServletContextHandler();
         for (final Class<? extends HttpServlet> servletClass : servletClasses()) {
-            final HttpServlet service = injector.getInstance(servletClass);
             final WebServlet serviceConfig = servletClass.getAnnotation(WebServlet.class);
-            for (final String path : serviceConfig.value()) {
-                LOG.info("Bound http service '" + serviceConfig.name() + "' @'" + path + "' as " + servletClass.getSimpleName());
-                context.addServlet(new ServletHolder(service), path);
+            if (serviceConfig.loadOnStartup() != 0) {
+                final HttpServlet service = injector.getInstance(servletClass);
+                for (final String path : serviceConfig.value()) {
+                    LOG.info("Bound http service '" + serviceConfig.name() + "' @'" + path + "' as " + servletClass.getSimpleName());
+                    context.addServlet(new ServletHolder(service), path);
+                }
             }
         }
         return context;

@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 15.08.2015.
@@ -54,7 +54,7 @@ public enum InfoResponceSerializer {
 
     @Nullable
     public static InfoResponse deserialize(final JSONObject jsonObject) {
-        final GeoPoint location;
+        final GeoPointImpl location;
         final List<Hypermarket> markets = new ArrayList<>();
 
         try {
@@ -68,7 +68,7 @@ public enum InfoResponceSerializer {
 
             final double longitude = meta.getDouble("longitude");
             final double latitude = meta.getDouble("latitude");
-            location = new GeoPoint(longitude, latitude);
+            location = new GeoPointImpl(longitude, latitude);
         } catch (JSONException e) {
             LOG.warn(e.getMessage());
             return null;

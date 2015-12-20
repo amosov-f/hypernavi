@@ -5,12 +5,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Function;
 
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.httpclient.HttpStatus;
@@ -32,10 +32,6 @@ import ru.hypernavi.util.TextUtils;
 public final class HyperHttpClient {
     private static final Log LOG = LogFactory.getLog(HyperHttpClient.class);
 
-    private static final Gson GSON = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
-
     @NotNull
     private final HttpClient client;
 
@@ -45,7 +41,7 @@ public final class HyperHttpClient {
     }
 
     @Nullable
-    public <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz) {
+    public <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Function<String, T> parser) {
         LOG.debug("Requesting data from: " + HttpTools.curl(req));
         final HttpResponse resp;
         try {
@@ -69,8 +65,8 @@ public final class HyperHttpClient {
             }
             final String content = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
             try {
-                return GSON.fromJson(content, clazz);
-            } catch (JsonSyntaxException e) {
+                return parser.apply(content);
+            } catch (RuntimeException e) {
                 LOG.error("Received bad response: " + TextUtils.limit(content, 1000), e);
                 return null;
             }

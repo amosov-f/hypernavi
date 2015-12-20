@@ -13,7 +13,7 @@ import ru.hypernavi.core.database.provider.sql.GeoObjectSqlProvider;
 import ru.hypernavi.core.database.provider.sql.GeoPointSqlProvider;
 import ru.hypernavi.core.database.provider.sql.PlanSqlProvider;
 import ru.hypernavi.core.database.provider.sql.SiteSqlProvider;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by amosov-f on 22.11.15.
@@ -28,10 +28,10 @@ public class MysqlTest {
         final GeoObjectSqlProvider geoObjectProvider = new GeoObjectSqlProvider(conn, geoPointProvider);
         final PlanSqlProvider planProvider = new PlanSqlProvider(conn);
         final SiteSqlProvider siteProvider = new SiteSqlProvider(conn, planProvider, geoObjectProvider);
-        final int id = siteProvider.insert(new Site(new GeoObject("name", "descr", new GeoPoint(30, 60)), new Plan("http://link1", 1.0), new Plan("http://link2", null)));
+        final int id = siteProvider.insert(new Site(new GeoObject("name", "descr", new GeoPointImpl(30, 60)), new Plan("http://link1", 1.0), new Plan("http://link2", null)));
 
         System.out.println(id);
-        System.out.println(siteProvider.add(new Site(new GeoObject("name", "descr", new GeoPoint(31, 61)), new Plan("http://link1", 1.0), new Plan("http://link2", null))));
+        System.out.println(siteProvider.add(new Site(new GeoObject("name", "descr", new GeoPointImpl(31, 61)), new Plan("http://link1", 1.0), new Plan("http://link2", null))));
 
 //        siteProvider.delete(1);
     }

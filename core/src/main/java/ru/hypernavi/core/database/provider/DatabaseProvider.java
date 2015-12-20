@@ -23,4 +23,8 @@ public interface DatabaseProvider<T> {
 
     @Nullable
     T remove(String id);
+
+    default void put(@NotNull final String id, @NotNull final T obj) {
+        throw new UnsupportedOperationException();
+    }
 }

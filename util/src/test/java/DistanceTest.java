@@ -1,6 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Acer on 27.07.2015.
@@ -18,8 +18,8 @@ public final class DistanceTest {
     private static void test(final double firstLatitude, final double firstLongitude, final double secondLatitude,
                       final double secondLongitude, final double actualDistance)
     {
-        final GeoPoint firstGeoPoint = new GeoPoint(firstLongitude, firstLatitude);
-        final GeoPoint secondGeoPoint = new GeoPoint(secondLongitude, secondLatitude);
-        assertEquals(GeoPoint.distance(firstGeoPoint, secondGeoPoint), actualDistance, actualDistance * 4.0E-3);
+        final GeoPointImpl firstGeoPoint = new GeoPointImpl(firstLongitude, firstLatitude);
+        final GeoPointImpl secondGeoPoint = new GeoPointImpl(secondLongitude, secondLatitude);
+        assertEquals(GeoPointImpl.distance(firstGeoPoint, secondGeoPoint), actualDistance, actualDistance * 4.0E-3);
     }
 }

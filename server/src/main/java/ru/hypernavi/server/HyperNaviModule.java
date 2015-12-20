@@ -12,7 +12,10 @@ import java.util.Objects;
 
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
@@ -22,14 +25,18 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import ru.hypernavi.commons.Platform;
+import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.auth.VkAuthValidator;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.goods.TomallGoodsClassifier;
 import ru.hypernavi.core.database.*;
+import ru.hypernavi.core.database.provider.DatabaseProvider;
+import ru.hypernavi.core.database.provider.mongo.SiteMongoProvider;
+import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.core.session.RequestReader;
-import ru.hypernavi.server.servlet.client.SearchRequestReader;
+import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -51,7 +58,7 @@ public final class HyperNaviModule extends AbstractModule {
     @Override
     protected void configure() {
         install(RequestReader.module());
-        install(SearchRequestReader.module());
+        install(SearchRequest.module());
         install(AdminRequestReader.module());
 
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
@@ -135,6 +142,17 @@ public final class HyperNaviModule extends AbstractModule {
                 }
                 bind(DataLoader.class).toInstance(new SQLDataLoader(statement));
                 LOG.info("Data storage is MySQL database: " + url);
+                return;
+            case "mongo":
+                final String[] hostWithPort = config.getProperty("hypernavi.data.mongo.client").split(":");
+                final MongoClient client = new MongoClient(hostWithPort[0], Integer.parseInt(hostWithPort[1]));
+                final MongoDatabase database = client.getDatabase(config.getProperty("hypernavi.data.mongo.database"));
+                bind(MongoDatabase.class).toInstance(database);
+                bind(new TypeLiteral<DatabaseProvider<Site>>() {}).to(SiteMongoProvider.class);
+                bind(new TypeLiteral<GeoIndex<Site>>() {}).to(SiteMongoProvider.class);
+
+                // TODO: remove
+                bind(DataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
                 return;
             default:
                 throw new UnsupportedOperationException("Unknown data source: " + dataSource);

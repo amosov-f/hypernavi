@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 28.07.2015.
@@ -74,7 +74,7 @@ public class Hypermarket implements Positioned, Indexable {
 
     @NotNull
     @Override
-    public GeoPoint getLocation() {
+    public GeoPointImpl getLocation() {
         return build.getLocation();
     }
 

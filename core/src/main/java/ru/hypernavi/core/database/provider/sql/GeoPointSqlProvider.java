@@ -9,6 +9,7 @@ import java.sql.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by amosov-f on 27.11.15.
@@ -24,7 +25,7 @@ public final class GeoPointSqlProvider extends SqlProvider<GeoPoint> {
     @Override
     public GeoPoint select(final int id) throws SQLException {
         final ResultSet select = statement.executeQuery("SELECT * FROM geo_point WHERE id = " + id);
-        return select.next() ? new GeoPoint(select.getDouble("longitude"), select.getDouble("latitude")) : null;
+        return select.next() ? new GeoPointImpl(select.getDouble("longitude"), select.getDouble("latitude")) : null;
     }
 
     @Nullable

@@ -17,7 +17,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.classify.scheme.Picture;
 import ru.hypernavi.core.classify.scheme.SchemeClassifier;
-import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreIOUtils;
 /**
  * Created by Константин on 16.09.2015.
@@ -127,14 +126,5 @@ public final class AddHypermarkets {
             urls.add("http://www.okmarket.ru" + matcher.group(1));
         }
         return urls;
-    }
-
-    @NotNull
-    private static GeoPoint position(@NotNull final String html) {
-        final Pattern pattern = Pattern.compile("new ymaps.Placemark\\(\\[([^\\]]+)\\]");
-        final Matcher matcher = pattern.matcher(html);
-        matcher.find();
-        final String[] parts = matcher.group(1).split("\\s*,\\s*");
-        return new GeoPoint(Double.parseDouble(parts[1]), Double.parseDouble(parts[0]));
     }
 }

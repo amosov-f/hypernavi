@@ -19,7 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 public final class MarkerActivity extends Activity {
     private static final Logger LOG = Logger.getLogger(MarkerActivity.class.getName());
@@ -123,7 +123,7 @@ public final class MarkerActivity extends Activity {
             }
             manager.removeUpdates(this);
 
-            final GeoPoint geoPosition = average(locations);
+            final GeoPointImpl geoPosition = average(locations);
 
             findViewById(R.id.button).setVisibility(View.VISIBLE);
             findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
@@ -147,14 +147,14 @@ public final class MarkerActivity extends Activity {
         }
 
         @NotNull
-        private GeoPoint average(@NotNull final List<Location> locations) {
+        private GeoPointImpl average(@NotNull final List<Location> locations) {
             double sumLat = 0;
             double sumLon = 0;
             for (final Location location : locations) {
                 sumLat += location.getLatitude();
                 sumLon += location.getLongitude();
             }
-            return new GeoPoint(sumLon / locations.size(), sumLat / locations.size());
+            return new GeoPointImpl(sumLon / locations.size(), sumLat / locations.size());
         }
     }
 }

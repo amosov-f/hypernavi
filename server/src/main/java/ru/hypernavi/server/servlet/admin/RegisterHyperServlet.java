@@ -14,8 +14,9 @@ import ru.hypernavi.commons.Building;
 import ru.hypernavi.core.database.RegisterHypermarket;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.server.servlet.AbstractHttpService;
-import ru.hypernavi.server.servlet.client.SearchRequestReader;
+import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 21.08.2015.
@@ -36,18 +37,18 @@ public class RegisterHyperServlet extends AbstractHttpService {
     private static final Property<String> PAGE = new Property<>("page");
 
     public RegisterHyperServlet() {
-        super(new RequestReader.Factory<SearchRequestReader>() {
+        super(new RequestReader.Factory<SearchRequest>() {
             @NotNull
             @Override
-            public SearchRequestReader create(@NotNull final HttpServletRequest req) {
-                return new SearchRequestReader(req) {
+            public SearchRequest create(@NotNull final HttpServletRequest req) {
+                return new SearchRequest(req) {
                     @Override
                     public void initialize(@NotNull final Session session) {
                         super.initialize(session);
                         setPropertyIfPresent(session, ADDRESS, PARAM_ADDRESS);
                         setPropertyIfPresent(session, TYPE, PARAM_TYPE);
                         setPropertyIfPresent(session, URL, PARAM_URL);
-                        setPropertyIfPresent(session, PAGE, PARAM_PAGE);
+                        setPropertyIfPresent(session, RegisterHyperServlet.PAGE, PARAM_PAGE);
                     }
 
                     @Override
@@ -73,7 +74,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
         final String url = session.demand(URL);
         final String page = session.demand(PAGE);
 
-        RegisterHypermarket.register(new Building(location, address, null, null, null), type, url, page);
+        RegisterHypermarket.register(new Building(new GeoPointImpl(location.getLongitude(), location.getLatitude()), address, null, null, null), type, url, page);
 
         LOG.info("OK!");
         resp.setStatus(HttpServletResponse.SC_OK);

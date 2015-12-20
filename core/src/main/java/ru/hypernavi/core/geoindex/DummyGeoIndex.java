@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 14.08.2015.
@@ -25,11 +27,12 @@ public final class DummyGeoIndex<T extends Positioned> implements GeoIndex<T> {
 
     @NotNull
     @Override
-    public List<T> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
+    public List<Index<? extends T>> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
         return points.stream()
-                .sorted(Comparator.comparing(point -> GeoPoint.distance(location, point.getLocation())))
+                .sorted(Comparator.comparing(point -> GeoPointImpl.distance(location, point.getLocation())))
                 .skip(offset)
                 .limit(count)
+                .map(point -> Index.of("", point))
                 .collect(Collectors.toList());
     }
 

@@ -5,23 +5,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
+import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 30.07.2015.
  */
 public interface GeoIndex<T extends Positioned> {
     @NotNull
-    List<T> getNN(@NotNull final GeoPoint location, final int offset, final int count);
+    List<Index<? extends T>> getNN(@NotNull final GeoPoint location, final int offset, final int count);
 
     @NotNull
-    default T getNN(@NotNull final GeoPoint location) {
+    default Index<? extends T> getNN(@NotNull final GeoPointImpl location) {
         return getKNN(location, 1).stream().findFirst().orElseThrow(() -> new IllegalStateException("No points in geo index!"));
     }
 
     @NotNull
-    default List<T> getKNN(@NotNull final GeoPoint location, final int k) {
+    default List<Index<? extends T>> getKNN(@NotNull final GeoPointImpl location, final int k) {
         return getNN(location, 0, k);
     }
 

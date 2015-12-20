@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.Assisted;
+import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -27,6 +28,8 @@ public class RequestReader implements SessionInitializer {
 
     @Override
     public void initialize(@NotNull final Session session) {
+        session.setIfNotNull(Property.HTTP_REQUEST_URI, req.getRequestURI());
+        session.setIfNotNull(Property.HTTP_SERVLET_PATH, req.getServletPath());
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
 
         setPropertyIfPresent(session, Property.TEXT, RequestParam.PRAM_TEXT);
@@ -41,7 +44,7 @@ public class RequestReader implements SessionInitializer {
     private GeoPoint getGeoLocation() {
         final Double lon = RequestParam.PARAM_LON.getValue(req);
         final Double lat = RequestParam.PARAM_LAT.getValue(req);
-        return lat != null && lon != null ? new GeoPoint(lon, lat) : null;
+        return lat != null && lon != null ? ArrayGeoPoint.of(lon, lat) : null;
     }
 
     protected <T> void setPropertyIfPresent(@NotNull final Session session,

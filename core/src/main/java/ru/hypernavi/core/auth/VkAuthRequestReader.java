@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.util.function.Optionals;
 
-import static ru.hypernavi.core.session.SessionValidationException.Error.*;
+import static ru.hypernavi.core.session.SessionValidationException.Error.UNAUTHORIZED;
 
 /**
  * Created by amosov-f on 14.11.15.
@@ -25,12 +27,12 @@ public class VkAuthRequestReader extends RequestReader {
     private static final RequestParam<String> PARAM_PHOTO_REC = new RequestParam.StringParam("photo_rec");
     private static final RequestParam<String> PARAM_HASH = new RequestParam.StringParam("hash");
 
-    @NotNull
-    private final VkAuthValidator validator;
+    @Inject
+    private VkAuthValidator validator;
 
-    public VkAuthRequestReader(@NotNull final HttpServletRequest req, @NotNull final VkAuthValidator validator) {
+    @Inject
+    public VkAuthRequestReader(@Assisted @NotNull final HttpServletRequest req) {
         super(req);
-        this.validator = validator;
     }
 
     @Override

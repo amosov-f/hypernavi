@@ -7,6 +7,7 @@ import java.util.List;
 
 
 import com.google.inject.Inject;
+import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.util.GeoPoint;
 
@@ -24,7 +25,7 @@ public final class SiteSqlGeoIndex implements GeoIndex<Site> {
 
     @NotNull
     @Override
-    public List<Site> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
+    public List<Index<? extends Site>> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
         return null;
     }
 }

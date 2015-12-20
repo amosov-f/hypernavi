@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.inject.Singleton;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 17.08.2015.
@@ -139,8 +139,8 @@ public class GeocoderParser {
 
 
     @Nullable
-    public GeoPoint getLocation() {
-        final GeoPoint position;
+    public GeoPointImpl getLocation() {
+        final GeoPointImpl position;
         try {
             String location = "";
             if (response != null) {
@@ -152,7 +152,7 @@ public class GeocoderParser {
                         .getJSONObject("Point")
                         .getString("pos");
             }
-            position = GeoPoint.parseString(location);
+            position = GeoPointImpl.parseString(location);
         } catch (JSONException ignored) {
             return null;
         }

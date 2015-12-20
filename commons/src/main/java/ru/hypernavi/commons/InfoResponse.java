@@ -1,7 +1,7 @@
 package ru.hypernavi.commons;
 
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

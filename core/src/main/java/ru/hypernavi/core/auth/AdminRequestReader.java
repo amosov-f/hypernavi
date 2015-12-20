@@ -30,8 +30,8 @@ public class AdminRequestReader extends VkAuthRequestReader {
     private final int[] adminUids;
 
     @Inject
-    public AdminRequestReader(@Assisted @NotNull final HttpServletRequest req, @NotNull final VkAuthValidator validator) {
-        super(req, validator);
+    public AdminRequestReader(@Assisted @NotNull final HttpServletRequest req) {
+        super(req);
         try {
             adminUids = IOUtils.readLines(getClass().getResourceAsStream("/auth/vk/admins.txt"), StandardCharsets.UTF_8).stream()
                     .mapToInt(Integer::parseInt)

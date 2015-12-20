@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
+import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Positioned;
 import ru.hypernavi.util.GeoPoint;
 
@@ -14,11 +15,11 @@ import ru.hypernavi.util.GeoPoint;
  */
 public interface SqlGeoIndex<T extends Positioned> extends GeoIndex<T> {
     @NotNull
-    List<T> selectNN(@NotNull final GeoPoint location, final int offset, final int count) throws SQLException;
+    List<Index<? extends T>> selectNN(@NotNull final GeoPoint location, final int offset, final int count) throws SQLException;
 
     @NotNull
     @Override
-    default List<T> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
+    default List<Index<? extends T>> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
         try {
             return selectNN(location, offset, count);
         } catch (SQLException e) {

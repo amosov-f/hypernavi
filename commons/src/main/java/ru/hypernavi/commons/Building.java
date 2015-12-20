@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 14.09.2015.
@@ -18,7 +18,7 @@ public class Building {
     private static final Log LOG = LogFactory.getLog(Building.class);
 
     @NotNull
-    private final GeoPoint location;
+    private final GeoPointImpl location;
     @NotNull
     private final String address;
     @NotNull
@@ -30,7 +30,7 @@ public class Building {
     private final String line;
     private final String city;
 
-    public Building(@NotNull final GeoPoint location,
+    public Building(@NotNull final GeoPointImpl location,
                     @NotNull final String address,
                     @NotNull final Double angle,
                     @Nullable final String city,
@@ -45,7 +45,7 @@ public class Building {
         this.line = line;
     }
 
-    public Building(@NotNull final GeoPoint location,
+    public Building(@NotNull final GeoPointImpl location,
                     @NotNull final String address,
                     @Nullable final String city,
                     @Nullable final String line,
@@ -60,7 +60,7 @@ public class Building {
     }
 
     @NotNull
-    public GeoPoint getLocation() {
+    public GeoPointImpl getLocation() {
         return location;
     }
 
@@ -128,10 +128,10 @@ public class Building {
 
     @Nullable
     public static Building construct(@NotNull final JSONObject obj) {
-        final GeoPoint location;
+        final GeoPointImpl location;
         final String address;
         try {
-            location = GeoPoint.construct(obj.getJSONObject("location"));
+            location = GeoPointImpl.construct(obj.getJSONObject("location"));
             address = obj.getString("address");
         } catch (JSONException e) {
             LOG.warn(e.getMessage());

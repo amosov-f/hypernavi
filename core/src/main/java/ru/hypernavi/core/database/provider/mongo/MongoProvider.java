@@ -7,14 +7,15 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import ru.hypernavi.core.database.provider.DatabaseProvider;
-import ru.hypernavi.util.json.GsonUtil;
+import ru.hypernavi.util.json.GsonUtils;
 
 /**
  * Created by amosov-f on 05.12.15.
  */
 public abstract class MongoProvider<T> implements DatabaseProvider<T> {
-    protected static final Gson GSON = GsonUtil.gson();
+    protected static final Gson GSON = GsonUtils.gson();
 
     @NotNull
     protected final MongoCollection<Document> coll;
@@ -31,5 +32,15 @@ public abstract class MongoProvider<T> implements DatabaseProvider<T> {
     @NotNull
     protected static <T> T fromDoc(@NotNull final Document doc, @NotNull final Class<T> clazz) {
         return GSON.fromJson(doc.toJson(), clazz);
+    }
+
+    @NotNull
+    protected static String id(@NotNull final Document doc) {
+        return doc.getObjectId("_id").toString();
+    }
+
+    @NotNull
+    protected static Document toDoc(@NotNull final String id) {
+        return new Document("_id", new ObjectId(id));
     }
 }

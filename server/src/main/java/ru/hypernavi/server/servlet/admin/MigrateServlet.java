@@ -21,7 +21,7 @@ import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.webutil.GeocoderParser;
 import ru.hypernavi.core.webutil.GeocoderSender;
 import ru.hypernavi.server.servlet.AbstractHttpService;
-import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.GeoPointImpl;
 
 /**
  * Created by Константин on 29.09.2015.
@@ -48,7 +48,7 @@ public class MigrateServlet extends AbstractHttpService {
         final List<Hypermarket> hypermarkets = new ArrayList<>(markets.getAll());
         for (final Hypermarket hypermarket : hypermarkets) {
             final int id = hypermarket.getId();
-            final GeoPoint loc = hypermarket.getLocation();
+            final GeoPointImpl loc = hypermarket.getLocation();
             final JSONObject obj = GeocoderSender.getGeocoderResponse(loc.getLongitude() + "," + loc.getLatitude());
             final GeocoderParser b = new GeocoderParser();
             b.setResponce(obj);
