@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpGet;
@@ -40,6 +41,9 @@ public class MigrateServlet extends AbstractHttpService {
     private final HypermarketHolder markets;
     @Inject
     private HyperHttpClient httpClient;
+    @Inject
+    @Named("localport")
+    private int localPort;
 
     @Inject
     public MigrateServlet(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<?> readerFactory) {
@@ -64,7 +68,7 @@ public class MigrateServlet extends AbstractHttpService {
             final Site site = new Site(position, new Plan("http://hypernavi.net" + hypermarket.getPath(), hypermarket.hasOrientation() ? hypermarket.getOrientation() : null));
             final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
             httpClient.execute(
-                    new HttpGet("http://localhost:8080/admin/site/add?site=" + siteValue + "&" + session.demand(Property.HTTP_QUERY_STRING)),
+                    new HttpGet("http://localhost:" + localPort + "/admin/site/add?site=" + siteValue + "&" + session.demand(Property.HTTP_QUERY_STRING)),
                     Function.identity()
             );
         }

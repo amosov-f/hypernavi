@@ -9,8 +9,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Option;
@@ -57,7 +59,12 @@ public final class HyperNaviServer {
     private final Injector injector;
 
     HyperNaviServer(final int port, @NotNull final Config config) {
-        injector = Guice.createInjector(new HyperNaviModule(config));
+        injector = Guice.createInjector(new HyperNaviModule(config), new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Integer.class).annotatedWith(Names.named("localport")).toInstance(port);
+            }
+        });
 
         final HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(new BeforeRequestHandler());
