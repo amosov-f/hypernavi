@@ -31,6 +31,7 @@ public class RequestReader implements SessionInitializer {
         session.setIfNotNull(Property.HTTP_REQUEST_URI, req.getRequestURI());
         session.setIfNotNull(Property.HTTP_SERVLET_PATH, req.getServletPath());
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
+        session.setIfNotNull(Property.HTTP_QUERY_STRING, req.getQueryString());
 
         setPropertyIfPresent(session, Property.TEXT, RequestParam.PRAM_TEXT);
         session.setIfNotNull(Property.GEO_LOCATION, getGeoLocation());

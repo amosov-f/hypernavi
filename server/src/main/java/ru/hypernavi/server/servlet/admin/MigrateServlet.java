@@ -22,6 +22,7 @@ import ru.hypernavi.commons.Plan;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -48,10 +49,10 @@ public class MigrateServlet extends AbstractHttpService {
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        migrate();
+        migrate(session);
     }
 
-    private void migrate() throws UnsupportedEncodingException {
+    private void migrate(@NotNull final Session session) throws UnsupportedEncodingException {
         try {
             Class.forName("ru.hypernavi.commons.SearchResponse$Data");
         } catch (ClassNotFoundException e) {
@@ -61,8 +62,9 @@ public class MigrateServlet extends AbstractHttpService {
         for (final Hypermarket hypermarket : hypermarkets) {
             final GeoObject position = new GeoObject(hypermarket.getLine(), hypermarket.getCity(), ArrayGeoPoint.of(hypermarket.getLocation().getLongitude(), hypermarket.getLocation().getLatitude()));
             final Site site = new Site(position, new Plan("http://hypernavi.net" + hypermarket.getPath(), hypermarket.hasOrientation() ? hypermarket.getOrientation() : null));
+            final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
             httpClient.execute(
-                    new HttpGet("http://localhost:8080/admin/site/add?site=" + URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name())),
+                    new HttpGet("http://localhost:8080/admin/site/add?site=" + siteValue + "&" + session.demand(Property.HTTP_QUERY_STRING)),
                     Function.identity()
             );
         }
