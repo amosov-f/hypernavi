@@ -1,4 +1,4 @@
-package ru.hypernavi.server.servlet.admin;
+package ru.hypernavi.server.servlet.admin.site;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,15 +18,15 @@ import ru.hypernavi.core.session.*;
 /**
  * Created by amosov-f on 06.12.15.
  */
-@WebServlet(name = "add site", value = "/admin/site/add", loadOnStartup = 0)
-public class AddSiteAdminService extends SiteAdminService {
+@WebServlet(name = "add site", value = "/admin/site/add")
+public class AddSiteService extends SiteAdminService {
     @NotNull
     private static final RequestParam<Site> SITE_PARAM = new RequestParam.ObjectParam<>("site", Site.class);
     @NotNull
     private static final Property<Site> SITE = new Property<>("site");
 
     @Inject
-    protected AddSiteAdminService() {
+    protected AddSiteService() {
         super(new RequestReader.Factory<AdminRequestReader>() {
             @NotNull
             @Override

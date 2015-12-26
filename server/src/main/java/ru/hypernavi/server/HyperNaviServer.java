@@ -25,7 +25,6 @@ import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.reflections.Reflections;
-import ru.hypernavi.core.telegram.HyperNaviBot;
 import ru.hypernavi.server.handler.AfterRequestHandler;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
 import ru.hypernavi.util.Config;
@@ -131,7 +130,7 @@ public final class HyperNaviServer {
 
 
         final HyperNaviServer server = new HyperNaviServer(port, config);
-        server.getInjector().getInstance(HyperNaviBot.class).start(true);
+//        server.getInjector().getInstance(HyperNaviBot.class).start(true);
         try {
             server.start();
         } catch (Exception e) {

@@ -17,14 +17,7 @@ import com.google.gson.TypeAdapterFactory;
 public enum GsonUtils {
     ;
 
-    private static final List<GsonBuilderConsumer> settings = new ArrayList<GsonBuilderConsumer>() {{
-        add(new GsonBuilderConsumer() {
-            @Override
-            public void accept(@NotNull final GsonBuilder builder) {
-                builder.setVersion(1.0);
-            }
-        });
-    }};
+    private static final List<GsonBuilderConsumer> settings = new ArrayList<>();
 
     public static void registerTypeAdapterFactory(@NotNull final TypeAdapterFactory factory) {
         settings.add(new GsonBuilderConsumer() {

@@ -26,7 +26,7 @@ public final class AdminService extends HtmlPageHttpService {
 
     @Inject
     public AdminService(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<AdminRequestReader> reader) {
-        super("admin2.ftl", reader);
+        super("admin.ftl", reader);
         this.markets = markets;
     }
 

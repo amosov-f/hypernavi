@@ -1,4 +1,4 @@
-package ru.hypernavi.server.servlet.admin;
+package ru.hypernavi.server.servlet.admin.site;
 
 import org.jetbrains.annotations.NotNull;
 

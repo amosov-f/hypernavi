@@ -31,9 +31,7 @@ public final class AuthService extends HtmlPageHttpService {
 
                     @Override
                     public void validate(@NotNull final Session session) throws SessionValidationException {
-                        if (!session.has(URL)) {
-                            throw new SessionValidationException("No 'url' param in request!");
-                        }
+                        validate(session, URL);
                     }
                 };
             }

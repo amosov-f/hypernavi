@@ -5,10 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import ru.hypernavi.util.json.GsonUtils;
 
 /**
@@ -16,9 +13,17 @@ import ru.hypernavi.util.json.GsonUtils;
  */
 public final class ArrayGeoPoint implements GeoPoint {
     static {
-        GsonUtils.registerTypeAdapter(GeoPoint.class, new JsonDeserializer<GeoPoint>() {
+        GsonUtils.registerTypeAdapter(GeoPoint.class, new JsonSerializer<GeoPoint>() {
+            @NotNull
             @Override
-            public GeoPoint deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+            public JsonElement serialize(@NotNull final GeoPoint geoPoint, @NotNull final Type t, @NotNull final JsonSerializationContext context) {
+                return context.serialize(geoPoint);
+            }
+        });
+        GsonUtils.registerTypeAdapter(GeoPoint.class, new JsonDeserializer<GeoPoint>() {
+            @NotNull
+            @Override
+            public GeoPoint deserialize(@NotNull final JsonElement json, @NotNull final Type t, @NotNull final JsonDeserializationContext context) {
                 return context.deserialize(json, ArrayGeoPoint.class);
             }
         });

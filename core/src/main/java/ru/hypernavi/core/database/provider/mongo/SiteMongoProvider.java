@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -52,7 +53,7 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
     @Nullable
     @Override
     public Site remove(@NotNull final String id) {
-        return site(coll.findOneAndDelete(toDoc(id))).get();
+        return Optional.ofNullable(site(coll.findOneAndDelete(toDoc(id)))).map(Index::get).orElse(null);
     }
 
     @Override

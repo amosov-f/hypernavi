@@ -17,7 +17,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 /**
  * Created by amosov-f on 11.12.15.
  */
-@WebServlet(name = "search", value = "/search", loadOnStartup = 0)
+@WebServlet(name = "search", value = "/search")
 public final class SearchService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(SearchService.class);
 

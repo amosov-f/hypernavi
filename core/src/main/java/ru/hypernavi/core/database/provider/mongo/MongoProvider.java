@@ -3,7 +3,6 @@ package ru.hypernavi.core.database.provider.mongo;
 import org.jetbrains.annotations.NotNull;
 
 
-import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -15,8 +14,6 @@ import ru.hypernavi.util.json.GsonUtils;
  * Created by amosov-f on 05.12.15.
  */
 public abstract class MongoProvider<T> implements DatabaseProvider<T> {
-    protected static final Gson GSON = GsonUtils.gson();
-
     @NotNull
     protected final MongoCollection<Document> coll;
 
@@ -26,12 +23,12 @@ public abstract class MongoProvider<T> implements DatabaseProvider<T> {
 
     @NotNull
     protected static Document toDoc(@NotNull final Object obj) {
-        return Document.parse(GSON.toJson(obj));
+        return Document.parse(GsonUtils.gson().toJson(obj));
     }
 
     @NotNull
     protected static <T> T fromDoc(@NotNull final Document doc, @NotNull final Class<T> clazz) {
-        return GSON.fromJson(doc.toJson(), clazz);
+        return GsonUtils.gson().fromJson(doc.toJson(), clazz);
     }
 
     @NotNull

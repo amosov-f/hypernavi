@@ -5,23 +5,28 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Function;
 
 
 import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
-import ru.hypernavi.commons.Building;
+import org.apache.http.client.methods.HttpGet;
+import ru.hypernavi.commons.GeoObject;
 import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.Plan;
+import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.database.HypermarketHolder;
+import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.webutil.GeocoderParser;
-import ru.hypernavi.core.webutil.GeocoderSender;
 import ru.hypernavi.server.servlet.AbstractHttpService;
-import ru.hypernavi.util.GeoPointImpl;
+import ru.hypernavi.util.ArrayGeoPoint;
+import ru.hypernavi.util.json.GsonUtils;
 
 /**
  * Created by Константин on 29.09.2015.
@@ -32,6 +37,8 @@ public class MigrateServlet extends AbstractHttpService {
 
     @NotNull
     private final HypermarketHolder markets;
+    @Inject
+    private HyperHttpClient httpClient;
 
     @Inject
     public MigrateServlet(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<?> readerFactory) {
@@ -44,26 +51,20 @@ public class MigrateServlet extends AbstractHttpService {
         migrate();
     }
 
-    private void migrate() {
-        final List<Hypermarket> hypermarkets = new ArrayList<>(markets.getAll());
+    private void migrate() throws UnsupportedEncodingException {
+        try {
+            Class.forName("ru.hypernavi.commons.SearchResponse$Data");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        final List<Hypermarket> hypermarkets = markets.getAll();
         for (final Hypermarket hypermarket : hypermarkets) {
-            final int id = hypermarket.getId();
-            final GeoPointImpl loc = hypermarket.getLocation();
-            final JSONObject obj = GeocoderSender.getGeocoderResponse(loc.getLongitude() + "," + loc.getLatitude());
-            final GeocoderParser b = new GeocoderParser();
-            b.setResponce(obj);
-
-            final String city = b.getCity();
-            final String line = b.getLine();
-            final String number = b.getNumber();
-
-            final Building build;
-            if (hypermarket.hasOrientation()) {
-                build = new Building(hypermarket.getLocation(), hypermarket.getAddress(), hypermarket.getOrientation(), city, line, number);
-            } else {
-                build = new Building(hypermarket.getLocation(), hypermarket.getAddress(), city, line, number);
-            }
-            markets.edit(id, new Hypermarket(id, build, hypermarket.getType(), hypermarket.getWeb()));
+            final GeoObject position = new GeoObject(hypermarket.getLine(), hypermarket.getCity(), ArrayGeoPoint.of(hypermarket.getLocation().getLongitude(), hypermarket.getLocation().getLatitude()));
+            final Site site = new Site(position, new Plan("http://hypernavi.net" + hypermarket.getPath(), hypermarket.hasOrientation() ? hypermarket.getOrientation() : null));
+            httpClient.execute(
+                    new HttpGet("http://localhost:8080/admin/site/add?site=" + URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name())),
+                    Function.identity()
+            );
         }
     }
 }
