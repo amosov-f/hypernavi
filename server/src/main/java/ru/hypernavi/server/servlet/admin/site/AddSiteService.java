@@ -3,7 +3,6 @@ package ru.hypernavi.server.servlet.admin.site;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -11,46 +10,22 @@ import java.io.IOException;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
-import ru.hypernavi.commons.Site;
-import ru.hypernavi.core.auth.AdminRequestReader;
-import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
 
 /**
  * Created by amosov-f on 06.12.15.
  */
 @WebServlet(name = "add site", value = "/admin/site/add")
-public class AddSiteService extends SiteAdminService {
-    @NotNull
-    private static final RequestParam<Site> SITE_PARAM = new RequestParam.ObjectParam<>("site", Site.class);
-    @NotNull
-    private static final Property<Site> SITE = new Property<>("site");
-
+public final class AddSiteService extends SiteAdminService {
     @Inject
-    protected AddSiteService() {
-        super(new RequestReader.Factory<AdminRequestReader>() {
-            @NotNull
-            @Override
-            public AdminRequestReader create(@NotNull final HttpServletRequest req) {
-                return new AdminRequestReader(req) {
-                    @Override
-                    public void initialize(@NotNull final Session session) {
-                        super.initialize(session);
-                        setPropertyIfPresent(session, SITE, SITE_PARAM);
-                    }
-
-                    @Override
-                    public void validate(@NotNull final Session session) throws SessionValidationException {
-                        super.validate(session);
-                        validate(session, SITE);
-                    }
-                };
-            }
-        });
+    public AddSiteService(@NotNull final RequestReader.Factory<SiteRequest> initFactory) {
+        super(initFactory);
     }
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final String id = provider.add(session.demand(SITE));
+        final String id = provider.add(session.demand(SiteRequest.SITE));
         if (id == null) {
             resp.sendError(HttpStatus.SC_NOT_MODIFIED, "Site isn't added!");
             return;

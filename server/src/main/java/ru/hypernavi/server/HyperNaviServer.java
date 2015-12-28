@@ -45,12 +45,14 @@ public final class HyperNaviServer {
     private static final String OPT_CONFIG = "cfg";
     private static final String OPT_LOG_CFG = "logcfg";
     private static final String OPT_LOG_DIR = "logdir";
+    private static final String OPT_BOT = "bot";
 
     private static final Options OPTIONS = new Options() {{
         addOption(Option.builder(OPT_PORT).hasArg().required().desc("server binding port").build());
         addOption(Option.builder(OPT_CONFIG).hasArgs().required().desc("config files").build());
         addOption(Option.builder(OPT_LOG_CFG).hasArg().required().desc("log4j configuration file").build());
         addOption(Option.builder(OPT_LOG_DIR).hasArg().desc("directory for logs").build());
+        addOption(Option.builder(OPT_BOT).desc("HyperNavi Bot configuration").build());
     }};
 
     @NotNull
@@ -136,9 +138,10 @@ public final class HyperNaviServer {
         Optional.ofNullable(cmd.getOptionValue(OPT_LOG_DIR)).ifPresent(logsDir -> System.setProperty("LOGS_DIR", logsDir));
         DOMConfigurator.configure(MoreIOUtils.toURL(cmd.getOptionValue(OPT_LOG_CFG)));
 
-
         final HyperNaviServer server = new HyperNaviServer(port, config);
-        server.getInjector().getInstance(HyperNaviBot.class).start(true);
+        if (cmd.hasOption(OPT_BOT)) {
+            server.getInjector().getInstance(HyperNaviBot.class).start(true);
+        }
         try {
             server.start();
         } catch (Exception e) {

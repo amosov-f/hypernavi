@@ -18,6 +18,8 @@ ymaps.ready(function () {
     objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
     map.geoObjects.add(objectManager);
 
+    console.log($(location));
+
     $.ajax({
         url: "/search?lon=30&lat=60&ns=100",
         success: function (searchData) {
@@ -123,21 +125,21 @@ function sync() {
 }
 
 function onRemove() {
-    removeSite();
     var id = site.raw.id;
     if (id) {
         $.ajax({
-            url: '/admin/site/remove?site_id=' + id,
+            url: '/admin/site/remove' + $(location).attr('search') + '&site_id=' + id,
             type: 'GET',
-            success: function (resp) {
+            success: function (resp, textStatus, req) {
                 alert('Объект ' + id + ' успешно удален!');
+                removeSite();
+                site = null;
             },
-            error: function () {
-                alert('Ошибка!')
+            error: function (req, textStatus, error) {
+                alert('Ошибка! ' + error)
             }
         });
     }
-    site = null;
 }
 
 function removeSite() {
@@ -148,8 +150,10 @@ function onSubmit() {
     var rawSite = site.raw;
     rawSite.plans[0].link = $('#link').val();
     var add = !rawSite.id;
+    var path = add ? '/admin/site/add' : '/admin/site/edit';
+    var param = add ? 'site' : 'site_index';
     $.ajax({
-        url: (add ? '/admin/site/add' : '/admin/site/edit') + '?site=' + JSON.stringify(rawSite),
+        url: path + $(location).attr('search') + '&' + param + '=' + JSON.stringify(rawSite),
         type: 'GET',
         success: function (id) {
             site.properties.balloonContent = balloonContent(rawSite);
@@ -160,8 +164,8 @@ function onSubmit() {
             }
             refresh();
         },
-        error: function () {
-            alert('Ошибка!')
+        error: function (req, textStatus, error) {
+            alert('Ошибка! ' + error)
         }
     });
     refresh();

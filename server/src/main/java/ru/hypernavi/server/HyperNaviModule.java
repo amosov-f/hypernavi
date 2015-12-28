@@ -36,6 +36,7 @@ import ru.hypernavi.core.database.provider.DatabaseProvider;
 import ru.hypernavi.core.database.provider.mongo.SiteMongoProvider;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.server.servlet.admin.site.SiteRequest;
 import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
@@ -60,6 +61,7 @@ public final class HyperNaviModule extends AbstractModule {
         install(RequestReader.module());
         install(SearchRequest.module());
         install(AdminRequestReader.module());
+        install(SiteRequest.module());
 
         bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
         bindTemplates();

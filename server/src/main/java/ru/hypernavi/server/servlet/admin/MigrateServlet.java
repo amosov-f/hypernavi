@@ -21,6 +21,7 @@ import ru.hypernavi.commons.GeoObject;
 import ru.hypernavi.commons.Hypermarket;
 import ru.hypernavi.commons.Plan;
 import ru.hypernavi.commons.Site;
+import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.session.Property;
@@ -46,7 +47,7 @@ public class MigrateServlet extends AbstractHttpService {
     private int localPort;
 
     @Inject
-    public MigrateServlet(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<?> readerFactory) {
+    public MigrateServlet(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<AdminRequestReader> readerFactory) {
         super(readerFactory);
         this.markets = markets;
     }

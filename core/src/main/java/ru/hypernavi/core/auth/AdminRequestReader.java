@@ -43,9 +43,6 @@ public class AdminRequestReader extends VkAuthRequestReader {
 
     @Override
     public void validate(@NotNull final Session session) throws SessionValidationException {
-        if (true) {
-            return;
-        }
         super.validate(session);
         if (!ArrayUtils.contains(adminUids, session.demand(Property.VK_USER).getUid())) {
             throw new SessionValidationException(FORBIDDEN, "Only admins have access to this page!");
