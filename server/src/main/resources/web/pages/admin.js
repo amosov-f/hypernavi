@@ -139,6 +139,9 @@ function onRemove() {
                 alert('Ошибка! ' + error)
             }
         });
+    } else {
+        removeSite();
+        site = null;
     }
 }
 
