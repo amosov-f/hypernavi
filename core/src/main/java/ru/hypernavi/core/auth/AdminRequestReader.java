@@ -15,6 +15,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.util.Types;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
@@ -28,6 +29,8 @@ import static ru.hypernavi.core.session.SessionValidationException.Error.FORBIDD
 public class AdminRequestReader extends VkAuthRequestReader {
     @NotNull
     private final int[] adminUids;
+    @Inject
+    private Platform platform;
 
     @Inject
     public AdminRequestReader(@Assisted @NotNull final HttpServletRequest req) {
@@ -43,6 +46,9 @@ public class AdminRequestReader extends VkAuthRequestReader {
 
     @Override
     public void validate(@NotNull final Session session) throws SessionValidationException {
+        if (platform == Platform.DEVELOPMENT) {
+            return;
+        }
         super.validate(session);
         if (!ArrayUtils.contains(adminUids, session.demand(Property.VK_USER).getUid())) {
             throw new SessionValidationException(FORBIDDEN, "Only admins have access to this page!");

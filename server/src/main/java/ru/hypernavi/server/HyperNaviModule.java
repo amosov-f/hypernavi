@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import ru.hypernavi.commons.Platform;
+import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.auth.VkAuthValidator;
@@ -142,7 +142,7 @@ public final class HyperNaviModule extends AbstractModule {
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-                bind(DataLoader.class).toInstance(new SQLDataLoader(statement));
+//                bind(DataLoader.class).toInstance(new SQLDataLoader(statement));
                 LOG.info("Data storage is MySQL database: " + url);
                 return;
             case "mongo":

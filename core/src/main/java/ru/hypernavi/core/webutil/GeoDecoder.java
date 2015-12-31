@@ -42,7 +42,7 @@ public final class GeoDecoder {
                 .addParameter("results", 1)
                 .addParameter("format", "json")
                 .build();
-        final JsonObject response = httpClient.execute(new HttpGet(uri), MoreGsonUtils.parser());
+        final JsonObject response = httpClient.executeText(new HttpGet(uri), MoreGsonUtils.parser());
         if (response == null) {
             return null;
         }

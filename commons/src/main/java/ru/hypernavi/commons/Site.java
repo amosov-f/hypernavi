@@ -5,20 +5,28 @@ import org.jetbrains.annotations.NotNull;
 
 import net.jcip.annotations.Immutable;
 import ru.hypernavi.util.GeoPoint;
+import ru.hypernavi.util.json.GsonUtils;
+import ru.hypernavi.util.json.RuntimeTypeAdapterFactory;
 
 /**
  * Created by amosov-f on 07.11.15.
  */
 @Immutable
 public class Site implements Positioned {
+    static {
+        GsonUtils.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Hint.class, "type")
+                .registerSubtype(Image.class, "image")
+                .registerSubtype(Plan.class, "plan"));
+    }
+
     @NotNull
     private final GeoObject position;
     @NotNull
-    private final Plan[] plans;
+    private final Hint[] hints;
 
-    public Site(@NotNull final GeoObject position, @NotNull final Plan... plans) {
+    public Site(@NotNull final GeoObject position, @NotNull final Hint... hints) {
         this.position = position;
-        this.plans = plans;
+        this.hints = hints;
     }
 
     @NotNull
@@ -27,8 +35,8 @@ public class Site implements Positioned {
     }
 
     @NotNull
-    public final Plan[] getPlans() {
-        return plans;
+    public final Hint[] getHints() {
+        return hints;
     }
 
     @NotNull

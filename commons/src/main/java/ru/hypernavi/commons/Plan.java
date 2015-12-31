@@ -10,22 +10,22 @@ import net.jcip.annotations.Immutable;
  * Created by amosov-f on 07.11.15.
  */
 @Immutable
-public final class Plan {
+public final class Plan implements Hint {
     public static final Plan[] EMPTY_ARRAY = new Plan[0];
 
     @NotNull
-    private final String link;
+    private final Image image;
     @Nullable
     private final Double azimuth;
 
-    public Plan(@NotNull final String link, @Nullable final Double azimuth) {
-        this.link = link;
+    public Plan(@NotNull final Image image, @Nullable final Double azimuth) {
+        this.image = image;
         this.azimuth = azimuth;
     }
 
     @NotNull
-    public String getLink() {
-        return link;
+    public Image getImage() {
+        return image;
     }
 
     @Nullable

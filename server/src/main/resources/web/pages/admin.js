@@ -48,7 +48,10 @@ ymaps.ready(function () {
                     description: res.properties.get('description'),
                     location: reverseToPoint(res.geometry.getCoordinates())
                 },
-                plans: [{link: ''}]
+                hints: [{
+                    type: 'plan',
+                    image: {link: '', dimension: {width: 0, height: 0}, duplicates: []}
+                }]
             };
             objectManager.add(convert({data: {sites: [rawSite]}}));
         });
@@ -87,7 +90,7 @@ function feature(rawSite) {
 function balloonContent(rawSite) {
     return '<h3>' + rawSite.position.name + '</h3>' +
            '<p>' + rawSite.position.description + '</p>' +
-           '<img id="img' + rawSite.id + '"class="img-responsive img-rounded" src="' + rawSite.plans[0].link + '"/>' +
+           '<img id="img' + rawSite.id + '"class="img-responsive img-rounded" src="' + rawSite.hints[0].image.link + '"/>' +
            '<a class="btn" onclick="edit()">Редактировать</a>';
 }
 
@@ -116,7 +119,7 @@ function link() {
     if (link != null) {
         return link;
     }
-    return site.raw.plans[0].link;
+    return site.raw.hints[0].image.link;
 }
 
 function sync() {
@@ -128,7 +131,7 @@ function onRemove() {
     var id = site.raw.id;
     if (id) {
         $.ajax({
-            url: '/admin/site/remove' + $(location).attr('search') + '&site_id=' + id,
+            url: url('/admin/site/remove', $(location).attr('search'), 'site_id', id),
             type: 'GET',
             success: function (resp, textStatus, req) {
                 alert('Объект ' + id + ' успешно удален!');
@@ -151,12 +154,15 @@ function removeSite() {
 
 function onSubmit() {
     var rawSite = site.raw;
-    rawSite.plans[0].link = $('#link').val();
+    var imageLink = $('#link');
+    rawSite.hints[0].image.link = imageLink.val();
+    var image = $('#img' + site.id);
+    rawSite.hints[0].image.dimension.width = image.width();
+    rawSite.hints[0].image.dimension.height = image.height();
     var add = !rawSite.id;
     var path = add ? '/admin/site/add' : '/admin/site/edit';
-    var param = add ? 'site' : 'site_index';
     $.ajax({
-        url: path + $(location).attr('search') + '&' + param + '=' + JSON.stringify(rawSite),
+        url: url(path, $(location).attr('search'), add ? 'site' : 'site_index', JSON.stringify(rawSite)),
         type: 'GET',
         success: function (id) {
             site.properties.balloonContent = balloonContent(rawSite);
@@ -172,6 +178,10 @@ function onSubmit() {
         }
     });
     refresh();
+}
+
+function url(path, search, paramName, paramValue) {
+    return path + search + (search.length == 0 ? '?' : '&') + paramName + '=' + paramValue;
 }
 
 function reverseToPoint(coordinates) {

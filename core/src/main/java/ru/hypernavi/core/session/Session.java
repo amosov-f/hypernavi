@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
 
 import com.google.inject.ImplementedBy;
@@ -24,6 +25,11 @@ public interface Session {
 
     @Nullable
     <T> T get(@NotNull final Property<T> property);
+
+    @NotNull
+    default <T> Optional<T> getOptional(@NotNull final Property<T> property) {
+        return Optional.ofNullable(get(property));
+    }
 
     @NotNull
     default <T> T demand(@NotNull final Property<T> property) {

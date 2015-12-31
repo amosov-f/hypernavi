@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 import com.google.inject.AbstractModule;
@@ -30,6 +31,7 @@ import org.reflections.Reflections;
 import ru.hypernavi.core.telegram.HyperNaviBot;
 import ru.hypernavi.server.handler.AfterRequestHandler;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
+import ru.hypernavi.server.servlet.admin.MigrateServlet;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -120,11 +122,11 @@ public final class HyperNaviServer {
     }
 
     @NotNull
-    @SuppressWarnings("unchecked")
     private static Set<Class<? extends HttpServlet>> servletClasses() {
-        return new Reflections("ru.hypernavi").getTypesAnnotatedWith(WebServlet.class).stream()
-                .map(annotatedClass -> (Class<? extends HttpServlet>) annotatedClass)
-                .collect(Collectors.toSet());
+        return Stream.concat(
+                new Reflections("ru.hypernavi").getSubTypesOf(HttpServlet.class).stream(),
+                Stream.of(MigrateServlet.class) // TODO
+        ).filter(servletClass -> servletClass.isAnnotationPresent(WebServlet.class)).collect(Collectors.toSet());
     }
 
     public static void main(@NotNull final String[] args) throws Exception {

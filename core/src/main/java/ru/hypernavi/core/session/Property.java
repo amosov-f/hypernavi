@@ -3,7 +3,7 @@ package ru.hypernavi.core.session;
 import org.jetbrains.annotations.NotNull;
 
 
-import ru.hypernavi.commons.Platform;
+import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.util.GeoPoint;
 

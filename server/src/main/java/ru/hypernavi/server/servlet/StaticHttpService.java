@@ -15,7 +15,7 @@ import com.google.common.net.MediaType;
 import com.google.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
-import ru.hypernavi.commons.Platform;
+import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;

@@ -161,7 +161,7 @@ public final class HyperNaviBot {
 
     @Nullable
     private <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz) {
-        return httpClient.execute(req, MoreGsonUtils.parser(gson, clazz));
+        return httpClient.executeText(req, MoreGsonUtils.parser(gson, clazz));
     }
 
     public static void main(@NotNull final String... args) {
