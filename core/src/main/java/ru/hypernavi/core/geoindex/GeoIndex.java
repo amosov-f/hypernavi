@@ -18,6 +18,9 @@ public interface GeoIndex<T extends Positioned> {
     List<Index<? extends T>> getNN(@NotNull final GeoPoint location, final int offset, final int count);
 
     @NotNull
+    List<Index<? extends T>> getNN(@NotNull final GeoPoint location, final int radius);
+
+    @NotNull
     default Index<? extends T> getNN(@NotNull final GeoPointImpl location) {
         return getKNN(location, 1).stream().findFirst().orElseThrow(() -> new IllegalStateException("No points in geo index!"));
     }

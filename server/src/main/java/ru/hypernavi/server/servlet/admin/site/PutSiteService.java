@@ -16,20 +16,16 @@ import ru.hypernavi.core.session.Session;
 /**
  * Created by amosov-f on 06.12.15.
  */
-@WebServlet(name = "add site", value = "/admin/site/add")
-public final class AddSiteService extends SiteAdminService {
+@WebServlet(name = "put site", value = "/admin/site/put")
+public final class PutSiteService extends SiteAdminService {
     @Inject
-    public AddSiteService(@NotNull final RequestReader.Factory<SiteRequest> initFactory) {
-        super(initFactory);
+    public PutSiteService(@NotNull final RequestReader.Factory<SiteRequest> init) {
+        super(init);
     }
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final String id = provider.add(session.demand(SiteRequest.SITE));
-        if (id == null) {
-            resp.sendError(HttpStatus.SC_NOT_MODIFIED, "Site isn't added!");
-            return;
-        }
+        final String id = provider.put(session.demand(SiteRequest.SITE));
         resp.setStatus(HttpStatus.SC_OK);
         resp.setContentType(ContentType.TEXT_PLAIN.getMimeType());
         resp.getWriter().write(id);

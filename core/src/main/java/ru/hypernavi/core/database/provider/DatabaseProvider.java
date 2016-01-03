@@ -18,8 +18,17 @@ public interface DatabaseProvider<T> {
         return Arrays.stream(ids).map(this::get);
     }
 
-    @Nullable
+    default boolean has(@NotNull final String id) {
+        return get(id) != null;
+    }
+
+    @NotNull
     String add(@NotNull T obj);
+
+    @NotNull
+    default String put(@NotNull final T obj) {
+        return add(obj);
+    }
 
     @Nullable
     T remove(String id);

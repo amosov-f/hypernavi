@@ -38,6 +38,17 @@ public final class DummyGeoIndex<T extends Positioned> implements GeoIndex<T> {
 
     @NotNull
     @Override
+    public List<Index<? extends T>> getNN(@NotNull final GeoPoint location, final int radius) {
+        return points.stream()
+                .filter(point -> GeoPointImpl.distance(location, point.getLocation()) <= radius)
+                .sorted(Comparator.comparing(point -> GeoPointImpl.distance(location, point.getLocation())))
+                .map(point -> Index.of("", point))
+                .collect(Collectors.toList());
+
+    }
+
+    @NotNull
+    @Override
     @Deprecated
     public List<T> getAll() {
         return points;

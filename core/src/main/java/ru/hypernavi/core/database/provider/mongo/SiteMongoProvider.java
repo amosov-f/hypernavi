@@ -26,6 +26,8 @@ import ru.hypernavi.util.stream.MoreStreamSupport;
 public final class SiteMongoProvider extends MongoProvider<Site> implements GeoIndex<Site> {
     private static final Log LOG = LogFactory.getLog(SiteMongoProvider.class);
 
+    private static final int MIN_SITE_DISTANCE = 10;
+
     @Inject
     public SiteMongoProvider(@NotNull final MongoDatabase db) {
         super(db, "site");
@@ -50,6 +52,18 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
         return doc.getObjectId("_id").toString();
     }
 
+    @NotNull
+    @Override
+    public String put(@NotNull final Site site) {
+        final List<Index<? extends Site>> nearSites = getNN(site.getLocation(), MIN_SITE_DISTANCE);
+        if (nearSites.isEmpty()) {
+            return super.put(site);
+        }
+        final String id = nearSites.get(0).getId();
+        put(id, site);
+        return id;
+    }
+
     @Nullable
     @Override
     public Site remove(@NotNull final String id) {
@@ -64,13 +78,30 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
     @NotNull
     @Override
     public List<Index<? extends Site>> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
-        final Document near = new Document("$near", new Document().append("$geometry", toDoc(location)));
-        return MoreStreamSupport.stream(coll.find(new Document("position.location", near)))
+        return MoreStreamSupport.stream(coll.find(near(location, null)))
                 .skip(offset)
                 .limit(count)
                 .map(SiteMongoProvider::site)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    @NotNull
+    @Override
+    public List<Index<? extends Site>> getNN(@NotNull final GeoPoint location, final int radius) {
+        return MoreStreamSupport.stream(coll.find(near(location, radius)))
+                .map(SiteMongoProvider::site)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    @NotNull
+    private static Document near(@NotNull final GeoPoint location, @Nullable final Integer radius) {
+        final Document near = new Document().append("$geometry", toDoc(location));
+        if (radius != null) {
+            near.append("$maxDistance", radius);
+        }
+        return new Document("position.location", new Document("$near", near));
     }
 
     @NotNull

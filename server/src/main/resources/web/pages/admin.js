@@ -165,14 +165,14 @@ function onSubmit() {
     var image = $('#img' + site.id);
     rawSite.hints[0].image.dimension.width = image.width();
     rawSite.hints[0].image.dimension.height = image.height();
-    var add = !rawSite.id;
-    var path = add ? '/admin/site/add' : '/admin/site/edit';
+    var put = !rawSite.id;
+    var path = put ? '/admin/site/put' : '/admin/site/edit';
     $.ajax({
-        url: url(path, $(location).attr('search'), add ? 'site' : 'site_index', JSON.stringify(rawSite)),
+        url: url(path, $(location).attr('search'), put ? 'site' : 'site_index', JSON.stringify(rawSite)),
         type: 'GET',
         success: function (id) {
             site.properties.balloonContent = balloonContent(rawSite);
-            if (add) {
+            if (put) {
                 removeSite();
                 site.raw.id = id;
                 objectManager.objects.add(site);

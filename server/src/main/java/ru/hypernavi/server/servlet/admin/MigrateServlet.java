@@ -9,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 import com.google.inject.Inject;
@@ -43,9 +42,6 @@ public class MigrateServlet extends AbstractHttpService {
     }
 
     @NotNull
-    private final AtomicBoolean migrated = new AtomicBoolean();
-
-    @NotNull
     private final HypermarketHolder markets;
     @Inject
     private HyperHttpClient httpClient;
@@ -63,9 +59,7 @@ public class MigrateServlet extends AbstractHttpService {
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        if (migrated.compareAndSet(false, true)) {
-            migrate(session);
-        }
+        migrate(session);
     }
 
     private void migrate(@NotNull final Session session) throws UnsupportedEncodingException {
@@ -79,7 +73,7 @@ public class MigrateServlet extends AbstractHttpService {
             final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
             final String otherParams = session.getOptional(Property.HTTP_QUERY_STRING).map(qs -> "&" + qs).orElse("");
             httpClient.execute(
-                    new HttpGet("http://localhost:" + localPort + "/admin/site/add?site=" + siteValue + otherParams),
+                    new HttpGet("http://localhost:" + localPort + "/admin/site/put?site=" + siteValue + otherParams),
                     IOFunction.identity()
             );
         }
