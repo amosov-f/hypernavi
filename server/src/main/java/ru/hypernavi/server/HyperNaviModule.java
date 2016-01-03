@@ -4,10 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 
 
@@ -16,15 +12,16 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import com.mysql.fabric.jdbc.FabricMySQLDriver;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
+import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.Version;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.auth.VkAuthValidator;
@@ -35,6 +32,7 @@ import ru.hypernavi.core.database.*;
 import ru.hypernavi.core.database.provider.DatabaseProvider;
 import ru.hypernavi.core.database.provider.mongo.SiteMongoProvider;
 import ru.hypernavi.core.geoindex.GeoIndex;
+import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.server.servlet.admin.site.SiteRequest;
 import ru.hypernavi.server.servlet.search.SearchRequest;
@@ -79,6 +77,10 @@ public final class HyperNaviModule extends AbstractModule {
         bindVkAuthValidator();
 
         bindGoodsClassifier();
+
+        bind(HypermarketHolder.class).asEagerSingleton();
+        bind(ImageDataBase.class).asEagerSingleton();
+        requestStaticInjection(RegisterHypermarket.class);
     }
 
     private <T> void bindProperty(@NotNull final String key) {
@@ -86,7 +88,8 @@ public final class HyperNaviModule extends AbstractModule {
     }
 
     private void bindTemplates() {
-        final Configuration templatesConfig = new Configuration(Configuration.VERSION_2_3_23);
+        final Version version = Configuration.VERSION_2_3_23;
+        final Configuration templatesConfig = new Configuration(version);
         final String pathToBundle = config.getProperty("hypernavi.web.bundle");
         if (MoreIOUtils.isClasspath(pathToBundle)) {
             templatesConfig.setTemplateLoader(new ClassTemplateLoader(getClass(), MoreIOUtils.toResourceName(pathToBundle)));
@@ -99,10 +102,7 @@ public final class HyperNaviModule extends AbstractModule {
             templatesConfig.setTemplateUpdateDelayMilliseconds(0);
         }
         bind(Configuration.class).toInstance(templatesConfig);
-
-        bind(HypermarketHolder.class).asEagerSingleton();
-        bind(ImageDataBase.class).asEagerSingleton();
-        requestStaticInjection(RegisterHypermarket.class);
+        bind(ObjectWrapper.class).toInstance(new BeansWrapperBuilder(version).build());
     }
 
     private void bindHttpClient() {
@@ -126,24 +126,6 @@ public final class HyperNaviModule extends AbstractModule {
                 final String dataPath = config.getProperty("hypernavi.server.pathdata");
                 bind(DataLoader.class).toInstance(new FileDataLoader(dataPath));
                 LOG.info("Data storage is file system: " + dataPath);
-                return;
-            case "mysql":
-                final String url = config.getProperty("hypernavi.data.mysql.database");
-                final Statement statement;
-                try {
-                    DriverManager.registerDriver(new FabricMySQLDriver());
-                    // TODO: policy about reconnect
-                    final Connection connection = DriverManager.getConnection(url, config.subConfig("hypernavi.data.mysql"));
-                    try {
-                        statement = connection.createStatement();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-//                bind(DataLoader.class).toInstance(new SQLDataLoader(statement));
-                LOG.info("Data storage is MySQL database: " + url);
                 return;
             case "mongo":
                 final String[] hostWithPort = config.getProperty("hypernavi.data.mongo.client").split(":");

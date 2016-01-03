@@ -39,7 +39,7 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
             LOG.warn(id + " is invalid mongo id");
             return null;
         }
-        return site(coll.find(toDoc(id)).iterator().tryNext()).get();
+        return site(coll.find(toDoc(id)).iterator().tryNext()).map(Index::get).orElse(null);
     }
 
     @NotNull
@@ -53,7 +53,7 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
     @Nullable
     @Override
     public Site remove(@NotNull final String id) {
-        return Optional.ofNullable(site(coll.findOneAndDelete(toDoc(id)))).map(Index::get).orElse(null);
+        return site(coll.findOneAndDelete(toDoc(id))).map(Index::get).orElse(null);
     }
 
     @Override
@@ -69,11 +69,12 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
                 .skip(offset)
                 .limit(count)
                 .map(SiteMongoProvider::site)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    @Nullable
-    private static Index<Site> site(@Nullable final Document doc) {
-        return doc != null ? Index.of(id(doc), fromDoc(doc, Site.class)) : null;
+    @NotNull
+    private static Optional<Index<Site>> site(@Nullable final Document doc) {
+        return Optional.ofNullable(doc).map(d -> Index.of(id(d), fromDoc(d, Site.class)));
     }
 }

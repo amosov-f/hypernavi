@@ -27,10 +27,12 @@ public final class SiteRequest extends AdminRequestReader {
     static final Property<Site> SITE = new Property<>("site");
     static final Property<Index<Site>> SITE_INDEX = new Property<>("site_index");
     static final Property<String> SITE_ID = new Property<>("site_id");
+    static final Property<Boolean> EDIT = new Property<>("edit");
 
     private static final RequestParam<Site> SITE_PARAM = new RequestParam.ObjectParam<>("site", Site.class);
     private static final RequestParam<Index<Site>> SITE_INDEX_PARAM = new RequestParam.ObjectParam<>("site_index", new TypeToken<Index<Site>>(){}.getType());
     private static final RequestParam<String> SITE_ID_PARAM = new RequestParam.StringParam("site_id");
+    private static final RequestParam<Boolean> EDIT_PARAM = new RequestParam.BooleanParam("edit");
 
     @Inject
     public SiteRequest(@Assisted @NotNull final HttpServletRequest req) {
@@ -43,6 +45,7 @@ public final class SiteRequest extends AdminRequestReader {
         setPropertyIfPresent(session, SITE, SITE_PARAM);
         setPropertyIfPresent(session, SITE_INDEX, SITE_INDEX_PARAM);
         setPropertyIfPresent(session, SITE_ID, SITE_ID_PARAM);
+        setPropertyIfPresent(session, EDIT, EDIT_PARAM);
     }
 
     @NotNull

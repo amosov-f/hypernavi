@@ -1,6 +1,7 @@
 package ru.hypernavi.server.servlet;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import com.google.common.net.MediaType;
 import com.google.inject.Inject;
 import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.http.HttpStatus;
@@ -26,15 +28,22 @@ public abstract class HtmlPageHttpService extends AbstractHttpService {
     private final String pathInBundle;
     @Inject
     private Configuration templatesConfig;
+    @Inject
+    private ObjectWrapper objectWrapper;
 
     protected HtmlPageHttpService(@NotNull final String pathInBundle, @NotNull final RequestReader.Factory<?> initFactory) {
         super(initFactory);
         this.pathInBundle = pathInBundle;
     }
 
-    @NotNull
-    public Object getDataModel(@NotNull final Session session) {
+    @Nullable
+    public Object toDataModel(@NotNull final Session session) throws TemplateException {
         return new Object();
+    }
+
+    @NotNull
+    protected ObjectWrapper getObjectWrapper() {
+        return objectWrapper;
     }
 
     @Override
@@ -42,9 +51,15 @@ public abstract class HtmlPageHttpService extends AbstractHttpService {
         final Template template = templatesConfig.getTemplate(pathInBundle, StandardCharsets.UTF_8.name());
         final ByteArrayOutputStream pageBytes = new ByteArrayOutputStream();
         try {
-            template.process(getDataModel(session), new OutputStreamWriter(pageBytes, StandardCharsets.UTF_8));
+            final Object dataModel = toDataModel(session);
+            if (dataModel == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            template.process(dataModel, new OutputStreamWriter(pageBytes, StandardCharsets.UTF_8));
         } catch (TemplateException e) {
             resp.sendError(HttpStatus.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            return;
         }
         resp.setStatus(HttpStatus.SC_OK);
         resp.setContentType(MediaType.HTML_UTF_8.toString());

@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 import com.google.inject.Inject;
@@ -18,6 +21,8 @@ import ru.hypernavi.core.http.HyperHttpClient;
 public final class ImageDimensioner {
     @NotNull
     private final HyperHttpClient httpClient;
+    @NotNull
+    private final Map<String, Dimension> cache = new ConcurrentHashMap<>();
 
     @Inject
     public ImageDimensioner(@NotNull final HyperHttpClient httpClient) {
@@ -26,10 +31,16 @@ public final class ImageDimensioner {
 
     @Nullable
     public Dimension getDimension(@NotNull final String imageLink) {
-        final BufferedImage image = httpClient.execute(new HttpGet(imageLink), ImageIO::read);
-        if (image == null) {
-            return null;
-        }
+        return cache.computeIfAbsent(imageLink, this::getDimensionImpl);
+    }
+
+    @Nullable
+    public Dimension getDimensionImpl(@NotNull final String imageLink) {
+        return Optional.ofNullable(httpClient.execute(new HttpGet(imageLink), ImageIO::read)).map(this::of).orElse(null);
+    }
+
+    @NotNull
+    private Dimension of(@NotNull final BufferedImage image) {
         return Dimension.of(image.getWidth(), image.getHeight());
     }
 }

@@ -1,7 +1,20 @@
 package ru.hypernavi.commons;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by amosov-f on 29.12.15.
  */
-public interface Hint {
+public abstract class Hint {
+    @Nullable
+    private final String description;
+
+    protected Hint(@Nullable final String description) {
+        this.description = description;
+    }
+
+    @Nullable
+    public String getDescription() {
+        return description;
+    }
 }

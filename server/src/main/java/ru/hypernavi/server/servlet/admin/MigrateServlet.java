@@ -27,6 +27,7 @@ import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.webutil.ImageDimensioner;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.ArrayGeoPoint;
+import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.function.IOFunction;
 import ru.hypernavi.util.json.GsonUtils;
 
@@ -37,6 +38,9 @@ import ru.hypernavi.util.json.GsonUtils;
 @WebServlet(name = "migrate", value = "/admin/migrate")
 public class MigrateServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(MigrateServlet.class);
+    static {
+        MoreReflectionUtils.load(SearchResponse.Data.class);
+    }
 
     @NotNull
     private final AtomicBoolean migrated = new AtomicBoolean();
@@ -65,11 +69,6 @@ public class MigrateServlet extends AbstractHttpService {
     }
 
     private void migrate(@NotNull final Session session) throws UnsupportedEncodingException {
-        try {
-            Class.forName("ru.hypernavi.commons.SearchResponse$Data");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
         final List<Hypermarket> hypermarkets = markets.getAll();
         for (final Hypermarket hypermarket : hypermarkets) {
             final GeoObject position = new GeoObject(hypermarket.getLine(), hypermarket.getCity(), ArrayGeoPoint.of(hypermarket.getLocation().getLongitude(), hypermarket.getLocation().getLatitude()));

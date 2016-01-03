@@ -40,7 +40,7 @@ public final class AuthService extends HtmlPageHttpService {
 
     @NotNull
     @Override
-    public Object getDataModel(@NotNull final Session session) {
+    public Object toDataModel(@NotNull final Session session) {
         return new ImmutableMap.Builder<>().put("url", session.demand(URL)).build();
     }
 }

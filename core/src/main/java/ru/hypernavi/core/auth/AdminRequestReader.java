@@ -46,7 +46,7 @@ public class AdminRequestReader extends VkAuthRequestReader {
 
     @Override
     public void validate(@NotNull final Session session) throws SessionValidationException {
-        if (platform == Platform.DEVELOPMENT) {
+        if (platform.isLocal()) {
             return;
         }
         super.validate(session);

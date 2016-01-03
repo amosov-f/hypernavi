@@ -59,7 +59,7 @@ public abstract class AbstractHttpService extends HttpServlet {
     }
 
     @Override
-    protected void service(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
+    protected final void service(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
         final long timeStamp = System.currentTimeMillis();
         MDC.put("reqid", generateRequestId());
         LOG.info("Started processing: " + HttpTools.curl(req));

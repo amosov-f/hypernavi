@@ -10,7 +10,7 @@ import net.jcip.annotations.Immutable;
  * Created by amosov-f on 07.11.15.
  */
 @Immutable
-public final class Plan implements Hint {
+public final class Plan extends Hint {
     public static final Plan[] EMPTY_ARRAY = new Plan[0];
 
     @NotNull
@@ -19,6 +19,7 @@ public final class Plan implements Hint {
     private final Double azimuth;
 
     public Plan(@NotNull final Image image, @Nullable final Double azimuth) {
+        super("Схема магазина");
         this.image = image;
         this.azimuth = azimuth;
     }

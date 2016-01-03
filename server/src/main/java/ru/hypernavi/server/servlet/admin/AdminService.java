@@ -32,7 +32,7 @@ public final class AdminService extends HtmlPageHttpService {
 
     @NotNull
     @Override
-    public Object getDataModel(@NotNull final Session session) {
+    public Object toDataModel(@NotNull final Session session) {
         final ImmutableMap.Builder<String, Object> dataModel = new ImmutableMap.Builder<>();
         dataModel.put("number", markets.size());
         dataModel.put("server_starts", initTime);

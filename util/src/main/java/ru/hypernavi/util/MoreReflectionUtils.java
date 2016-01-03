@@ -30,4 +30,12 @@ public enum  MoreReflectionUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static void load(@NotNull final Class<?> clazz) {
+        try {
+            Class.forName(clazz.getName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

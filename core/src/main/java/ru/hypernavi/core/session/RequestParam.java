@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletRequest;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -23,6 +24,8 @@ public abstract class RequestParam<T> {
 
     public static final RequestParam<Double> PARAM_LON = new DoubleParam("lon");
     public static final RequestParam<Double> PARAM_LAT = new DoubleParam("lat");
+
+    public static final RequestParam<Boolean> DEBUG_PARAM = new RequestParam.BooleanParam("debug").defaultValue(false);
 
     @NotNull
     private final String name;
@@ -67,6 +70,12 @@ public abstract class RequestParam<T> {
         @Override
         T parse(@NotNull final String value) {
             return parser.apply(value);
+        }
+    }
+
+    public static final class BooleanParam extends LambdaParam<Boolean> {
+        public BooleanParam(@NotNull final String name) {
+            super(name, value -> Arrays.asList("1", "true").contains(value));
         }
     }
 

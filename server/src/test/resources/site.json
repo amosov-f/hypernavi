@@ -1,0 +1,27 @@
+{
+  "type": "site",
+  "position": {
+    "name": "Пушкин",
+    "description": "Россия, Санкт-Петербург, Пушкинский район",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        30.404469,
+        59.72034
+      ]
+    }
+  },
+  "hints": [
+    {
+      "type": "plan",
+      "image": {
+        "link": "",
+        "dimension": {
+          "width": 0,
+          "height": 0
+        },
+        "duplicates": []
+      }
+    }
+  ]
+}

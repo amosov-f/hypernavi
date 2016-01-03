@@ -88,10 +88,16 @@ function feature(rawSite) {
 }
 
 function balloonContent(rawSite) {
-    return '<h3>' + rawSite.position.name + '</h3>' +
-           '<p>' + rawSite.position.description + '</p>' +
-           '<img id="img' + rawSite.id + '"class="img-responsive img-rounded" src="' + rawSite.hints[0].image.link + '"/>' +
-           '<a class="btn" onclick="edit()">Редактировать</a>';
+    var absent = !rawSite.id;
+    var balloonContent;
+    $.ajax({
+        url: '/admin/site?' + (absent ? 'site=' + JSON.stringify(rawSite) : 'site_id=' + rawSite.id),
+        async: false,
+        success: function(html) {
+            balloonContent = html;
+        }
+    });
+    return balloonContent;
 }
 
 function refresh() {

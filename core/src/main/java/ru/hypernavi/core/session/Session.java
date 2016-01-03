@@ -3,7 +3,6 @@ package ru.hypernavi.core.session;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -27,13 +26,18 @@ public interface Session {
     <T> T get(@NotNull final Property<T> property);
 
     @NotNull
+    default <T> T get(@NotNull final Property<T> property, @NotNull final T defaultValue) {
+        return getOptional(property).orElse(defaultValue);
+    }
+
+    @NotNull
     default <T> Optional<T> getOptional(@NotNull final Property<T> property) {
         return Optional.ofNullable(get(property));
     }
 
     @NotNull
     default <T> T demand(@NotNull final Property<T> property) {
-        return Objects.requireNonNull(get(property), "There is no '" + property + "' property in session!");
+        return getOptional(property).orElseThrow(() -> new IllegalStateException("There is no '" + property + "' property in session!"));
     }
 
     default boolean has(@NotNull final Property<?> property) {
