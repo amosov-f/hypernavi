@@ -18,16 +18,23 @@ ymaps.ready(function () {
     objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
     map.geoObjects.add(objectManager);
 
-    console.log($(location));
-
     $.ajax({
         url: "/search?lon=30&lat=60&ns=100",
         success: function (searchData) {
             objectManager.add(convert(searchData));
-            objectManager.events.add('balloonopen', function (e) {
-                site = objectManager.objects.getById(e.get('objectId'));
-            });
         }
+    });
+
+    objectManager.events.add('balloonopen', function (e) {
+        site = objectManager.objects.getById(e.get('objectId'));
+        if (!site.properties.balloonContent) {
+            site.properties.balloonContent = balloonContent(site.raw);
+            refresh();
+        }
+    });
+
+    objectManager.events.add('balloonclose', function (e) {
+        site = null;
     });
 
     var searchControl = map.controls.get('searchControl');
@@ -75,7 +82,6 @@ function feature(rawSite) {
         id: ID++,
         geometry: reverseToPoint(rawSite.position.location.coordinates),
         properties: {
-            balloonContent: balloonContent(rawSite)
         },
         options: {
             balloonShadow: false,
