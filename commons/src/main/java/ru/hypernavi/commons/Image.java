@@ -11,6 +11,8 @@ import net.jcip.annotations.Immutable;
  */
 @Immutable
 public final class Image extends Hint {
+    public static final Type TYPE = Type.IMAGE;
+
     @NotNull
     private final String link;
     private final Dimension dimension;
@@ -58,6 +60,12 @@ public final class Image extends Hint {
     @NotNull
     public Image[] getDuplicates() {
         return duplicates;
+    }
+
+    @NotNull
+    @Override
+    public Type getType() {
+        return TYPE;
     }
 
     public enum Format {

@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import com.google.common.net.MediaType;
 import com.google.inject.Inject;
 import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.http.HttpStatus;
@@ -24,31 +23,24 @@ import ru.hypernavi.core.session.Session;
  * Created by amosov-f on 25.08.15.
  */
 public abstract class HtmlPageHttpService extends AbstractHttpService {
-    @NotNull
-    private final String pathInBundle;
     @Inject
     private Configuration templatesConfig;
-    @Inject
-    private ObjectWrapper objectWrapper;
 
-    protected HtmlPageHttpService(@NotNull final String pathInBundle, @NotNull final RequestReader.Factory<?> initFactory) {
-        super(initFactory);
-        this.pathInBundle = pathInBundle;
+    protected HtmlPageHttpService(@NotNull final RequestReader.Factory<?> init) {
+        super(init);
     }
+
+    @NotNull
+    public abstract String getPathInBundle(@NotNull final Session session);
 
     @Nullable
     public Object toDataModel(@NotNull final Session session) throws TemplateException {
         return new Object();
     }
 
-    @NotNull
-    protected ObjectWrapper getObjectWrapper() {
-        return objectWrapper;
-    }
-
     @Override
     public final void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final Template template = templatesConfig.getTemplate(pathInBundle, StandardCharsets.UTF_8.name());
+        final Template template = templatesConfig.getTemplate(getPathInBundle(session), StandardCharsets.UTF_8.name());
         final ByteArrayOutputStream pageBytes = new ByteArrayOutputStream();
         try {
             final Object dataModel = toDataModel(session);

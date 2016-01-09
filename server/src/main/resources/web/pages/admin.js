@@ -55,10 +55,7 @@ ymaps.ready(function () {
                     description: res.properties.get('description'),
                     location: reverseToPoint(res.geometry.getCoordinates())
                 },
-                hints: [{
-                    type: 'plan',
-                    image: {link: '', dimension: {width: 0, height: 0}, duplicates: []}
-                }]
+                hints: []
             };
             objectManager.add(convert({data: {sites: [rawSite]}}));
         });
@@ -97,7 +94,7 @@ function balloonContent(rawSite) {
     var absent = !rawSite.id;
     var balloonContent;
     $.ajax({
-        url: url('/admin/site', $(location).attr('search'), absent ? 'site' : 'site_id', absent ? JSON.stringify(rawSite) : rawSite.id),
+        url: url('/admin/site', absent ? 'site' : 'site_id', absent ? JSON.stringify(rawSite) : rawSite.id),
         async: false,
         success: function(html) {
             balloonContent = html;
@@ -108,91 +105,39 @@ function balloonContent(rawSite) {
 
 function refresh() {
     objectManager.objects.balloon.open(site.id);
+    $(site.properties.balloonContent).filter('script').each(function() {
+        $.globalEval(this.text);
+    });
 }
 
 function edit() {
-    site.properties.balloonContent = editBalloonContent();
-    refresh();
-}
-
-function editBalloonContent() {
-    var rawSite = site.raw;
-    return '<h3>' + rawSite.position.name + '</h3>' +
-           '<p>' + rawSite.position.description + '</p>' +
-           '<input id="link" type="url" class="form-control" value="' + link() + '">' +
-           '<a class="btn" onclick="sync()">Показать</a>' +
-           '<img id="img' + site.id + '" class="img-responsive img-rounded" src="' + link() + '"/>' +
-           '<a class="btn" onclick="onSubmit()">Сохранить</a>' +
-           '<a class="btn" onclick="onRemove()">Удалить</a>';
-}
-
-function link() {
-    var link = $('#link').val();
-    if (link != null) {
-        return link;
-    }
-    return site.raw.hints[0].image.link;
-}
-
-function sync() {
-    site.properties.balloonContent = editBalloonContent();
-    refresh();
-}
-
-function onRemove() {
-    var id = site.raw.id;
-    if (id) {
-        $.ajax({
-            url: url('/admin/site/remove', $(location).attr('search'), 'site_id', id),
-            type: 'GET',
-            success: function (resp, textStatus, req) {
-                alert('Объект ' + id + ' успешно удален!');
-                removeSite();
-                site = null;
-            },
-            error: function (req, textStatus, error) {
-                alert('Ошибка! ' + error)
-            }
-        });
-    } else {
-        removeSite();
-        site = null;
-    }
+    $.ajax({
+        url: url('/admin/site', 'edit=1&site_id', site.raw.id),
+        async: false,
+        success: function(html) {
+            site.properties.balloonContent = html;
+            refresh();
+        }
+    });
 }
 
 function removeSite() {
     objectManager.objects.remove(objectManager.objects.getById(site.id));
+    site = null;
 }
 
-function onSubmit() {
-    var rawSite = site.raw;
-    var imageLink = $('#link');
-    rawSite.hints[0].image.link = imageLink.val();
-    var image = $('#img' + site.id);
-    rawSite.hints[0].image.dimension.width = image.width();
-    rawSite.hints[0].image.dimension.height = image.height();
-    var put = !rawSite.id;
-    var path = put ? '/admin/site/put' : '/admin/site/edit';
-    $.ajax({
-        url: url(path, $(location).attr('search'), put ? 'site' : 'site_index', JSON.stringify(rawSite)),
-        type: 'GET',
-        success: function (id) {
-            site.properties.balloonContent = balloonContent(rawSite);
-            if (put) {
-                removeSite();
-                site.raw.id = id;
-                objectManager.objects.add(site);
-            }
-            refresh();
-        },
-        error: function (req, textStatus, error) {
-            alert('Ошибка! ' + error)
-        }
-    });
-    refresh();
+function onSubmitSuccess(id) {
+        site.properties.balloonContent = null;
+        //if (put) {
+        //    removeSite();
+        //    site.raw.id = id;
+        //    objectManager.objects.add(site);
+        //}
+        refresh();
 }
 
-function url(path, search, paramName, paramValue) {
+function url(path, paramName, paramValue) {
+    var search = $(location).attr('search');
     return path + search + (search.length == 0 ? '?' : '&') + paramName + '=' + paramValue;
 }
 

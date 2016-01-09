@@ -52,4 +52,9 @@ public final class ArrayGeoPoint implements GeoPoint {
     public double getLatitude() {
         return coordinates[1];
     }
+
+    @NotNull
+    public double[] getCoordinates() {
+        return coordinates;
+    }
 }

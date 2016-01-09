@@ -19,7 +19,7 @@ public final class AuthService extends HtmlPageHttpService {
     private static final RequestParam<String> PARAM_URL = new RequestParam.StringParam("url");
 
     public AuthService() {
-        super("auth.ftl", new RequestReader.Factory<RequestReader>() {
+        super(new RequestReader.Factory<RequestReader>() {
             @NotNull
             @Override
             public RequestReader create(@NotNull final HttpServletRequest req) {
@@ -36,6 +36,12 @@ public final class AuthService extends HtmlPageHttpService {
                 };
             }
         });
+    }
+
+    @NotNull
+    @Override
+    public String getPathInBundle(@NotNull final Session session) {
+        return "auth.ftl";
     }
 
     @NotNull

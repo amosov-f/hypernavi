@@ -1,5 +1,6 @@
 package ru.hypernavi.commons;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,5 +17,12 @@ public abstract class Hint {
     @Nullable
     public String getDescription() {
         return description;
+    }
+
+    @NotNull
+    public abstract Type getType();
+
+    public enum Type {
+        PLAN, IMAGE;
     }
 }

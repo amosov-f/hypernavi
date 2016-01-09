@@ -34,7 +34,13 @@ public class SiteTemplateService extends HtmlPageHttpService {
 
     @Inject
     protected SiteTemplateService(@NotNull final RequestReader.Factory<SiteRequest> init) {
-        super("site.ftl", init);
+        super(init);
+    }
+
+    @NotNull
+    @Override
+    public String getPathInBundle(@NotNull final Session session) {
+        return session.has(SiteRequest.SITE) || session.get(SiteRequest.EDIT, false) ? "edit.ftl" : "site.ftl";
     }
 
     @Nullable
@@ -49,7 +55,6 @@ public class SiteTemplateService extends HtmlPageHttpService {
         model.put("id", siteId);
         model.put("site", site);
         model.put("debug", session.get(Property.DEBUG, false));
-        model.put("edit", session.get(SiteRequest.EDIT, false));
         return model;
     }
 }

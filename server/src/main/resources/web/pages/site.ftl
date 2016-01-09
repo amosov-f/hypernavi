@@ -23,16 +23,18 @@
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                   aria-controls="collapseOne">
 					<#if hint.description??>${hint.description}</#if>
                 </a>
             </h4>
         </div>
         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
-                <img id="img<#if id??>${id}</#if>" class="img-responsive img-rounded" src="${hint.image.link}"/>
+                <img class="img-responsive img-rounded" src="<#if hint.image??>${hint.image.link}<#else>${hint.link}</#if>"/>
             </div>
         </div>
     </div>
 </#list>
+</div>
 </body>

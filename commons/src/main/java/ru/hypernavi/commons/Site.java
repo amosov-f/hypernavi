@@ -15,8 +15,8 @@ import ru.hypernavi.util.json.RuntimeTypeAdapterFactory;
 public class Site implements Positioned {
     static {
         GsonUtils.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Hint.class, "type")
-                .registerSubtype(Image.class, "image")
-                .registerSubtype(Plan.class, "plan"));
+                .registerSubtype(Image.class, Image.TYPE.name().toLowerCase())
+                .registerSubtype(Plan.class, Plan.TYPE.name().toLowerCase()));
     }
 
     @NotNull

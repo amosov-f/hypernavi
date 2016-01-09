@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 
 import com.google.inject.Inject;
 import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.HtmlPageHttpService;
 
 /**
@@ -15,7 +16,13 @@ import ru.hypernavi.server.servlet.HtmlPageHttpService;
 @WebServlet(name = "morda", value = "")
 public final class MordaHttpService extends HtmlPageHttpService {
     @Inject
-    public MordaHttpService(@NotNull final RequestReader.Factory<?> initFactory) {
-        super("morda.ftl", initFactory);
+    public MordaHttpService(@NotNull final RequestReader.Factory<?> init) {
+        super(init);
+    }
+
+    @NotNull
+    @Override
+    public String getPathInBundle(@NotNull final Session session) {
+        return "morda.ftl";
     }
 }

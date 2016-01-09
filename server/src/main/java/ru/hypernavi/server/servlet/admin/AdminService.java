@@ -25,9 +25,15 @@ public final class AdminService extends HtmlPageHttpService {
     private final LocalDateTime initTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 
     @Inject
-    public AdminService(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<AdminRequestReader> reader) {
-        super("admin.ftl", reader);
+    public AdminService(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<AdminRequestReader> init) {
+        super(init);
         this.markets = markets;
+    }
+
+    @NotNull
+    @Override
+    public String getPathInBundle(@NotNull final Session session) {
+        return "admin.ftl";
     }
 
     @NotNull

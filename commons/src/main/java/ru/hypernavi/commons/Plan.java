@@ -12,6 +12,7 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public final class Plan extends Hint {
     public static final Plan[] EMPTY_ARRAY = new Plan[0];
+    public static final Type TYPE = Type.PLAN;
 
     @NotNull
     private final Image image;
@@ -32,5 +33,11 @@ public final class Plan extends Hint {
     @Nullable
     public Double getAzimuth() {
         return azimuth;
+    }
+
+    @NotNull
+    @Override
+    public Type getType() {
+        return TYPE;
     }
 }
