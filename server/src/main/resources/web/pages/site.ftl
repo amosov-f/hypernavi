@@ -18,20 +18,26 @@
 <p>${site.position.description}</p>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-    <a class="btn" onclick="edit()">Редактировать</a>
+    <div class="form-group">
+        <a class="btn btn-default" onclick="edit()">Редактировать</a>
+    </div>
 <#list site.hints as hint>
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
-                   aria-controls="collapseOne">
-					<#if hint.description??>${hint.description}</#if>
+                <a href="#${hint?index}" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapseOne">
+					<#if hint.type == 'PLAN'>
+                        Схема
+                    <#elseif hint.type == 'IMAGE'>
+                        Изображение
+					</#if>
                 </a>
             </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <div id="${hint?index}" class="panel-collapse collapse <#if hint?index == 0>in</#if>" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
                 <img class="img-responsive img-rounded" src="<#if hint.image??>${hint.image.link}<#else>${hint.link}</#if>"/>
+                <#if hint.description??><div class="well">${hint.description}</div></#if>
             </div>
         </div>
     </div>

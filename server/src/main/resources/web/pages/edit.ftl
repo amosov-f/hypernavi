@@ -150,10 +150,12 @@
     }
 
     function onSubmit() {
-        var hints = $('.panel-collapse').map(function () {
-            var hint = {
-                description: $(this).find('textarea').val()
-            };
+        var hints = $('.panel-collapse').map(function() {
+            var hint = {};
+            var description = $(this).find('textarea').val();
+            if (description.length != 0) {
+                hint.description = description;
+            }
             var index = $(this).attr('id');
             var $hint = $('#plan' + index);
             if ($hint.hasClass('active')) {
@@ -195,12 +197,11 @@
     </#if>
         var put = !site.id;
         var path = put ? '/admin/site/put' : '/admin/site/edit';
-        console.log(site);
         $.ajax({
             url: url(path, put ? 'site' : 'site_index', JSON.stringify(site)),
             type: 'GET',
-            success: function (resp) {
-                onSubmitSuccess(resp)
+            success: function (id) {
+                onSubmitSuccess(put ? id : null)
             },
             error: function (req, textStatus, error) {
                 alert('Ошибка! ' + error)

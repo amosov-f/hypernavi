@@ -28,12 +28,14 @@ ymaps.ready(function () {
     objectManager.events.add('balloonopen', function (e) {
         site = objectManager.objects.getById(e.get('objectId'));
         if (!site.properties.balloonContent) {
+            console.log(site.raw.id);
             site.properties.balloonContent = balloonContent(site.raw);
             refresh();
         }
     });
 
     objectManager.events.add('balloonclose', function (e) {
+        console.log('nul!');
         site = null;
     });
 
@@ -127,13 +129,12 @@ function removeSite() {
 }
 
 function onSubmitSuccess(id) {
-        site.properties.balloonContent = null;
-        //if (put) {
-        //    removeSite();
-        //    site.raw.id = id;
-        //    objectManager.objects.add(site);
-        //}
-        refresh();
+    console.log('pizza: ' + id);
+    site.properties.balloonContent = null;
+    if (id) {
+        site.raw.id = id;
+    }
+    refresh();
 }
 
 function url(path, paramName, paramValue) {
