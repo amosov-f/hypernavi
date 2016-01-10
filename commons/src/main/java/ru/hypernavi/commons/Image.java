@@ -69,6 +69,20 @@ public final class Image extends Hint {
     }
 
     public enum Format {
-        JPG, PNG, GIF
+        JPG, PNG, GIF;
+
+        @NotNull
+        public String getMimeType() {
+            switch (this) {
+                case JPG:
+                    return "image/jpeg";
+                case PNG:
+                    return "image/png";
+                case GIF:
+                    return "image/gif";
+                default:
+                    throw new UnsupportedOperationException();
+            }
+        }
     }
 }

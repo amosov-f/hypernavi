@@ -40,6 +40,11 @@ public final class GeoObject implements Positioned {
         return location;
     }
 
+    @NotNull
+    public String getAddress() {
+        return description + ", " + name;
+    }
+
     @Override
     public String toString() {
         return "GeoObject{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", location=" + location + '}';

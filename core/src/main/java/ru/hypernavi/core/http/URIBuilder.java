@@ -1,6 +1,7 @@
 package ru.hypernavi.core.http;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 import java.net.URI;
@@ -41,6 +42,11 @@ public final class URIBuilder {
     public URIBuilder setParameter(@NotNull final String param, @NotNull final String value) {
         builder.setParameter(param, value);
         return this;
+    }
+
+    @NotNull
+    public URIBuilder setParameterIfNotNull(@NotNull final String param, @Nullable final String value) {
+        return value != null ? setParameter(param, value) : this;
     }
 
     @NotNull

@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -19,6 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -26,12 +29,13 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-import ru.hypernavi.commons.Hypermarket;
+import ru.hypernavi.commons.*;
 import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.GeoPointImpl;
 import ru.hypernavi.util.MoreIOUtils;
+import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.concurrent.MoreExecutors;
 import ru.hypernavi.util.json.GsonUtils;
@@ -45,6 +49,11 @@ public final class HyperNaviBot {
 
     private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot";
     private static final long GET_UPDATES_DELAY = 3000;
+
+    static {
+        MoreReflectionUtils.load(Index.class);
+        MoreReflectionUtils.load(Site.class);
+    }
 
     @NotNull
     private final AtomicInteger updateId = new AtomicInteger();
@@ -99,7 +108,7 @@ public final class HyperNaviBot {
                 continue;
             }
             final int chatId = message.getChat().getId();
-            final GeoPointImpl location = message.getLocation();
+            final GeoPoint location = message.getLocation();
             service.submit(() -> {
                 if (location == null) {
                     sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию \uD83D\uDCCE, и я покажу ближайший к Вам гипермаркет.");
@@ -110,11 +119,27 @@ public final class HyperNaviBot {
                     sendMessage(chatId, "Простите, наш сервер не работает");
                     return;
                 }
-                final Hypermarket hypermarket = searchResponse.getData().getHypermarkets()[0];
-                sendMessage(chatId, "Ближайший гипермаркет: " + hypermarket.getAddress());
-                sendMessage(chatId, "Сейчас покажу его схему...");
-                sendPhoto(chatId, "http://" + searchHost + hypermarket.getPath());
+                searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site));
             });
+        }
+    }
+
+    private void respond(final int chatId, @NotNull final Site site) {
+        sendMessage(chatId, "Адрес: " + site.getPosition().getAddress());
+        for (final Hint hint : site.getHints()) {
+            Optional.ofNullable(hint.getDescription()).ifPresent(descr -> sendMessage(chatId, descr + ":"));
+            final Image image;
+            switch (hint.getType()) {
+                case PLAN:
+                    image = Plan.class.cast(hint).getImage();
+                    break;
+                case IMAGE:
+                    image = Image.class.cast(hint);
+                    break;
+                default:
+                    throw new UnsupportedOperationException();
+            }
+            sendPhoto(chatId, image);
         }
     }
 
@@ -125,10 +150,11 @@ public final class HyperNaviBot {
     }
 
     @Nullable
-    private SearchResponse search(@NotNull final GeoPointImpl location) {
-        final URI uri = new URIBuilder("http://" + searchHost + "/schemainfo")
+    private SearchResponse search(@NotNull final GeoPoint location) {
+        final URI uri = new URIBuilder("http://" + searchHost + "/search")
                 .addParameter("lon", location.getLongitude())
                 .addParameter("lat", location.getLatitude())
+                .addParameter("ns", 1)
                 .build();
         return execute(new HttpGet(uri), SearchResponse.class);
     }
@@ -141,16 +167,25 @@ public final class HyperNaviBot {
         execute(new HttpGet(uri), Object.class);
     }
 
-    private void sendPhoto(final int chatId, @NotNull final String photoUrl) {
-        final URI uri = new URIBuilder(getMethodUrl("/sendPhoto")).setParameter("chat_id", chatId).build();
+    private void sendPhoto(final int chatId, @NotNull final Image photo) {
+        final URI uri = new URIBuilder(getMethodUrl("/sendPhoto"))
+                .setParameter("chat_id", chatId)
+//                .setParameterIfNotNull("caption", photo.getDescription())
+                .build();
         final HttpEntityEnclosingRequestBase req = new HttpPost(uri);
+        final String mimeType = Optional.ofNullable(photo.getFormat()).orElse(Image.Format.JPG).getMimeType();
+        final InputStream photoInputStream;
         try {
-            req.setEntity(MultipartEntityBuilder.create()
-                    .addBinaryBody("photo", MoreIOUtils.connect(photoUrl), ContentType.create("image/jpeg"), photoUrl)
-                    .build());
+            photoInputStream = MoreIOUtils.connect(photo.getLink());
         } catch (IOException e) {
             LOG.error("Can't download photo!", e);
+            sendMessage(chatId, "Простите, не могу загрузить изображение");
+            return;
         }
+        final HttpEntity entity = MultipartEntityBuilder.create()
+                .addBinaryBody("photo", photoInputStream, ContentType.create(mimeType), photo.getLink())
+                .build();
+        req.setEntity(entity);
         execute(req, Object.class);
     }
 

@@ -23,6 +23,6 @@ public abstract class Hint {
     public abstract Type getType();
 
     public enum Type {
-        PLAN, IMAGE;
+        PLAN, IMAGE
     }
 }
