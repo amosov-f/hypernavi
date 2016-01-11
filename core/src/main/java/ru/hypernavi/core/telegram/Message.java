@@ -14,11 +14,14 @@ public final class Message {
     @NotNull
     private final Chat chat;
     @Nullable
+    private final String text;
+    @Nullable
     private final GeoPoint location;
 
-    public Message(final int messageId, @NotNull final Chat chat, @Nullable final GeoPoint location) {
+    public Message(final int messageId, @NotNull final Chat chat, @Nullable final String text, @Nullable final GeoPoint location) {
         this.messageId = messageId;
         this.chat = chat;
+        this.text = text;
         this.location = location;
     }
 
@@ -29,6 +32,11 @@ public final class Message {
     @NotNull
     public Chat getChat() {
         return chat;
+    }
+
+    @Nullable
+    public String getText() {
+        return text;
     }
 
     @Nullable

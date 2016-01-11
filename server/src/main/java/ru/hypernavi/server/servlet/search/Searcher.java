@@ -1,17 +1,20 @@
 package ru.hypernavi.server.servlet.search;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 
 import com.google.inject.Inject;
+import ru.hypernavi.commons.GeoObject;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.SearchResponse;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.webutil.yandex.MapsSearcher;
 import ru.hypernavi.util.GeoPoint;
 
 /**
@@ -20,10 +23,22 @@ import ru.hypernavi.util.GeoPoint;
 public final class Searcher {
     @Inject
     private GeoIndex<Site> geoIndex;
+    @Inject
+    private MapsSearcher mapsSearcher;
 
-    @NotNull
+    @Nullable
     public SearchResponse search(@NotNull final Session session) {
-        final GeoPoint location = session.demand(Property.GEO_LOCATION);
+        GeoPoint location = session.get(Property.GEO_LOCATION);
+        if (location == null) {
+            final String text = session.demand(Property.TEXT);
+            final GeoObject position = mapsSearcher.search(text, null);
+            if (position != null) {
+                location = position.getLocation();
+            }
+        }
+        if (location == null) {
+            return null;
+        }
         final int page = session.demand(SearchRequest.PAGE);
         final int numSite = session.demand(SearchRequest.NUM_SITE);
 

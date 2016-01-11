@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonDeserializer;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -28,7 +30,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
 import ru.hypernavi.commons.*;
 import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.http.URIBuilder;
@@ -109,14 +110,23 @@ public final class HyperNaviBot {
             }
             final int chatId = message.getChat().getId();
             final GeoPoint location = message.getLocation();
+            final String text = message.getText();
             service.submit(() -> {
-                if (location == null) {
+                final SearchResponse searchResponse;
+                if (location != null) {
+                    searchResponse = search(location);
+                    if (searchResponse == null) {
+                        sendMessage(chatId, "Простите, наш сервер не работает");
+                        return;
+                    }
+                } else if (StringUtils.startsWithIgnoreCase(text, "поиск")) {
+                    searchResponse = search(Objects.requireNonNull(StringUtils.removeStartIgnoreCase(text, "поиск")).trim());
+                    if (searchResponse == null) {
+                        sendMessage(chatId, "Простите, я не знаю такого места");
+                        return;
+                    }
+                } else {
                     sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию \uD83D\uDCCE, и я покажу ближайший к Вам гипермаркет.");
-                    return;
-                }
-                final SearchResponse searchResponse = search(location);
-                if (searchResponse == null) {
-                    sendMessage(chatId, "Простите, наш сервер не работает");
                     return;
                 }
                 searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site));
@@ -154,6 +164,15 @@ public final class HyperNaviBot {
         final URI uri = new URIBuilder("http://" + searchHost + "/search")
                 .addParameter("lon", location.getLongitude())
                 .addParameter("lat", location.getLatitude())
+                .addParameter("ns", 1)
+                .build();
+        return execute(new HttpGet(uri), SearchResponse.class);
+    }
+
+    @Nullable
+    private SearchResponse search(@NotNull final String text) {
+        final URI uri = new URIBuilder("http://" + searchHost + "/search")
+                .addParameter("text", text)
                 .addParameter("ns", 1)
                 .build();
         return execute(new HttpGet(uri), SearchResponse.class);
@@ -197,13 +216,5 @@ public final class HyperNaviBot {
     @Nullable
     private <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz) {
         return httpClient.executeText(req, MoreGsonUtils.parser(gson, clazz));
-    }
-
-    public static void main(@NotNull final String... args) {
-        new HyperNaviBot(
-                "139192271:AAGD6kiaoiiJEBxnquWOdu2WTVLisAqAWPE",
-                "hypernavi.net",
-                new HyperHttpClient(HttpClientBuilder.create().build())
-        ).start(false);
     }
 }

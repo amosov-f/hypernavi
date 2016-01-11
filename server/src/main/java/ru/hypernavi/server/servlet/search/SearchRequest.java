@@ -37,7 +37,9 @@ public class SearchRequest extends RequestReader {
 
     @Override
     public void validate(@NotNull final Session session) throws SessionValidationException {
-        validate(session, Property.GEO_LOCATION);
+        if (!session.has(Property.GEO_LOCATION) && !session.has(Property.TEXT)) {
+            throw new SessionValidationException("No location in request!");
+        }
     }
 
     @NotNull

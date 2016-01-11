@@ -1,4 +1,4 @@
-package ru.hypernavi.core.webutil;
+package ru.hypernavi.core.webutil.yandex;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

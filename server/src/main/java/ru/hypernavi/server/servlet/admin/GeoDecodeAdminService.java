@@ -13,7 +13,7 @@ import org.apache.http.HttpStatus;
 import ru.hypernavi.commons.GeoObject;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.session.*;
-import ru.hypernavi.core.webutil.GeoDecoder;
+import ru.hypernavi.core.webutil.yandex.GeoDecoder;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**

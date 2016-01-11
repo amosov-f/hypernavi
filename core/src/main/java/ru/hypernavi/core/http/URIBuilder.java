@@ -29,6 +29,11 @@ public final class URIBuilder {
     }
 
     @NotNull
+    public URIBuilder addParameterIfNotNull(@NotNull final String param, @Nullable final String value) {
+        return value != null ? addParameter(param, value) : this;
+    }
+
+    @NotNull
     public URIBuilder addParameter(@NotNull final String param, final int value) {
         return addParameter(param, Integer.toString(value));
     }
