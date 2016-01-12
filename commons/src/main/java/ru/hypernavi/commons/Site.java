@@ -15,23 +15,23 @@ import ru.hypernavi.util.json.RuntimeTypeAdapterFactory;
 public class Site implements Positioned {
     static {
         GsonUtils.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Hint.class, "type")
-                .registerSubtype(Image.class, Image.TYPE.name().toLowerCase())
+                .registerSubtype(Picture.class, Picture.TYPE.name().toLowerCase())
                 .registerSubtype(Plan.class, Plan.TYPE.name().toLowerCase()));
     }
 
     @NotNull
-    private final GeoObject position;
+    private final GeoObject place;
     @NotNull
     private final Hint[] hints;
 
-    public Site(@NotNull final GeoObject position, @NotNull final Hint... hints) {
-        this.position = position;
+    public Site(@NotNull final GeoObject place, @NotNull final Hint... hints) {
+        this.place = place;
         this.hints = hints;
     }
 
     @NotNull
-    public final GeoObject getPosition() {
-        return position;
+    public final GeoObject getPlace() {
+        return place;
     }
 
     @NotNull
@@ -42,6 +42,6 @@ public class Site implements Positioned {
     @NotNull
     @Override
     public GeoPoint getLocation() {
-        return position.getLocation();
+        return place.getLocation();
     }
 }

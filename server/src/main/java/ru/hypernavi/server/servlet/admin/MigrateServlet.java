@@ -69,7 +69,7 @@ public class MigrateServlet extends AbstractHttpService {
             final String imageLink = "http://hypernavi.net" + hypermarket.getPath();
             final Image image = new Image(imageLink, dimensioner.getDimension(imageLink));
             final Double azimuth = hypermarket.hasOrientation() ? hypermarket.getOrientation() : null;
-            final Site site = new Site(position, new Plan(image, azimuth));
+            final Site site = new Site(position, new Plan("Схема магазина", image, azimuth));
             final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
             final String otherParams = session.getOptional(Property.HTTP_QUERY_STRING).map(qs -> "&" + qs).orElse("");
             httpClient.execute(

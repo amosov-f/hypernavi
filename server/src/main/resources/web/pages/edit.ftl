@@ -16,9 +16,9 @@
 </#if>
 </head>
 <body>
-<h3>${site.position.name}</h3>
+<h3>${site.place.name}</h3>
 
-<p>${site.position.description}</p>
+<p>${site.place.description}</p>
 
 <div class="panel-group" id="accordion">
     <div class="form-group">
@@ -28,10 +28,15 @@
 
 <#assign hints = site.hints>
 <#if !hints?has_content>
-	<#assign hints = hints + [{'type': 'PLAN'}]>
+	<#assign hints = hints + [{
+        'type': 'PLAN',
+        'image': {
+            'link': ''
+        }
+    }]>
 </#if>
 <#list hints as hint>
-    <div class="panel panel-default template">
+    <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a href="#${hint?index}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">
@@ -48,15 +53,14 @@
                 </div>
                 <div class="form-group input-group">
                     <span class="input-group-addon">Описание</span>
-                    <textarea id="description" class="form-control"
-                              rows="2"><#if hint.description??>${hint.description}</#if></textarea>
+                    <textarea class="form-control" rows="2"><#if hint.description??>${hint.description}</#if></textarea>
                 </div>
-                <ul id="tabs" class="nav nav-tabs" role="tablist">
+                <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" <#if hint.type == 'PLAN'>class="active"</#if>>
-                        <a class="nav-plan" href="#plan${hint?index}" data-toggle="tab">Схема</a>
+                        <a href="#plan${hint?index}" data-toggle="tab">Схема</a>
                     </li>
-                    <li role="presentation" <#if hint.type == 'IMAGE'>class="active"</#if>>
-                        <a class="nav-image" href="#image${hint?index}" data-toggle="tab">Изображение</a>
+                    <li role="presentation" <#if hint.type == 'PICTURE'>class="active"</#if>>
+                        <a href="#picture${hint?index}" data-toggle="tab">Изображение</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -65,7 +69,7 @@
                             <div class="form-group col-lg-10">
                                 <div class="input-group">
                                     <span class="input-group-addon">Ссылка</span>
-                                    <input type="url" class="form-control" <#if hint.image??>value="${hint.image.link}"</#if>>
+                                    <input type="url" class="form-control" <#if hint.type == 'PLAN'>value="${hint.image.link}"</#if>>
                                 </div>
                             </div>
                             <a class="btn btn-default col-lg-2" onclick="sync('plan${hint?index}')">Показать</a>
@@ -73,25 +77,23 @@
                         <div class="form-group col-lg-12">
                             <div class="form-group input-group ">
                                 <span class="input-group-addon">Азимут</span>
-                                <input type="number" class="form-control"
-									   <#if hint.azimuth??>value="${hint.azimuth}"</#if>>
+                                <input type="number" class="form-control" <#if hint.azimuth??>value="${hint.azimuth}"</#if>>
                                 <span class="input-group-addon">градусов</span>
                             </div>
                         </div>
-                        <img class="img-responsive img-rounded" <#if hint.image??>src="${hint.image.link}"</#if>/>
+                        <img class="img-responsive img-rounded" <#if hint.type == 'PLAN'>src="${hint.image.link}"</#if>/>
                     </div>
-                    <div id="image${hint?index}" role="tabpanel"
-                         class="tab-image tab-pane fade <#if hint.type == 'IMAGE'>in active</#if>">
+                    <div id="picture${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PICTURE'>in active</#if>">
                         <div class="form-group">
                             <div class="form-group col-lg-10">
                                 <div class="input-group">
                                     <span class="input-group-addon">Ссылка</span>
-                                    <input id="link" type="url" class="form-control" <#if hint.link??>value="${hint.link}"</#if>>
+                                    <input type="url" class="form-control" <#if hint.type == 'PICTURE'>value="${hint.image.link}"</#if>>
                                 </div>
                             </div>
-                            <a class="btn btn-default col-lg-2" onclick="sync('image${hint?index}')">Показать</a>
+                            <a class="btn btn-default col-lg-2" onclick="sync('picture${hint?index}')">Показать</a>
                         </div>
-                        <img class="img-responsive img-rounded" <#if hint.link??>src="${hint.link}"</#if>/>
+                        <img class="img-responsive img-rounded" <#if hint.type == 'PICTURE'>src="${hint.image.link}"</#if>/>
                     </div>
                 </div>
             </div>
@@ -104,12 +106,11 @@
 </button>
 
 <script>
-    var $templateHint = $(".template").first();
-
-    var INDEX = ${site.hints?size};
+    var $TEMPLATE = $(".panel").first();
+    var INDEX = ${hints?size};
 
     function addHint() {
-        var $newHint = $templateHint.clone();
+        var $newHint = $TEMPLATE.clone();
 
         $newHint.find(':input').val('');
         $newHint.find('img').attr('src', '');
@@ -123,12 +124,12 @@
                 .removeClass('in');
 
         $newHint.find('a[href^=#plan]').attr('href', '#plan' + INDEX);
-        $newHint.find('a[href^=#image]').attr('href', '#image' + INDEX);
+        $newHint.find('a[href^=#picture]').attr('href', '#picture' + INDEX);
         $newHint.find('div[id^=plan]').attr('id', 'plan' + INDEX);
-        $newHint.find('div[id^=image]').attr('id', 'image' + INDEX);
+        $newHint.find('div[id^=picture]').attr('id', 'picture' + INDEX);
 
         $newHint.find('a[onclick^=sync]').attr('onclick', "sync('plan" + INDEX + "')");
-        $newHint.find('a[onclick^=sync]').attr('onclick', "sync('image" + INDEX + "')");
+        $newHint.find('a[onclick^=sync]').attr('onclick', "sync('picture" + INDEX + "')");
         $newHint.find('button[onclick^=removeHint]').attr('onclick', "removeHint('" + INDEX + "')");
 
         $("#accordion").append($newHint.fadeIn());
@@ -152,42 +153,45 @@
     function onSubmit() {
         var hints = $('.panel-collapse').map(function() {
             var hint = {};
+
             var description = $(this).find('textarea').val();
             if (description.length != 0) {
                 hint.description = description;
             }
+
             var index = $(this).attr('id');
             var $hint = $('#plan' + index);
-            if ($hint.hasClass('active')) {
-                hint.type = 'plan';
-                var link = $hint.find(':input[type=url]').val();
-                hint.image = {
-                    link: link,
-                    dimension: dimension(link),
-                    duplicates: []
-                };
+            hint.type = 'plan';
+            if (!$hint.hasClass('active')) {
+                $hint = $('#picture' + index);
+                hint.type = 'picture';
+            }
+
+            var link = $hint.find(':input[type=url]').val();
+            hint.image = {
+                link: link,
+                dimension: dimension(link),
+                duplicates: []
+            };
+
+            if (hint.type == 'plan') {
                 var azimuth = $hint.find(':input[type=number]').val();
                 if (azimuth.length != 0) {
                     hint.azimuth = parseFloat(azimuth);
                 }
-            } else {
-                $hint = $('#image' + index);
-                hint.type = 'image';
-                hint.link = $hint.find(':input[type=url]').val();
-                hint.dimension = dimension(hint.link);
-                hint.duplicates = [];
             }
+
             return hint;
         }).get();
 
         var site = {
             type: 'site',
-            position: {
-                name: '${site.position.name}',
-                description: '${site.position.description}',
+            place: {
+                name: '${site.place.name}',
+                description: '${site.place.description}',
                 location: {
                     type: 'Point',
-                    coordinates: [${site.position.location.longitude}, ${site.position.location.latitude}]
+                    coordinates: [${site.place.location.longitude}, ${site.place.location.latitude}]
                 }
             },
             hints: hints

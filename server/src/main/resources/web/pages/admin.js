@@ -52,7 +52,7 @@ ymaps.ready(function () {
             }
             var rawSite = {
                 type: 'site',
-                position: {
+                place: {
                     name: res.properties.get('name'),
                     description: res.properties.get('description'),
                     location: reverseToPoint(res.geometry.getCoordinates())
@@ -79,7 +79,7 @@ function feature(rawSite) {
     return {
         type: "Feature",
         id: ID++,
-        geometry: reverseToPoint(rawSite.position.location.coordinates),
+        geometry: reverseToPoint(rawSite.place.location.coordinates),
         properties: {
         },
         options: {

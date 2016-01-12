@@ -10,24 +10,16 @@ import net.jcip.annotations.Immutable;
  * Created by amosov-f on 07.11.15.
  */
 @Immutable
-public final class Plan extends Hint {
+public final class Plan extends Picture {
     public static final Plan[] EMPTY_ARRAY = new Plan[0];
     public static final Type TYPE = Type.PLAN;
 
-    @NotNull
-    private final Image image;
     @Nullable
     private final Double azimuth;
 
-    public Plan(@NotNull final Image image, @Nullable final Double azimuth) {
-        super("Схема магазина");
-        this.image = image;
+    public Plan(@Nullable final String description, @NotNull final Image image, @Nullable final Double azimuth) {
+        super(description, image);
         this.azimuth = azimuth;
-    }
-
-    @NotNull
-    public Image getImage() {
-        return image;
     }
 
     @Nullable

@@ -136,21 +136,9 @@ public final class HyperNaviBot {
     }
 
     private void respond(final int chatId, @NotNull final Site site) {
-        sendMessage(chatId, "Адрес: " + site.getPosition().getAddress());
+        sendMessage(chatId, "Адрес: " + site.getPlace().getAddress());
         for (final Hint hint : site.getHints()) {
-            Optional.ofNullable(hint.getDescription()).ifPresent(descr -> sendMessage(chatId, descr + ":"));
-            final Image image;
-            switch (hint.getType()) {
-                case PLAN:
-                    image = Plan.class.cast(hint).getImage();
-                    break;
-                case IMAGE:
-                    image = Image.class.cast(hint);
-                    break;
-                default:
-                    throw new UnsupportedOperationException();
-            }
-            sendPhoto(chatId, image);
+            sendPhoto(chatId, ((Picture) hint).getImage(), hint.getDescription());
         }
     }
 
@@ -187,10 +175,10 @@ public final class HyperNaviBot {
         execute(new HttpGet(uri), Object.class);
     }
 
-    private void sendPhoto(final int chatId, @NotNull final Image photo) {
+    private void sendPhoto(final int chatId, @NotNull final Image photo, @Nullable final String caption) {
         final URI uri = new URIBuilder(getMethodUrl("/sendPhoto"))
                 .setParameter("chat_id", chatId)
-//                .setParameterIfNotNull("caption", photo.getDescription())
+                .setParameterIfNotNull("caption", caption)
                 .build();
         final HttpEntityEnclosingRequestBase req = new HttpPost(uri);
         final String mimeType = Optional.ofNullable(photo.getFormat()).orElse(Image.Format.JPG).getMimeType();

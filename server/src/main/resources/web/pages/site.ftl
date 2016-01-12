@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-<h3>${site.position.name}</h3>
+<h3>${site.place.name}</h3>
 
-<p>${site.position.description}</p>
+<p>${site.place.description}</p>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="form-group">
@@ -28,7 +28,7 @@
                 <a href="#${hint?index}" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapseOne">
 					<#if hint.type == 'PLAN'>
                         Схема
-                    <#elseif hint.type == 'IMAGE'>
+					<#elseif hint.type == 'PICTURE'>
                         Изображение
 					</#if>
                 </a>
@@ -36,8 +36,12 @@
         </div>
         <div id="${hint?index}" class="panel-collapse collapse <#if hint?index == 0>in</#if>" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
-                <img class="img-responsive img-rounded" src="<#if hint.image??>${hint.image.link}<#else>${hint.link}</#if>"/>
-                <#if hint.description??><div class="well">${hint.description}</div></#if>
+                <div class="form-group">
+                    <img class="img-responsive img-rounded" src="${hint.image.link}"/>
+                </div>
+				<#if hint.description??>
+                    <div class="well">${hint.description}</div>
+				</#if>
             </div>
         </div>
     </div>

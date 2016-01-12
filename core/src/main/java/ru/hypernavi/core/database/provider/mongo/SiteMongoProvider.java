@@ -31,7 +31,7 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
     @Inject
     public SiteMongoProvider(@NotNull final MongoDatabase db) {
         super(db, "site");
-        coll.createIndex(new Document("position.location", "2dsphere"));
+        coll.createIndex(new Document("place.location", "2dsphere"));
     }
 
     @Nullable
@@ -101,7 +101,7 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
         if (radius != null) {
             near.append("$maxDistance", radius);
         }
-        return new Document("position.location", new Document("$near", near));
+        return new Document("place.location", new Document("$near", near));
     }
 
     @NotNull
