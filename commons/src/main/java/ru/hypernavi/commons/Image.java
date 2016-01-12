@@ -50,7 +50,7 @@ public final class Image extends Hint {
     @Nullable
     public Format getFormat() {
         for (final Format format : Format.values()) {
-            if (link.toLowerCase().endsWith(format.name().toLowerCase())) {
+            if (link.toLowerCase().endsWith(format.getExtension())) {
                 return format;
             }
         }
@@ -70,6 +70,11 @@ public final class Image extends Hint {
 
     public enum Format {
         JPG, PNG, GIF;
+
+        @NotNull
+        public String getExtension() {
+            return name().toLowerCase();
+        }
 
         @NotNull
         public String getMimeType() {

@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonDeserializer;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -202,10 +203,16 @@ public final class HyperNaviBot {
             return;
         }
         final HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("photo", photoInputStream, ContentType.create(mimeType), photo.getLink())
+                .addBinaryBody("photo", photoInputStream, ContentType.create(mimeType), getFileName(photo))
                 .build();
         req.setEntity(entity);
         execute(req, Object.class);
+    }
+
+    @NotNull
+    private String getFileName(@NotNull final Image image) {
+        final Image.Format format = Optional.ofNullable(image.getFormat()).orElse(Image.Format.JPG);
+        return DigestUtils.md5Hex(image.getLink()) + "." + format.getExtension();
     }
 
     @NotNull
