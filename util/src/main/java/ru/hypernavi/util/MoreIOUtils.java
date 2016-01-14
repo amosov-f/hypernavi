@@ -49,6 +49,7 @@ public enum MoreIOUtils {
         final URLConnection connection = new URL(url).openConnection();
         connection.setDoOutput(true);
         connection.setDoInput(true);
+        connection.addRequestProperty("User-Agent", "");
         return connection.getInputStream();
     }
 
