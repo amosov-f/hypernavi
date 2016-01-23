@@ -16,6 +16,15 @@
             <groupId>ru.hypernavi</groupId>
             <artifactId>util8</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ru.hypernavi</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>nz.ac.waikato.cms.weka</groupId>

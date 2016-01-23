@@ -20,7 +20,6 @@ import ru.hypernavi.util.EnumUtils;
 import ru.hypernavi.util.MoreIOUtils;
 import weka.classifiers.Evaluation;
 import weka.classifiers.trees.RandomForest;
-import weka.core.Instances;
 
 /**
  * Created by amosov-f on 03.09.15.
@@ -39,8 +38,8 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
         new AreaFeature()
     );
 
-    public SchemeClassifier(@NotNull final Picture... dataset) {
-        super(new RandomForest(), FEATURES, new ChainAnswer(), SchemeClassifier::toString, dataset);
+    public SchemeClassifier() {
+        super(new RandomForest(), FEATURES, new ChainAnswer(), SchemeClassifier::toString);
     }
 
     @Override
@@ -55,8 +54,9 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
 
     public static SchemeClassifier getClassifier() throws Exception {
         DOMConfigurator.configure(MoreIOUtils.toURL("classpath:/log4j.xml"));
-        final SchemeClassifier classifier = new SchemeClassifier(Picture.download());
-        final Evaluation evaluation = classifier.learning();
+        final SchemeClassifier classifier = new SchemeClassifier();
+        classifier.learn(Picture.download());
+        final Evaluation evaluation = classifier.crossValidate();
 
         LOG.info(evaluation.toMatrixString());
         LOG.info(evaluation.toClassDetailsString());
@@ -104,13 +104,6 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
         final Picture tnPicture = Objects.requireNonNull(Picture.download(tnUrl));
         LOG.info(tpUrl + " -> " + toString(classifier.classify(tpPicture)) + ", " + classifier.isClass(tpPicture));
         LOG.info(tnUrl + " -> " + toString(classifier.classify(tnPicture)) + ", " + classifier.isClass(tnPicture));
-    }
-
-    public Evaluation learning() throws Exception {
-        final Instances instances = this.getInstances();
-        final Evaluation evaluation = new Evaluation(instances);
-        evaluation.crossValidateModel(this.getWekaClassifier(), instances, instances.size(), new Random(0));
-        return evaluation;
     }
 
     public void manyClassify(final String fileName) {

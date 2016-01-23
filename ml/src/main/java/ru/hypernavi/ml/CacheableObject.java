@@ -1,4 +1,4 @@
-package ru.hypernavi.ml.factor;
+package ru.hypernavi.ml;
 
 import org.jetbrains.annotations.NotNull;
 

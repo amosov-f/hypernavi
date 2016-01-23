@@ -19,7 +19,7 @@ import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import ru.hypernavi.commons.Chain;
 import ru.hypernavi.ml.HugeObject;
-import ru.hypernavi.ml.factor.CacheableObject;
+import ru.hypernavi.ml.CacheableObject;
 import ru.hypernavi.util.MD5;
 import ru.hypernavi.util.MoreIOUtils;
 

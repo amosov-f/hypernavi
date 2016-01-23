@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.json.GsonUtils;
 

@@ -1,4 +1,4 @@
-package ru.hypernavi.commons;
+package ru.hypernavi.commons.hint;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +23,6 @@ public abstract class Hint {
     public abstract Type getType();
 
     public enum Type {
-        PLAN, PICTURE
+        PLAN, PICTURE, TEXT
     }
 }

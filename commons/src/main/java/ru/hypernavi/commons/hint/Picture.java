@@ -1,7 +1,11 @@
-package ru.hypernavi.commons;
+package ru.hypernavi.commons.hint;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+
+import ru.hypernavi.commons.Image;
+import ru.hypernavi.commons.hint.Hint;
 
 /**
  * Created by amosov-f on 12.01.16.

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 import net.jcip.annotations.Immutable;
+import ru.hypernavi.commons.hint.Plan;
 
 /**
  * TODO: rename to Hypermarket

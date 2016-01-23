@@ -3,6 +3,11 @@ package ru.hypernavi.core.telegram;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -31,9 +36,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import ru.hypernavi.commons.Image;
 import ru.hypernavi.commons.*;
+import ru.hypernavi.commons.hint.Hint;
+import ru.hypernavi.commons.hint.Picture;
+import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.http.URIBuilder;
+import ru.hypernavi.ml.regression.map.MapProjection;
+import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.GeoPointImpl;
 import ru.hypernavi.util.MoreIOUtils;
@@ -72,7 +83,9 @@ public final class HyperNaviBot {
     private final String authToken;
 
     @NotNull
-    private final Gson gson;
+    private final Gson telegramGson;
+    @NotNull
+    private final Gson searchGson;
 
     @Inject
     public HyperNaviBot(@Named("hypernavi.telegram.bot.auth_token") @NotNull final String authToken,
@@ -82,12 +95,13 @@ public final class HyperNaviBot {
         this.authToken = authToken;
         this.searchHost = searchHost;
         this.httpClient = httpClient;
-        gson = GsonUtils.builder()
+        telegramGson = GsonUtils.builder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(GeoPoint.class, (JsonDeserializer<GeoPoint>) (json, t, context) -> {
                     return context.deserialize(json, GeoPointImpl.class);
                 })
                 .create();
+        searchGson = GsonUtils.gson();
     }
 
     public void start(final boolean inBackground) {
@@ -113,33 +127,73 @@ public final class HyperNaviBot {
             final GeoPoint location = message.getLocation();
             final String text = message.getText();
             service.submit(() -> {
-                final SearchResponse searchResponse;
-                if (location != null) {
-                    searchResponse = search(location);
-                    if (searchResponse == null) {
-                        sendMessage(chatId, "Простите, наш сервер не работает");
+                try {
+                    final SearchResponse searchResponse;
+                    if (location != null) {
+                        searchResponse = search(location);
+                        if (searchResponse == null) {
+                            sendMessage(chatId, "Простите, наш сервер не работает");
+                            return;
+                        }
+                    } else if (StringUtils.startsWithIgnoreCase(text, "поиск")) {
+                        searchResponse = search(Objects.requireNonNull(StringUtils.removeStartIgnoreCase(text, "поиск")).trim());
+                        if (searchResponse == null) {
+                            sendMessage(chatId, "Простите, я не знаю такого места");
+                            return;
+                        }
+                    } else {
+                        sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию \uD83D\uDCCE, и я покажу ближайший к Вам гипермаркет.");
                         return;
                     }
-                } else if (StringUtils.startsWithIgnoreCase(text, "поиск")) {
-                    searchResponse = search(Objects.requireNonNull(StringUtils.removeStartIgnoreCase(text, "поиск")).trim());
-                    if (searchResponse == null) {
-                        sendMessage(chatId, "Простите, я не знаю такого места");
-                        return;
-                    }
-                } else {
-                    sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию \uD83D\uDCCE, и я покажу ближайший к Вам гипермаркет.");
-                    return;
+                    searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
+                } catch (RuntimeException e) {
+                    LOG.error("Error!", e);
                 }
-                searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site));
             });
         }
     }
 
-    private void respond(final int chatId, @NotNull final Site site) {
+    private void respond(final int chatId, @NotNull final Site site, @Nullable final GeoPoint location) {
         sendMessage(chatId, "Адрес: " + site.getPlace().getAddress());
         for (final Hint hint : site.getHints()) {
-            sendPhoto(chatId, ((Picture) hint).getImage(), hint.getDescription());
+            if (hint instanceof Plan) {
+                final Plan plan = (Plan) hint;
+                if (location != null) {
+                    final BufferedImage image = drawLocation(plan, location);
+                    if (image != null) {
+                        sendPhoto(chatId, image, plan.getImage().getFormat(), hint.getDescription());
+                        continue;
+                    }
+                }
+            }
+            if (hint instanceof Picture) {
+                sendPhoto(chatId, ((Picture) hint).getImage(), hint.getDescription());
+            }
         }
+    }
+
+    @Nullable
+    private BufferedImage drawLocation(@NotNull final Plan plan, @NotNull final GeoPoint location) {
+        final PointMap[] points = plan.getPoints();
+        if (points.length == 0) {
+            return null;
+        }
+        final MapProjection mapProjection = MapProjectionImpl.learn(points);
+        final Point point = mapProjection.map(location);
+        final BufferedImage image;
+        try {
+            image = ImageIO.read(MoreIOUtils.connect(plan.getImage().getLink()));
+        } catch (IOException e) {
+            LOG.error("Can't download image!", e);
+            return null;
+        }
+        final Graphics2D g = (Graphics2D) image.getGraphics();
+        g.setStroke(new BasicStroke(10));
+        g.setColor(Color.RED);
+        // TODO: size
+        g.drawOval(point.x - 50, point.y - 50, 100, 100);
+        g.fillOval(point.x - 7, point.y - 7, 14, 14);
+        return image;
     }
 
     @Nullable
@@ -155,7 +209,7 @@ public final class HyperNaviBot {
                 .addParameter("lat", location.getLatitude())
                 .addParameter("ns", 1)
                 .build();
-        return execute(new HttpGet(uri), SearchResponse.class);
+        return execute(new HttpGet(uri), SearchResponse.class, searchGson);
     }
 
     @Nullable
@@ -164,7 +218,7 @@ public final class HyperNaviBot {
                 .addParameter("text", text)
                 .addParameter("ns", 1)
                 .build();
-        return execute(new HttpGet(uri), SearchResponse.class);
+        return execute(new HttpGet(uri), SearchResponse.class, searchGson);
     }
 
     private void sendMessage(final int chatId, @NotNull final String text) {
@@ -175,13 +229,18 @@ public final class HyperNaviBot {
         execute(new HttpGet(uri), Object.class);
     }
 
+    private void sendPhoto(final int chatId, @NotNull final BufferedImage photo, @Nullable final Image.Format format, @Nullable final String caption) {
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(photo, Optional.ofNullable(format).orElse(Image.Format.JPG).getExtension(), bout);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        final InputStream photoStream = new ByteArrayInputStream(bout.toByteArray());
+        sendPhoto(chatId, photoStream, format, caption);
+    }
+
     private void sendPhoto(final int chatId, @NotNull final Image photo, @Nullable final String caption) {
-        final URI uri = new URIBuilder(getMethodUrl("/sendPhoto"))
-                .setParameter("chat_id", chatId)
-                .setParameterIfNotNull("caption", caption)
-                .build();
-        final HttpEntityEnclosingRequestBase req = new HttpPost(uri);
-        final String mimeType = Optional.ofNullable(photo.getFormat()).orElse(Image.Format.JPG).getMimeType();
         final InputStream photoInputStream;
         try {
             photoInputStream = MoreIOUtils.connect(photo.getLink());
@@ -190,17 +249,31 @@ public final class HyperNaviBot {
             sendMessage(chatId, "Простите, не могу загрузить изображение");
             return;
         }
+        sendPhoto(chatId, photoInputStream, photo.getFormat(), caption);
+    }
+
+    private void sendPhoto(final int chatId,
+                           @NotNull final InputStream photoStream,
+                           @Nullable final Image.Format format,
+                           @Nullable final String caption)
+    {
+        final URI uri = new URIBuilder(getMethodUrl("/sendPhoto"))
+                .setParameter("chat_id", chatId)
+                .setParameterIfNotNull("caption", caption)
+                .build();
+        final HttpEntityEnclosingRequestBase req = new HttpPost(uri);
+        final String mimeType = Optional.ofNullable(format).orElse(Image.Format.JPG).getMimeType();
+
         final HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("photo", photoInputStream, ContentType.create(mimeType), getFileName(photo))
+                .addBinaryBody("photo", photoStream, ContentType.create(mimeType), getFileName(photoStream, format))
                 .build();
         req.setEntity(entity);
         execute(req, Object.class);
     }
 
     @NotNull
-    private String getFileName(@NotNull final Image image) {
-        final Image.Format format = Optional.ofNullable(image.getFormat()).orElse(Image.Format.JPG);
-        return DigestUtils.md5Hex(image.getLink()) + "." + format.getExtension();
+    private String getFileName(@NotNull final InputStream in, @Nullable final Image.Format format) {
+        return DigestUtils.md5Hex(in.toString()) + "." + (format != null ? format : Image.Format.JPG).getExtension();
     }
 
     @NotNull
@@ -210,6 +283,11 @@ public final class HyperNaviBot {
 
     @Nullable
     private <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz) {
+        return execute(req, clazz, telegramGson);
+    }
+
+    @Nullable
+    private <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz, @NotNull final Gson gson) {
         return httpClient.executeText(req, MoreGsonUtils.parser(gson, clazz));
     }
 }

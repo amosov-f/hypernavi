@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -17,6 +18,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpGet;
 import ru.hypernavi.commons.*;
+import ru.hypernavi.commons.Dimension;
+import ru.hypernavi.commons.Image;
+import ru.hypernavi.commons.hint.Hint;
+import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.http.HyperHttpClient;
@@ -59,6 +64,10 @@ public class MigrateServlet extends AbstractHttpService {
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+        if ("priboy".equals(session.get(Property.TEXT))) {
+            fillPriboy(session);
+            return;
+        }
         migrate(session);
     }
 
@@ -70,12 +79,41 @@ public class MigrateServlet extends AbstractHttpService {
             final Image image = new Image(imageLink, dimensioner.getDimension(imageLink));
             final Double azimuth = hypermarket.hasOrientation() ? hypermarket.getOrientation() : null;
             final Site site = new Site(position, new Plan("Схема магазина", image, azimuth));
-            final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
-            final String otherParams = session.getOptional(Property.HTTP_QUERY_STRING).map(qs -> "&" + qs).orElse("");
-            httpClient.execute(
-                    new HttpGet("http://localhost:" + localPort + "/admin/site/put?site=" + siteValue + otherParams),
-                    IOFunction.identity()
-            );
+            put(site, session);
         }
+    }
+
+    private void fillPriboy(@NotNull final Session session) throws UnsupportedEncodingException {
+        final PointMap[] points = {
+                PointMap.of(ArrayGeoPoint.of(29.77691, 60.21363), new Point(1532, 536)),
+                PointMap.of(ArrayGeoPoint.of(29.733273, 60.21502), new Point(313, 647)),
+                PointMap.of(ArrayGeoPoint.of(29.737416, 60.211785), new Point(445, 805)),
+                PointMap.of(ArrayGeoPoint.of(29.734286, 60.209901), new Point(401, 920)),
+                PointMap.of(ArrayGeoPoint.of(29.749053, 60.224224), new Point(651, 40)),
+                PointMap.of(ArrayGeoPoint.of(29.777747, 60.21935), new Point(1481, 185)),
+                PointMap.of(ArrayGeoPoint.of(29.744552, 60.2135), new Point(631, 662))
+        };
+        final GeoObject position = new GeoObject(
+                "Спортивно-оздоровительная база Прибой",
+                "Санкт-Петербург, Зеленогорск г., просп. Ленина, 59",
+                ArrayGeoPoint.of(29.71061, 60.207235)
+        );
+        final Hint hint = new Plan(
+                "Схема лыжных трасс",
+                new Image("http://www.adventureraces.ru/objects/2008-9-4/586_zelenogorsk_trasses.jpg", Dimension.of(0, 0), new Image[0]),
+                0d,
+                points
+        );
+        final Site site = new Site(position, hint);
+        put(site, session);
+    }
+
+    private void put(@NotNull final Site site, @NotNull final Session session) throws UnsupportedEncodingException {
+        final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
+        final String otherParams = session.getOptional(Property.HTTP_QUERY_STRING).map(qs -> "&" + qs).orElse("");
+        httpClient.execute(
+                new HttpGet("http://localhost:" + localPort + "/admin/site/put?site=" + siteValue + otherParams),
+                IOFunction.identity()
+        );
     }
 }

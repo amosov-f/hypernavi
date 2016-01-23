@@ -37,4 +37,19 @@ public abstract class Factor<T> implements ToDoubleFunction<T> {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    public static final class Lambda<T> extends Factor<T> {
+        @NotNull
+        private final ToDoubleFunction<T> delegate;
+
+        public Lambda(@NotNull final String name, @NotNull final ToDoubleFunction<T> delegate) {
+            super(name);
+            this.delegate = delegate;
+        }
+
+        @Override
+        public double applyAsDouble(@NotNull final T object) {
+            return delegate.applyAsDouble(object);
+        }
+    }
 }

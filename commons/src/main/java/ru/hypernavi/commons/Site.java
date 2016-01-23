@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 
 import net.jcip.annotations.Immutable;
+import ru.hypernavi.commons.hint.Hint;
+import ru.hypernavi.commons.hint.Picture;
+import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.json.GsonUtils;
 import ru.hypernavi.util.json.RuntimeTypeAdapterFactory;
