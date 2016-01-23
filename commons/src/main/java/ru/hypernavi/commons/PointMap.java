@@ -13,6 +13,8 @@ import ru.hypernavi.util.GeoPoint;
  * Created by amosov-f on 23.01.16.
  */
 public final class PointMap {
+    public static final PointMap[] EMPTY_ARRAY = new PointMap[0];
+
     @NotNull
     private final GeoPoint geoPoint;
     @Nullable

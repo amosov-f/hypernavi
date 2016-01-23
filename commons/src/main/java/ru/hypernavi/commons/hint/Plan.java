@@ -34,7 +34,8 @@ public final class Plan extends Picture {
 
     @NotNull
     public PointMap[] getPoints() {
-        return points;
+        // TODO
+        return points != null ? points : PointMap.EMPTY_ARRAY;
     }
 
     @NotNull
