@@ -4,6 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -35,5 +39,35 @@ public interface DatabaseProvider<T> {
 
     default void put(@NotNull final String id, @NotNull final T obj) {
         throw new UnsupportedOperationException();
+    }
+
+    class Impl<T> implements DatabaseProvider<T> {
+        @NotNull
+        private static final AtomicInteger counter = new AtomicInteger();
+        @NotNull
+        private static final Supplier<String> KEY_GENERATOR = () -> String.valueOf(counter.getAndIncrement());
+
+        @NotNull
+        private final Map<String, T> data = new HashMap<>();
+
+        @Nullable
+        @Override
+        public T get(@NotNull final String id) {
+            return data.get(id);
+        }
+
+        @NotNull
+        @Override
+        public String add(@NotNull final T obj) {
+            final String key = KEY_GENERATOR.get();
+            data.put(key, obj);
+            return key;
+        }
+
+        @Nullable
+        @Override
+        public T remove(final String id) {
+            return data.remove(id);
+        }
     }
 }

@@ -31,6 +31,7 @@ import ru.hypernavi.core.classify.goods.TomallGoodsClassifier;
 import ru.hypernavi.core.database.*;
 import ru.hypernavi.core.database.provider.DatabaseProvider;
 import ru.hypernavi.core.database.provider.mongo.SiteMongoProvider;
+import ru.hypernavi.core.geoindex.DummyGeoIndex;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.RequestReader;
@@ -125,6 +126,8 @@ public final class HyperNaviModule extends AbstractModule {
             case "file":
                 final String dataPath = config.getProperty("hypernavi.server.pathdata");
                 bind(DataLoader.class).toInstance(new FileDataLoader(dataPath));
+                bind(new TypeLiteral<DatabaseProvider<Site>>() {}).toInstance(new DatabaseProvider.Impl<>());
+                bind(new TypeLiteral<GeoIndex<Site>>() {}).toInstance(new DummyGeoIndex<>());
                 LOG.info("Data storage is file system: " + dataPath);
                 return;
             case "mongo":
