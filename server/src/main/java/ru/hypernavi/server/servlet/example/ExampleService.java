@@ -26,6 +26,6 @@ public final class ExampleService extends HtmlPageHttpService {
     @NotNull
     @Override
     public String getPathInBundle(@NotNull final Session session) {
-        return "example/example.ftl";
+        return "example/example.html";
     }
 }
