@@ -16,7 +16,7 @@ import ru.hypernavi.server.servlet.HtmlPageHttpService;
  * Date: 05.03.16
  * Time: 23:31
  */
-@WebServlet(name = "example site", value = "/example")
+@WebServlet(name = "example page", value = "/example")
 public final class ExampleService extends HtmlPageHttpService {
     @Inject
     public ExampleService(@NotNull final RequestReader.Factory<?> init) {
@@ -26,6 +26,6 @@ public final class ExampleService extends HtmlPageHttpService {
     @NotNull
     @Override
     public String getPathInBundle(@NotNull final Session session) {
-        return "example/example.html";
+        return "katya/bootstrap.html";
     }
 }

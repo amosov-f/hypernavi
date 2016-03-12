@@ -1,0 +1,89 @@
+
+<!DOCTYPE>
+<html>
+<head>
+    <title>Flat accordion menu</title>
+	
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+	<style>
+		.demo_container{
+			margin:10px auto;
+			width:100%;
+		}
+	</style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+			/*$('#cssmenu > ul > li ul').each(function(index, e){
+				var count = $(e).find('li').length;
+				var content = '<span class=\"cnt\">' + count + '</span>';
+				$(e).closest('li').children('a').append(content);
+			});*/
+			$('#cssmenu > ul > li > a').click(function() {
+				$('#cssmenu li').removeClass('active');
+				$(this).closest('li').addClass('active');	
+				var checkElement = $(this).next();
+				if((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+					$(this).closest('li').removeClass('active');
+					checkElement.slideUp('normal');
+				}
+				if((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+					$('#cssmenu ul ul:visible').slideUp('normal');
+					checkElement.slideDown('normal');
+				}
+				if($(this).closest('li').find('ul').children().length == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			});
+        });
+    </script>
+</head>
+<body>
+
+
+<div class="demo_container">
+
+	<div id='cssmenu'>
+		<ul>
+			
+			<li class='has-sub'><a href='#'><span>Brasilia</span></a>
+				<ul>
+                                    <li><img src="http://inosmi.ru/images/16830/84/168308489.jpg">
+                                    <img src="http://v-kosmose.com/wp-content/uploads/2015/09/when_did_the_first_man_go_into_space_1961_53860aea07fb5.jpg">
+                                    <img src="http://inosmi.ru/images/16830/84/168308489.jpg"></li>
+                                  
+					<!--<li><a href='#'><span>Смартфоны</span></a></li>
+					<li><a href='#'><span>Планшеты</span></a></li>
+					<li><a href='#'><span>Ноутбуки</span></a></li>-->
+				</ul>
+			</li>
+			<li class='has-sub'><a href='#'><span>Latvia</span></a>
+				<ul>
+					 <li><img src="http://v-kosmose.com/wp-content/uploads/2015/09/when_did_the_first_man_go_into_space_1961_53860aea07fb5.jpg">
+                                    
+                                    <img src="http://inosmi.ru/images/16830/84/168308489.jpg"></li>
+					<!--<li><a href='#'><span>Смартфоны</span></a></li>
+					<li><a href='#'><span>Планшеты</span></a></li>
+					<li><a href='#'><span>Ноутбуки</span></a></li>-->
+				</ul>
+			</li>
+                        <li class='has-sub'><a href='#'><span>Russia</span></a>
+				<ul>
+					 <li><img src="http://lib.rus.ec/i/2/568802/i_089.jpg">
+                                    <img src="https://44.img.avito.st/1280x960/2271799344.jpg">
+                                    <img src="http://img1.liveinternet.ru/images/attach/c/2/73/254/73254819_4016659_img258.jpg"></li>
+					<!--<li><a href='#'><span>Смартфоны</span></a></li>
+					<li><a href='#'><span>Планшеты</span></a></li>
+					<li><a href='#'><span>Ноутбуки</span></a></li>-->
+				</ul>
+			</li>
+			
+		</ul>
+	</div>
+
+</div>
+
+</body>
+</html>
