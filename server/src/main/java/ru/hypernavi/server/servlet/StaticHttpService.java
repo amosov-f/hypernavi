@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 
@@ -35,7 +36,7 @@ public final class StaticHttpService extends AbstractHttpService {
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final String path = session.demand(Property.HTTP_REQUEST_URI);
+        final String path = URLDecoder.decode(session.demand(Property.HTTP_REQUEST_URI), StandardCharsets.UTF_8.name());
         InputStream in = getClass().getResourceAsStream(path);
         if (platform == Platform.DEVELOPMENT) {
             try {
