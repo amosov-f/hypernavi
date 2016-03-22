@@ -1,82 +1,140 @@
-<!DOCTYPE html>
 
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <script src="/assets/demo/bootstrap-3/css/bootstrap.min.css"></script>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   </head>
-    <body>
-       <style type="text/css">
-h2{
-    margin: 0;     
-    color: #666;
-    padding-top: 90px;
-    font-size: 52px;
-    font-family: "trebuchet ms", sans-serif;    
-}
-.item{
-    background: #333;    
-    text-align: center;
-    height: 300px !important;
-}
-.carousel{
-    margin-top: 20px;
-}
-</style>
- 
-<!-- Карусель -->
-<div id="myCarousel" class="carousel slide" data-interval="3000" data-ride="carousel">
-  <!-- Индикаторы для карусели -->
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bootstrap 3 - Демо валидации формы">
+   <link rel="icon" href="/assets/images/logo/favicon.ico" type="image/x-icon">
+   <link rel="shortcut icon" href="/assets/images/logo/favicon.ico" type="image/x-icon">
+    <title>Bootstrap 3 - Демонстрация работы компонентов</title>
+    <link href="/assets/demo/bootstrap-3/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- 1. Подключаем скомпилированный и минимизированный файл CSS Bootstrap 3 -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- 2. Подключаем библиотеку jQuery, необходимую для работы скриптов Bootstrap 3 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 3. Подключаем скомпилированный и минимизированный файл JavaScript платформы Bootstrap 3 -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Дополнительный сценарий на языке JavaScript, предназначенный для инициализации компонента Bootstrap "Popovers" -->
+    <script>
+      $(function () {
+        $('[data-toggle="popover"]').popover()
+      })
+    </script>
+  </head>
+<body>
+<h3 class="text-danger">Компонент carousel (карусель)</h3>
+<hr>
+<p id="carousel1">1. Пример карусели</p>
+<div style="margin-top: 20px; margin-bottom: 20px;">
+<div id="myCarousel" class="carousel slide" data-interval="3000" data-ride="carousel" style="margin-top: 20px;">
+  <!-- Carousel indicators -->
   <ol class="carousel-indicators">
-    <!-- Перейти к 0 слайду карусели с помощью соответствующего индекса data-slide-to="0" -->
     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-    <!-- Перейти к 1 слайду карусели с помощью соответствующего индекса data-slide-to="1" -->
     <li data-target="#myCarousel" data-slide-to="1"></li>
-    <!-- Перейти к 2 слайду карусели с помощью соответствующего индекса data-slide-to="2" -->
     <li data-target="#myCarousel" data-slide-to="2"></li>
   </ol>   
-  <!-- Слайды карусели -->
+  <!-- Carousel items -->
   <div class="carousel-inner">
-    <!-- Слайды создаются с помощью контейнера с классом item, внутри которого помещается содержимое слайда -->
-    <div class="active item">
-      <h2>Слайд №1</h2>
+    <div class="active item" style="background: #333; text-align: center; height: 300px !important;">
+      <h2 style="margin: 0; color: #666; padding-top: 90px; font-size: 52px;">Слайд №1</h2>
       <div class="carousel-caption">
         <h3>Заголовок 1 слайда</h3>
-        <p>Текст (описание) 1 слайда...</p>
+        <p>Описание 1 слайда...</p>
       </div>
     </div>
-    <!-- Слайд №2 -->
-    <div class="item">
-      <h2>Slide 2</h2>
+    <div class="item" style="background: #333; text-align: center; height: 300px !important;">
+      <h2 style="margin: 0; color: #666; padding-top: 90px; font-size: 52px;">Слайд №2</h2>
       <div class="carousel-caption">
-        <h3>Second slide label</h3>
-        <p>Aliquam sit amet gravida nibh, facilisis gravida odio.</p>
+        <h3>Заголовок 2 слайда</h3>
+        <p>Описание 2 слайда...</p>
       </div>
     </div>
-    <!-- Слайд №3 -->
-    <div class="item">
-      <h2>Slide 3</h2>
+    <div class="item" style="background: #333; text-align: center; height: 300px !important;">
+      <h2 style="margin: 0; color: #666; padding-top: 90px; font-size: 52px;">Слайд №3</h2>
       <div class="carousel-caption">
-        <h3>Third slide label</h3>
-        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+        <h3>Заголовок 3 слайда</h3>
+        <p>Описание 3 слайда...</p>
       </div>
     </div>
   </div>
-  <!-- Навигация для карусели -->
-  <!-- Кнопка, осуществляющая переход на предыдущий слайд с помощью атрибута data-slide="prev" -->
+  <!-- Carousel nav -->
   <a class="carousel-control left" href="#myCarousel" data-slide="prev">
     <span class="glyphicon glyphicon-chevron-left"></span>
   </a>
-  <!-- Кнопка, осуществляющая переход на следующий слайд с помощью атрибута data-slide="next" -->
   <a class="carousel-control right" href="#myCarousel" data-slide="next">
     <span class="glyphicon glyphicon-chevron-right"></span>
   </a>
 </div>
-    </body>
-</html>
+</div>
+ <script src="/assets/demo/bootstrap-3/css/bootstrap.min.css"></script>
+<script src="/assets/demo/jquery/jquery-1.11.2.min.js"></script>
+<script src="/assets/demo/bootstrap-3/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function(){
+  $(".show-tooltip").click(function(){
+    $(".tooltip-method a").tooltip('show');
+  });
+  $(".hide-tooltip").click(function(){
+    $(".tooltip-method a").tooltip('hide');
+  });
+  $(".toggle-tooltip").click(function(){
+    $(".tooltip-method a").tooltip('toggle');
+  });
+  $(".destroy-tooltip").click(function(){
+    $(".tooltip-method a").tooltip('destroy');
+  });
+});
+$(document).ready(function(){
+  $(".tooltip-examples a").tooltip();
+  $(".tooltip-examples button").tooltip();
+});
 
+$(document).ready(function(){
+  $(".tooltip-options a").tooltip({
+    title : 'Текст всплывающей подсказки при отсутствии атрибута title.',
+    placement: 'right',
+    delay: { show: 500, hide: 100 }
+  });
+});
+</script>
+<script>
+$(document).ready(function(){
+  // Инициализирует карусель
+  $(".start-slide").click(function(){
+    $("#myCarousel2").carousel('cycle');
+  });
+  // Останавливает процесс автоматической смены слайдов карусели
+  $(".pause-slide").click(function(){
+    $("#myCarousel2").carousel('pause');
+  });
+  // Осуществляет переход на предыдущий слайд
+  $(".prev-slide").click(function(){
+    $("#myCarousel2").carousel('prev');
+  });
+  // Осуществляет переход на следующий слайд
+  $(".next-slide").click(function(){
+    $("#myCarousel2").carousel('next');
+  });
+  // Осуществляет переход на 0 слайд карусели 
+  $(".slide-one").click(function(){
+    $("#myCarousel2").carousel(0);
+  });
+  // Осуществляет переход на 1 слайд карусели 
+  $(".slide-two").click(function(){
+    $("#myCarousel2").carousel(1);
+  });
+  // Осуществляет переход на 2 слайд карусели 
+  $(".slide-three").click(function(){
+    $("#myCarousel2").carousel(2);
+  });
+});
+</script>
+</body>
+</html>
 
 
 
