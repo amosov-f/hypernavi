@@ -13,8 +13,8 @@ import ru.hypernavi.util.MoreIOUtils;
  */
 public final class HyperNaviServerLauncher {
     public static final int PORT = 8081;
-    private static final String[] CONFIG_PATHS = {"classpath:/common.properties", "classpath:/test.properties"};
-    private static final String LOG_CFG = "classpath:/log4j-test.xml";
+    private static final String[] CONFIG_PATHS = {"classpath:/properties/common.properties", "classpath:/properties/test.properties"};
+    private static final String LOG_CFG = "classpath:/logging/log4j-test.xml";
 
     private HyperNaviServer server;
 

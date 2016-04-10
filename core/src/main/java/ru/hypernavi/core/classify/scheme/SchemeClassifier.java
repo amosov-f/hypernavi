@@ -53,7 +53,7 @@ public final class SchemeClassifier extends WekaClassifier<Picture> implements B
     }
 
     public static SchemeClassifier getClassifier() throws Exception {
-        DOMConfigurator.configure(MoreIOUtils.toURL("classpath:/log4j.xml"));
+        DOMConfigurator.configure(MoreIOUtils.toURL("classpath:/logging/log4j.xml"));
         final SchemeClassifier classifier = new SchemeClassifier();
         classifier.learn(Picture.download());
         final Evaluation evaluation = classifier.crossValidate();

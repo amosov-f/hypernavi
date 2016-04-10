@@ -23,7 +23,7 @@ mv -v ${JAR_PATH} ~/${FILENAME}
 rsync -a data /root
 
 # starting server
-nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar ~/${FILENAME} -port ${PORT} -cfg classpath:/common.properties classpath:/testing.properties -logcfg classpath:/log4j-dev.xml -logdir /root/log -bot 2>> /dev/null >> /dev/null &
+nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar ~/${FILENAME} -port ${PORT} -cfg classpath:/properties/common.properties classpath:/properties/testing.properties -logcfg classpath:/logging/log4j-dev.xml -logdir /root/log -bot 2>> /dev/null >> /dev/null &
 
 # reloading nginx
 mv -v nginx.conf /etc/nginx/sites-available/hypernavi.net
