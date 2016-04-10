@@ -13,7 +13,7 @@
         <module>core</module>
         <module>util</module>
         <module>ml</module>
-        <module>client</module>
+        <!--module>client</module-->
         <module>junk</module>
         <module>util8</module>
         <module>commons</module>
