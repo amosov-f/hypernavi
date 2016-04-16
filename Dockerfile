@@ -1,5 +1,5 @@
 FROM java:8-jre
-FROM nginx
+#FROM nginx
 
 EXPOSE 80
 
