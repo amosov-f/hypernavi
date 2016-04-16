@@ -11,4 +11,5 @@ git_configure_user() {
 
 git_configure_user /root/hypernavi-data
 cd /root/hypernavi-data
-git commit -am "data updated" && git push origin master
+git -C commit -am "data updated"
+git -C push origin master
