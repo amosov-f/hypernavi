@@ -9,6 +9,6 @@ git_configure_user() {
   git -C ${DIR} config user.email "${GIT_COMMITER_EMAIL}"
 }
 
-git_configure_user /root/hypernavi
+git_configure_user /root/hypernavi-data
 cd /root/hypernavi-data
 git commit -am "data updated" && git push origin master
