@@ -14,6 +14,21 @@ git_configure_user() {
   git -C ${DIR} config user.email "${GIT_COMMITER_EMAIL}"
 }
 
+git_switch_to() {
+  BRANCH=$1
+  DIR=$2
+  print_message "Switching to ${BRANCH} at ${DIR}"
+  git -C ${DIR} checkout ${BRANCH}
+}
+
+git_update_branch() {
+  BRANCH=$1
+  DIR=$2
+  git_switch_to ${BRANCH} ${DIR}
+  print_message "Updating branch ${BRANCH} at ${DIR}"
+  git -C ${DIR} pull --rebase origin ${BRANCH}
+}
+
 git_commit_changes() {
   COMMIT_MESSAGE=$1
   DIR=$2
@@ -30,5 +45,6 @@ git_push() {
 HYPERNAVI_DATA_DIR="/root/hypernavi-data"
 
 git_configure_user ${HYPERNAVI_DATA_DIR}
+git_update_branch "master" ${HYPERNAVI_DATA_DIR}
 git_commit_changes "data updated" ${HYPERNAVI_DATA_DIR}
 git_push "master" ${HYPERNAVI_DATA_DIR}
