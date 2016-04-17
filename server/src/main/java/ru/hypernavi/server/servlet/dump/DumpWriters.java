@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 
+import org.apache.http.entity.ContentType;
 import ru.hypernavi.core.session.RequestParam;
 import ru.hypernavi.core.session.Session;
 
@@ -38,6 +39,7 @@ public final class DumpWriters {
     }
 
     public void dump(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+        resp.setContentType(ContentType.TEXT_HTML.getMimeType());
         for (final DumpWriter dumpWriter : Objects.requireNonNull(enabledDumpWriters, "Enable DumpWriters before!")) {
             dumpWriter.dump(session, resp);
         }

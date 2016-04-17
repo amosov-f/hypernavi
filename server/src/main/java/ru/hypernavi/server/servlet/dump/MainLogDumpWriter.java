@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 
 import ru.hypernavi.core.session.Session;
@@ -29,11 +31,19 @@ public final class MainLogDumpWriter implements DumpWriter {
 
     @Override
     public void dump(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final ServletOutputStream out = resp.getOutputStream();
-        out.print("<xmp>");
-        for (final String s : MemoryAppender.getAndClean(session.getId())) {
-            out.println(s);
+        final List<String> logs = MemoryAppender.getAndClean(session.getId());
+        try {
+            final ServletOutputStream out = resp.getOutputStream();
+            out.print("<xmp>");
+            for (final String s : logs) {
+                out.println(s);
+            }
+            out.print("</xmp>");
+        } catch (IllegalStateException ignored) {
+            final PrintWriter writer = resp.getWriter();
+            writer.print("<xmp>");
+            logs.forEach(writer::println);
+            writer.print("</xmp>");
         }
-        out.print("</xmp>");
     }
 }
