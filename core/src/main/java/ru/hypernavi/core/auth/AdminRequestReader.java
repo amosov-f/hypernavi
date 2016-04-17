@@ -3,8 +3,9 @@ package ru.hypernavi.core.auth;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 import com.google.inject.Inject;
@@ -13,7 +14,6 @@ import com.google.inject.Module;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.util.Types;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.Property;
@@ -33,13 +33,10 @@ public class AdminRequestReader extends VkAuthRequestReader {
     @Inject
     public AdminRequestReader(@Assisted @NotNull final HttpServletRequest req) {
         super(req);
-        try {
-            adminUids = IOUtils.readLines(getClass().getResourceAsStream("/auth/vk/admins.txt"), StandardCharsets.UTF_8).stream()
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        final InputStream in = getClass().getResourceAsStream("/auth/vk/admins.txt");
+        adminUids = new BufferedReader(new InputStreamReader(in)).lines()
+                .mapToInt(Integer::parseInt)
+                .toArray();
     }
 
     @Override

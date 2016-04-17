@@ -29,7 +29,8 @@ public class RequestReader implements SessionInitializer {
 
     @Override
     public void initialize(@NotNull final Session session) {
-        session.setIfNotNull(Property.HTTP_REQUEST_URI, HttpTools.requestURL(req));
+        session.setIfNotNull(Property.HTTP_REQUEST_URL, HttpTools.requestURL(req));
+        session.setIfNotNull(Property.HTTP_REQUEST_URI, HttpTools.requestURI(req));
         session.setIfNotNull(Property.HTTP_SERVLET_PATH, req.getServletPath());
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
         session.setIfNotNull(Property.HTTP_QUERY_STRING, req.getQueryString());

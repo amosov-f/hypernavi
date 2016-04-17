@@ -10,6 +10,7 @@ import ru.hypernavi.util.GeoPoint;
  * Created by amosov-f on 24.10.15.
  */
 public final class Property<T> {
+    public static final Property<String> HTTP_REQUEST_URL = new Property<>("http_request_url");
     public static final Property<String> HTTP_REQUEST_URI = new Property<>("http_request_uri");
     public static final Property<String> HTTP_SERVLET_PATH = new Property<>("http_servlet_path");
     public static final Property<String> HTTP_PATH_INFO = new Property<>("http_path_info");

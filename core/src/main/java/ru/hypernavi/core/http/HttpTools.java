@@ -31,6 +31,12 @@ public enum HttpTools {
     }
 
     @NotNull
+    public static String requestURI(@NotNull final HttpServletRequest req) {
+        final String requestURI = req.getRequestURI();
+        return req.getQueryString() != null ? requestURI + "?" + req.getQueryString() : requestURI;
+    }
+
+    @NotNull
     public static List<Pair<String, String>> headers(@NotNull final HttpUriRequest req) {
         return Arrays.stream(req.getAllHeaders()).map(header -> Pair.of(header.getName(), header.getValue())).collect(Collectors.toList());
     }
