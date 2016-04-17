@@ -39,8 +39,11 @@ public final class DumpWriters {
     }
 
     public void dump(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        resp.setContentType(ContentType.TEXT_HTML.getMimeType());
-        for (final DumpWriter dumpWriter : Objects.requireNonNull(enabledDumpWriters, "Enable DumpWriters before!")) {
+        Objects.requireNonNull(enabledDumpWriters, "Enable DumpWriters before!");
+        if (enabledDumpWriters.length != 0 && resp.getContentType() == null) {
+            resp.setContentType(ContentType.TEXT_HTML.getMimeType());
+        }
+        for (final DumpWriter dumpWriter : enabledDumpWriters) {
             dumpWriter.dump(session, resp);
         }
     }
