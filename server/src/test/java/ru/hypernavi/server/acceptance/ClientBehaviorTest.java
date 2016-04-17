@@ -13,6 +13,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ru.hypernavi.commons.Hypermarket;
@@ -37,6 +38,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void testHypermarketSchemaSend() {
         final double lon = 30;
         final double lat = 60;
@@ -78,6 +80,7 @@ public class ClientBehaviorTest extends AcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void testImgOkStatus() {
         final HttpResponse resp = execute("/img/4A1D07D7CF511735F7683FB681EA52DA.jpg");
         assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());

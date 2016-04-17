@@ -14,6 +14,9 @@ import com.google.inject.ImplementedBy;
 @SuppressWarnings("ClassReferencesSubclass")
 @ImplementedBy(SessionImpl.class)
 public interface Session {
+    @NotNull
+    String getId();
+
     <T> void set(@NotNull final Property<? super T> property, @NotNull final T value);
 
     default <T> void setIfNotNull(@NotNull final Property<? super T> property, @Nullable final T value) {

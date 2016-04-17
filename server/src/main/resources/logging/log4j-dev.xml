@@ -21,6 +21,12 @@
         </layout>
     </appender>
 
+    <appender name="MainMemory" class="ru.hypernavi.util.log.MemoryAppender">
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ddMMyy HHmmss.SSS}{Europe/Moscow} %5p [%t] %c{1} &lt;%X{reqid}&gt; %m %throwable>>%n"/>
+        </layout>
+    </appender>
+
     <logger name="org.springframework">
         <level value="info"/>
     </logger>
@@ -52,5 +58,6 @@
     <root>
         <priority value="ALL"/>
         <appender-ref ref="Main"/>
+        <appender-ref ref="MainMemory"/>
     </root>
 </log4j:configuration>

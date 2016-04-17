@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 
-import com.google.inject.*;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
@@ -22,6 +22,7 @@ import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
 import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.session.*;
+import ru.hypernavi.server.servlet.dump.DumpWriters;
 import ru.hypernavi.util.json.GsonUtils;
 
 /**
@@ -38,16 +39,11 @@ public abstract class AbstractHttpService extends HttpServlet {
     @Nullable
     private Provider<Session> sessionFactory;
 
+    @Inject
+    private Provider<DumpWriters> dumpWritersProvider;
+
     protected AbstractHttpService(@NotNull final RequestReader.Factory<?> initFactory) {
         this.initFactory = initFactory;
-    }
-
-    @NotNull
-    private static String generateRequestId() {
-        final String nanos = Long.toString(System.nanoTime());
-        // noinspection MagicNumber
-        final int random = ThreadLocalRandom.current().nextInt(1000, 10000);
-        return System.currentTimeMillis() + nanos.substring(nanos.length() - 3) + "-" + random;
     }
 
     @NotNull
@@ -60,40 +56,56 @@ public abstract class AbstractHttpService extends HttpServlet {
 
     @Override
     protected final void service(@NotNull final HttpServletRequest req, @NotNull final HttpServletResponse resp) throws IOException {
-        final long timeStamp = System.currentTimeMillis();
-        MDC.put("reqid", generateRequestId());
+        final long startTime = System.currentTimeMillis();
+
+        final Session session = Objects.requireNonNull(sessionFactory).get();
+        MDC.put("reqid", session.getId());
+
+        final DumpWriters dumpWriters = dumpWritersProvider.get();
+        dumpWriters.enable(session, req);
+
         LOG.info("Started processing: " + HttpTools.curl(req));
 
         final SessionInitializer initializer = initFactory.create(req);
-        final Session session = Objects.requireNonNull(sessionFactory).get();
+
         initializer.initialize(session);
+        if (validate(initializer, session, resp)) {
+            service(session, resp);
+        }
+
+        req.setAttribute(HttpTools.SERVICE, getServiceConfig().name());
+        LOG.info(String.format(
+                "Finished processing in [service: %d, jetty: %d] ms",
+                System.currentTimeMillis() - startTime,
+                System.currentTimeMillis() - ((Request) req).getTimeStamp()
+        ));
+
+        dumpWriters.dump(session, resp);
+    }
+
+    private boolean validate(@NotNull final SessionInitializer initializer,
+                             @NotNull final Session session,
+                             @NotNull final HttpServletResponse resp) throws IOException
+    {
         try {
             initializer.validate(session);
+            return true;
         } catch (SessionValidationException e) {
             switch (e.getError()) {
                 case BAD_REQUEST:
                     LOG.info("Bad request: " + e.getMessage());
                     resp.sendError(HttpStatus.SC_BAD_REQUEST, e.getMessage());
-                    return;
+                    break;
                 case UNAUTHORIZED:
                     LOG.info("Unauthorized: " + e.getMessage());
-                    resp.sendRedirect("/auth?url=" + req.getRequestURI());
-                    return;
+                    resp.sendRedirect("/auth?url=" + session.get(Property.HTTP_REQUEST_URI));
+                    break;
                 case FORBIDDEN:
                     LOG.info("Forbidden: " + e.getMessage());
                     resp.sendError(HttpStatus.SC_FORBIDDEN, e.getMessage());
-                    return;
             }
+            return false;
         }
-
-        service(session, resp);
-
-        req.setAttribute(HttpTools.SERVICE, getServiceConfig().name());
-        LOG.info(String.format(
-                "Finished processing in [service: %d, jetty: %d] ms",
-                System.currentTimeMillis() - timeStamp,
-                System.currentTimeMillis() - ((Request) req).getTimeStamp()
-        ));
     }
 
     public abstract void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException;
