@@ -13,7 +13,7 @@ import ru.hypernavi.server.servlet.HtmlPageHttpService;
 /**
  * Created by amosov-f on 25.08.15.
  */
-@WebServlet(name = "morda", value = "")
+@WebServlet(name = "morda", value = "/morda")
 public final class MordaHttpService extends HtmlPageHttpService {
     @Inject
     public MordaHttpService(@NotNull final RequestReader.Factory<?> init) {
