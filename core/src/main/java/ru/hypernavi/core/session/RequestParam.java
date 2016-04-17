@@ -4,8 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,14 +44,21 @@ public abstract class RequestParam<T> {
     }
 
     @Nullable
-    public abstract T getValue(@NotNull final ServletRequest req);
+    public abstract T getValue(@NotNull final HttpServletRequest req);
 
-    public abstract static class RequestParamImpl<T> extends RequestParam<T> {
+    public boolean contained(@NotNull final HttpServletRequest req) {
+        return getValue(req) != null;
+    }
+
+    public abstract static class RequestParamBase<T> extends RequestParam<T> {
+        @NotNull
+        private final BiFunction<HttpServletRequest, String, String> getter;
         @Nullable
         private T defaultValue;
 
-        protected RequestParamImpl(@NotNull final String name) {
+        protected RequestParamBase(@NotNull final String name, @NotNull final BiFunction<HttpServletRequest, String, String> getter) {
             super(name);
+            this.getter = getter;
         }
 
         @Nullable
@@ -65,8 +74,8 @@ public abstract class RequestParam<T> {
 
         @Nullable
         @Override
-        public final T getValue(@NotNull final ServletRequest req) {
-            final String value = req.getParameter(getName());
+        public final T getValue(@NotNull final HttpServletRequest req) {
+            final String value = getter.apply(req, getName());
             try {
                 return Optional.ofNullable(value).map(this::parse).orElse(getDefaultValue());
             } catch (RuntimeException e) {
@@ -79,6 +88,12 @@ public abstract class RequestParam<T> {
         abstract T parse(@NotNull final String value);
     }
 
+    public abstract static class RequestParamImpl<T> extends RequestParamBase<T> {
+        protected RequestParamImpl(@NotNull final String name) {
+            super(name, ServletRequest::getParameter);
+        }
+    }
+
     public abstract static class ListParam<T> extends RequestParam<List<T>> {
         protected ListParam(@NotNull final String name) {
             super(name);
@@ -86,7 +101,7 @@ public abstract class RequestParam<T> {
 
         @NotNull
         @Override
-        public List<T> getValue(@NotNull final ServletRequest req) {
+        public List<T> getValue(@NotNull final HttpServletRequest req) {
             final String[] values = Optional.ofNullable(req.getParameterValues(getName())).orElse(ArrayUtils.EMPTY_STRING_ARRAY);
             try {
                 return Arrays.stream(values).map(this::parse).flatMap(List::stream).collect(Collectors.toList());
@@ -98,6 +113,12 @@ public abstract class RequestParam<T> {
 
         @Nullable
         abstract List<T> parse(@NotNull final String value);
+    }
+
+    public abstract static class HeaderParam<T> extends RequestParamBase<T> {
+        protected HeaderParam(@NotNull final String name) {
+            super(name, HttpServletRequest::getHeader);
+        }
     }
 
     public static class LambdaParam<T> extends RequestParamImpl<T> {
@@ -195,6 +216,34 @@ public abstract class RequestParam<T> {
     public static final class StringListParam extends LambdaDelimiterParam<String> {
         public StringListParam(@NotNull final String name) {
             super(name, Function.identity());
+        }
+    }
+
+    public static class LambdaHeaderParam<T> extends HeaderParam<T> {
+        @NotNull
+        private final Function<String, T> parser;
+
+        public LambdaHeaderParam(@NotNull final String name, @NotNull final Function<String, T> parser) {
+            super(name);
+            this.parser = parser;
+        }
+
+        @Nullable
+        @Override
+        public T parse(@NotNull final String value) {
+            return parser.apply(value);
+        }
+    }
+
+    public static final class StringHeaderParam extends LambdaHeaderParam<String> {
+        public StringHeaderParam(@NotNull final String name) {
+            super(name, Function.identity());
+        }
+    }
+
+    public static final class ObjectHeaderParam<T> extends LambdaHeaderParam<T> {
+        public ObjectHeaderParam(@NotNull final String name, @NotNull final Type clazz) {
+            super(name, value -> GsonUtils.gson().fromJson(value, clazz));
         }
     }
 }

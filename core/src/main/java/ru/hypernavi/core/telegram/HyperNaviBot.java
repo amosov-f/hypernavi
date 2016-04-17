@@ -198,16 +198,16 @@ public final class HyperNaviBot {
 
     @Nullable
     private GetUpdatesResponse getUpdates(final int updateId) {
-        final URI uri = new URIBuilder(getMethodUrl("/getUpdates")).addParameter("offset", updateId + 1).build();
+        final URI uri = new URIBuilder(getMethodUrl("/getUpdates")).add("offset", updateId + 1).build();
         return execute(new HttpGet(uri), GetUpdatesResponse.class);
     }
 
     @Nullable
     private SearchResponse search(@NotNull final GeoPoint location) {
         final URI uri = new URIBuilder("http://" + searchHost + "/search")
-                .addParameter("lon", location.getLongitude())
-                .addParameter("lat", location.getLatitude())
-                .addParameter("ns", 1)
+                .add("lon", location.getLongitude())
+                .add("lat", location.getLatitude())
+                .add("ns", 1)
                 .build();
         return execute(new HttpGet(uri), SearchResponse.class, searchGson);
     }
@@ -215,16 +215,16 @@ public final class HyperNaviBot {
     @Nullable
     private SearchResponse search(@NotNull final String text) {
         final URI uri = new URIBuilder("http://" + searchHost + "/search")
-                .addParameter("text", text)
-                .addParameter("ns", 1)
+                .add("text", text)
+                .add("ns", 1)
                 .build();
         return execute(new HttpGet(uri), SearchResponse.class, searchGson);
     }
 
     private void sendMessage(final int chatId, @NotNull final String text) {
         final URI uri = new URIBuilder(getMethodUrl("/sendMessage"))
-                .addParameter("chat_id", chatId)
-                .addParameter("text", text)
+                .add("chat_id", chatId)
+                .add("text", text)
                 .build();
         execute(new HttpGet(uri), Object.class);
     }
@@ -258,8 +258,8 @@ public final class HyperNaviBot {
                            @Nullable final String caption)
     {
         final URI uri = new URIBuilder(getMethodUrl("/sendPhoto"))
-                .setParameter("chat_id", chatId)
-                .setParameterIfNotNull("caption", caption)
+                .set("chat_id", chatId)
+                .setIfNotNull("caption", caption)
                 .build();
         final HttpEntityEnclosingRequestBase req = new HttpPost(uri);
         final String mimeType = Optional.ofNullable(format).orElse(Image.Format.JPG).getMimeType();

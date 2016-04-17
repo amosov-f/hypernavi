@@ -91,19 +91,7 @@ public abstract class AbstractHttpService extends HttpServlet {
             initializer.validate(session);
             return true;
         } catch (SessionValidationException e) {
-            switch (e.getError()) {
-                case BAD_REQUEST:
-                    LOG.info("Bad request: " + e.getMessage());
-                    resp.sendError(HttpStatus.SC_BAD_REQUEST, e.getMessage());
-                    break;
-                case UNAUTHORIZED:
-                    LOG.info("Unauthorized: " + e.getMessage());
-                    resp.sendRedirect("/auth?url=" + session.get(Property.HTTP_REQUEST_URI));
-                    break;
-                case FORBIDDEN:
-                    LOG.info("Forbidden: " + e.getMessage());
-                    resp.sendError(HttpStatus.SC_FORBIDDEN, e.getMessage());
-            }
+            e.accept(session, resp);
             return false;
         }
     }

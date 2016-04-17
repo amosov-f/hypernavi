@@ -21,8 +21,6 @@ import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionValidationException;
 
-import static ru.hypernavi.core.session.SessionValidationException.Error.FORBIDDEN;
-
 /**
  * Created by amosov-f on 14.11.15.
  */
@@ -51,7 +49,7 @@ public class AdminRequestReader extends VkAuthRequestReader {
         }
         super.validate(session);
         if (!ArrayUtils.contains(adminUids, session.demand(Property.VK_USER).getUid())) {
-            throw new SessionValidationException(FORBIDDEN, "Only admins have access to this page!");
+            throw new SessionValidationException.Forbidden("Only admins have access to this page!");
         }
     }
 

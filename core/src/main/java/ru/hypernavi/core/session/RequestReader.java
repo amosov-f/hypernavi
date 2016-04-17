@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.Assisted;
+import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 
@@ -28,7 +29,7 @@ public class RequestReader implements SessionInitializer {
 
     @Override
     public void initialize(@NotNull final Session session) {
-        session.setIfNotNull(Property.HTTP_REQUEST_URI, req.getRequestURI());
+        session.setIfNotNull(Property.HTTP_REQUEST_URI, HttpTools.requestURL(req));
         session.setIfNotNull(Property.HTTP_SERVLET_PATH, req.getServletPath());
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
         session.setIfNotNull(Property.HTTP_QUERY_STRING, req.getQueryString());

@@ -37,10 +37,10 @@ public final class GeoDecoder {
     @Nullable
     public GeoObject decode(@NotNull final String geocode) {
         final URI uri = new URIBuilder("https://geocode-maps.yandex.ru/1.x")
-                .addParameter("geocode", geocode)
-                .addParameter("kind", "house")
-                .addParameter("results", 1)
-                .addParameter("format", "json")
+                .add("geocode", geocode)
+                .add("kind", "house")
+                .add("results", 1)
+                .add("format", "json")
                 .build();
         final JsonObject response = httpClient.executeText(new HttpGet(uri), MoreGsonUtils.parser());
         if (response == null) {

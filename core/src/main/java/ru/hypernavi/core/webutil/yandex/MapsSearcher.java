@@ -36,11 +36,11 @@ public final class MapsSearcher {
     @Nullable
     public GeoObject search(@NotNull final String text, @Nullable final GeoPoint center) {
         final URI uri = new URIBuilder("https://search-maps.yandex.ru/v1/")
-                .addParameter("apikey", API_KEY)
-                .addParameter("text", text)
-                .addParameter("lang", "ru_RU")
-                .addParameterIfNotNull("ll", Optional.ofNullable(center).map(MapsSearcher::ll).orElse(null))
-                .addParameter("results", 1)
+                .add("apikey", API_KEY)
+                .add("text", text)
+                .add("lang", "ru_RU")
+                .addIfNotNull("ll", Optional.ofNullable(center).map(MapsSearcher::ll).orElse(null))
+                .add("results", 1)
                 .build();
         final JsonObject response = httpClient.executeText(new HttpGet(uri), MoreGsonUtils.parser());
         if (response == null) {
