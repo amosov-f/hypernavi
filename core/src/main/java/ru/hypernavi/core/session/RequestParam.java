@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -243,6 +244,49 @@ public abstract class RequestParam<T> {
 
     public static final class ObjectHeaderParam<T> extends LambdaHeaderParam<T> {
         public ObjectHeaderParam(@NotNull final String name, @NotNull final Type clazz) {
+            super(name, value -> GsonUtils.gson().fromJson(value, clazz));
+        }
+    }
+
+    public abstract static class CookieParam<T> extends RequestParamBase<T> {
+        protected CookieParam(@NotNull final String name) {
+            super(name, CookieParam::get);
+        }
+
+        @Nullable
+        private static String get(@NotNull final HttpServletRequest req, @NotNull final String name) {
+            return Arrays.stream(Optional.ofNullable(req.getCookies()).orElse(new Cookie[0]))
+                    .filter(c -> c.getName().equals(name))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
+        }
+    }
+
+    public static class LambdaCookieParam<T> extends CookieParam<T> {
+        @NotNull
+        private final Function<String, T> parser;
+
+        public LambdaCookieParam(@NotNull final String name, @NotNull final Function<String, T> parser) {
+            super(name);
+            this.parser = parser;
+        }
+
+        @Nullable
+        @Override
+        T parse(@NotNull final String value) {
+            return parser.apply(value);
+        }
+    }
+
+    public static final class StringCookieParam extends LambdaCookieParam<String> {
+        public StringCookieParam(@NotNull final String name) {
+            super(name, Function.identity());
+        }
+    }
+
+    public static final class ObjectCookieParam<T> extends LambdaCookieParam<T> {
+        public ObjectCookieParam(@NotNull final String name, @NotNull final Type clazz) {
             super(name, value -> GsonUtils.gson().fromJson(value, clazz));
         }
     }

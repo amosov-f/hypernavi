@@ -31,8 +31,8 @@ public class VkAuthRequestReader extends RequestReader {
             PARAM_UID, PARAM_FIRST_NAME, PARAM_LAST_NAME, PARAM_PHOTO, PARAM_PHOTO_REC, PARAM_HASH
     };
 
-    private static final RequestParam.HeaderParam<VkUser> HEADER_VK_USER = new RequestParam.ObjectHeaderParam<>("vk_user", VkUser.class);
-    private static final RequestParam.HeaderParam<String> HEADER_VK_HASH = new RequestParam.StringHeaderParam("vk_hash");
+    private static final RequestParam.CookieParam<VkUser> COOKIE_VK_USER = new RequestParam.ObjectCookieParam<>("vk_user", VkUser.class);
+    private static final RequestParam.CookieParam<String> COOKIE_VK_HASH = new RequestParam.StringCookieParam("vk_hash");
 
     @Inject
     private VkAuthValidator validator;
@@ -46,7 +46,7 @@ public class VkAuthRequestReader extends RequestReader {
     public void initialize(@NotNull final Session session) {
         super.initialize(session);
 
-        setPropertyIfPresent(session, Property.VK_USER, HEADER_VK_USER);
+        setPropertyIfPresent(session, Property.VK_USER, COOKIE_VK_USER);
     }
 
     @Override
@@ -58,15 +58,15 @@ public class VkAuthRequestReader extends RequestReader {
                 builder.remove(param.getName());
             }
             final Cookie[] cookies = {
-                    new Cookie(HEADER_VK_USER.getName(), GsonUtils.gson().toJson(getParamUser())),
-                    new Cookie(HEADER_VK_HASH.getName(), PARAM_HASH.getValue(req))
+                    new Cookie(COOKIE_VK_USER.getName(), GsonUtils.gson().toJson(getParamUser())),
+                    new Cookie(COOKIE_VK_HASH.getName(), PARAM_HASH.getValue(req))
             };
             Arrays.stream(cookies).forEach(cookie -> cookie.setDomain("hypernavi.net"));
             throw new SessionValidationException.Redirect("Vk params in request", builder.build().toString(), cookies);
         }
         final VkUser user = Optional.ofNullable(session.get(Property.VK_USER))
                 .orElseThrow(() -> new SessionValidationException.UnAuthorized("Not enough vk auth parameters!"));
-        final String hash = Optional.ofNullable(HEADER_VK_HASH.getValue(req))
+        final String hash = Optional.ofNullable(COOKIE_VK_HASH.getValue(req))
                 .orElseThrow(() -> new SessionValidationException.UnAuthorized("No 'hash' parameter in request!"));
         if (!validator.validate(user, hash)) {
             throw new SessionValidationException.UnAuthorized("Invalid request digest!");
