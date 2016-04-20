@@ -1,16 +1,18 @@
 package ru.hypernavi.ml.regression;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: amosov-f
@@ -26,6 +28,10 @@ public final class PolynomialRegression extends AbstractClassifier {
 
     public PolynomialRegression(final int deg) {
         this.deg = deg;
+    }
+
+    public int getDegree() {
+        return deg;
     }
 
     @Override

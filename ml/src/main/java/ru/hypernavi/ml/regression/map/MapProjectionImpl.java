@@ -9,7 +9,7 @@ import java.util.function.ToDoubleFunction;
 
 import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.ml.factor.Factor;
-import ru.hypernavi.ml.regression.PolynomialRegression;
+import ru.hypernavi.ml.regression.BestPolynomialRegression;
 import ru.hypernavi.ml.regression.WekaRegression;
 import ru.hypernavi.util.GeoPoint;
 
@@ -42,9 +42,9 @@ public final class MapProjectionImpl implements MapProjection {
     public static MapProjection learn(@NotNull final PointMap... points) {
         final java.util.List<? extends Factor<PointMap>> features = Arrays.asList(LONGITUDE, LATITUDE);
         // TODO: polynom degree
-        final WekaRegression<PointMap> fx = new WekaRegression<>(new PolynomialRegression(1), features, X);
+        final WekaRegression<PointMap> fx = new WekaRegression<>(new BestPolynomialRegression(), features, X);
         fx.learn(points);
-        final WekaRegression<PointMap> fy = new WekaRegression<>(new PolynomialRegression(1), features, Y);
+        final WekaRegression<PointMap> fy = new WekaRegression<>(new BestPolynomialRegression(), features, Y);
         fy.learn(points);
         return new MapProjectionImpl(projection(fx), projection(fy));
     }
