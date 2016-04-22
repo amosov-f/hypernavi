@@ -32,6 +32,7 @@ import ru.hypernavi.commons.Image;
 import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResult;
+import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.GeoPointImpl;
 import ru.hypernavi.util.MoreIOUtils;
@@ -66,9 +67,14 @@ public final class TelegramApi {
     }
 
     public void sendMessage(final int chatId, @NotNull final String text) {
+        sendMessage(chatId, text, null);
+    }
+
+    public void sendMessage(final int chatId, @NotNull final String text, @Nullable final ReplyMarkup replyMarkup) {
         final URI uri = method("/sendMessage")
                 .add("chat_id", chatId)
                 .add("text", text)
+                .addIfNotNull("reply_markup", Optional.ofNullable(replyMarkup).map(telegramGson::toJson).orElse(null))
                 .build();
         execute(new HttpGet(uri), Object.class);
     }

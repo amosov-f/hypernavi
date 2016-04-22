@@ -39,6 +39,9 @@ import ru.hypernavi.core.telegram.api.Update;
 import ru.hypernavi.core.telegram.api.inline.InlineQuery;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResult;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResultPhoto;
+import ru.hypernavi.core.telegram.api.markup.KeyboardButton;
+import ru.hypernavi.core.telegram.api.markup.ReplyKeyboardMarkup;
+import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
 import ru.hypernavi.ml.regression.map.MapProjection;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.util.GeoPoint;
@@ -149,7 +152,9 @@ public final class HyperNaviBot {
                     return;
                 }
             } else {
-                api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию \uD83D\uDCCE, и я покажу ближайший к Вам гипермаркет.");
+                final KeyboardButton button = new KeyboardButton("Отправить геопозицию", false, true);
+                final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
+                api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
                 return;
             }
             searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
