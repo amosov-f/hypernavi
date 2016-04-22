@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.httpclient.HttpStatus;
@@ -22,6 +23,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
 import ru.hypernavi.util.TextUtils;
 import ru.hypernavi.util.function.IOFunction;
+import ru.hypernavi.util.json.MoreGsonUtils;
 
 /**
  * Created by amosov-f on 04.11.15.
@@ -91,6 +93,11 @@ public final class HyperHttpClient {
                 return null;
             }
         });
+    }
+
+    @Nullable
+    public <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz, @NotNull final Gson gson) {
+        return executeText(req, MoreGsonUtils.parser(gson, clazz));
     }
 
     private static void catchIOException(@NotNull final IOException e) {

@@ -1,4 +1,4 @@
-package ru.hypernavi.core.telegram;
+package ru.hypernavi.core.telegram.api;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

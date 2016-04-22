@@ -1,4 +1,4 @@
-package ru.hypernavi.core.telegram;
+package ru.hypernavi.core.telegram.api;
 
 /**
  * Created by amosov-f on 18.10.15.
