@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.servlet.http.HttpServletRequest;
 
 
+import com.google.common.net.HttpHeaders;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
@@ -34,6 +35,7 @@ public class RequestReader implements SessionInitializer {
         session.setIfNotNull(Property.HTTP_SERVLET_PATH, req.getServletPath());
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
         session.setIfNotNull(Property.HTTP_QUERY_STRING, req.getQueryString());
+        session.setIfNotNull(Property.HTTP_COOKIE, req.getHeader(HttpHeaders.COOKIE));
 
         setPropertyIfPresent(session, Property.TEXT, RequestParam.PRAM_TEXT);
         session.setIfNotNull(Property.GEO_LOCATION, getGeoLocation());

@@ -12,13 +12,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpGet;
-import ru.hypernavi.commons.*;
 import ru.hypernavi.commons.Dimension;
+import ru.hypernavi.commons.*;
 import ru.hypernavi.commons.Image;
 import ru.hypernavi.commons.hint.Hint;
 import ru.hypernavi.commons.hint.Plan;
@@ -42,6 +43,7 @@ import ru.hypernavi.util.json.GsonUtils;
 @WebServlet(name = "migrate", value = "/admin/migrate")
 public class MigrateServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(MigrateServlet.class);
+
     static {
         MoreReflectionUtils.load(SearchResponse.Data.class);
     }
@@ -64,9 +66,17 @@ public class MigrateServlet extends AbstractHttpService {
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        if ("priboy".equals(session.get(Property.TEXT))) {
-            fillPriboy(session);
-            return;
+        final String text = session.get(Property.TEXT);
+        if (text != null) {
+            switch (text) {
+                case "priboy":
+                    fillPriboy(session);
+                    return;
+                case "sheregesh":
+                    fillSheregesh(session);
+                    return;
+
+            }
         }
         migrate(session);
     }
@@ -108,12 +118,43 @@ public class MigrateServlet extends AbstractHttpService {
         put(site, session);
     }
 
+    private void fillSheregesh(@NotNull final Session session) throws UnsupportedEncodingException {
+        final PointMap[] points = {
+                PointMap.of(ArrayGeoPoint.of(52.950115, 87.864426), new Point(424, 314)),
+                PointMap.of(ArrayGeoPoint.of(52.946880, 87.878242), new Point(404, 363)),
+                PointMap.of(ArrayGeoPoint.of(52.936802, 87.881500), new Point(252, 456)),
+                PointMap.of(ArrayGeoPoint.of(52.939671, 87.872322), new Point(280, 399)),
+                PointMap.of(ArrayGeoPoint.of(52.931137, 87.886307), new Point(121, 536)),
+                PointMap.of(ArrayGeoPoint.of(52.929447, 87.889999), new Point(134, 546)),
+                PointMap.of(ArrayGeoPoint.of(52.947880, 87.966248), new Point(1271, 749)),
+//                PointMap.of(ArrayGeoPoint.of(49.085281, 2.133985), new Point(949, 278)),
+                PointMap.of(ArrayGeoPoint.of(52.954025, 87.933517), new Point(1032, 361)),
+                PointMap.of(ArrayGeoPoint.of(52.969238, 87.934677), new Point(1540, 252)),
+                PointMap.of(ArrayGeoPoint.of(52.952625, 87.951111), new Point(1603, 485)),
+                PointMap.of(ArrayGeoPoint.of(52.954544, 87.938316), new Point(1415, 342)),
+                PointMap.of(ArrayGeoPoint.of(52.951675, 87.926857), new Point(821, 273)),
+                PointMap.of(ArrayGeoPoint.of(52.931507, 87.901680), new Point(389, 495)),
+                PointMap.of(ArrayGeoPoint.of(52.947304, 87.968338), new Point(1299, 822))
+        };
+        final GeoObject position = new GeoObject(
+                "поселок городского типа Шерегеш",
+                "Россия, Кемеровская область, Таштагольский район",
+                ArrayGeoPoint.of(52.921122, 87.989488)
+        );
+        final Hint hint = new Plan(
+                "Схема лыжных трасс",
+                new Image("http://nutrinews.ru/wp-content/uploads/2015/12/CHto-za-SHeregesh-i-gde-on-nahoditsya.jpg", Dimension.of(547, 397), new Image[0]),
+                null,
+                points
+        );
+        final Site site = new Site(position, hint);
+        put(site, session);
+    }
+
     private void put(@NotNull final Site site, @NotNull final Session session) throws UnsupportedEncodingException {
         final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
-        final String otherParams = session.getOptional(Property.HTTP_QUERY_STRING).map(qs -> "&" + qs).orElse("");
-        httpClient.execute(
-                new HttpGet("http://localhost:" + localPort + "/admin/site/put?site=" + siteValue + otherParams),
-                IOFunction.identity()
-        );
+        final HttpGet req = new HttpGet("http://hypernavi.net/admin/site/put?site=" + siteValue);
+        req.setHeader(HttpHeaders.COOKIE, session.get(Property.HTTP_COOKIE));
+        httpClient.execute(req, IOFunction.identity());
     }
 }
