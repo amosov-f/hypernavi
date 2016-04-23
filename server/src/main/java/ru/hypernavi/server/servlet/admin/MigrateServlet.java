@@ -120,26 +120,26 @@ public class MigrateServlet extends AbstractHttpService {
 
     private void fillSheregesh(@NotNull final Session session) throws UnsupportedEncodingException {
         final PointMap[] points = {
-                PointMap.of(ArrayGeoPoint.of(52.950115, 87.864426), new Point(424, 314)),
-                PointMap.of(ArrayGeoPoint.of(52.946880, 87.878242), new Point(404, 363)),
-                PointMap.of(ArrayGeoPoint.of(52.936802, 87.881500), new Point(252, 456)),
-                PointMap.of(ArrayGeoPoint.of(52.939671, 87.872322), new Point(280, 399)),
-                PointMap.of(ArrayGeoPoint.of(52.931137, 87.886307), new Point(121, 536)),
-                PointMap.of(ArrayGeoPoint.of(52.929447, 87.889999), new Point(134, 546)),
-                PointMap.of(ArrayGeoPoint.of(52.947880, 87.966248), new Point(1271, 749)),
+                PointMap.of(ArrayGeoPoint.of(87.864426, 52.950115), new Point(424, 314)),
+                PointMap.of(ArrayGeoPoint.of(87.878242, 52.946880), new Point(404, 363)),
+                PointMap.of(ArrayGeoPoint.of(87.881500, 52.936802), new Point(252, 456)),
+                PointMap.of(ArrayGeoPoint.of(87.872322, 52.939671), new Point(280, 399)),
+                PointMap.of(ArrayGeoPoint.of(87.886307, 52.931137), new Point(121, 536)),
+                PointMap.of(ArrayGeoPoint.of(87.889999, 52.929447), new Point(134, 546)),
+                PointMap.of(ArrayGeoPoint.of(87.966248, 52.947880), new Point(1271, 749)),
 //                PointMap.of(ArrayGeoPoint.of(49.085281, 2.133985), new Point(949, 278)),
-                PointMap.of(ArrayGeoPoint.of(52.954025, 87.933517), new Point(1032, 361)),
-                PointMap.of(ArrayGeoPoint.of(52.969238, 87.934677), new Point(1540, 252)),
-                PointMap.of(ArrayGeoPoint.of(52.952625, 87.951111), new Point(1603, 485)),
-                PointMap.of(ArrayGeoPoint.of(52.954544, 87.938316), new Point(1415, 342)),
-                PointMap.of(ArrayGeoPoint.of(52.951675, 87.926857), new Point(821, 273)),
-                PointMap.of(ArrayGeoPoint.of(52.931507, 87.901680), new Point(389, 495)),
-                PointMap.of(ArrayGeoPoint.of(52.947304, 87.968338), new Point(1299, 822))
+                PointMap.of(ArrayGeoPoint.of(87.933517, 52.954025), new Point(1032, 361)),
+                PointMap.of(ArrayGeoPoint.of(87.934677, 52.969238), new Point(1540, 252)),
+                PointMap.of(ArrayGeoPoint.of(87.951111, 52.952625), new Point(1603, 485)),
+                PointMap.of(ArrayGeoPoint.of(87.938316, 52.954544), new Point(1415, 342)),
+                PointMap.of(ArrayGeoPoint.of(87.926857, 52.951675), new Point(821, 273)),
+                PointMap.of(ArrayGeoPoint.of(87.901680, 52.931507), new Point(389, 495)),
+                PointMap.of(ArrayGeoPoint.of(87.968338, 52.947304), new Point(1299, 822))
         };
         final GeoObject position = new GeoObject(
                 "поселок городского типа Шерегеш",
                 "Россия, Кемеровская область, Таштагольский район",
-                ArrayGeoPoint.of(52.921122, 87.989488)
+                ArrayGeoPoint.of(87.989488, 52.921122)
         );
         final Hint hint = new Plan(
                 "Схема лыжных трасс",
