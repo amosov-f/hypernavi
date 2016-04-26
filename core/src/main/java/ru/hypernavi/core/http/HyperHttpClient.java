@@ -100,7 +100,7 @@ public final class HyperHttpClient {
         return executeText(req, MoreGsonUtils.parser(gson, clazz));
     }
 
-    private static void catchIOException(@NotNull final IOException e) {
+    private void catchIOException(@NotNull final IOException e) {
         LOG.error("Encountered unrecoverable I/O exception", e);
     }
 }

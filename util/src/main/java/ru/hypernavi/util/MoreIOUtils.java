@@ -44,6 +44,15 @@ public enum MoreIOUtils {
         return path.replace('\\', '/').replace("classpath:", "");
     }
 
+    @Nullable
+    public static InputStream connectSafe(@NotNull final String link) {
+        try {
+            return connect(link);
+        } catch (IOException ignored) {
+            return null;
+        }
+    }
+
     @NotNull
     public static InputStream connect(@NotNull final String url) throws IOException {
         final URLConnection connection = new URL(url).openConnection();

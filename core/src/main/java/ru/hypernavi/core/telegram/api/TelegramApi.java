@@ -3,11 +3,8 @@ package ru.hypernavi.core.telegram.api;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
@@ -36,6 +33,7 @@ import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.GeoPointImpl;
 import ru.hypernavi.util.MoreIOUtils;
+import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.json.GsonUtils;
 
 /**
@@ -79,27 +77,23 @@ public final class TelegramApi {
         execute(new HttpGet(uri), Object.class);
     }
 
-    public void sendPhoto(final int chatId, @NotNull final BufferedImage photo, @Nullable final Image.Format format, @Nullable final String caption) {
-        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(photo, Optional.ofNullable(format).orElse(Image.Format.JPG).getExtension(), bout);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        final InputStream photoStream = new ByteArrayInputStream(bout.toByteArray());
-        sendPhoto(chatId, photoStream, format, caption);
+    public void sendPhoto(final int chatId,
+                          @NotNull final BufferedImage photo,
+                          @NotNull final Image.Format format,
+                          @Nullable final String caption)
+    {
+        final byte[] photoBytes = ImageUtils.toByteArray(photo, format.getExtension());
+        sendPhoto(chatId, new ByteArrayInputStream(photoBytes), format, caption);
     }
 
     public void sendPhoto(final int chatId, @NotNull final Image photo, @Nullable final String caption) {
-        final InputStream photoInputStream;
-        try {
-            photoInputStream = MoreIOUtils.connect(photo.getLink());
-        } catch (IOException e) {
-            LOG.error("Can't download photo!", e);
+        final InputStream photoStream = MoreIOUtils.connectSafe(photo.getLink());
+        if (photoStream == null) {
+            LOG.error("Can't download photo: " + photo.getLink());
             sendMessage(chatId, "Простите, не могу загрузить изображение");
             return;
         }
-        sendPhoto(chatId, photoInputStream, photo.getFormat(), caption);
+        sendPhoto(chatId, photoStream, photo.getFormat(), caption);
     }
 
     private void sendPhoto(final int chatId,

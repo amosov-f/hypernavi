@@ -3,10 +3,8 @@ package ru.hypernavi.core.telegram;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Objects;
@@ -42,11 +40,12 @@ import ru.hypernavi.core.telegram.api.inline.InlineQueryResultPhoto;
 import ru.hypernavi.core.telegram.api.markup.KeyboardButton;
 import ru.hypernavi.core.telegram.api.markup.ReplyKeyboardMarkup;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
+import ru.hypernavi.core.webutil.ImageEditor;
 import ru.hypernavi.ml.regression.map.MapProjection;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.util.GeoPoint;
-import ru.hypernavi.util.MoreIOUtils;
 import ru.hypernavi.util.MoreReflectionUtils;
+import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.concurrent.MoreExecutors;
 import ru.hypernavi.util.json.GsonUtils;
@@ -78,6 +77,8 @@ public final class HyperNaviBot {
     private String searchHost;
     @Inject
     private HyperHttpClient httpClient;
+    @Inject
+    private ImageEditor imageEditor;
 
     public void start(final boolean inBackground) {
         final ScheduledThreadPoolExecutor executor = MoreExecutors.newSingleThreadScheduledExecutor("BOT", inBackground);
@@ -127,7 +128,7 @@ public final class HyperNaviBot {
                 .filter(Picture.class::isInstance)
                 .map(Picture.class::cast)
                 .map(Picture::getImage)
-                .map(Image::getLink)
+                .map(Image::getThumbOrFull)
                 .map(link -> new InlineQueryResultPhoto(link, link, link))
                 .toArray(InlineQueryResult[]::new);
         api.answerInlineQuery(inlineQuery.getId(), results);
@@ -171,7 +172,10 @@ public final class HyperNaviBot {
                 if (location != null) {
                     final BufferedImage image = drawLocation(plan, location);
                     if (image != null) {
-                        api.sendPhoto(chatId, image, plan.getImage().getFormat(), hint.getDescription());
+                        final Image.Format format = Optional.ofNullable(ImageUtils.format(image))
+                                .map(Image.Format::parse)
+                                .orElse(plan.getImage().getFormat(Image.Format.JPG));
+                        api.sendPhoto(chatId, image, format, hint.getDescription());
                         continue;
                     }
                 }
@@ -190,20 +194,13 @@ public final class HyperNaviBot {
         }
         final MapProjection mapProjection = MapProjectionImpl.learn(points);
         final Point point = mapProjection.map(location);
-        final BufferedImage image;
-        try {
-            image = ImageIO.read(MoreIOUtils.connect(plan.getImage().getLink()));
-        } catch (IOException e) {
-            LOG.error("Can't download image!", e);
+
+        final BufferedImage image = ImageUtils.downloadSafe(plan.getImage().getLink());
+        if (image == null) {
+            LOG.warn("Can't download image: " + plan.getImage().getLink());
             return null;
         }
-        final Graphics2D g = (Graphics2D) image.getGraphics();
-        g.setStroke(new BasicStroke(10));
-        g.setColor(Color.RED);
-        // TODO: size
-        g.drawOval(point.x - 50, point.y - 50, 100, 100);
-        g.fillOval(point.x - 7, point.y - 7, 14, 14);
-        return image;
+        return imageEditor.drawLocation(image, point);
     }
 
     @Nullable

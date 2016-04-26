@@ -86,7 +86,7 @@ public class MigrateServlet extends AbstractHttpService {
         for (final Hypermarket hypermarket : hypermarkets) {
             final GeoObject position = new GeoObject(hypermarket.getLine(), hypermarket.getCity(), ArrayGeoPoint.of(hypermarket.getLocation().getLongitude(), hypermarket.getLocation().getLatitude()));
             final String imageLink = "http://hypernavi.net" + hypermarket.getPath();
-            final Image image = new Image(imageLink, dimensioner.getDimension(imageLink));
+            final Image image = new Image(imageLink, null, dimensioner.getDimension(imageLink));
             final Double azimuth = hypermarket.hasOrientation() ? hypermarket.getOrientation() : null;
             final Site site = new Site(position, new Plan("Схема магазина", image, azimuth));
             put(site, session);
@@ -110,7 +110,7 @@ public class MigrateServlet extends AbstractHttpService {
         );
         final Hint hint = new Plan(
                 "Схема лыжных трасс",
-                new Image("http://www.adventureraces.ru/objects/2008-9-4/586_zelenogorsk_trasses.jpg", Dimension.of(0, 0), new Image[0]),
+                new Image("http://www.adventureraces.ru/objects/2008-9-4/586_zelenogorsk_trasses.jpg", null, Dimension.of(0, 0), new Image[0]),
                 0d,
                 points
         );
@@ -119,6 +119,10 @@ public class MigrateServlet extends AbstractHttpService {
     }
 
     private void fillSheregesh(@NotNull final Session session) throws UnsupportedEncodingException {
+        put(sheregesh(), session);
+    }
+
+    private static Site sheregesh() {
         final PointMap[] points = {
                 PointMap.of(ArrayGeoPoint.of(87.864426, 52.950115), new Point(424, 314)),
                 PointMap.of(ArrayGeoPoint.of(87.878242, 52.946880), new Point(404, 363)),
@@ -143,12 +147,11 @@ public class MigrateServlet extends AbstractHttpService {
         );
         final Hint hint = new Plan(
                 "Схема лыжных трасс",
-                new Image("http://nutrinews.ru/wp-content/uploads/2015/12/CHto-za-SHeregesh-i-gde-on-nahoditsya.jpg", Dimension.of(547, 397), new Image[0]),
+                new Image("http://nutrinews.ru/wp-content/uploads/2015/12/CHto-za-SHeregesh-i-gde-on-nahoditsya.jpg", null, Dimension.of(547, 397), new Image[0]),
                 null,
                 points
         );
-        final Site site = new Site(position, hint);
-        put(site, session);
+        return new Site(position, hint);
     }
 
     private void put(@NotNull final Site site, @NotNull final Session session) throws UnsupportedEncodingException {
