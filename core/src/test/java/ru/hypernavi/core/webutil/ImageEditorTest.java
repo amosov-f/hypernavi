@@ -11,7 +11,10 @@ import java.io.UncheckedIOException;
 
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import ru.hypernavi.util.awt.ImageUtils;
 
 /**
@@ -21,6 +24,14 @@ import ru.hypernavi.util.awt.ImageUtils;
  */
 public final class ImageEditorTest {
     private static final String DEFAULT_FORMAT = "jpg";
+
+    @Rule
+    public final TestWatcher ceanupOnSuccess = new TestWatcher() {
+        @Override
+        protected void succeeded(@NotNull final Description description) {
+            getBufferFile(DEFAULT_FORMAT).delete();
+        }
+    };
 
     @NotNull
     private final ImageEditor editor = new ImageEditor();
