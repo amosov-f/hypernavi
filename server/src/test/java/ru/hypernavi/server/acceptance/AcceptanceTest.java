@@ -3,12 +3,14 @@ package ru.hypernavi.server.acceptance;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Rule;
 import org.junit.rules.DisableOnDebug;
@@ -38,10 +40,15 @@ public class AcceptanceTest {
 
     @NotNull
     protected final HttpResponse execute(@NotNull final String uri) {
+        return execute(new HttpGet(uri));
+    }
+
+    @NotNull
+    protected final HttpResponse execute(@NotNull final HttpUriRequest req) {
         try {
-            return client.execute(LOCALHOST, new HttpGet(uri));
+            return client.execute(LOCALHOST, req);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 }

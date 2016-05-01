@@ -46,12 +46,6 @@ public final class TelegramApi {
 
     private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot";
 
-    @NotNull
-    private final Gson telegramGson = GsonUtils.builder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .registerTypeAdapter(GeoPoint.class, (JsonDeserializer<?>) (json, t, ctx) -> ctx.deserialize(json, GeoPointImpl.class))
-            .create();
-
     @Inject
     @Named("hypernavi.telegram.bot.auth_token")
     private String authToken;
@@ -72,7 +66,7 @@ public final class TelegramApi {
         final URI uri = method("/sendMessage")
                 .add("chat_id", chatId)
                 .add("text", text)
-                .addIfNotNull("reply_markup", Optional.ofNullable(replyMarkup).map(telegramGson::toJson).orElse(null))
+                .addIfNotNull("reply_markup", Optional.ofNullable(replyMarkup).map(gson()::toJson).orElse(null))
                 .build();
         execute(new HttpGet(uri), Object.class);
     }
@@ -116,12 +110,20 @@ public final class TelegramApi {
     }
 
     public void answerInlineQuery(@NotNull final String inlineQueryId, @NotNull final InlineQueryResult... results) {
-        final String resultsParam = telegramGson.toJson(results);
+        final String resultsParam = gson().toJson(results);
         final URI uri = method("/answerInlineQuery")
                 .set("inline_query_id", inlineQueryId)
                 .set("results", resultsParam)
                 .build();
         execute(new HttpGet(uri), Object.class);
+    }
+
+    @NotNull
+    public static Gson gson() {
+        return GsonUtils.builder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapter(GeoPoint.class, (JsonDeserializer<?>) (json, t, ctx) -> ctx.deserialize(json, GeoPointImpl.class))
+                .create();
     }
 
     @NotNull
@@ -131,7 +133,7 @@ public final class TelegramApi {
 
     @Nullable
     private <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz) {
-        return httpClient.execute(req, clazz, telegramGson);
+        return httpClient.execute(req, clazz, gson());
     }
 
     @NotNull

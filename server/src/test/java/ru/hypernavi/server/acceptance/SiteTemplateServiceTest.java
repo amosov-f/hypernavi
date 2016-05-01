@@ -9,12 +9,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import ru.hypernavi.server.HyperNaviServerRunner;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * Created by amosov-f on 03.01.16.
  */
+@RunWith(HyperNaviServerRunner.class)
 public final class SiteTemplateServiceTest extends AcceptanceTest {
     @Test
     public void testHtmlResponse() throws IOException {

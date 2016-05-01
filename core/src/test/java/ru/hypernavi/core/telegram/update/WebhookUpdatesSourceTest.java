@@ -12,8 +12,8 @@ import java.util.stream.IntStream;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
-import ru.hypernavi.util.json.GsonUtils;
 
 /**
  * User: amosov-f
@@ -25,8 +25,15 @@ public class WebhookUpdatesSourceTest {
     private final WebhookUpdatesSource source = new WebhookUpdatesSource();
 
     @Test
+    public void updateMustBeParsedCorrectly() {
+        final Update update = TelegramApi.gson().fromJson(read("/telegram/webhook/start.json"), Update.class);
+        Assert.assertEquals(993615304, update.getUpdateId());
+        Assert.assertNotNull(update.getMessage());
+    }
+
+    @Test
     public void updatesSourceMustBeThreadSafe() {
-        final Update update = GsonUtils.gson().fromJson(read("/telegram/webhook/text.json"), Update.class);
+        final Update update = TelegramApi.gson().fromJson(read("/telegram/webhook/text.json"), Update.class);
         final ExecutorService service = Executors.newFixedThreadPool(10);
         final int[] updateIds = IntStream.range(0, 100000).toArray();
         IntStream.of(updateIds).forEach(i -> service.submit(() -> source.add(clone(update, i))));
