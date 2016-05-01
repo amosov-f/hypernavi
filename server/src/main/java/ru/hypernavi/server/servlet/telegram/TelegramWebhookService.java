@@ -41,6 +41,7 @@ public final class TelegramWebhookService extends AbstractHttpService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) {
         final Update update = GsonUtils.gson().fromJson(session.demand(Property.HTTP_BODY_UTF8), Update.class);
+        LOG.info("Recieved update " + update.getUpdateId());
         updatesSource.add(update);
     }
 }

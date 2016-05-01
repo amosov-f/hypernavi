@@ -85,6 +85,7 @@ public final class HyperNaviBot {
 
     public void start() {
         while (true) {
+            LOG.info("Waiting for next update...");
             final Update update = updatesSource.next();
             service.submit(() -> processUpdate(update));
         }
