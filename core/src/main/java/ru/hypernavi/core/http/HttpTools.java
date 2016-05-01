@@ -1,14 +1,24 @@
 package ru.hypernavi.core.http;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 
 /**
  * User: amosov-f
@@ -54,20 +64,41 @@ public enum HttpTools {
 
     @NotNull
     public static String curl(@NotNull final HttpUriRequest req) {
-        return curl(req.getURI().toString(), headers(req));
+        return curl(req.getURI().toString(), content(req), headers(req));
     }
 
     @NotNull
     public static String curl(@NotNull final HttpServletRequest req) {
-        return curl(requestURL(req), headers(req));
+        return curl(requestURL(req), null, headers(req));
     }
 
     @NotNull
-    private static String curl(@NotNull final String url, @NotNull final List<Pair<String, String>> headers) {
+    private static String curl(@NotNull final String url,
+                               @Nullable final String data,
+                               @NotNull final List<Pair<String, String>> headers)
+    {
         final StringBuilder sb = new StringBuilder("curl \"").append(url).append("\" -i ");
+        if (data != null) {
+            sb.append(" -d \'").append(data).append("\' ");
+        }
         for (final Pair<String, String> header : headers) {
             sb.append("-H \"").append(header.getKey()).append(":").append(header.getValue()).append("\" ");
         }
         return sb.append("| less").toString();
+    }
+
+    @Nullable
+    public static String content(@NotNull final HttpUriRequest req) {
+        if (req instanceof HttpPost) {
+            final HttpEntity entity = ((HttpPost) req).getEntity();
+            if (entity instanceof StringEntity) {
+                try {
+                    return IOUtils.toString(entity.getContent());
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        }
+        return null;
     }
 }
