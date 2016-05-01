@@ -21,8 +21,8 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
  * Time: 21:35
  */
 @WebServlet(name = "telegram webhook", value = "/telegram/*")
-public final class TelegramWebhookService extends AbstractHttpService {
-    public TelegramWebhookService() {
+public final class TelegramWebhookkService extends AbstractHttpService {
+    public TelegramWebhookkService() {
         super(new RequestReader.Factory<SessionInitializer>() {
             @NotNull
             @Override
