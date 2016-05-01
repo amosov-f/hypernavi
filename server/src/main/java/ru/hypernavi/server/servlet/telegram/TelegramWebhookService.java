@@ -10,6 +10,8 @@ import java.io.UncheckedIOException;
 
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
@@ -21,8 +23,10 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
  * Time: 21:35
  */
 @WebServlet(name = "telegram webhook", value = "/telegram/*")
-public final class TelegramWebhookkService extends AbstractHttpService {
-    public TelegramWebhookkService() {
+public final class TelegramWebhookService extends AbstractHttpService {
+    private static final Log LOG = LogFactory.getLog(TelegramWebhookService.class);
+
+    public TelegramWebhookService() {
         super(new RequestReader.Factory<SessionInitializer>() {
             @NotNull
             @Override
@@ -32,7 +36,7 @@ public final class TelegramWebhookkService extends AbstractHttpService {
                     public void initialize(@NotNull final Session session) {
                         super.initialize(session);
                         try {
-                            System.out.println(IOUtils.toString(req.getInputStream()));
+                            LOG.info("data: " + IOUtils.toString(req.getInputStream()));
                         } catch (IOException e) {
                             throw new UncheckedIOException(e);
                         }

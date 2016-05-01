@@ -16,3 +16,6 @@ docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -d amosov/hypernav
 # nginx
 # docker run --name nginx -p 80:80 -p 443:443 -v /root/hypernavi-data/nginx.conf:/etc/nginx/conf.d/default.conf -v /etc/nginx/ssl:/etc/nginx/ssl -v /root/hypernavi-data/data/img:/usr/share/nginx/img -d nginx
 # docker stop nginx && docker rm nginx
+
+# https
+# sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
