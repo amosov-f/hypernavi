@@ -154,11 +154,9 @@ public final class HyperNaviModule extends AbstractModule {
     private void bindTelegramBot() {
         bindProperty("hypernavi.telegram.bot.auth_token");
         bindProperty("hypernavi.telegram.bot.search_host");
-        if (getPlatform() == Platform.PRODUCTION) {
-            bind(UpdatesSource.class).to(WebhookUpdatesSource.class);
-        } else {
-            bind(UpdatesSource.class).to(GetUpdatesSource.class);
-        }
+        final Class<? extends UpdatesSource> updatesSourceClass = getPlatform() == Platform.PRODUCTION ? WebhookUpdatesSource.class
+                                                                                                       : GetUpdatesSource.class;
+        bind(UpdatesSource.class).to(updatesSourceClass).asEagerSingleton();
     }
 
     private void bindVkAuthValidator() {
