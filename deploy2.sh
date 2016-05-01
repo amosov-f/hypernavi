@@ -5,7 +5,7 @@ docker tag $(docker images -q amosov/hypernavi) amosov/hypernavi
 docker push amosov/hypernavi
 docker stop hypernavi
 docker rm hypernavi
-docker run --name hypernavi -p 7340:80 -d amosov/hypernavi
+docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -d amosov/hypernavi
 
 # mongodb
 # docker run --name mongo -p 27017:27017 -v /root/hypernavi-data/data/db:/data/db -d mongo
