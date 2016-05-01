@@ -1,0 +1,19 @@
+{
+  "update_id": 993615303,
+  "message": {
+    "message_id": 724,
+    "from": {
+      "id": 132838048,
+      "first_name": "Fedor",
+      "last_name": "Amosov"
+    },
+    "chat": {
+      "id": 132838048,
+      "first_name": "Fedor",
+      "last_name": "Amosov",
+      "type": "private"
+    },
+    "date": 1462133420,
+    "text": "pizza"
+  }
+}

@@ -13,19 +13,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.google.inject.Inject;
 import org.apache.http.client.methods.HttpGet;
 import ru.hypernavi.commons.Dimension;
-import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.http.HttpClient;
 
 /**
  * Created by amosov-f on 29.12.15.
  */
 public final class ImageDimensioner {
     @NotNull
-    private final HyperHttpClient httpClient;
+    private final HttpClient httpClient;
     @NotNull
     private final Map<String, Dimension> cache = new ConcurrentHashMap<>();
 
     @Inject
-    public ImageDimensioner(@NotNull final HyperHttpClient httpClient) {
+    public ImageDimensioner(@NotNull final HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 

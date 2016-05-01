@@ -1,0 +1,22 @@
+{
+  "update_id": 993615302,
+  "message": {
+    "message_id": 723,
+    "from": {
+      "id": 132838048,
+      "first_name": "Fedor",
+      "last_name": "Amosov"
+    },
+    "chat": {
+      "id": 132838048,
+      "first_name": "Fedor",
+      "last_name": "Amosov",
+      "type": "private"
+    },
+    "date": 1462133291,
+    "location": {
+      "latitude": 59.854295,
+      "longitude": 30.375684
+    }
+  }
+}

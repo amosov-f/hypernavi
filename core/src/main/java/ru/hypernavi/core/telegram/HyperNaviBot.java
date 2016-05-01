@@ -11,9 +11,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 import com.google.gson.Gson;
@@ -28,9 +25,8 @@ import ru.hypernavi.commons.*;
 import ru.hypernavi.commons.hint.Hint;
 import ru.hypernavi.commons.hint.Picture;
 import ru.hypernavi.commons.hint.Plan;
-import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.http.URIBuilder;
-import ru.hypernavi.core.telegram.api.GetUpdatesResponse;
 import ru.hypernavi.core.telegram.api.Message;
 import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
@@ -40,6 +36,7 @@ import ru.hypernavi.core.telegram.api.inline.InlineQueryResultPhoto;
 import ru.hypernavi.core.telegram.api.markup.KeyboardButton;
 import ru.hypernavi.core.telegram.api.markup.ReplyKeyboardMarkup;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
+import ru.hypernavi.core.telegram.update.UpdatesSource;
 import ru.hypernavi.core.webutil.ImageEditor;
 import ru.hypernavi.ml.regression.map.MapProjection;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
@@ -47,7 +44,6 @@ import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
-import ru.hypernavi.util.concurrent.MoreExecutors;
 import ru.hypernavi.util.json.GsonUtils;
 
 /**
@@ -56,15 +52,11 @@ import ru.hypernavi.util.json.GsonUtils;
 public final class HyperNaviBot {
     private static final Log LOG = LogFactory.getLog(HyperNaviBot.class);
 
-    private static final long GET_UPDATES_DELAY = 3000;
-
     static {
         MoreReflectionUtils.load(Index.class);
         MoreReflectionUtils.load(Site.class);
     }
 
-    @NotNull
-    private final AtomicInteger updateId = new AtomicInteger();
     @NotNull
     private final ExecutorService service = Executors.newCachedThreadPool(new LoggingThreadFactory("SENDER"));
     @NotNull
@@ -76,25 +68,24 @@ public final class HyperNaviBot {
     @Named("hypernavi.telegram.bot.search_host")
     private String searchHost;
     @Inject
-    private HyperHttpClient httpClient;
+    private HttpClient httpClient;
     @Inject
     private ImageEditor imageEditor;
 
+    @Inject
+    private UpdatesSource updatesSource;
+
     public void start(final boolean inBackground) {
-        final ScheduledThreadPoolExecutor executor = MoreExecutors.newSingleThreadScheduledExecutor("BOT", inBackground);
-        executor.scheduleWithFixedDelay(this::processUpdates, 0, GET_UPDATES_DELAY, TimeUnit.MILLISECONDS);
+        if (inBackground) {
+            service.submit((Runnable) this::start);
+        } else {
+            start();
+        }
     }
 
-    public void processUpdates() {
-        final int updateIdSnapshot = updateId.get();
-        final GetUpdatesResponse getUpdatesResponse = api.getUpdates(updateIdSnapshot);
-        if (getUpdatesResponse == null) {
-            return;
-        }
-        for (final Update update : getUpdatesResponse.getResult()) {
-            if (update.getUpdateId() > updateIdSnapshot) {
-                updateId.compareAndSet(updateIdSnapshot, update.getUpdateId());
-            }
+    public void start() {
+        while (true) {
+            final Update update = updatesSource.next();
             service.submit(() -> processUpdate(update));
         }
     }

@@ -22,6 +22,10 @@ public class SessionValidationException extends Exception {
         super(detailMessage);
     }
 
+    public SessionValidationException(@NotNull final String detailMessage, @NotNull final Throwable cause) {
+        super(detailMessage, cause);
+    }
+
     public void accept(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         LOG.info("Bad request: " + getMessage());
         resp.sendError(HttpStatus.SC_BAD_REQUEST, getMessage());

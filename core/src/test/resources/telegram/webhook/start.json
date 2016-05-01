@@ -1,0 +1,26 @@
+{
+  "update_id": 993615304,
+  "message": {
+    "message_id": 725,
+    "from": {
+      "id": 132838048,
+      "first_name": "Fedor",
+      "last_name": "Amosov"
+    },
+    "chat": {
+      "id": 132838048,
+      "first_name": "Fedor",
+      "last_name": "Amosov",
+      "type": "private"
+    },
+    "date": 1462133472,
+    "text": "\/start",
+    "entities": [
+      {
+        "type": "bot_command",
+        "offset": 0,
+        "length": 6
+      }
+    ]
+  }
+}

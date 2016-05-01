@@ -25,7 +25,7 @@ import ru.hypernavi.commons.hint.Hint;
 import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.database.HypermarketHolder;
-import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
@@ -51,7 +51,7 @@ public class MigrateServlet extends AbstractHttpService {
     @NotNull
     private final HypermarketHolder markets;
     @Inject
-    private HyperHttpClient httpClient;
+    private HttpClient httpClient;
     @Inject
     @Named("localport")
     private int localPort;

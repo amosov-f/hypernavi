@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import org.apache.http.client.methods.HttpGet;
 import ru.hypernavi.commons.GeoObject;
-import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
@@ -26,10 +26,10 @@ public final class MapsSearcher {
     private static final String API_KEY = "72df8f2d-f9c5-431d-8d14-c22f233f34c2";
 
     @NotNull
-    private final HyperHttpClient httpClient;
+    private final HttpClient httpClient;
 
     @Inject
-    public MapsSearcher(@NotNull final HyperHttpClient httpClient) {
+    public MapsSearcher(@NotNull final HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 

@@ -26,7 +26,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import ru.hypernavi.commons.Image;
-import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResult;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
@@ -56,7 +56,7 @@ public final class TelegramApi {
     @Named("hypernavi.telegram.bot.auth_token")
     private String authToken;
     @Inject
-    private HyperHttpClient httpClient;
+    private HttpClient httpClient;
 
     @Nullable
     public GetUpdatesResponse getUpdates(final int updateId) {

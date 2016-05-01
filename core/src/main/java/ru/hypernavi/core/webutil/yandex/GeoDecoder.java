@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpGet;
 import ru.hypernavi.commons.GeoObject;
-import ru.hypernavi.core.http.HyperHttpClient;
+import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.json.MoreGsonUtils;
@@ -27,10 +27,10 @@ public final class GeoDecoder {
     private static final Log LOG = LogFactory.getLog(GeoDecoder.class);
 
     @NotNull
-    private final HyperHttpClient httpClient;
+    private final HttpClient httpClient;
 
     @Inject
-    public GeoDecoder(@NotNull final HyperHttpClient httpClient) {
+    public GeoDecoder(@NotNull final HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 

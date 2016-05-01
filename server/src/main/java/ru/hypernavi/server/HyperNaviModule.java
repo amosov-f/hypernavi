@@ -33,8 +33,12 @@ import ru.hypernavi.core.database.provider.DatabaseProvider;
 import ru.hypernavi.core.database.provider.mongo.SiteMongoProvider;
 import ru.hypernavi.core.geoindex.DummyGeoIndex;
 import ru.hypernavi.core.geoindex.GeoIndex;
+import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.telegram.update.GetUpdatesSource;
+import ru.hypernavi.core.telegram.update.UpdatesSource;
+import ru.hypernavi.core.telegram.update.WebhookUpdatesSource;
 import ru.hypernavi.server.servlet.admin.site.SiteRequest;
 import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.Config;
@@ -62,7 +66,7 @@ public final class HyperNaviModule extends AbstractModule {
         install(AdminRequestReader.module());
         install(SiteRequest.module());
 
-        bind(Platform.class).toInstance(Platform.parse(config.getProperty("hypernavi.server.platform")));
+        bind(Platform.class).toInstance(getPlatform());
         bindTemplates();
         bindHttpClient();
 
@@ -108,6 +112,7 @@ public final class HyperNaviModule extends AbstractModule {
 
     private void bindHttpClient() {
         bind(HttpClient.class).toInstance(HttpClientBuilder.create().build());
+        bind(ru.hypernavi.core.http.HttpClient.class).to(HyperHttpClient.class);
     }
 
     private void bindGoodsClassifier() {
@@ -149,11 +154,20 @@ public final class HyperNaviModule extends AbstractModule {
     private void bindTelegramBot() {
         bindProperty("hypernavi.telegram.bot.auth_token");
         bindProperty("hypernavi.telegram.bot.search_host");
+        if (getPlatform() == Platform.PRODUCTION) {
+            bind(UpdatesSource.class).to(WebhookUpdatesSource.class);
+        } else {
+            bind(UpdatesSource.class).to(GetUpdatesSource.class);
+        }
     }
 
     private void bindVkAuthValidator() {
         final int appId = config.getInt("hypernavi.auth.vk.app_id");
         final String secretKey = config.getProperty("hypernavi.auth.vk.secret_key");
         bind(VkAuthValidator.class).toInstance(new VkAuthValidator(appId, secretKey));
+    }
+    @NotNull
+    private Platform getPlatform() {
+        return Platform.parse(config.getProperty("hypernavi.server.platform"));
     }
 }
