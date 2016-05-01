@@ -131,8 +131,10 @@ public final class HyperNaviModule extends AbstractModule {
             case "file":
                 final String dataPath = config.getProperty("hypernavi.server.pathdata");
                 bind(DataLoader.class).toInstance(new FileDataLoader(dataPath));
-                bind(new TypeLiteral<DatabaseProvider<Site>>() {}).toInstance(new DatabaseProvider.Impl<>());
-                bind(new TypeLiteral<GeoIndex<Site>>() {}).toInstance(new DummyGeoIndex<>());
+                bind(new TypeLiteral<DatabaseProvider<Site>>() {
+                }).toInstance(new DatabaseProvider.Impl<>());
+                bind(new TypeLiteral<GeoIndex<Site>>() {
+                }).toInstance(new DummyGeoIndex<>());
                 LOG.info("Data storage is file system: " + dataPath);
                 return;
             case "mongo":
@@ -140,8 +142,10 @@ public final class HyperNaviModule extends AbstractModule {
                 final MongoClient client = new MongoClient(hostWithPort[0], Integer.parseInt(hostWithPort[1]));
                 final MongoDatabase database = client.getDatabase(config.getProperty("hypernavi.data.mongo.database"));
                 bind(MongoDatabase.class).toInstance(database);
-                bind(new TypeLiteral<DatabaseProvider<Site>>() {}).to(SiteMongoProvider.class);
-                bind(new TypeLiteral<GeoIndex<Site>>() {}).to(SiteMongoProvider.class);
+                bind(new TypeLiteral<DatabaseProvider<Site>>() {
+                }).to(SiteMongoProvider.class);
+                bind(new TypeLiteral<GeoIndex<Site>>() {
+                }).to(SiteMongoProvider.class);
 
                 // TODO: remove
                 bind(DataLoader.class).toInstance(new FileDataLoader(config.getProperty("hypernavi.server.pathdata")));
@@ -154,9 +158,9 @@ public final class HyperNaviModule extends AbstractModule {
     private void bindTelegramBot() {
         bindProperty("hypernavi.telegram.bot.auth_token");
         bindProperty("hypernavi.telegram.bot.search_host");
-        final Class<? extends UpdatesSource> updatesSourceClass = getPlatform() == Platform.PRODUCTION ? WebhookUpdatesSource.class
-                                                                                                       : GetUpdatesSource.class;
-        bind(UpdatesSource.class).to(updatesSourceClass).asEagerSingleton();
+        final Class<? extends UpdatesSource> updatesSourceClass = getPlatform().isProductionLike() ? WebhookUpdatesSource.class
+                                                                                                   : GetUpdatesSource.class;
+        bind(UpdatesSource.class).to(updatesSourceClass);
     }
 
     private void bindVkAuthValidator() {
@@ -164,6 +168,7 @@ public final class HyperNaviModule extends AbstractModule {
         final String secretKey = config.getProperty("hypernavi.auth.vk.secret_key");
         bind(VkAuthValidator.class).toInstance(new VkAuthValidator(appId, secretKey));
     }
+
     @NotNull
     private Platform getPlatform() {
         return Platform.parse(config.getProperty("hypernavi.server.platform"));

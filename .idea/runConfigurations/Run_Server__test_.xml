@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Server [light]" type="Application" factoryName="Application">
+  <configuration default="false" name="Run Server [test]" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="ru.hypernavi.server.HyperNaviServer" />
     <option name="VM_PARAMETERS" value="" />
-    <option name="PROGRAM_PARAMETERS" value="-port 8080 -cfg classpath:/properties/common.properties classpath:/properties/debug.properties classpath:/properties/debug-light.properties classpath:/properties/local.properties -logcfg classpath:/logging/log4j-console.xml -logdir ./hypernavi/out/log" />
+    <option name="PROGRAM_PARAMETERS" value="-port 8081 -cfg classpath:/properties/common.properties classpath:/properties/test.properties -logcfg classpath:/logging/log4j-console.xml -logdir ./hypernavi/out/log -bot" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />

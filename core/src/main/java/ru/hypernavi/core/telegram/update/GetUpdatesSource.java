@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import ru.hypernavi.core.telegram.api.GetUpdatesResponse;
 import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
@@ -20,7 +21,8 @@ import ru.hypernavi.util.concurrent.MoreExecutors;
  * Date: 01.05.16
  * Time: 23:45
  */
-public class GetUpdatesSource extends QueuedUpdatesSource {
+@Singleton
+public final class GetUpdatesSource extends QueuedUpdatesSource {
     private static final long GET_UPDATES_DELAY = 3000;
 
     @NotNull

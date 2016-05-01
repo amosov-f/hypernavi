@@ -18,6 +18,10 @@ public enum Platform {
         return this == TESTING || this == PRODUCTION;
     }
 
+    public boolean isProductionLike() {
+        return this == PRODUCTION || this == TEST;
+    }
+
     @NotNull
     public static Platform parse(@NotNull final String name) {
         return Arrays.stream(Platform.values())

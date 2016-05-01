@@ -16,7 +16,7 @@ import ru.hypernavi.server.HyperNaviServerRunner;
  * Time: 1:21
  */
 @RunWith(HyperNaviServerRunner.class)
-public final class TelegramWebhookTest extends AcceptanceTest {
+public final class TelegramWebhookServiceTest extends AcceptanceTest {
     @Test
     public void webhookHandleResponseStatusMustBe200() throws Exception {
         final HttpPost req = new HttpPost("/telegram/139192271:AAGD6kiaoiiJEBxnquWOdu2WTVLisAqAWPE");
