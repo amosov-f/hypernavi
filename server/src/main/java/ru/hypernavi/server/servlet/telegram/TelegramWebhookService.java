@@ -42,6 +42,7 @@ public final class TelegramWebhookService extends AbstractHttpService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final String body = session.demand(Property.HTTP_BODY_UTF8);
+        LOG.debug("Recieved update from Telegram: '" + body + "'");
         final Update update = TelegramApi.gson().fromJson(body, Update.class);
         if (update.getUpdateId() == 0) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No update in request body: '" + body + "'");
