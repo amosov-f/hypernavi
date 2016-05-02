@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,6 +30,7 @@ import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.telegram.api.Message;
 import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
+import ru.hypernavi.core.telegram.api.entity.BotCommand;
 import ru.hypernavi.core.telegram.api.inline.InlineQuery;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResult;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResultPhoto;
@@ -44,6 +46,7 @@ import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.json.GsonUtils;
+import ru.hypernavi.util.stream.MoreStreamSupport;
 
 /**
  * Created by amosov-f on 17.10.15.
@@ -138,6 +141,14 @@ public final class HyperNaviBot {
         final int chatId = message.getChat().getId();
         final GeoPoint location = message.getLocation();
         final String text = message.getText();
+        final boolean startCommand = MoreStreamSupport.instances(message.getEntities(), BotCommand.class)
+                .anyMatch(command -> command.getCommand(Objects.requireNonNull(text)).equals("/start"));
+        if (startCommand) {
+            final KeyboardButton button = new KeyboardButton("Отправить геопозицию", false, true);
+            final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
+            api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
+            return;
+        }
         final SearchResponse searchResponse;
         if (location != null) {
             searchResponse = search(location);
@@ -152,9 +163,6 @@ public final class HyperNaviBot {
                 return;
             }
         } else {
-            final KeyboardButton button = new KeyboardButton("Отправить геопозицию", false, true);
-            final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
-            api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
             return;
         }
         searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
