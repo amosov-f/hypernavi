@@ -14,7 +14,9 @@ import ru.hypernavi.util.awt.ImageUtils;
  * Date: 26.04.16
  * Time: 20:33
  */
-public final class ImageEditor {
+public enum ImageEditor {
+    INSTANCE;
+
     @NotNull
     public BufferedImage createThumb(@NotNull final BufferedImage image, final float scale) {
         final int w = (int) (image.getWidth() / scale);

@@ -3,7 +3,6 @@ package ru.hypernavi.core.telegram;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Arrays;
@@ -20,7 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpGet;
 import ru.hypernavi.commons.Image;
-import ru.hypernavi.commons.*;
+import ru.hypernavi.commons.Index;
+import ru.hypernavi.commons.SearchResponse;
+import ru.hypernavi.commons.Site;
 import ru.hypernavi.commons.hint.Hint;
 import ru.hypernavi.commons.hint.Picture;
 import ru.hypernavi.commons.hint.Plan;
@@ -37,9 +38,6 @@ import ru.hypernavi.core.telegram.api.markup.KeyboardButton;
 import ru.hypernavi.core.telegram.api.markup.ReplyKeyboardMarkup;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
 import ru.hypernavi.core.telegram.update.UpdatesSource;
-import ru.hypernavi.core.webutil.ImageEditor;
-import ru.hypernavi.ml.regression.map.MapProjection;
-import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.awt.ImageUtils;
@@ -68,8 +66,6 @@ public final class HyperNaviBot {
     private String searchHost;
     @Inject
     private HttpClient httpClient;
-    @Inject
-    private ImageEditor imageEditor;
 
     @Inject
     private UpdatesSource updatesSource;
@@ -172,7 +168,7 @@ public final class HyperNaviBot {
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
                 if (location != null) {
-                    final BufferedImage image = drawLocation(plan, location);
+                    final BufferedImage image = LocationMapper.INSTANCE.mapLocation(plan, location);
                     if (image != null) {
                         final Image.Format format = Optional.ofNullable(ImageUtils.format(image))
                                 .map(Image.Format::parse)
@@ -186,23 +182,6 @@ public final class HyperNaviBot {
                 api.sendPhoto(chatId, ((Picture) hint).getImage(), hint.getDescription());
             }
         }
-    }
-
-    @Nullable
-    private BufferedImage drawLocation(@NotNull final Plan plan, @NotNull final GeoPoint location) {
-        final PointMap[] points = plan.getPoints();
-        if (points.length == 0) {
-            return null;
-        }
-        final MapProjection mapProjection = MapProjectionImpl.learn(points);
-        final Point point = mapProjection.map(location);
-
-        final BufferedImage image = ImageUtils.downloadSafe(plan.getImage().getLink());
-        if (image == null) {
-            LOG.warn("Can't download image: " + plan.getImage().getLink());
-            return null;
-        }
-        return imageEditor.drawLocation(image, point);
     }
 
     @Nullable

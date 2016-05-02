@@ -50,6 +50,11 @@ public final class MapProjectionImpl implements MapProjection {
     }
 
     @NotNull
+    public static Point map(@NotNull final GeoPoint geoPoint, @NotNull final PointMap... points) {
+        return learn(points).map(geoPoint);
+    }
+
+    @NotNull
     private static ToDoubleFunction<GeoPoint> projection(@NotNull final ToDoubleFunction<PointMap> f) {
         return geoPoint -> f.applyAsDouble(PointMap.of(geoPoint));
     }

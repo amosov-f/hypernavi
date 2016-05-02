@@ -33,14 +33,11 @@ public final class ImageEditorTest {
         }
     };
 
-    @NotNull
-    private final ImageEditor editor = new ImageEditor();
-
     @Test
     public void createDoubleScaledThumbFromImage() {
         final BufferedImage image = read("/plan-small.jpg");
         final int scale = 2;
-        final BufferedImage thumb = editor.createThumb(image, scale);
+        final BufferedImage thumb = ImageEditor.INSTANCE.createThumb(image, scale);
         writeToBufferFile(thumb);
         assertEquals(read("/plan-small-scaled.jpg"), thumb);
     }
@@ -49,7 +46,7 @@ public final class ImageEditorTest {
     public void drawUserLocationOnSmallPlan() {
         final BufferedImage plan = read("/plan-small.jpg");
         final Point location = new Point(300, 250);
-        final BufferedImage editedPlan = editor.drawLocation(plan, location);
+        final BufferedImage editedPlan = ImageEditor.INSTANCE.drawLocation(plan, location);
         writeToBufferFile(editedPlan);
         assertEquals(read("/plan-small-location.jpg"), editedPlan);
     }
@@ -58,7 +55,7 @@ public final class ImageEditorTest {
     public void drawUserLocationOnMiddlePlan() {
         final BufferedImage plan = read("/plan-middle.jpg");
         final Point location = new Point(300, 250);
-        final BufferedImage editedPlan = editor.drawLocation(plan, location);
+        final BufferedImage editedPlan = ImageEditor.INSTANCE.drawLocation(plan, location);
         writeToBufferFile(editedPlan);
         assertEquals(read("/plan-middle-location.jpg"), editedPlan);
     }
