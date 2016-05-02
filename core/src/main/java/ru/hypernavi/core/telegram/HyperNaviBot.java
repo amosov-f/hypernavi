@@ -99,15 +99,11 @@ public final class HyperNaviBot {
     private void processInlineQuery(@NotNull final InlineQuery inlineQuery) {
         final GeoPoint location = inlineQuery.getLocation();
         final String query = inlineQuery.getQuery();
-        if (location == null && !StringUtils.startsWithIgnoreCase(query, "поиск")) {
-            LOG.warn("No location in request");
-            return;
-        }
         final SearchResponse searchResponse;
         if (location != null) {
             searchResponse = search(location);
         } else {
-            searchResponse = search(StringUtils.removeStartIgnoreCase(query, "поиск").trim());
+            searchResponse = search(query);
         }
         if (searchResponse == null) {
             LOG.error("Server not respond by location " + location);
