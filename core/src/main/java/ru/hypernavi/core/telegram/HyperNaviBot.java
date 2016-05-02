@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.lang3.StringUtils;
@@ -61,8 +60,6 @@ public final class HyperNaviBot {
 
     @NotNull
     private final ExecutorService service = Executors.newCachedThreadPool(new LoggingThreadFactory("SENDER"));
-    @NotNull
-    private final Gson searchGson = GsonUtils.gson();
 
     @Inject
     private TelegramApi api;
@@ -215,7 +212,7 @@ public final class HyperNaviBot {
                 .add("lat", location.getLatitude())
                 .add("ns", 1)
                 .build();
-        return httpClient.execute(new HttpGet(uri), SearchResponse.class, searchGson);
+        return httpClient.execute(new HttpGet(uri), SearchResponse.class, GsonUtils.gson());
     }
 
     @Nullable
@@ -224,6 +221,6 @@ public final class HyperNaviBot {
                 .add("text", text)
                 .add("ns", 1)
                 .build();
-        return httpClient.execute(new HttpGet(uri), SearchResponse.class, searchGson);
+        return httpClient.execute(new HttpGet(uri), SearchResponse.class, GsonUtils.gson());
     }
 }
