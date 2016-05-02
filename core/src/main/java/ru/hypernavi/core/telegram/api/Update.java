@@ -1,5 +1,6 @@
 package ru.hypernavi.core.telegram.api;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -33,5 +34,11 @@ public final class Update {
     @Nullable
     public InlineQuery getInlineQuery() {
         return inlineQuery;
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return TelegramApi.gson().toJson(this);
     }
 }

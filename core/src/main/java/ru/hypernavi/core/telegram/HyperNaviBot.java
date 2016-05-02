@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -87,7 +86,14 @@ public final class HyperNaviBot {
         while (true) {
             LOG.info("Waiting for next update...");
             final Update update = updatesSource.next();
-            service.submit(() -> processUpdate(update));
+            service.submit(() -> {
+                try {
+                    LOG.debug("Update processing started: '" + update + "'");
+                    processUpdate(update);
+                } catch (RuntimeException e) {
+                    LOG.error("Error while processing update: '" + update + "'", e);
+                }
+            });
         }
     }
 
@@ -132,30 +138,27 @@ public final class HyperNaviBot {
         final int chatId = message.getChat().getId();
         final GeoPoint location = message.getLocation();
         final String text = message.getText();
-        try {
-            final SearchResponse searchResponse;
-            if (location != null) {
-                searchResponse = search(location);
-                if (searchResponse == null) {
-                    api.sendMessage(chatId, "Простите, наш сервер не работает");
-                    return;
-                }
-            } else if (StringUtils.startsWithIgnoreCase(text, "поиск")) {
-                searchResponse = search(Objects.requireNonNull(StringUtils.removeStartIgnoreCase(text, "поиск")).trim());
-                if (searchResponse == null) {
-                    api.sendMessage(chatId, "Простите, я не знаю такого места");
-                    return;
-                }
-            } else {
-                final KeyboardButton button = new KeyboardButton("Отправить геопозицию", false, true);
-                final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
-                api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
+        final SearchResponse searchResponse;
+        if (location != null) {
+            searchResponse = search(location);
+            if (searchResponse == null) {
+                api.sendMessage(chatId, "Простите, наш сервер не работает");
                 return;
             }
-            searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
-        } catch (RuntimeException e) {
-            LOG.error("Error!", e);
+        } else if (!StringUtils.isBlank(text)) {
+            searchResponse = search(text);
+            if (searchResponse == null) {
+                api.sendMessage(chatId, "Простите, я не знаю такого места");
+                return;
+            }
+        } else {
+            final KeyboardButton button = new KeyboardButton("Отправить геопозицию", false, true);
+            final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
+            api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
+            return;
         }
+        searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
+
     }
 
     private void respond(final int chatId, @NotNull final Site site, @Nullable final GeoPoint location) {
