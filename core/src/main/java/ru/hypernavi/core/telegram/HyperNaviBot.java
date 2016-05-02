@@ -102,11 +102,17 @@ public final class HyperNaviBot {
         final SearchResponse searchResponse;
         if (location != null) {
             searchResponse = search(location);
-        } else {
+            if (searchResponse == null) {
+                LOG.error("Server not respond by location: " + location);
+                return;
+            }
+        } else if (!StringUtils.isBlank(query)) {
             searchResponse = search(query);
-        }
-        if (searchResponse == null) {
-            LOG.error("Server not respond by location " + location);
+            if (searchResponse == null) {
+                LOG.error("Server not respond by query: '" + query + "'");
+                return;
+            }
+        } else {
             return;
         }
         final InlineQueryResult[] results = searchResponse.getData().getSites().stream()
