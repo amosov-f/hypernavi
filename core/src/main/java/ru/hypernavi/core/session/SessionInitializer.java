@@ -10,9 +10,11 @@ public interface SessionInitializer {
 
     void validate(@NotNull final Session session) throws SessionValidationException;
 
-    default void validate(@NotNull final Session session, @NotNull final Property<?> property) throws SessionValidationException {
-        if (!session.has(property)) {
-            throw new SessionValidationException("No '" + property + "' in request!");
+    default void validate(@NotNull final Session session, @NotNull final Property<?>... properties) throws SessionValidationException {
+        for (final Property<?> property : properties) {
+            if (!session.has(property)) {
+                throw new SessionValidationException("No '" + property + "' in request!");
+            }
         }
     }
 }

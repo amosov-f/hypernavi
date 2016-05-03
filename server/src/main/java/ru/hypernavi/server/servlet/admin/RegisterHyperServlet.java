@@ -59,10 +59,7 @@ public class RegisterHyperServlet extends AbstractHttpService {
                     @Override
                     public void validate(@NotNull final Session session) throws SessionValidationException {
                         super.validate(session);
-                        if (session.has(ADDRESS) && session.has(TYPE) && session.has(URL) && session.has(PAGE)) {
-                            return;
-                        }
-                        throw new SessionValidationException("Request hasn't required params!");
+                        validate(session, ADDRESS, TYPE, URL, PAGE);
                     }
                 };
             }

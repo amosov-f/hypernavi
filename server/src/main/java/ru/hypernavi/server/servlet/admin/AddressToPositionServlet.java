@@ -45,9 +45,7 @@ public class AddressToPositionServlet extends AbstractHttpService {
 
             @Override
             public void validate(@NotNull final Session session) throws SessionValidationException {
-                if (!session.has(GEOCODE)) {
-                    throw new SessionValidationException("No geocode in request!");
-                }
+                validate(session, GEOCODE);
             }
         });
     }

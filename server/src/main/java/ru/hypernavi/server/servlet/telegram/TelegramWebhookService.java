@@ -55,9 +55,7 @@ public final class TelegramWebhookService extends AbstractHttpService {
                         if (!token.equals(authToken)) {
                             throw new SessionValidationException.Forbidden("Invalid Telegram auth token: '" + token + "'!");
                         }
-                        if (!session.has(UPDATE)) {
-                            throw new SessionValidationException("No update in request body from Telegram!");
-                        }
+                        validate(session, UPDATE);
                     }
                 };
             }
