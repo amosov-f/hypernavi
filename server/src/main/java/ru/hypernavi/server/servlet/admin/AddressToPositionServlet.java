@@ -17,7 +17,12 @@ import java.util.logging.Logger;
 import org.apache.http.entity.ContentType;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionValidationException;
+import ru.hypernavi.core.session.param.Param;
+import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.core.webutil.GeocoderParser;
 import ru.hypernavi.core.webutil.GeocoderSender;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -28,7 +33,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 public class AddressToPositionServlet extends AbstractHttpService {
     private static final Logger LOG = Logger.getLogger(AddressToPositionServlet.class.getName());
 
-    private static final RequestParam<String> PARAM_GEOCODE = new RequestParam.StringParam("geocode");
+    private static final Param<String> PARAM_GEOCODE = new QueryParam.StringParam("geocode");
     private static final Property<String> GEOCODE = new Property<>("geocode");
 
     public AddressToPositionServlet() {

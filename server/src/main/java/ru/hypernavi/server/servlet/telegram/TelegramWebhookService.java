@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 import com.google.inject.Inject;
@@ -13,6 +12,8 @@ import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.param.BodyParam;
+import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
 import ru.hypernavi.core.telegram.update.WebhookUpdatesSource;
@@ -27,6 +28,10 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 public final class TelegramWebhookService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(TelegramWebhookService.class);
 
+    private static final Param<Update> UPDATE_PARAM = new BodyParam.ObjectParam<>(Update.class, TelegramApi.gsonFactory(), true);
+
+    private static final Property<Update> UPDATE = new Property<>("update");
+
     @Inject
     private WebhookUpdatesSource updatesSource;
 
@@ -36,13 +41,22 @@ public final class TelegramWebhookService extends AbstractHttpService {
             @NotNull
             @Override
             public SessionInitializer create(@NotNull final HttpServletRequest req) {
-                return new BodyReader(req) {
+                return new RequestReader(req) {
+                    @Override
+                    public void initialize(@NotNull final Session session) {
+                        super.initialize(session);
+                        setPropertyIfPresent(session, UPDATE, UPDATE_PARAM);
+                    }
+
                     @Override
                     public void validate(@NotNull final Session session) throws SessionValidationException {
                         super.validate(session);
                         final String token = session.demand(Property.HTTP_PATH_INFO).substring(1);
                         if (!token.equals(authToken)) {
                             throw new SessionValidationException.Forbidden("Invalid Telegram auth token: '" + token + "'!");
+                        }
+                        if (!session.has(UPDATE)) {
+                            throw new SessionValidationException("No update in request body from Telegram!");
                         }
                     }
                 };
@@ -51,15 +65,7 @@ public final class TelegramWebhookService extends AbstractHttpService {
     }
 
     @Override
-    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final String body = session.demand(Property.HTTP_BODY_UTF8);
-        LOG.debug("Recieved update from Telegram: '" + body + "'");
-
-        final Update update = TelegramApi.gson().fromJson(body, Update.class);
-        if (update.getUpdateId() == 0) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "No update in request body: '" + body + "'");
-            return;
-        }
-        updatesSource.add(update);
+    public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) {
+        updatesSource.add(session.demand(UPDATE));
     }
 }

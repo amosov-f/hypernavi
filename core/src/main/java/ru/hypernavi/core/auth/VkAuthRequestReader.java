@@ -13,6 +13,9 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.param.CookieParam;
+import ru.hypernavi.core.session.param.NamedParam;
+import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.util.function.Optionals;
 import ru.hypernavi.util.json.GsonUtils;
 
@@ -20,19 +23,19 @@ import ru.hypernavi.util.json.GsonUtils;
  * Created by amosov-f on 14.11.15.
  */
 public class VkAuthRequestReader extends RequestReader {
-    private static final RequestParam<Integer> PARAM_UID = new RequestParam.IntegerParam("uid");
-    private static final RequestParam<String> PARAM_FIRST_NAME = new RequestParam.StringParam("first_name");
-    private static final RequestParam<String> PARAM_LAST_NAME = new RequestParam.StringParam("last_name");
-    private static final RequestParam<String> PARAM_PHOTO = new RequestParam.StringParam("photo");
-    private static final RequestParam<String> PARAM_PHOTO_REC = new RequestParam.StringParam("photo_rec");
-    private static final RequestParam<String> PARAM_HASH = new RequestParam.StringParam("hash");
+    private static final NamedParam<Integer> PARAM_UID = new QueryParam.IntegerParam("uid");
+    private static final NamedParam<String> PARAM_FIRST_NAME = new QueryParam.StringParam("first_name");
+    private static final NamedParam<String> PARAM_LAST_NAME = new QueryParam.StringParam("last_name");
+    private static final NamedParam<String> PARAM_PHOTO = new QueryParam.StringParam("photo");
+    private static final NamedParam<String> PARAM_PHOTO_REC = new QueryParam.StringParam("photo_rec");
+    private static final NamedParam<String> PARAM_HASH = new QueryParam.StringParam("hash");
 
-    private static final RequestParam<?>[] VK_PARAMS = new RequestParam[]{
+    private static final NamedParam<?>[] VK_PARAMS = new NamedParam[]{
             PARAM_UID, PARAM_FIRST_NAME, PARAM_LAST_NAME, PARAM_PHOTO, PARAM_PHOTO_REC, PARAM_HASH
     };
 
-    private static final RequestParam.CookieParam<VkUser> COOKIE_VK_USER = new RequestParam.ObjectCookieParam<>("vk_user", VkUser.class);
-    private static final RequestParam.CookieParam<String> COOKIE_VK_HASH = new RequestParam.StringCookieParam("vk_hash");
+    private static final CookieParam<VkUser> COOKIE_VK_USER = new CookieParam.ObjectParam<>("vk_user", VkUser.class);
+    private static final CookieParam<String> COOKIE_VK_HASH = new CookieParam.StringParam("vk_hash");
 
     @Inject
     private VkAuthValidator validator;
@@ -54,7 +57,7 @@ public class VkAuthRequestReader extends RequestReader {
         super.validate(session);
         if (getParamUser() != null && PARAM_HASH.contained(req)) {
             final URIBuilder builder = new URIBuilder(session.demand(Property.HTTP_REQUEST_URI));
-            for (final RequestParam<?> param : VK_PARAMS) {
+            for (final NamedParam<?> param : VK_PARAMS) {
                 builder.remove(param.getName());
             }
             final Cookie[] cookies = {

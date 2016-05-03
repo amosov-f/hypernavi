@@ -13,6 +13,7 @@ import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.Assisted;
 import ru.hypernavi.core.http.HttpTools;
+import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 
@@ -37,10 +38,10 @@ public class RequestReader implements SessionInitializer {
         session.setIfNotNull(Property.HTTP_QUERY_STRING, req.getQueryString());
         session.setIfNotNull(Property.HTTP_COOKIE, req.getHeader(HttpHeaders.COOKIE));
 
-        setPropertyIfPresent(session, Property.TEXT, RequestParam.PRAM_TEXT);
+        setPropertyIfPresent(session, Property.TEXT, Param.TEXT);
         session.setIfNotNull(Property.GEO_LOCATION, getGeoLocation());
 
-        setPropertyIfPresent(session, Property.DEBUG, RequestParam.PARAM_DEBUG);
+        setPropertyIfPresent(session, Property.DEBUG, Param.DEBUG);
     }
 
     @Override
@@ -49,14 +50,14 @@ public class RequestReader implements SessionInitializer {
 
     @Nullable
     private GeoPoint getGeoLocation() {
-        final Double lon = RequestParam.PARAM_LON.getValue(req);
-        final Double lat = RequestParam.PARAM_LAT.getValue(req);
+        final Double lon = Param.LON.getValue(req);
+        final Double lat = Param.LAT.getValue(req);
         return lat != null && lon != null ? ArrayGeoPoint.of(lon, lat) : null;
     }
 
     protected <T> void setPropertyIfPresent(@NotNull final Session session,
                                             @NotNull final Property<T> property,
-                                            @NotNull final RequestParam<? extends T> param)
+                                            @NotNull final Param<? extends T> param)
     {
         session.setIfNotNull(property, param.getValue(req));
     }

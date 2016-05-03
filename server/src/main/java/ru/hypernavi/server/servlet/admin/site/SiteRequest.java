@@ -16,9 +16,10 @@ import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestParam;
 import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.param.Param;
+import ru.hypernavi.core.session.param.QueryParam;
 
 /**
  * Created by amosov-f on 28.12.15.
@@ -29,10 +30,10 @@ public final class SiteRequest extends AdminRequestReader {
     static final Property<String> SITE_ID = new Property<>("site_id");
     static final Property<Boolean> EDIT = new Property<>("edit");
 
-    private static final RequestParam<Site> SITE_PARAM = new RequestParam.ObjectParam<>("site", Site.class);
-    private static final RequestParam<Index<Site>> SITE_INDEX_PARAM = new RequestParam.ObjectParam<>("site_index", new TypeToken<Index<Site>>(){}.getType());
-    private static final RequestParam<String> SITE_ID_PARAM = new RequestParam.StringParam("site_id");
-    private static final RequestParam<Boolean> EDIT_PARAM = new RequestParam.BooleanParam("edit");
+    private static final Param<Site> SITE_PARAM = new QueryParam.ObjectParam<>("site", Site.class);
+    private static final Param<Index<Site>> SITE_INDEX_PARAM = new QueryParam.ObjectParam<>("site_index", new TypeToken<Index<Site>>(){}.getType());
+    private static final Param<String> SITE_ID_PARAM = new QueryParam.StringParam("site_id");
+    private static final Param<Boolean> EDIT_PARAM = new QueryParam.BooleanParam("edit");
 
     @Inject
     public SiteRequest(@Assisted @NotNull final HttpServletRequest req) {

@@ -11,7 +11,12 @@ import com.google.inject.Module;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.util.Types;
-import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionValidationException;
+import ru.hypernavi.core.session.param.Param;
+import ru.hypernavi.core.session.param.QueryParam;
 
 /**
  * Created by amosov-f on 08.11.15.
@@ -20,8 +25,8 @@ public class SearchRequest extends RequestReader {
     public static final Property<Integer> PAGE = new Property<>("page");
     public static final Property<Integer> NUM_SITE = new Property<>("num_site");
 
-    private static final RequestParam<Integer> PAGE_PARAM = new RequestParam.IntegerParam("p").defaultValue(0);
-    private static final RequestParam<Integer> NUM_SITE_PARAM = new RequestParam.IntegerParam("ns").defaultValue(10);
+    private static final Param<Integer> PAGE_PARAM = new QueryParam.IntegerParam("p").defaultValue(0);
+    private static final Param<Integer> NUM_SITE_PARAM = new QueryParam.IntegerParam("ns").defaultValue(10);
 
     @Inject
     public SearchRequest(@Assisted @NotNull final HttpServletRequest req) {

@@ -12,7 +12,7 @@ import java.util.Objects;
 
 
 import org.apache.http.entity.ContentType;
-import ru.hypernavi.core.session.RequestParam;
+import ru.hypernavi.core.session.param.ListQueryParam;
 import ru.hypernavi.core.session.Session;
 
 /**
@@ -21,7 +21,7 @@ import ru.hypernavi.core.session.Session;
  * Time: 14:03
  */
 public final class DumpWriters {
-    public static final RequestParam.ListParam<String> PARAM_DUMP = new RequestParam.StringListParam("dump");
+    public static final ListQueryParam<String> PARAM_DUMP = new ListQueryParam.StringListParam("dump");
 
     @NotNull
     private final DumpWriter[] dumpWriters = {

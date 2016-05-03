@@ -12,7 +12,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Building;
 import ru.hypernavi.core.database.RegisterHypermarket;
-import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionValidationException;
+import ru.hypernavi.core.session.param.Param;
+import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.GeoPoint;
@@ -26,10 +31,10 @@ import ru.hypernavi.util.GeoPointImpl;
 public class RegisterHyperServlet extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(RegisterHyperServlet.class);
 
-    private static final RequestParam<String> PARAM_ADDRESS = new RequestParam.StringParam("address");
-    private static final RequestParam<String> PARAM_TYPE = new RequestParam.StringParam("type");
-    private static final RequestParam<String> PARAM_URL = new RequestParam.StringParam("url");
-    private static final RequestParam<String> PARAM_PAGE = new RequestParam.StringParam("page");
+    private static final Param<String> PARAM_ADDRESS = new QueryParam.StringParam("address");
+    private static final Param<String> PARAM_TYPE = new QueryParam.StringParam("type");
+    private static final Param<String> PARAM_URL = new QueryParam.StringParam("url");
+    private static final Param<String> PARAM_PAGE = new QueryParam.StringParam("page");
 
     private static final Property<String> ADDRESS = new Property<>("address");
     private static final Property<String> TYPE = new Property<>("type");

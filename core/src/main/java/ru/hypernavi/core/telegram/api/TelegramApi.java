@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 
 import com.google.gson.FieldNamingPolicy;
@@ -124,6 +125,11 @@ public final class TelegramApi {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(GeoPoint.class, (JsonDeserializer<?>) (json, t, ctx) -> ctx.deserialize(json, GeoPointImpl.class))
                 .create();
+    }
+
+    @NotNull
+    public static Supplier<Gson> gsonFactory() {
+        return TelegramApi::gson;
     }
 
     @NotNull

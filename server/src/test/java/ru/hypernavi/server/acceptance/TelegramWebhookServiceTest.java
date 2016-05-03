@@ -22,6 +22,6 @@ public final class TelegramWebhookServiceTest extends AcceptanceTest {
         final HttpPost req = new HttpPost("/telegram/139192271:AAGD6kiaoiiJEBxnquWOdu2WTVLisAqAWPE");
         req.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/telegram/webhook/location.json"), ContentType.APPLICATION_JSON));
         final HttpResponse resp = execute(req);
-        Assert.assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+        Assert.assertEquals(resp.getStatusLine().getReasonPhrase(), HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
     }
 }
