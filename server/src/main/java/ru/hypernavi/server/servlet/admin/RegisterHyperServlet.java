@@ -12,10 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.Building;
 import ru.hypernavi.core.database.RegisterHypermarket;
-import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestReader;
-import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.session.SessionValidationException;
+import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.server.servlet.AbstractHttpService;
@@ -41,29 +38,25 @@ public class RegisterHyperServlet extends AbstractHttpService {
     private static final Property<String> URL = new Property<>("url");
     private static final Property<String> PAGE = new Property<>("page");
 
-    public RegisterHyperServlet() {
-        super(new RequestReader.Factory<SearchRequest>() {
-            @NotNull
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new SearchRequest(req) {
             @Override
-            public SearchRequest create(@NotNull final HttpServletRequest req) {
-                return new SearchRequest(req) {
-                    @Override
-                    public void initialize(@NotNull final Session session) {
-                        super.initialize(session);
-                        setPropertyIfPresent(session, ADDRESS, PARAM_ADDRESS);
-                        setPropertyIfPresent(session, TYPE, PARAM_TYPE);
-                        setPropertyIfPresent(session, URL, PARAM_URL);
-                        setPropertyIfPresent(session, RegisterHyperServlet.PAGE, PARAM_PAGE);
-                    }
-
-                    @Override
-                    public void validate(@NotNull final Session session) throws SessionValidationException {
-                        super.validate(session);
-                        validate(session, ADDRESS, TYPE, URL, PAGE);
-                    }
-                };
+            public void initialize(@NotNull final Session session) {
+                super.initialize(session);
+                setPropertyIfPresent(session, ADDRESS, PARAM_ADDRESS);
+                setPropertyIfPresent(session, TYPE, PARAM_TYPE);
+                setPropertyIfPresent(session, URL, PARAM_URL);
+                setPropertyIfPresent(session, RegisterHyperServlet.PAGE, PARAM_PAGE);
             }
-        });
+
+            @Override
+            public void validate(@NotNull final Session session) throws SessionValidationException {
+                super.validate(session);
+                validate(session, ADDRESS, TYPE, URL, PAGE);
+            }
+        };
     }
 
     @Override

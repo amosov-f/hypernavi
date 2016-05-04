@@ -46,9 +46,4 @@ public class SearchRequest extends RequestReader {
             throw new SessionValidationException("No location in request!");
         }
     }
-
-    @NotNull
-    public static Module module() {
-        return new FactoryModuleBuilder().build(Key.get(Types.newParameterizedTypeWithOwner(RequestReader.class, Factory.class, SearchRequest.class)));
-    }
 }

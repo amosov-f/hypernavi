@@ -16,7 +16,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.http.HttpStatus;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 
 /**
@@ -25,10 +24,6 @@ import ru.hypernavi.core.session.Session;
 public abstract class HtmlPageHttpService extends AbstractHttpService {
     @Inject
     private Configuration templatesConfig;
-
-    protected HtmlPageHttpService(@NotNull final RequestReader.Factory<?> init) {
-        super(init);
-    }
 
     @NotNull
     public abstract String getPathInBundle(@NotNull final Session session);

@@ -7,11 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 
 import com.google.common.net.HttpHeaders;
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.Assisted;
 import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.util.ArrayGeoPoint;
@@ -24,8 +19,7 @@ public class RequestReader implements SessionInitializer {
     @NotNull
     protected final HttpServletRequest req;
 
-    @Inject
-    public RequestReader(@Assisted @NotNull final HttpServletRequest req) {
+    public RequestReader(@NotNull final HttpServletRequest req) {
         this.req = req;
     }
 
@@ -60,21 +54,5 @@ public class RequestReader implements SessionInitializer {
                                             @NotNull final Param<? extends T> param)
     {
         session.setIfNotNull(property, param.getValue(req));
-    }
-
-    @FunctionalInterface
-    public interface Factory<T extends SessionInitializer> {
-        @NotNull
-        T create(@NotNull HttpServletRequest req);
-    }
-
-    @NotNull
-    public static Module module() {
-        return new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(new TypeLiteral<Factory<?>>() {}).toInstance(RequestReader::new);
-            }
-        };
     }
 }

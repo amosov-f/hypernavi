@@ -7,10 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 import com.google.common.collect.ImmutableMap;
-import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestReader;
-import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.session.SessionValidationException;
+import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.server.servlet.HtmlPageHttpService;
@@ -23,24 +20,20 @@ public final class AuthService extends HtmlPageHttpService {
     private static final Property<String> URL = new Property<>("url");
     private static final Param<String> PARAM_URL = new QueryParam.StringParam("url");
 
-    public AuthService() {
-        super(new RequestReader.Factory<RequestReader>() {
-            @NotNull
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new RequestReader(req) {
             @Override
-            public RequestReader create(@NotNull final HttpServletRequest req) {
-                return new RequestReader(req) {
-                    @Override
-                    public void initialize(@NotNull final Session session) {
-                        setPropertyIfPresent(session, URL, PARAM_URL);
-                    }
-
-                    @Override
-                    public void validate(@NotNull final Session session) throws SessionValidationException {
-                        validate(session, URL);
-                    }
-                };
+            public void initialize(@NotNull final Session session) {
+                setPropertyIfPresent(session, URL, PARAM_URL);
             }
-        });
+
+            @Override
+            public void validate(@NotNull final Session session) throws SessionValidationException {
+                validate(session, URL);
+            }
+        };
     }
 
     @NotNull

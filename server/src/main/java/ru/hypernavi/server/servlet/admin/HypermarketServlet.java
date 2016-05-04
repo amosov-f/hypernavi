@@ -7,9 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-import com.google.inject.Inject;
 import org.apache.commons.io.IOUtils;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
@@ -19,11 +17,6 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 // TODO: extend HtmlPageHttpService
 @WebServlet(name = "add hyper", value = "/hypermarket")
 public class HypermarketServlet extends AbstractHttpService {
-    @Inject
-    protected HypermarketServlet(@NotNull final RequestReader.Factory<?> initFactory) {
-        super(initFactory);
-    }
-
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");

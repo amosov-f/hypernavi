@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,10 +18,7 @@ import java.util.logging.Logger;
 import org.apache.http.entity.ContentType;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestReader;
-import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.session.SessionValidationException;
+import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.core.webutil.GeocoderParser;
@@ -36,8 +34,10 @@ public class AddressToPositionServlet extends AbstractHttpService {
     private static final Param<String> PARAM_GEOCODE = new QueryParam.StringParam("geocode");
     private static final Property<String> GEOCODE = new Property<>("geocode");
 
-    public AddressToPositionServlet() {
-        super(req -> new RequestReader(req) {
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new RequestReader(req) {
             @Override
             public void initialize(@NotNull final Session session) {
                 setPropertyIfPresent(session, GEOCODE, PARAM_GEOCODE);
@@ -47,7 +47,7 @@ public class AddressToPositionServlet extends AbstractHttpService {
             public void validate(@NotNull final Session session) throws SessionValidationException {
                 validate(session, GEOCODE);
             }
-        });
+        };
     }
 
     @Nullable

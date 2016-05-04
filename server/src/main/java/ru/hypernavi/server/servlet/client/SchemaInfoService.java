@@ -3,6 +3,7 @@ package ru.hypernavi.server.servlet.client;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,8 +20,8 @@ import ru.hypernavi.commons.InfoResponceSerializer;
 import ru.hypernavi.commons.InfoResponse;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.GeoPoint;
@@ -36,9 +37,10 @@ public class SchemaInfoService extends AbstractHttpService {
     @Inject
     private HypermarketHolder markets;
 
-    @Inject
-    public SchemaInfoService(@NotNull final RequestReader.Factory<SearchRequest> initFactory) {
-        super(initFactory);
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new SearchRequest(req);
     }
 
     @Override

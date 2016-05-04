@@ -2,11 +2,13 @@ package ru.hypernavi.server.servlet.admin.site;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 import com.google.inject.Inject;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.database.provider.DatabaseProvider;
-import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
@@ -16,7 +18,9 @@ public abstract class SiteAdminService extends AbstractHttpService {
     @Inject
     protected DatabaseProvider<Site> provider;
 
-    protected SiteAdminService(@NotNull final RequestReader.Factory<SiteRequest> initFactory) {
-        super(initFactory);
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new SiteRequest(req);
     }
 }

@@ -3,6 +3,7 @@ package ru.hypernavi.server.servlet.search;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -11,8 +12,8 @@ import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.hypernavi.commons.SearchResponse;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
@@ -25,9 +26,10 @@ public final class SearchService extends AbstractHttpService {
     @Inject
     private Searcher searcher;
 
-    @Inject
-    public SearchService(@NotNull final RequestReader.Factory<SearchRequest> init) {
-        super(init);
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new SearchRequest(req);
     }
 
     @Override

@@ -7,10 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 
 /**
@@ -18,11 +16,6 @@ import ru.hypernavi.core.session.Session;
  */
 @WebServlet(name = "put site", value = "/admin/site/put")
 public final class PutSiteService extends SiteAdminService {
-    @Inject
-    public PutSiteService(@NotNull final RequestReader.Factory<SiteRequest> init) {
-        super(init);
-    }
-
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final String id = provider.put(session.demand(SiteRequest.SITE));

@@ -3,6 +3,7 @@ package ru.hypernavi.server.servlet.admin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
@@ -27,8 +28,8 @@ import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.database.HypermarketHolder;
 import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.core.webutil.ImageDimensioner;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 import ru.hypernavi.util.ArrayGeoPoint;
@@ -59,9 +60,14 @@ public class MigrateServlet extends AbstractHttpService {
     private ImageDimensioner dimensioner;
 
     @Inject
-    public MigrateServlet(@NotNull final HypermarketHolder markets, @NotNull final RequestReader.Factory<AdminRequestReader> readerFactory) {
-        super(readerFactory);
+    public MigrateServlet(@NotNull final HypermarketHolder markets) {
         this.markets = markets;
+    }
+
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new AdminRequestReader(req);
     }
 
     @Override

@@ -7,10 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import ru.hypernavi.commons.Site;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
 
 /**
@@ -18,11 +16,6 @@ import ru.hypernavi.core.session.Session;
  */
 @WebServlet(name = "remove site", value = "/admin/site/remove")
 public final class RemoveSiteService extends SiteAdminService {
-    @Inject
-    public RemoveSiteService(@NotNull final RequestReader.Factory<SiteRequest> initFactory) {
-        super(initFactory);
-    }
-
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final Site site = provider.remove(session.demand(SiteRequest.SITE_ID));

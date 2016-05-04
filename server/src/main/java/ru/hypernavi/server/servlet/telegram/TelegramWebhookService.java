@@ -36,30 +36,29 @@ public final class TelegramWebhookService extends AbstractHttpService {
     private WebhookUpdatesSource updatesSource;
 
     @Inject
-    public TelegramWebhookService(@Named("hypernavi.telegram.bot.auth_token") final String authToken) {
-        super(new RequestReader.Factory<SessionInitializer>() {
-            @NotNull
-            @Override
-            public SessionInitializer create(@NotNull final HttpServletRequest req) {
-                return new RequestReader(req) {
-                    @Override
-                    public void initialize(@NotNull final Session session) {
-                        super.initialize(session);
-                        setPropertyIfPresent(session, UPDATE, UPDATE_PARAM);
-                    }
+    @Named("hypernavi.telegram.bot.auth_token")
+    private String authToken;
 
-                    @Override
-                    public void validate(@NotNull final Session session) throws SessionValidationException {
-                        super.validate(session);
-                        final String token = session.demand(Property.HTTP_PATH_INFO).substring(1);
-                        if (!token.equals(authToken)) {
-                            throw new SessionValidationException.Forbidden("Invalid Telegram auth token: '" + token + "'!");
-                        }
-                        validate(session, UPDATE);
-                    }
-                };
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new RequestReader(req) {
+            @Override
+            public void initialize(@NotNull final Session session) {
+                super.initialize(session);
+                setPropertyIfPresent(session, UPDATE, UPDATE_PARAM);
             }
-        });
+
+            @Override
+            public void validate(@NotNull final Session session) throws SessionValidationException {
+                super.validate(session);
+                final String token = session.demand(Property.HTTP_PATH_INFO).substring(1);
+                if (!token.equals(authToken)) {
+                    throw new SessionValidationException.Forbidden("Invalid Telegram auth token: '" + token + "'!");
+                }
+                validate(session, UPDATE);
+            }
+        };
     }
 
     @Override

@@ -24,20 +24,16 @@ public final class GeoDecodeAdminService extends AbstractHttpService {
     @Inject
     private GeoDecoder decoder;
 
-    public GeoDecodeAdminService() {
-        super(new RequestReader.Factory<SessionInitializer>() {
-            @NotNull
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new AdminRequestReader(req) {
             @Override
-            public SessionInitializer create(@NotNull final HttpServletRequest req) {
-                return new AdminRequestReader(req) {
-                    @Override
-                    public void validate(@NotNull final Session session) throws SessionValidationException {
-                        super.validate(session);
-                        validate(session, Property.TEXT);
-                    }
-                };
+            public void validate(@NotNull final Session session) throws SessionValidationException {
+                super.validate(session);
+                validate(session, Property.TEXT);
             }
-        });
+        };
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,8 +14,8 @@ import freemarker.template.TemplateModelException;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.database.provider.DatabaseProvider;
 import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.HtmlPageHttpService;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
@@ -32,9 +33,10 @@ public class SiteTemplateService extends HtmlPageHttpService {
     @Inject
     protected DatabaseProvider<Site> provider;
 
-    @Inject
-    protected SiteTemplateService(@NotNull final RequestReader.Factory<SiteRequest> init) {
-        super(init);
+    @NotNull
+    @Override
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new SiteRequest(req);
     }
 
     @NotNull

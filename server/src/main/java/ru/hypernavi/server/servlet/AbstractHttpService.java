@@ -21,6 +21,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
 import ru.hypernavi.core.http.HttpTools;
+import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.server.servlet.dump.DumpWriters;
 import ru.hypernavi.util.json.GsonUtils;
@@ -33,18 +34,13 @@ import ru.hypernavi.util.json.GsonUtils;
 public abstract class AbstractHttpService extends HttpServlet {
     private static final Log LOG = LogFactory.getLog(AbstractHttpService.class);
 
-    @NotNull
-    private final RequestReader.Factory<?> initFactory;
     @Inject
     @Nullable
     private Provider<Session> sessionFactory;
-
     @Inject
     private Provider<DumpWriters> dumpWritersProvider;
-
-    protected AbstractHttpService(@NotNull final RequestReader.Factory<?> initFactory) {
-        this.initFactory = initFactory;
-    }
+    @Inject
+    private Platform platform;
 
     @NotNull
     protected WebServlet getServiceConfig() {
@@ -64,12 +60,14 @@ public abstract class AbstractHttpService extends HttpServlet {
         final DumpWriters dumpWriters = dumpWritersProvider.get();
         dumpWriters.enable(session, req);
 
+        session.set(Property.PLATFORM, platform);
+
         LOG.info("Started processing: " + HttpTools.curl(req));
 
-        final SessionInitializer initializer = initFactory.create(req);
+        final SessionInitializer reader = createReader(req);
 
-        initializer.initialize(session);
-        if (validate(initializer, session, resp)) {
+        reader.initialize(session);
+        if (validate(reader, session, resp)) {
             service(session, resp);
         }
 
@@ -94,6 +92,11 @@ public abstract class AbstractHttpService extends HttpServlet {
             e.accept(session, resp);
             return false;
         }
+    }
+
+    @NotNull
+    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
+        return new RequestReader(req);
     }
 
     public abstract void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException;

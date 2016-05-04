@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import ru.hypernavi.commons.Site;
-import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.auth.VkAuthValidator;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
@@ -35,12 +34,9 @@ import ru.hypernavi.core.geoindex.DummyGeoIndex;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.server.Platform;
-import ru.hypernavi.core.session.RequestReader;
 import ru.hypernavi.core.telegram.update.GetUpdatesSource;
 import ru.hypernavi.core.telegram.update.UpdatesSource;
 import ru.hypernavi.core.telegram.update.WebhookUpdatesSource;
-import ru.hypernavi.server.servlet.admin.site.SiteRequest;
-import ru.hypernavi.server.servlet.search.SearchRequest;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -61,11 +57,6 @@ public final class HyperNaviModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(RequestReader.module());
-        install(SearchRequest.module());
-        install(AdminRequestReader.module());
-        install(SiteRequest.module());
-
         bind(Platform.class).toInstance(getPlatform());
         bindTemplates();
         bindHttpClient();
