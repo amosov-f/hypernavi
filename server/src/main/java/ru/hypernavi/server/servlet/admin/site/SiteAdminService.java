@@ -21,6 +21,6 @@ public abstract class SiteAdminService extends AbstractHttpService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new SiteRequest(req);
+        return new SiteReader(req);
     }
 }

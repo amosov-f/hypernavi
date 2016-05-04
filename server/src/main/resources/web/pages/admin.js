@@ -96,7 +96,10 @@ function balloonContent(rawSite) {
     var absent = !rawSite.id;
     var balloonContent;
     $.ajax({
-        url: url('/admin/site', absent ? 'site' : 'site_id', absent ? encodeURIComponent(JSON.stringify(rawSite)) : rawSite.id),
+        url: absent ? '/admin/site' : url('/admin/site', 'site_id', rawSite.id),
+        data: absent ? JSON.stringify(rawSite) : null,
+        type: absent ? 'POST' : 'GET',
+        contentType: "application/json; charset=utf-8",
         async: false,
         success: function(html) {
             balloonContent = html;

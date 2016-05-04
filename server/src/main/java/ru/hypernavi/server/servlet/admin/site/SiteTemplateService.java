@@ -20,6 +20,8 @@ import ru.hypernavi.server.servlet.HtmlPageHttpService;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
 
+import static ru.hypernavi.server.servlet.admin.site.SiteBodyReader.SITE;
+
 /**
  * Created by amosov-f on 01.01.16.
  */
@@ -36,20 +38,20 @@ public class SiteTemplateService extends HtmlPageHttpService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new SiteRequest(req);
+        return new SiteBodyReader(req);
     }
 
     @NotNull
     @Override
     public String getPathInBundle(@NotNull final Session session) {
-        return session.has(SiteRequest.SITE) || session.get(SiteRequest.EDIT, false) ? "edit.ftl" : "site.ftl";
+        return session.has(SITE) || session.get(SiteReader.EDIT, false) ? "edit.ftl" : "site.ftl";
     }
 
     @Nullable
     @Override
     public Object toDataModel(@NotNull final Session session) throws TemplateModelException {
-        final String siteId = session.get(SiteRequest.SITE_ID);
-        final Site site = siteId != null ? provider.get(siteId) : session.get(SiteRequest.SITE);
+        final String siteId = session.get(SiteReader.SITE_ID);
+        final Site site = siteId != null ? provider.get(siteId) : session.get(SITE);
         if (site == null) {
             return null;
         }

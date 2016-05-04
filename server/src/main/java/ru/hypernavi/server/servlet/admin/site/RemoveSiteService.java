@@ -18,7 +18,7 @@ import ru.hypernavi.core.session.Session;
 public final class RemoveSiteService extends SiteAdminService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final Site site = provider.remove(session.demand(SiteRequest.SITE_ID));
+        final Site site = provider.remove(session.demand(SiteReader.SITE_ID));
         if (site == null) {
             resp.sendError(HttpStatus.SC_NOT_MODIFIED, "Site wasn't removed!");
             return;

@@ -36,11 +36,11 @@ public final class BeforeRequestHandler extends AbstractHandler {
         }
 
         final long readingTimestamp = System.currentTimeMillis();
-        if (HttpMethod.POST.is(req.getMethod()) || HttpMethod.PUT.is(req.getMethod())) {
-            // trigger urlencoded post data upload from client
-            req.getParameterMap();
-            request.setAttribute(HttpTools.CONTENT_RECEIVED_TS, System.currentTimeMillis());
-        }
+//        if (HttpMethod.POST.is(req.getMethod()) || HttpMethod.PUT.is(req.getMethod())) {
+//            // trigger urlencoded post data upload from client
+//            req.getParameterMap();
+//            request.setAttribute(HttpTools.CONTENT_RECEIVED_TS, System.currentTimeMillis());
+//        }
 
         final String acceptEncoding = req.getHeader(HttpHeaders.ACCEPT_ENCODING);
         LOG.info(String.format(

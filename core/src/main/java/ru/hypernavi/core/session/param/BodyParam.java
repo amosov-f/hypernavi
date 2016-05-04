@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
@@ -30,11 +31,11 @@ public abstract class BodyParam<T> implements Param<T> {
     @Override
     public T getValue(@NotNull final HttpServletRequest req) {
         try {
-            return parse(req.getReader());
+            return parse(new InputStreamReader(req.getInputStream()));
         } catch (IOException e) {
             LOG.warn(e);
         } catch (RuntimeException e) {
-            LOG.error(e);
+            LOG.error("Error during body parsing!", e);
         }
         return null;
     }
@@ -70,7 +71,7 @@ public abstract class BodyParam<T> implements Param<T> {
             super(reader -> parse(reader, type, gson.get(), debug));
         }
 
-        @NotNull
+        @Nullable
         private static <T> T parse(@NotNull final Reader reader,
                                    @NotNull final Type type,
                                    @NotNull final Gson gson,

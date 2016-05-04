@@ -9,10 +9,11 @@ import java.util.Arrays;
 import java.util.Optional;
 
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 import ru.hypernavi.core.http.URIBuilder;
-import ru.hypernavi.core.session.*;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.RequestReader;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionValidationException;
 import ru.hypernavi.core.session.param.CookieParam;
 import ru.hypernavi.core.session.param.NamedParam;
 import ru.hypernavi.core.session.param.QueryParam;
@@ -37,11 +38,9 @@ public class VkAuthRequestReader extends RequestReader {
     private static final CookieParam<VkUser> COOKIE_VK_USER = new CookieParam.ObjectParam<>("vk_user", VkUser.class);
     private static final CookieParam<String> COOKIE_VK_HASH = new CookieParam.StringParam("vk_hash");
 
-    @Inject
-    private VkAuthValidator validator;
+    public static final Property<VkAuthValidator> VALIDATOR = new Property<>("validator");
 
-    @Inject
-    public VkAuthRequestReader(@Assisted @NotNull final HttpServletRequest req) {
+    public VkAuthRequestReader(@NotNull final HttpServletRequest req) {
         super(req);
     }
 
@@ -71,7 +70,7 @@ public class VkAuthRequestReader extends RequestReader {
                 .orElseThrow(() -> new SessionValidationException.UnAuthorized("Not enough vk auth parameters!"));
         final String hash = Optional.ofNullable(COOKIE_VK_HASH.getValue(req))
                 .orElseThrow(() -> new SessionValidationException.UnAuthorized("No 'hash' parameter in request!"));
-        if (!validator.validate(user, hash)) {
+        if (!session.demand(VALIDATOR).validate(user, hash)) {
             throw new SessionValidationException.UnAuthorized("Invalid request digest!");
         }
     }

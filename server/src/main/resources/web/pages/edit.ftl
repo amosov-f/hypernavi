@@ -202,8 +202,10 @@
         var put = !site.id;
         var path = put ? '/admin/site/put' : '/admin/site/edit';
         $.ajax({
-            url: url(path, put ? 'site' : 'site_index', encodeURIComponent(JSON.stringify(site))),
-            type: 'GET',
+            url: path,
+            data: JSON.stringify(site),
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
             success: function (id) {
                 onSubmitSuccess(put ? id : null)
             },

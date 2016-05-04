@@ -20,6 +20,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
+import ru.hypernavi.core.auth.VkAuthRequestReader;
+import ru.hypernavi.core.auth.VkAuthValidator;
 import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.*;
@@ -41,6 +43,8 @@ public abstract class AbstractHttpService extends HttpServlet {
     private Provider<DumpWriters> dumpWritersProvider;
     @Inject
     private Platform platform;
+    @Inject
+    private VkAuthValidator validator;
 
     @NotNull
     protected WebServlet getServiceConfig() {
@@ -61,6 +65,7 @@ public abstract class AbstractHttpService extends HttpServlet {
         dumpWriters.enable(session, req);
 
         session.set(Property.PLATFORM, platform);
+        session.set(VkAuthRequestReader.VALIDATOR, validator);
 
         LOG.info("Started processing: " + HttpTools.curl(req));
 
