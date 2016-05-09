@@ -28,14 +28,14 @@ ymaps.ready(function () {
     objectManager.events.add('balloonopen', function (e) {
         site = objectManager.objects.getById(e.get('objectId'));
         if (!site.properties.balloonContent) {
-            console.log(site.raw.id);
             site.properties.balloonContent = balloonContent(site.raw);
-            refresh();
+            if (site.properties.balloonContent != null) {
+                refresh();
+            }
         }
     });
 
     objectManager.events.add('balloonclose', function (e) {
-        console.log('nul!');
         site = null;
     });
 
@@ -94,7 +94,7 @@ function feature(rawSite) {
 
 function balloonContent(rawSite) {
     var absent = !rawSite.id;
-    var balloonContent;
+    var balloonContent = null;
     $.ajax({
         url: absent ? '/admin/site' : url('/admin/site', 'site_id', rawSite.id),
         data: absent ? JSON.stringify(rawSite) : null,
@@ -103,6 +103,10 @@ function balloonContent(rawSite) {
         async: false,
         success: function(html) {
             balloonContent = html;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
         }
     });
     return balloonContent;

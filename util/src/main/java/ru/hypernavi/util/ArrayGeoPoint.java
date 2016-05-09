@@ -57,4 +57,10 @@ public final class ArrayGeoPoint implements GeoPoint {
     public double[] getCoordinates() {
         return coordinates;
     }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "(lon=" + getLongitude() + ",lat=" + getLatitude() + ")";
+    }
 }

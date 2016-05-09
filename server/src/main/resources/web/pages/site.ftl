@@ -42,6 +42,31 @@
 				<#if hint.description??>
                     <div class="well">${hint.description}</div>
 				</#if>
+				<#if hint.type == 'PLAN' && hint.points?has_content>
+                    <h4 align="center">Разметка схемы</h4>
+                    <table class="table table-striped fixed">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Широта</th>
+                            <th>Долгота</th>
+                            <th>X</th>
+                            <th>Y</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+							<#list hint.points as point>
+                            <tr>
+                                <th scope="row">${point?index + 1}</th>
+                                <td>${point.geoPoint.latitude}</td>
+                                <td>${point.geoPoint.longitude}</td>
+                                <td>${point.mapPoint.x}</td>
+                                <td>${point.mapPoint.y}</td>
+                            </tr>
+							</#list>
+                        </tbody>
+                    </table>
+				</#if>
             </div>
         </div>
     </div>

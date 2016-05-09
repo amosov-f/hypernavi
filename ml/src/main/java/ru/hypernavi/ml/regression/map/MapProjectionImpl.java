@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.ToDoubleFunction;
 
 
@@ -40,7 +41,7 @@ public final class MapProjectionImpl implements MapProjection {
 
     @NotNull
     public static MapProjection learn(@NotNull final PointMap... points) {
-        final java.util.List<? extends Factor<PointMap>> features = Arrays.asList(LONGITUDE, LATITUDE);
+        final List<? extends Factor<PointMap>> features = Arrays.asList(LONGITUDE, LATITUDE);
         // TODO: polynom degree
         final WekaRegression<PointMap> fx = new WekaRegression<>(new BestPolynomialRegression(), features, X);
         fx.learn(points);
