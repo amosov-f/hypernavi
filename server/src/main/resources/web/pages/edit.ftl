@@ -75,13 +75,37 @@
                             <a class="btn btn-default col-lg-2" onclick="sync('plan${hint?index}')">Показать</a>
                         </div>
                         <div class="form-group col-lg-12">
-                            <div class="form-group input-group ">
+                            <div class="form-group input-group">
                                 <span class="input-group-addon">Азимут</span>
                                 <input type="number" class="form-control" <#if hint.azimuth??>value="${hint.azimuth}"</#if>>
                                 <span class="input-group-addon">градусов</span>
                             </div>
                         </div>
                         <img class="img-responsive img-rounded" <#if hint.type == 'PLAN'>src="${hint.image.link}"</#if>/>
+                        <#if hint.type == 'PLAN'>
+                            <h4 align="center">Разметка схемы</h4>
+                            <table class="table table-striped fixed">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Широта,Долгота</th>
+                                    <th>X,Y</th>
+                                </tr>
+                                </thead>
+                                <tbody id="points${hint?index}">
+                                    <#list hint.points as point>
+                                    <tr>
+                                        <th scope="row">${point?index + 1}</th>
+                                        <td><input class="form-control" value="${point.geoPoint.latitude},${point.geoPoint.longitude}"></td>
+                                        <td><input class="form-control" value="${point.mapPoint.x},${point.mapPoint.y}"></td>
+                                    </tr>
+                                    </#list>
+                                </tbody>
+                            </table>
+                        </#if>
+                        <button class="btn btn-default" onclick="addPointMap(${hint?index})">
+                            <i class="glyphicon glyphicon-plus"></i> Новая точка
+                        </button>
                     </div>
                     <div id="picture${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PICTURE'>in active</#if>">
                         <div class="form-group">
@@ -131,6 +155,9 @@
         $newHint.find('a[onclick^=sync]').attr('onclick', "sync('plan" + INDEX + "')");
         $newHint.find('a[onclick^=sync]').attr('onclick', "sync('picture" + INDEX + "')");
         $newHint.find('button[onclick^=removeHint]').attr('onclick', "removeHint('" + INDEX + "')");
+
+        $newHint.find('tbody').attr('id', 'points' + INDEX);
+        $newHint.find('button[onclick^=addPointMap]').attr('onclick', "addPointMap('" + INDEX + "')");
 
         $("#accordion").append($newHint.fadeIn());
 
@@ -213,6 +240,13 @@
                 alert('Ошибка! ' + error)
             }
         });
+    }
+
+    function addPointMap(hintIndex) {
+        var points = $('#points' + hintIndex);
+        var no = points.children('tr').length + 1;
+        var row = '<tr><th scope="row">' + no + '</th><td><input class="form-control"></td><td><input class="form-control"></td></tr>';
+        points.append(row)
     }
 
     function dimension(link) {
