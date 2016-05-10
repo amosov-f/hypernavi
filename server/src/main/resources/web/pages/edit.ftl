@@ -206,6 +206,33 @@
                 if (azimuth.length != 0) {
                     hint.azimuth = parseFloat(azimuth);
                 }
+
+                hint.points = $hint.find('tr').slice(1).map(function () {
+                    var lonLat = $(this).find('input').eq(0).val();
+                    var xy = $(this).find('input').eq(1).val();
+                    if (!lonLat && !xy) {
+                        return null;
+                    }
+                    var lon = parseInt(lonLat.split(',')[0]);
+                    var lat = parseInt(lonLat.split(',')[1]);
+                    var x = parseInt(xy.split(',')[0]);
+                    var y = parseInt(xy.split(',')[1]);
+                    var message = null;
+                    if (isNaN(x) || isNaN(y)) {
+                        message = "Неверный формат 'X,Y': '" + xy + "'!";
+                    }
+                    if (isNaN(lon) || isNaN(lat)) {
+                        message = "Неверный формат 'Широты,Долготы': '" + lonLat + "'!";
+                    }
+                    if (message != null) {
+                        alert(message);
+                        throw message;
+                    }
+                    return {
+                        geoPoint: { type: 'Point', coordinates: [ lon, lat ] },
+                        mapPoint: { x: x, y: y }
+                    }
+                }).get();
             }
 
             return hint;
@@ -243,10 +270,10 @@
     }
 
     function addPointMap(hintIndex) {
-        var points = $('#points' + hintIndex);
-        var no = points.children('tr').length + 1;
+        var $points = $('#points' + hintIndex);
+        var no = $points.children('tr').length + 1;
         var row = '<tr><th scope="row">' + no + '</th><td><input class="form-control"></td><td><input class="form-control"></td></tr>';
-        points.append(row)
+        $points.append(row)
     }
 
     function dimension(link) {
