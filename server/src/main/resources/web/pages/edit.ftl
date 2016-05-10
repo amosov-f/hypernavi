@@ -32,7 +32,8 @@
         'type': 'PLAN',
         'image': {
             'link': ''
-        }
+        },
+        'points': []
     }]>
 </#if>
 <#list hints as hint>
