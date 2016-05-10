@@ -214,8 +214,8 @@
                     if (!lonLat && !xy) {
                         return null;
                     }
-                    var lon = parseInt(lonLat.split(',')[0]);
-                    var lat = parseInt(lonLat.split(',')[1]);
+                    var lon = parseFloat(lonLat.split(',')[0]);
+                    var lat = parseFloat(lonLat.split(',')[1]);
                     var x = parseInt(xy.split(',')[0]);
                     var y = parseInt(xy.split(',')[1]);
                     var message = null;
