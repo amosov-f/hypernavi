@@ -209,21 +209,21 @@
                 }
 
                 hint.points = $hint.find('tr').slice(1).map(function () {
-                    var lonLat = $(this).find('input').eq(0).val();
+                    var latLon = $(this).find('input').eq(0).val();
                     var xy = $(this).find('input').eq(1).val();
-                    if (!lonLat && !xy) {
+                    if (!latLon && !xy) {
                         return null;
                     }
-                    var lon = parseFloat(lonLat.split(',')[0]);
-                    var lat = parseFloat(lonLat.split(',')[1]);
+                    var lat = parseFloat(latLon.split(',')[0]);
+                    var lon = parseFloat(latLon.split(',')[1]);
                     var x = parseInt(xy.split(',')[0]);
                     var y = parseInt(xy.split(',')[1]);
                     var message = null;
                     if (isNaN(x) || isNaN(y)) {
                         message = "Неверный формат 'X,Y': '" + xy + "'!";
                     }
-                    if (isNaN(lon) || isNaN(lat)) {
-                        message = "Неверный формат 'Широты,Долготы': '" + lonLat + "'!";
+                    if (isNaN(lat) || isNaN(lon)) {
+                        message = "Неверный формат 'Широты,Долготы': '" + latLon + "'!";
                     }
                     if (message != null) {
                         alert(message);
