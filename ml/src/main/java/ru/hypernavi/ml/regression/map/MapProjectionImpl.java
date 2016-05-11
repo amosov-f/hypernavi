@@ -6,8 +6,10 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
+import java.util.stream.IntStream;
 
 
+import org.apache.commons.lang3.ArrayUtils;
 import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.ml.regression.BestPolynomialRegression;
@@ -42,7 +44,6 @@ public final class MapProjectionImpl implements MapProjection {
     @NotNull
     public static MapProjection learn(@NotNull final PointMap... points) {
         final List<? extends Factor<PointMap>> features = Arrays.asList(LONGITUDE, LATITUDE);
-        // TODO: polynom degree
         final WekaRegression<PointMap> fx = new WekaRegression<>(new BestPolynomialRegression(), features, X);
         fx.learn(points);
         final WekaRegression<PointMap> fy = new WekaRegression<>(new BestPolynomialRegression(), features, Y);
@@ -53,6 +54,22 @@ public final class MapProjectionImpl implements MapProjection {
     @NotNull
     public static Point map(@NotNull final GeoPoint geoPoint, @NotNull final PointMap... points) {
         return learn(points).map(geoPoint);
+    }
+
+    @NotNull
+    public static double[] validate(@NotNull final PointMap... points) {
+        return IntStream.range(0, points.length)
+                .mapToDouble(i -> distance(points[i], ArrayUtils.remove(points, i)))
+                .toArray();
+    }
+
+    private static double distance(@NotNull final PointMap point, @NotNull final PointMap... otherPoints) {
+        final Point predictedPoint = map(point.getGeoPoint(), otherPoints);
+        return distance(point.getMapPoint(), predictedPoint);
+    }
+
+    private static double distance(@NotNull final Point p1, @NotNull final Point p2) {
+        return Point.distance(p1.x, p1.y, p2.x, p2.y);
     }
 
     @NotNull

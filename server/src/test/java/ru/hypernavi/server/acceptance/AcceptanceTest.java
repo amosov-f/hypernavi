@@ -3,15 +3,20 @@ package ru.hypernavi.server.acceptance;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
+import java.util.Objects;
 
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.rules.DisableOnDebug;
 import org.junit.rules.TestRule;
@@ -50,5 +55,19 @@ public class AcceptanceTest {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    protected void assertJsonEquals(@NotNull final String classpathToExpected, @NotNull final String actual) {
+        final JsonElement expectedJson = fromClasspath(classpathToExpected);
+        final JsonElement actualJson =  new JsonParser().parse(actual);
+        if (Objects.equals(expectedJson, actualJson)) {
+            return;
+        }
+        Assert.assertEquals(expectedJson, actualJson);
+    }
+
+    @NotNull
+    protected JsonElement fromClasspath(@NotNull final String classpath) {
+        return new JsonParser().parse(new InputStreamReader(getClass().getResourceAsStream(classpath)));
     }
 }

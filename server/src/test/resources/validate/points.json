@@ -1,0 +1,80 @@
+[
+  {
+    "geoPoint": {
+      "type": "Point",
+      "coordinates": [
+        29.733273,
+        60.21502
+      ]
+    },
+    "mapPoint": {
+      "x": 313,
+      "y": 647
+    }
+  },
+  {
+    "geoPoint": {
+      "type": "Point",
+      "coordinates": [
+        29.737416,
+        60.211785
+      ]
+    },
+    "mapPoint": {
+      "x": 445,
+      "y": 805
+    }
+  },
+  {
+    "geoPoint": {
+      "type": "Point",
+      "coordinates": [
+        29.734286,
+        60.209901
+      ]
+    },
+    "mapPoint": {
+      "x": 401,
+      "y": 920
+    }
+  },
+  {
+    "geoPoint": {
+      "type": "Point",
+      "coordinates": [
+        29.749053,
+        60.224224
+      ]
+    },
+    "mapPoint": {
+      "x": 651,
+      "y": 40
+    }
+  },
+  {
+    "geoPoint": {
+      "type": "Point",
+      "coordinates": [
+        29.777747,
+        60.21935
+      ]
+    },
+    "mapPoint": {
+      "x": 1481,
+      "y": 185
+    }
+  },
+  {
+    "geoPoint": {
+      "type": "Point",
+      "coordinates": [
+        29.744552,
+        60.2135
+      ]
+    },
+    "mapPoint": {
+      "x": 631,
+      "y": 662
+    }
+  }
+]

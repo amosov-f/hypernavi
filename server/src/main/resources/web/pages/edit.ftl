@@ -91,6 +91,7 @@
                                     <th>#</th>
                                     <th>Широта,Долгота</th>
                                     <th>X,Y</th>
+                                    <th>Ошибка (в пикселях)</th>
                                 </tr>
                                 </thead>
                                 <tbody id="points${hint?index}">
@@ -99,6 +100,7 @@
                                         <th scope="row">${point?index + 1}</th>
                                         <td><input class="form-control" value="${point.geoPoint.latitude},${point.geoPoint.longitude}"></td>
                                         <td><input class="form-control" value="${point.mapPoint.x},${point.mapPoint.y}"></td>
+                                        <td></td>
                                     </tr>
                                     </#list>
                                 </tbody>
@@ -106,6 +108,9 @@
                         </#if>
                         <button class="btn btn-default" onclick="addPointMap(${hint?index})">
                             <i class="glyphicon glyphicon-plus"></i> Новая точка
+                        </button>
+                        <button class="btn btn-default" onclick="validate(${hint?index})">
+                            <i class="glyphicon glyphicon-play"></i> Провалидировать
                         </button>
                     </div>
                     <div id="picture${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PICTURE'>in active</#if>">
@@ -208,32 +213,8 @@
                     hint.azimuth = parseFloat(azimuth);
                 }
 
-                hint.points = $hint.find('tr').slice(1).map(function () {
-                    var latLon = $(this).find('input').eq(0).val();
-                    var xy = $(this).find('input').eq(1).val();
-                    if (!latLon && !xy) {
-                        return null;
-                    }
-                    var lat = parseFloat(latLon.split(',')[0]);
-                    var lon = parseFloat(latLon.split(',')[1]);
-                    var x = parseInt(xy.split(',')[0]);
-                    var y = parseInt(xy.split(',')[1]);
-                    var message = null;
-                    if (isNaN(x) || isNaN(y)) {
-                        message = "Неверный формат 'X,Y': '" + xy + "'!";
-                    }
-                    if (isNaN(lat) || isNaN(lon)) {
-                        message = "Неверный формат 'Широты,Долготы': '" + latLon + "'!";
-                    }
-                    if (message != null) {
-                        alert(message);
-                        throw message;
-                    }
-                    return {
-                        geoPoint: { type: 'Point', coordinates: [ lon, lat ] },
-                        mapPoint: { x: x, y: y }
-                    }
-                }).get();
+                hint.points = extractPoints($hint);
+                check(hint.points);
             }
 
             return hint;
@@ -270,10 +251,40 @@
         });
     }
 
+    function extractPoints($html) {
+        return $html.find('tr').map(function (i) {
+            var latLon = $(this).find('input').eq(0).val();
+            var xy = $(this).find('input').eq(1).val();
+            if (!latLon && !xy) {
+                return null;
+            }
+            var lat = parseFloat(latLon.split(',')[0]);
+            var lon = parseFloat(latLon.split(',')[1]);
+            var x = parseInt(xy.split(',')[0]);
+            var y = parseInt(xy.split(',')[1]);
+            var message = null;
+            if (isNaN(x) || isNaN(y)) {
+                message = "Неверный формат 'X,Y': '" + xy + "'!";
+            }
+            if (isNaN(lat) || isNaN(lon)) {
+                message = "Неверный формат 'Широты,Долготы': '" + latLon + "'!";
+            }
+            if (message != null) {
+                alert(message);
+                throw message;
+            }
+            return {
+                no: i,
+                geoPoint: { type: 'Point', coordinates: [ lon, lat ] },
+                mapPoint: { x: x, y: y }
+            }
+        }).get()
+    }
+
     function addPointMap(hintIndex) {
         var $points = $('#points' + hintIndex);
         var no = $points.children('tr').length + 1;
-        var row = '<tr><th scope="row">' + no + '</th><td><input class="form-control"></td><td><input class="form-control"></td></tr>';
+        var row = '<tr><th scope="row">' + no + '</th><td><input class="form-control"></td><td><input class="form-control"></td><td></td></tr>';
         $points.append(row)
     }
 
@@ -284,6 +295,37 @@
             width: img.width,
             height: img.height
         };
+    }
+
+    function validate(hintIndex) {
+        var $html = $('#points' + hintIndex);
+        var points = extractPoints($html);
+        check(points);
+        $html.find('tr').each(function () {
+            $($(this).find('td')[2]).html('');
+        });
+        $.ajax({
+            url: '/admin/validate',
+            data: JSON.stringify(points),
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            success: function (distances) {
+                points.forEach(function (point, i) {
+                    $($($html.find('tr')[point.no]).find('td')[2]).html(Math.round(distances[i]));
+                });
+            },
+            error: function (req, textStatus, error) {
+                alert('Ошибка! ' + error)
+            }
+        });
+    }
+
+    function check(points) {
+        if (points.length < 3) {
+            var message = 'Точек должно быть хотя бы три!';
+            alert(message);
+            throw message;
+        }
     }
 
     function onRemove() {

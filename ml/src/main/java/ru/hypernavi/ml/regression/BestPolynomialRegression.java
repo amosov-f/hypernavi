@@ -31,7 +31,7 @@ public final class BestPolynomialRegression extends AbstractClassifier {
 
     @Override
     public void buildClassifier(@NotNull final Instances data) throws Exception {
-        final int bestDeg = IntStream.range(0, MAX_DEG + 1).mapToObj(deg -> deg).max(Comparator.comparing(deg -> {
+        final int bestDeg = IntStream.range(0, MAX_DEG + 1).boxed().max(Comparator.comparing(deg -> {
             try {
                 return evaluate(deg, data);
             } catch (Exception e) {
