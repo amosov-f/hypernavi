@@ -321,7 +321,7 @@
     }
 
     function check(points) {
-        if (points.length < 3) {
+        if (0 < points.length && points.length < 3) {
             var message = 'Точек должно быть хотя бы три!';
             alert(message);
             throw message;
