@@ -20,7 +20,7 @@ import weka.core.Instances;
  * Time: 22:35
  */
 public final class BestPolynomialRegression extends AbstractClassifier {
-    private static final int MAX_DEG = 10;
+    private static final int MAX_DEG = 7;
 
     @Nullable
     private PolynomialRegression delegate;
