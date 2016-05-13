@@ -27,7 +27,7 @@
             <input id="input" type="url" class="form-control" value="http://usamovara.spb.ru/px2/256.jpg">
         </div>
     </div>
-    <a class="btn btn-primary" onclick="download()">Загрузить!</a>
+    <a class="btn btn-primary" onclick="downloadImage()">Загрузить!</a>
 </div>
 
 <div class="form-group" align="center">
@@ -35,7 +35,7 @@
 </div>
 
 <script type="text/javascript">
-    function download() {
+    function downloadImage() {
         $('#img').attr('src', $('#input').val())
     }
 
