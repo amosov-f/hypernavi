@@ -35,12 +35,12 @@ public final class ImageDimensioner {
     }
 
     @Nullable
-    public Dimension getDimensionImpl(@NotNull final String imageLink) {
-        return Optional.ofNullable(httpClient.execute(new HttpGet(imageLink), ImageIO::read)).map(this::of).orElse(null);
+    public Dimension getDimension(@NotNull final BufferedImage image) {
+        return Dimension.of(image.getWidth(), image.getHeight());
     }
 
-    @NotNull
-    private Dimension of(@NotNull final BufferedImage image) {
-        return Dimension.of(image.getWidth(), image.getHeight());
+    @Nullable
+    public Dimension getDimensionImpl(@NotNull final String imageLink) {
+        return Optional.ofNullable(httpClient.execute(new HttpGet(imageLink), ImageIO::read)).map(this::getDimension).orElse(null);
     }
 }

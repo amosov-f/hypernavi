@@ -50,9 +50,11 @@ public final class HyperNaviModule extends AbstractModule {
 
     @NotNull
     private final Config config;
+    private final int port;
 
-    public HyperNaviModule(@NotNull final Config config) {
+    public HyperNaviModule(@NotNull final Config config, final int port) {
         this.config = config;
+        this.port = port;
     }
 
     @Override
@@ -60,6 +62,7 @@ public final class HyperNaviModule extends AbstractModule {
         bind(Platform.class).toInstance(getPlatform());
         bindTemplates();
         bindHttpClient();
+        bind(String.class).annotatedWith(Names.named("hypernavi.server.host")).toInstance(getServerHost());
 
         bindProperty("hypernavi.server.pathdata");
         bindProperty("hypernavi.server.serviceimg");
@@ -163,5 +166,10 @@ public final class HyperNaviModule extends AbstractModule {
     @NotNull
     private Platform getPlatform() {
         return Platform.parse(config.getProperty("hypernavi.server.platform"));
+    }
+
+    @NotNull
+    private String getServerHost() {
+        return getPlatform().isLocal() ? "localhost:" + port : "hypernavi.net";
     }
 }

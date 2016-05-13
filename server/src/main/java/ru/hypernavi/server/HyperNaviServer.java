@@ -64,7 +64,7 @@ public final class HyperNaviServer {
     private final Injector injector;
 
     HyperNaviServer(final int port, @NotNull final Config config) {
-        injector = Guice.createInjector(new HyperNaviModule(config), new AbstractModule() {
+        injector = Guice.createInjector(new HyperNaviModule(config, port), new AbstractModule() {
             @Override
             protected void configure() {
                 bind(Integer.class).annotatedWith(Names.named("localport")).toInstance(port);

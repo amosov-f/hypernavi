@@ -28,14 +28,36 @@ public enum ImageUtils {
 
     private static final Log LOG = LogFactory.getLog(ImageUtils.class);
 
+    private static final String[] FORMATS = {"jpg", "png", "gif"};
+
+    @NotNull
+    public static String format(@Nullable final BufferedImage image, @Nullable final String imageLink) {
+        final String imageLinkFormat = Optional.ofNullable(imageLink)
+                .map(ImageUtils::format)
+                .orElse("jpg");
+        return Optional.ofNullable(image)
+                .map(ImageUtils::format)
+                .orElse(imageLinkFormat);
+    }
+
+    @Nullable
+    public static String format(@NotNull final String imageLink) {
+        for (final String format : FORMATS) {
+            if (imageLink.endsWith(format)) {
+                return format;
+            }
+        }
+        for (final String format : FORMATS) {
+            if (imageLink.toLowerCase().contains("." + format)) {
+                return format;
+            }
+        }
+        return null;
+    }
+
     @Nullable
     public static String format(@NotNull final BufferedImage image) {
         return MoreStreamSupport.stream(ImageIO.getImageReaders(image)).map(ImageUtils::format).findFirst().orElse(null);
-    }
-
-    @NotNull
-    public static String format(@NotNull final BufferedImage image, @NotNull final String defaultFormat) {
-        return Optional.ofNullable(format(image)).orElse(defaultFormat);
     }
 
     @NotNull
@@ -82,10 +104,15 @@ public enum ImageUtils {
         return bout.toByteArray();
     }
 
+    @NotNull
+    public static BufferedImage download(@NotNull final String link) throws IOException {
+        return ImageIO.read(new URL(link));
+    }
+
     @Nullable
     public static BufferedImage downloadSafe(@NotNull final String link) {
         try {
-            return ImageIO.read(new URL(link));
+            return download(link);
         } catch (IOException ignored) {
             return null;
         }

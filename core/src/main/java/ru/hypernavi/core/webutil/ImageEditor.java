@@ -18,6 +18,12 @@ public enum ImageEditor {
     INSTANCE;
 
     @NotNull
+    public BufferedImage createThumb(@NotNull final BufferedImage image, final int height) {
+        final float scale = 1.0f * image.getHeight() / height;
+        return createThumb(image, scale);
+    }
+
+    @NotNull
     public BufferedImage createThumb(@NotNull final BufferedImage image, final float scale) {
         final int w = (int) (image.getWidth() / scale);
         final int h = (int) (image.getHeight() / scale);

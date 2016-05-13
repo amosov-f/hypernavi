@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 
@@ -23,6 +24,7 @@ import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import ru.hypernavi.server.HandleErrorsInLog;
 import ru.hypernavi.server.HyperNaviServerLauncher;
+import ru.hypernavi.util.json.GsonUtils;
 
 /**
  * Created by amosov-f on 22.08.15.
@@ -49,9 +51,23 @@ public class AcceptanceTest {
     }
 
     @NotNull
+    protected final <T> T execute(@NotNull final String uri, @NotNull final Type type) {
+        return execute(new HttpGet(uri), type);
+    }
+
+    @NotNull
     protected final HttpResponse execute(@NotNull final HttpUriRequest req) {
         try {
             return client.execute(LOCALHOST, req);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @NotNull
+    protected final <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Type type) {
+        try {
+            return GsonUtils.gson().fromJson(new InputStreamReader(execute(req).getEntity().getContent()), type);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

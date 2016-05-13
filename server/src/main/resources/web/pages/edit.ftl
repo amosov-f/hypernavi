@@ -201,11 +201,7 @@
             }
 
             var link = $hint.find(':input[type=url]').val();
-            hint.image = {
-                link: link,
-                dimension: dimension(link),
-                duplicates: []
-            };
+            hint.image = duplicate(link);
 
             if (hint.type == 'plan') {
                 var azimuth = $hint.find(':input[type=number]').val();
@@ -288,13 +284,21 @@
         $points.append(row)
     }
 
-    function dimension(link) {
-        var img = new Image();
-        img.src = link;
-        return {
-            width: img.width,
-            height: img.height
-        };
+    function duplicate(link) {
+        var image;
+        $.ajax({
+            url: '/admin/image/duplicate?link=' + encodeURIComponent(link),
+            async: false,
+            success: function (duplicatedImage) {
+                image = duplicatedImage;
+            },
+            error: function (req, textStatus, error) {
+                alert('Ошибка! ' + error);
+                throw error;
+            }
+
+        });
+        return image;
     }
 
     function validate(hintIndex) {

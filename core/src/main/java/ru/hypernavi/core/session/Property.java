@@ -17,8 +17,6 @@ public final class Property<T> {
     public static final Property<String> HTTP_PATH_INFO = new Property<>("http_path_info");
     public static final Property<String> HTTP_QUERY_STRING = new Property<>("http_query_string");
     public static final Property<String> HTTP_COOKIE = new Property<>("http_cookie");
-    public static final Property<byte[]> HTTP_BODY = new Property<>("http_body");
-    public static final Property<String> HTTP_BODY_UTF8 = new Property<>("http_body_utf8");
 
     public static final Property<Platform> PLATFORM = new Property<>("platform");
 

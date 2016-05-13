@@ -36,7 +36,7 @@ public final class ImageEditorTest {
     @Test
     public void createDoubleScaledThumbFromImage() {
         final BufferedImage image = read("/plan-small.jpg");
-        final int scale = 2;
+        final float scale = 2;
         final BufferedImage thumb = ImageEditor.INSTANCE.createThumb(image, scale);
         writeToBufferFile(thumb);
         assertEquals(read("/plan-small-scaled.jpg"), thumb);
