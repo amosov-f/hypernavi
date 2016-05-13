@@ -14,7 +14,7 @@ docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -d amosov/hypernav
 # sudo mongod --fork --logpath /var/log/mongod.log
 
 # nginx
-# docker run --name nginx -p 80:80 -p 443:443 -v /root/hypernavi-data/nginx.conf:/etc/nginx/conf.d/default.conf -v /etc/nginx/ssl:/etc/nginx/ssl -v /root/hypernavi-data/data/img:/usr/share/nginx/img -d nginx
+# docker run --name nginx -p 80:80 -p 443:443 -v /root/hypernavi-data/nginx.conf:/etc/nginx/conf.d/default.conf -v /etc/nginx/ssl:/etc/nginx/ssl -v /root/hypernavi-data/data/img:/usr/share/nginx/img -v /root/hypernavi-data/data/thumb:/usr/share/nginx/thumb -d nginx
 # docker stop nginx && docker rm nginx
 
 # https
