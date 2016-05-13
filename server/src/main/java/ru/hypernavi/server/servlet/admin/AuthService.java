@@ -23,17 +23,7 @@ public final class AuthService extends HtmlPageHttpService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new RequestReader(req) {
-            @Override
-            public void initialize(@NotNull final Session session) {
-                setPropertyIfPresent(session, URL, PARAM_URL);
-            }
-
-            @Override
-            public void validate(@NotNull final Session session) throws SessionValidationException {
-                validate(session, URL);
-            }
-        };
+        return new ParamRequestReader(new RequestReader(req), URL, PARAM_URL);
     }
 
     @NotNull

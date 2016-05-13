@@ -28,19 +28,7 @@ public final class ValidatePointsService extends SiteAdminService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new RequestReader(req) {
-            @Override
-            public void initialize(@NotNull final Session session) {
-                super.initialize(session);
-                setPropertyIfPresent(session, POINTS, POINTS_BODY);
-            }
-
-            @Override
-            public void validate(@NotNull final Session session) throws SessionValidationException {
-                super.validate(session);
-                validate(session, POINTS);
-            }
-        };
+        return new ParamRequestReader(new RequestReader(req), POINTS, POINTS_BODY);
     }
 
     @Override

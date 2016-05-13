@@ -15,12 +15,14 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
+import ru.hypernavi.core.session.ParamRequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
-import ru.hypernavi.core.session.SessionValidationException;
 import ru.hypernavi.core.session.param.BodyParam;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.util.json.GsonUtils;
+
+import static ru.hypernavi.server.servlet.admin.site.SiteReader.SITE_INDEX;
 
 /**
  * Created by amosov-f on 20.12.15.
@@ -37,24 +39,12 @@ public final class EditSiteService extends SiteAdminService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new SiteReader(req) {
-            @Override
-            public void initialize(@NotNull final Session session) {
-                super.initialize(session);
-                setPropertyIfPresent(session, SITE_INDEX, SITE_INDEX_BODY);
-            }
-
-            @Override
-            public void validate(@NotNull final Session session) throws SessionValidationException {
-                super.validate(session);
-                validate(session, SITE_INDEX);
-            }
-        };
+        return new ParamRequestReader(new SiteReader(req), SITE_INDEX, SITE_INDEX_BODY);
     }
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final Index<Site> site = session.demand(SiteReader.SITE_INDEX);
+        final Index<Site> site = session.demand(SITE_INDEX);
 
         provider.put(site.getId(), site.get());
 
