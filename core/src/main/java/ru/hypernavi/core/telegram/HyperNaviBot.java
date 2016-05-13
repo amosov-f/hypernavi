@@ -124,8 +124,7 @@ public final class HyperNaviBot {
                 .filter(Picture.class::isInstance)
                 .map(Picture.class::cast)
                 .map(Picture::getImage)
-                .map(Image::getThumbOrFull)
-                .map(link -> new InlineQueryResultPhoto(link, link, link))
+                .map(image -> new InlineQueryResultPhoto(image.getLink(), image.getLink(), image.getThumbOrFull()))
                 .toArray(InlineQueryResult[]::new);
         api.answerInlineQuery(inlineQuery.getId(), results);
     }
