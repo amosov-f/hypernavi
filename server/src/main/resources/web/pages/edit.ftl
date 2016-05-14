@@ -91,7 +91,7 @@
                                     <th>#</th>
                                     <th>Широта,Долгота</th>
                                     <th>X,Y</th>
-                                    <th>Ошибка (в пикселях)</th>
+                                    <th>Ошибка в пикс.</th>
                                 </tr>
                                 </thead>
                                 <tbody id="points${hint?index}">
