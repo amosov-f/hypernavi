@@ -33,6 +33,7 @@ git_commit_changes() {
   COMMIT_MESSAGE=$1
   DIR=$2
   print_message "Commiting changes at ${DIR} with message \"${COMMIT_MESSAGE}\""
+  git -C ${DIR} add -A
   git -C ${DIR} commit -am "${COMMIT_MESSAGE}"
 }
 
