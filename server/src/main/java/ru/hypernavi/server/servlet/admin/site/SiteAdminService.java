@@ -6,8 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 import com.google.inject.Inject;
-import ru.hypernavi.commons.Site;
-import ru.hypernavi.core.database.provider.DatabaseProvider;
+import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
@@ -16,7 +15,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
  */
 public abstract class SiteAdminService extends AbstractHttpService {
     @Inject
-    protected DatabaseProvider<Site> provider;
+    protected SiteProvider provider;
 
     @NotNull
     @Override

@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Hint {
     @Nullable
     private final String description;
+    @Nullable
+    private Integer authorUid;
 
     protected Hint(@Nullable final String description) {
         this.description = description;
@@ -21,6 +23,15 @@ public abstract class Hint {
 
     @NotNull
     public abstract Type getType();
+
+    @Nullable
+    public Integer getAuthorUid() {
+        return authorUid;
+    }
+
+    public void setAuthorUid(@Nullable final Integer authorUid) {
+        this.authorUid = authorUid;
+    }
 
     public enum Type {
         PLAN, PICTURE, TEXT

@@ -12,7 +12,7 @@ import java.util.Map;
 import com.google.inject.Inject;
 import freemarker.template.TemplateModelException;
 import ru.hypernavi.commons.Site;
-import ru.hypernavi.core.database.provider.DatabaseProvider;
+import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
@@ -33,7 +33,7 @@ public class SiteTemplateService extends HtmlPageHttpService {
     }
 
     @Inject
-    protected DatabaseProvider<Site> provider;
+    protected SiteProvider provider;
 
     @NotNull
     @Override

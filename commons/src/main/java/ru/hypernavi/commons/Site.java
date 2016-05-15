@@ -1,6 +1,7 @@
 package ru.hypernavi.commons;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 import net.jcip.annotations.Immutable;
@@ -28,6 +29,10 @@ public class Site implements Positioned {
     private final Hint[] hints;
 
     public Site(@NotNull final GeoObject place, @NotNull final Hint... hints) {
+        this(place, hints, null);
+    }
+
+    public Site(@NotNull final GeoObject place, @NotNull final Hint[] hints, @Nullable final Integer authorUid) {
         this.place = place;
         this.hints = hints;
     }

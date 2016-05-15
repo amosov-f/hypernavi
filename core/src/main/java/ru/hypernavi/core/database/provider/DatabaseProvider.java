@@ -48,7 +48,7 @@ public interface DatabaseProvider<T> {
         private static final Supplier<String> KEY_GENERATOR = () -> String.valueOf(counter.getAndIncrement());
 
         @NotNull
-        private final Map<String, T> data = new HashMap<>();
+        protected final Map<String, T> data = new HashMap<>();
 
         @Nullable
         @Override

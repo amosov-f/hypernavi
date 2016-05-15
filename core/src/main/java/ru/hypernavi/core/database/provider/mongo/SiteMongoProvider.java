@@ -16,6 +16,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
+import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.stream.MoreStreamSupport;
@@ -23,7 +24,7 @@ import ru.hypernavi.util.stream.MoreStreamSupport;
 /**
  * Created by amosov-f on 05.12.15.
  */
-public final class SiteMongoProvider extends MongoProvider<Site> implements GeoIndex<Site> {
+public final class SiteMongoProvider extends MongoProvider<Site> implements GeoIndex<Site>, SiteProvider {
     private static final Log LOG = LogFactory.getLog(SiteMongoProvider.class);
 
     private static final int MIN_SITE_DISTANCE = 10;
@@ -93,6 +94,16 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
                 .map(SiteMongoProvider::site)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    @NotNull
+    @Override
+    public Site[] getAllSites() {
+        return MoreStreamSupport.stream(coll.find())
+                .map(SiteMongoProvider::site)
+                .map(Optional::get)
+                .map(Index::get)
+                .toArray(Site[]::new);
     }
 
     @NotNull

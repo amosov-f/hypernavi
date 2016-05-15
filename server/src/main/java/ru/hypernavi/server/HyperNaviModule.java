@@ -28,7 +28,7 @@ import ru.hypernavi.core.classify.goods.GoodsClassifier;
 import ru.hypernavi.core.classify.goods.RandomGoodsClassifier;
 import ru.hypernavi.core.classify.goods.TomallGoodsClassifier;
 import ru.hypernavi.core.database.*;
-import ru.hypernavi.core.database.provider.DatabaseProvider;
+import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.database.provider.mongo.SiteMongoProvider;
 import ru.hypernavi.core.geoindex.DummyGeoIndex;
 import ru.hypernavi.core.geoindex.GeoIndex;
@@ -125,8 +125,7 @@ public final class HyperNaviModule extends AbstractModule {
             case "file":
                 final String dataPath = config.getProperty("hypernavi.server.pathdata");
                 bind(DataLoader.class).toInstance(new FileDataLoader(dataPath));
-                bind(new TypeLiteral<DatabaseProvider<Site>>() {
-                }).toInstance(new DatabaseProvider.Impl<>());
+                bind(SiteProvider.class).toInstance(new SiteProvider.Impl());
                 bind(new TypeLiteral<GeoIndex<Site>>() {
                 }).toInstance(new DummyGeoIndex<>());
                 LOG.info("Data storage is file system: " + dataPath);
@@ -136,8 +135,7 @@ public final class HyperNaviModule extends AbstractModule {
                 final MongoClient client = new MongoClient(hostWithPort[0], Integer.parseInt(hostWithPort[1]));
                 final MongoDatabase database = client.getDatabase(config.getProperty("hypernavi.data.mongo.database"));
                 bind(MongoDatabase.class).toInstance(database);
-                bind(new TypeLiteral<DatabaseProvider<Site>>() {
-                }).to(SiteMongoProvider.class);
+                bind(SiteProvider.class).to(SiteMongoProvider.class);
                 bind(new TypeLiteral<GeoIndex<Site>>() {
                 }).to(SiteMongoProvider.class);
 
