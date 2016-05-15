@@ -9,6 +9,8 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -20,6 +22,8 @@ import weka.core.Instances;
  * Time: 22:35
  */
 public final class BestPolynomialRegression extends AbstractClassifier {
+    private static final Log LOG = LogFactory.getLog(BestPolynomialRegression.class);
+
     private static final int MAX_DEG = 7;
 
     @Nullable
@@ -38,6 +42,7 @@ public final class BestPolynomialRegression extends AbstractClassifier {
                 throw new RuntimeException(e);
             }
         })).get();
+        LOG.debug("Best degree of polynom is " + bestDeg);
         delegate = new PolynomialRegression(bestDeg);
         delegate.buildClassifier(data);
     }
