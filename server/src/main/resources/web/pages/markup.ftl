@@ -44,7 +44,10 @@
     var image;
     var canvas;
 
-    $('#image').click(function (e) {
+    $('#image').mousedown(function (e) {
+        if (e.which != 1 && e.which != 3) {
+            return;
+        }
         var coords = canvasMouseCoords(e);
         var x = Math.floor(coords.x * image.width / canvas.width);
         var y = Math.floor(coords.y * image.height / canvas.height);
