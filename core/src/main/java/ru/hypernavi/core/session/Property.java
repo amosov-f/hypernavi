@@ -22,7 +22,10 @@ public final class Property<T> {
 
     public static final Property<String> TEXT = new Property<>("text");
     public static final Property<GeoPoint> GEO_LOCATION = new Property<>("geo_location");
-    
+
+    public static final Property<String> URL = new Property<>("url");
+    public static final Property<String> LINK = new Property<>("link");
+
     public static final Property<VkUser> VK_USER = new Property<>("vk_user");
     public static final Property<Boolean> DEBUG = new Property<>("debug");
 

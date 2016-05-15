@@ -302,10 +302,10 @@
     }
 
     function validate(hintIndex) {
-        var $html = $('#points' + hintIndex);
-        var points = extractPoints($html);
+        var $points = $('#points' + hintIndex);
+        var points = extractPoints($points);
         check(points);
-        $html.find('tr').each(function () {
+        $points.find('tr').each(function () {
             $($(this).find('td')[2]).html('');
         });
         $.ajax({
@@ -315,7 +315,7 @@
             contentType: "application/json; charset=utf-8",
             success: function (distances) {
                 points.forEach(function (point, i) {
-                    $($($html.find('tr')[point.no]).find('td')[2]).html(Math.round(distances[i]));
+                    $($($points.find('tr')[point.no]).find('td')[2]).html(Math.round(distances[i]));
                 });
             },
             error: function (req, textStatus, error) {

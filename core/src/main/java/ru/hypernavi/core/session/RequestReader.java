@@ -35,6 +35,9 @@ public class RequestReader implements SessionInitializer {
         setPropertyIfPresent(session, Property.TEXT, Param.TEXT);
         session.setIfNotNull(Property.GEO_LOCATION, getGeoLocation());
 
+        setPropertyIfPresent(session, Property.URL, Param.URL);
+        setPropertyIfPresent(session, Property.LINK, Param.LINK);
+
         setPropertyIfPresent(session, Property.DEBUG, Param.DEBUG);
     }
 

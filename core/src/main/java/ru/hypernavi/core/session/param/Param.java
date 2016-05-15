@@ -16,6 +16,9 @@ public interface Param<T> {
     Param<Double> LAT = new QueryParam.DoubleParam("lat");
     Param<Double> LON = new QueryParam.DoubleParam("lon");
 
+    Param<String> URL = new QueryParam.StringParam("url");
+    Param<String> LINK = new QueryParam.StringParam("link");
+
     Param<Boolean> DEBUG = new QueryParam.BooleanParam("debug").defaultValue(false);
 
     @Nullable

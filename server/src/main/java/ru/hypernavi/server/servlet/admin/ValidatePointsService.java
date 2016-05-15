@@ -1,4 +1,4 @@
-package ru.hypernavi.server.servlet.admin.site;
+package ru.hypernavi.server.servlet.admin;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +13,7 @@ import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.BodyParam;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
+import ru.hypernavi.server.servlet.admin.site.SiteAdminService;
 
 /**
  * User: amosov-f
