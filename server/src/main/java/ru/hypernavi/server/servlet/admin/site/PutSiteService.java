@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
+import ru.hypernavi.commons.Site;
+import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
 
@@ -26,7 +28,9 @@ public final class PutSiteService extends SiteAdminService {
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final String id = provider.put(session.demand(SiteBodyReader.SITE));
+        final Site site = session.demand(SiteBodyReader.SITE);
+        site.setIfNotPresent(session.demand(Property.VK_USER).getUid());
+        final String id = provider.put(site);
         resp.setStatus(HttpStatus.SC_OK);
         resp.setContentType(ContentType.TEXT_PLAIN.getMimeType());
         resp.getWriter().write(id);

@@ -56,9 +56,6 @@
                     <span class="input-group-addon">Описание</span>
                     <textarea class="form-control" rows="2"><#if hint.description??>${hint.description}</#if></textarea>
                 </div>
-                <div class="form-group">
-                    <input type="hidden" <#if hint.authorUid??>value="${hint.authorUid}"</#if>>
-                </div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" <#if hint.type == 'PLAN'>class="active"</#if>>
                         <a href="#plan${hint?index}" data-toggle="tab">Схема</a>
@@ -193,13 +190,6 @@
             var description = $(this).find('textarea').val();
             if (description.length != 0) {
                 hint.description = description;
-            }
-            var authorUid = $(this).find(':input[type=hidden]').val();
-            var vkUser = getCookie('vk_user');
-            if (!authorUid && vkUser) {
-                console.log(vkUser);
-                hint.authorUid = JSON.parse(vkUser).uid;
-                console.log(hint.authorUid);
             }
 
             var index = $(this).attr('id');
@@ -363,14 +353,6 @@
     function url(path, paramName, paramValue) {
         var search = $(location).attr('search');
         return path + search + (search.length == 0 ? '?' : '&') + paramName + '=' + paramValue;
-    }
-
-    // возвращает cookie с именем name, если есть, если нет, то undefined
-    function getCookie(name) {
-        var matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-        ));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 </script>
 

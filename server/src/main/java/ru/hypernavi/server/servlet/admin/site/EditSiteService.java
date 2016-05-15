@@ -16,6 +16,7 @@ import org.apache.http.entity.ContentType;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.session.ParamRequestReader;
+import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.core.session.param.BodyParam;
@@ -45,7 +46,7 @@ public final class EditSiteService extends SiteAdminService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final Index<Site> site = session.demand(SITE_INDEX);
-
+        site.get().setIfNotPresent(session.demand(Property.VK_USER).getUid());
         provider.put(site.getId(), site.get());
 
         resp.setStatus(HttpStatus.SC_OK);
