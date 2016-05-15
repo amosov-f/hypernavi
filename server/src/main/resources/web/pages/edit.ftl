@@ -197,7 +197,9 @@
             var authorUid = $(this).find(':input[type=hidden]').val();
             var vkUser = getCookie('vk_user');
             if (!authorUid && vkUser) {
+                console.log(vkUser);
                 hint.authorUid = JSON.parse(vkUser).uid;
+                console.log(hint.authorUid);
             }
 
             var index = $(this).attr('id');
