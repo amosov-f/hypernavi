@@ -56,6 +56,9 @@
                     <span class="input-group-addon">Описание</span>
                     <textarea class="form-control" rows="2"><#if hint.description??>${hint.description}</#if></textarea>
                 </div>
+                <div class="form-group">
+                    <input type="hidden" <#if hint.authorUid??>value="${hint.authorUid}"</#if>>
+                </div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" <#if hint.type == 'PLAN'>class="active"</#if>>
                         <a href="#plan${hint?index}" data-toggle="tab">Схема</a>
@@ -190,6 +193,10 @@
             var description = $(this).find('textarea').val();
             if (description.length != 0) {
                 hint.description = description;
+            }
+            var authorUid = $(this).find(':input[type=hidden]').val();
+            if (authorUid) {
+                hint.authorUid = authorUid;
             }
 
             var index = $(this).attr('id');
