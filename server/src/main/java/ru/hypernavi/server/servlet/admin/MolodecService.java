@@ -21,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * User: amosov-f
@@ -56,7 +57,12 @@ public final class MolodecService extends HtmlPageHttpService {
                 if (authorUid == null) {
                     continue;
                 }
-                final Score score = author2score.computeIfAbsent(authorUid, Score::new);
+                final Score score = author2score.computeIfAbsent(authorUid, new Function<Integer, Score>() {
+                    @Override
+                    public Score apply(@NotNull final Integer uid) {
+                        return new Score(uid);
+                    }
+                });
                 score.incrementHints();
                 if (hint instanceof Plan) {
                     score.incrementPlans();
