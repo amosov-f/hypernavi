@@ -1,20 +1,18 @@
 package ru.hypernavi.ml.regression.map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.commons.PointMap;
+import ru.hypernavi.ml.factor.Factor;
+import ru.hypernavi.ml.regression.BestPolynomialRegression;
+import ru.hypernavi.ml.regression.WekaRegression;
+import ru.hypernavi.util.GeoPoint;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.IntStream;
-
-
-import org.apache.commons.lang3.ArrayUtils;
-import ru.hypernavi.commons.PointMap;
-import ru.hypernavi.ml.factor.Factor;
-import ru.hypernavi.ml.regression.BestPolynomialRegression;
-import ru.hypernavi.ml.regression.WekaRegression;
-import ru.hypernavi.util.GeoPoint;
 
 /**
  * Created by amosov-f on 22.01.16.
@@ -57,19 +55,19 @@ public final class MapProjectionImpl implements MapProjection {
     }
 
     @NotNull
-    public static double[] validate(@NotNull final PointMap... points) {
+    public static Point[] validate(@NotNull final PointMap... points) {
         return IntStream.range(0, points.length)
-                .mapToDouble(i -> distance(points[i], ArrayUtils.remove(points, i)))
-                .toArray();
+                .mapToObj(i -> regress(points[i], ArrayUtils.remove(points, i)))
+                .toArray(Point[]::new);
     }
 
-    private static double distance(@NotNull final PointMap point, @NotNull final PointMap... otherPoints) {
+    private static Point regress(@NotNull final PointMap point, @NotNull final PointMap... otherPoints) {
         final Point predictedPoint = map(point.getGeoPoint(), otherPoints);
-        return distance(point.getMapPoint(), predictedPoint);
+        return diff(point.getMapPoint(), predictedPoint);
     }
 
-    private static double distance(@NotNull final Point p1, @NotNull final Point p2) {
-        return Point.distance(p1.x, p1.y, p2.x, p2.y);
+    private static Point diff(@NotNull final Point p1, @NotNull final Point p2) {
+        return new Point(p2.x - p1.x, p2.y - p1.y);
     }
 
     @NotNull

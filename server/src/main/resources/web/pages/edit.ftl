@@ -94,7 +94,7 @@
                                     <th>#</th>
                                     <th>Широта,Долгота</th>
                                     <th>X,Y</th>
-                                    <th>Ошибка в пикс.</th>
+                                    <th>Ошибка по X,Y</th>
                                 </tr>
                                 </thead>
                                 <tbody id="points${hint?index}">
@@ -110,7 +110,7 @@
                             </table>
                         </#if>
                         <button class="btn btn-default" onclick="addPointMap(${hint?index})">
-                            <i class="glyphicon glyphicon-plus"></i> Новая точка
+                            <i class="glyphicon glyphicon-plus"></i> Еще точка
                         </button>
                         <button class="btn btn-default" onclick="validate(${hint?index})">
                             <i class="glyphicon glyphicon-play"></i> Провалидировать
@@ -207,7 +207,7 @@
                 hint.type = 'picture';
             }
 
-            var link = $hint.find(':input[type=url]').val();
+            var link = imageLink($hint);
             hint.image = duplicate(link);
 
             if (hint.type == 'plan') {
@@ -254,6 +254,10 @@
         });
     }
 
+    function imageLink($hint) {
+        return $hint.find(':input[type=url]').val();
+    }
+
     function extractPoints($html) {
         return $html.find('tr').map(function (i) {
             var latLon = $(this).find('input').eq(0).val();
@@ -291,6 +295,15 @@
         $points.append(row)
     }
 
+    function dimension(link) {
+        var img = new Image();
+        img.src = link;
+        return {
+            width: img.width,
+            height: img.height
+        };
+    }
+
     function duplicate(link) {
         var image;
         $.ajax({
@@ -309,6 +322,12 @@
     }
 
     function validate(hintIndex) {
+        var planLink = imageLink($('#plan' + hintIndex));
+        if (!planLink) {
+            alertAndThrow('Сначала укажите ссылку на схему!')
+        }
+        var planSize = dimension(planLink);
+
         var $points = $('#points' + hintIndex);
         var points = extractPoints($points);
         check(points);
@@ -316,13 +335,15 @@
             $($(this).find('td')[2]).html('');
         });
         $.ajax({
-            url: '/admin/validate',
+            url: 'http://localhost:8080/admin/validate',
             data: JSON.stringify(points),
             type: 'POST',
             contentType: "application/json; charset=utf-8",
-            success: function (distances) {
+            success: function (diffs) {
                 points.forEach(function (point, i) {
-                    $($($points.find('tr')[point.no]).find('td')[2]).html(Math.round(distances[i]));
+                    var dx = Math.round(100 * diffs[i].x / planSize.width);
+                    var dy = Math.round(100 * diffs[i].y / planSize.height);
+                    $($($points.find('tr')[point.no]).find('td')[2]).html(dx + '%,' + dy + '%');
                 });
             },
             error: function (req, textStatus, error) {
@@ -333,10 +354,13 @@
 
     function check(points) {
         if (0 < points.length && points.length < 3) {
-            var message = 'Точек должно быть хотя бы три!';
-            alert(message);
-            throw message;
+            alertAndThrow('Точек должно быть хотя бы три!')
         }
+    }
+
+    function alertAndThrow(message) {
+        alert(message);
+        throw message;
     }
 
     function onRemove() {

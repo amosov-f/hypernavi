@@ -1,19 +1,18 @@
 package ru.hypernavi.server.servlet.admin;
 
 import org.jetbrains.annotations.NotNull;
-
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-
 import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.BodyParam;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.server.servlet.admin.site.SiteAdminService;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.io.IOException;
 
 /**
  * User: amosov-f
@@ -35,7 +34,7 @@ public final class ValidatePointsService extends SiteAdminService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final PointMap[] points = session.demand(POINTS);
-        final double[] distances = MapProjectionImpl.validate(points);
-        write(distances, resp);
+        final Point[] diffs = MapProjectionImpl.validate(points);
+        write(diffs, resp);
     }
 }
