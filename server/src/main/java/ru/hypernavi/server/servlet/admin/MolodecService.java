@@ -56,7 +56,7 @@ public final class MolodecService extends HtmlPageHttpService {
                 if (authorUid == null) {
                     continue;
                 }
-                final Score score = author2score.get(authorUid);
+                final Score score = author2score.computeIfAbsent(authorUid, Score::new);
                 score.incrementHints();
                 if (hint instanceof Plan) {
                     score.incrementPlans();

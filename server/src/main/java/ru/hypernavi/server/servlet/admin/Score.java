@@ -8,9 +8,19 @@ import java.util.Comparator;
  * Created by amosov-f on 18.05.16.
  */
 public final class Score {
+    private final int authorUid;
+
     private int markedSchemes;
     private int plans;
     private int hints;
+
+    public Score(final int authorUid) {
+        this.authorUid = authorUid;
+    }
+
+    public int getAuthorUid() {
+        return authorUid;
+    }
 
     public int getMarkedPlans() {
         return markedSchemes;
