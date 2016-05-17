@@ -335,7 +335,7 @@
             $($(this).find('td')[2]).html('');
         });
         $.ajax({
-            url: 'http://localhost:8080/admin/validate',
+            url: '/admin/validate',
             data: JSON.stringify(points),
             type: 'POST',
             contentType: "application/json; charset=utf-8",
