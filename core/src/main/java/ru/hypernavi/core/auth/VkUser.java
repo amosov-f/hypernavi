@@ -9,6 +9,8 @@ import java.util.Objects;
  * Created by amosov-f on 14.11.15.
  */
 public final class VkUser {
+    public static final VkUser[] EMPTY_ARRAY = new VkUser[0];
+
     private final int uid;
     @NotNull
     private final String firstName;
