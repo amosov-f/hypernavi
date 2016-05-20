@@ -35,6 +35,13 @@
 
 <div id="map"/>
 
+<script>
+    <#setting locale="en_US">
+    var LANG = '${lang}';
+    var CENTER = [${center.latitude}, ${center.longitude}];
+    var ZOOM = ${zoom};
+</script>
+
 <script src="/web/pages/balloon.js" type="text/javascript"></script>
 <script src="/web/pages/admin.js" type="text/javascript"></script>
 <script src="/web/pages/edit.js" type="text/javascript"></script>

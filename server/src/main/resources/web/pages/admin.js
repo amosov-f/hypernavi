@@ -3,12 +3,15 @@ var ID = 0;
 
 ymaps.ready(function () {
     var map = new ymaps.Map('map', {
-        center: [59.796, 30.1466],
-        zoom: 9
+        center: CENTER,
+        zoom: ZOOM,
+        controls: ['zoomControl', 'searchControl', 'typeSelector',  'fullscreenControl']
     }, {
         noPlacemark: true,
         searchControlProvider: 'yandex#search'
     });
+
+    addLangButton(map);
 
     objectManager = new ymaps.ObjectManager({
         clusterize: true,
@@ -63,6 +66,24 @@ ymaps.ready(function () {
         });
     });
 });
+
+function addLangButton(map) {
+    var changeLangButton = new ymaps.control.Button({
+        data: {
+            content: 'Сменить язык'
+        },
+        options: {
+            maxWidth: 150
+        }
+    });
+    changeLangButton.events.add('click', function () {
+        var lat = map.getCenter()[0];
+        var lon = map.getCenter()[1];
+        var lang = LANG === 'ru_RU' ? 'en_US' : 'ru_RU';
+        location.href = '/admin?lang=' + lang + '&lat=' + lat + '&lon=' + lon + '&zoom=' + map.getZoom();
+    });
+    map.controls.add(changeLangButton);
+}
 
 function convert(searchData) {
     var features = [];
@@ -158,4 +179,14 @@ function reverseToPoint(coordinates) {
 
 function equals(a, b) {
     return a.toString() == b.toString();
+}
+
+function updateQueryStringParameter(uri, key, value) {
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+        return uri.replace(re, '$1' + key + "=" + value + '$2');
+    } else {
+        return uri + separator + key + "=" + value;
+    }
 }

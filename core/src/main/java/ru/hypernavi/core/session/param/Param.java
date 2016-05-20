@@ -18,6 +18,7 @@ public interface Param<T> {
 
     Param<Double> LAT = new QueryParam.DoubleParam("lat");
     Param<Double> LON = new QueryParam.DoubleParam("lon");
+    Param<Integer> ZOOM = new QueryParam.IntegerParam("zoom");
 
     Param<String> URL = new QueryParam.StringParam("url");
     Param<String> LINK = new QueryParam.StringParam("link");

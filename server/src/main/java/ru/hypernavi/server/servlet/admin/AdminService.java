@@ -7,6 +7,8 @@ import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.HtmlPageHttpService;
+import ru.hypernavi.util.ArrayGeoPoint;
+import ru.hypernavi.util.GeoPoint;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,9 @@ import java.time.ZoneId;
  */
 @WebServlet(name = "adminka", value = "/admin")
 public final class AdminService extends HtmlPageHttpService {
+    private static final GeoPoint DEFAULT_CENTER = ArrayGeoPoint.of(30.1466, 59.796);
+    private static final int DEFAULT_ZOOM = 9;
+
     @NotNull
     private final LocalDateTime initTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 
@@ -39,6 +44,8 @@ public final class AdminService extends HtmlPageHttpService {
         final ImmutableMap.Builder<String, Object> dataModel = new ImmutableMap.Builder<>();
         dataModel.put("server_starts", initTime);
         dataModel.put("lang", session.demand(Property.LANG));
+        dataModel.put("center", session.get(Property.GEO_LOCATION, DEFAULT_CENTER));
+        dataModel.put("zoom", session.get(Property.ZOOM, DEFAULT_ZOOM));
         return dataModel.build();
     }
 }
