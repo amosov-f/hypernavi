@@ -1,12 +1,11 @@
 package ru.hypernavi.core.session;
 
+import com.google.inject.ImplementedBy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-
-
-import com.google.inject.ImplementedBy;
+import java.util.function.Consumer;
 
 /**
  * Created by amosov-f on 21.11.15.
@@ -45,5 +44,11 @@ public interface Session {
 
     default boolean has(@NotNull final Property<?> property) {
         return get(property) != null;
+    }
+
+    default <T> void ifHas(@NotNull final Property<T> property, @NotNull final Consumer<? super T> consumer) {
+        if (has(property)) {
+            consumer.accept(demand(property));
+        }
     }
 }

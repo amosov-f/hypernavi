@@ -52,12 +52,4 @@ public class Site implements Positioned {
     public GeoPoint getLocation() {
         return place.getLocation();
     }
-
-    public void setIfNotPresent(final int authorUid) {
-        for (final Hint hint : getHints()) {
-            if (hint.getAuthorUid() == null) {
-                hint.setAuthorUid(authorUid);
-            }
-        }
-    }
 }

@@ -37,6 +37,7 @@
 
 <script src="/web/pages/balloon.js" type="text/javascript"></script>
 <script src="/web/pages/admin.js" type="text/javascript"></script>
+<script src="/web/pages/edit.js" type="text/javascript"></script>
 
 </body>
 </html>
