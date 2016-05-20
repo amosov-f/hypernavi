@@ -1,5 +1,6 @@
 package ru.hypernavi.core.telegram;
 
+import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import ru.hypernavi.core.telegram.api.markup.KeyboardButton;
 import ru.hypernavi.core.telegram.api.markup.ReplyKeyboardMarkup;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
 import ru.hypernavi.core.telegram.update.UpdatesSource;
+import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.awt.ImageUtils;
@@ -38,6 +40,7 @@ import ru.hypernavi.util.stream.MoreStreamSupport;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -121,7 +124,7 @@ public final class HyperNaviBot {
 
     private void processMessage(@NotNull final Message message) {
         final int chatId = message.getChat().getId();
-        final GeoPoint location = message.getLocation();
+        GeoPoint location = message.getLocation();
         final String text = toNullIfBlank(message.getText());
         final boolean startCommand = MoreStreamSupport.instances(message.getEntities(), BotCommand.class)
                 .anyMatch(command -> command.getCommand(Objects.requireNonNull(text)).equals("/start"));
@@ -134,13 +137,22 @@ public final class HyperNaviBot {
         if (location == null && text == null) {
             return;
         }
+        if (text != null) {
+            final GeoPoint locationFromText = extractLocation(text);
+            if (locationFromText != null) {
+                location = locationFromText;
+            }
+        }
         final SearchResponse searchResponse = search(location, text);
         if (searchResponse == null) {
             LOG.error("Server not respond by: location=" + location + ", text=" + text);
             api.sendMessage(chatId, "Простите, наш сервер не ответил на этот запрос");
             return;
         }
-        searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
+        final GeoPoint finalLocation = location;
+        searchResponse.getData().getSites().stream()
+                .map(Index::get)
+                .forEach(site -> respond(chatId, site, finalLocation));
 
     }
 
@@ -183,5 +195,20 @@ public final class HyperNaviBot {
     @Nullable
     private String toNullIfBlank(@Nullable final String text) {
         return !StringUtils.isBlank(text) ? text : null;
+    }
+
+    @Nullable
+    private GeoPoint extractLocation(@NotNull final String text) {
+        final List<String> parts = Splitter.on(',').trimResults().splitToList(text);
+        if (parts.size() != 2) {
+            return null;
+        }
+        try {
+            final double latitude = Double.parseDouble(parts.get(0));
+            final double longitude = Double.parseDouble(parts.get(1));
+            return ArrayGeoPoint.of(longitude, latitude);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
     }
 }
