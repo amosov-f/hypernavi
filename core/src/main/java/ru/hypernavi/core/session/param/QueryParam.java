@@ -2,14 +2,15 @@ package ru.hypernavi.core.session.param;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.hypernavi.util.json.GsonUtils;
 
 import javax.servlet.ServletRequest;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.function.Function;
-
-
-import ru.hypernavi.util.json.GsonUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User: amosov-f
@@ -74,6 +75,31 @@ public abstract class QueryParam<T> extends RequestGetterParam<T> {
     public static final class ObjectParam<T> extends LambdaParam<T> {
         public ObjectParam(@NotNull final String name, @NotNull final Type clazz) {
             super(name, value -> GsonUtils.gson().fromJson(value, clazz));
+        }
+    }
+
+    public static final class LocaleParam extends QueryParam<Locale> {
+        private static final Pattern SHORT_PATTERN = Pattern.compile("[a-zA-Z]{2}");
+        private static final Pattern LONG_PATTERN = Pattern.compile("([a-zA-Z]{2})[-_]([a-zA-Z]{2})");
+
+        public LocaleParam(@NotNull final String name) {
+            super(name);
+        }
+
+        @Nullable
+        @Override
+        protected Locale parse(@NotNull final String value) {
+            final Matcher longMatcher = LONG_PATTERN.matcher(value);
+            if (longMatcher.matches()) {
+                final String language = longMatcher.group(1);
+                final String country = longMatcher.group(2);
+                return new Locale(language, country);
+            }
+            final Matcher shortMatcher = SHORT_PATTERN.matcher(value);
+            if (shortMatcher.matches()) {
+                return new Locale(value);
+            }
+            return null;
         }
     }
 }

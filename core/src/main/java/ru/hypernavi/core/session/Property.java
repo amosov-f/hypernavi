@@ -7,6 +7,8 @@ import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.util.GeoPoint;
 
+import java.util.Locale;
+
 /**
  * Created by amosov-f on 24.10.15.
  */
@@ -17,6 +19,8 @@ public final class Property<T> {
     public static final Property<String> HTTP_PATH_INFO = new Property<>("http_path_info");
     public static final Property<String> HTTP_QUERY_STRING = new Property<>("http_query_string");
     public static final Property<String> HTTP_COOKIE = new Property<>("http_cookie");
+
+    public static final Property<Locale> LANG = new Property<>("lang");
 
     public static final Property<Platform> PLATFORM = new Property<>("platform");
 

@@ -1,16 +1,14 @@
 package ru.hypernavi.core.session;
 
+import com.google.common.net.HttpHeaders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.servlet.http.HttpServletRequest;
-
-
-import com.google.common.net.HttpHeaders;
 import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.session.param.Param;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by amosov-f on 24.10.15.
@@ -31,6 +29,8 @@ public class RequestReader implements SessionInitializer {
         session.setIfNotNull(Property.HTTP_PATH_INFO, req.getPathInfo());
         session.setIfNotNull(Property.HTTP_QUERY_STRING, req.getQueryString());
         session.setIfNotNull(Property.HTTP_COOKIE, req.getHeader(HttpHeaders.COOKIE));
+
+        setPropertyIfPresent(session, Property.LANG, Param.LANG);
 
         setPropertyIfPresent(session, Property.TEXT, Param.TEXT);
         session.setIfNotNull(Property.GEO_LOCATION, getGeoLocation());

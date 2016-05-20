@@ -1,18 +1,17 @@
 package ru.hypernavi.server.servlet.admin;
 
+import com.google.common.collect.ImmutableMap;
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.core.auth.AdminRequestReader;
+import ru.hypernavi.core.session.Property;
+import ru.hypernavi.core.session.Session;
+import ru.hypernavi.core.session.SessionInitializer;
+import ru.hypernavi.server.servlet.HtmlPageHttpService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-
-
-import com.google.common.collect.ImmutableMap;
-import ru.hypernavi.core.auth.AdminRequestReader;
-import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.session.SessionInitializer;
-import ru.hypernavi.server.servlet.HtmlPageHttpService;
 
 /**
  * Created by Константин on 02.09.2015.
@@ -39,6 +38,7 @@ public final class AdminService extends HtmlPageHttpService {
     public Object toDataModel(@NotNull final Session session) {
         final ImmutableMap.Builder<String, Object> dataModel = new ImmutableMap.Builder<>();
         dataModel.put("server_starts", initTime);
+        dataModel.put("lang", session.demand(Property.LANG));
         return dataModel.build();
     }
 }

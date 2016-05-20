@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 /**
  * User: amosov-f
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
  * Time: 23:15
  */
 public interface Param<T> {
+    Param<Locale> LANG = new QueryParam.LocaleParam("lang").defaultValue(new Locale("ru", "RU"));
+
     Param<String> TEXT = new QueryParam.StringParam("text");
 
     Param<Double> LAT = new QueryParam.DoubleParam("lat");
