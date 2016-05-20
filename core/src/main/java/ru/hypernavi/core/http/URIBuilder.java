@@ -41,6 +41,11 @@ public final class URIBuilder {
     }
 
     @NotNull
+    public URIBuilder addIfNotNull(@NotNull final String param, @Nullable final Double value) {
+        return value != null ? add(param, value) : this;
+    }
+
+    @NotNull
     public URIBuilder set(@NotNull final String param, @NotNull final String value) {
         builder.setParameter(param, value);
         return this;

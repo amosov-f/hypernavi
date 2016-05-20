@@ -98,21 +98,13 @@ public final class HyperNaviBot {
 
     private void processInlineQuery(@NotNull final InlineQuery inlineQuery) {
         final GeoPoint location = inlineQuery.getLocation();
-        final String query = inlineQuery.getQuery();
-        final SearchResponse searchResponse;
-        if (!StringUtils.isBlank(query)) {
-            searchResponse = search(query);
-            if (searchResponse == null) {
-                LOG.error("Server not respond by query: '" + query + "'");
-                return;
-            }
-        } else if (location != null) {
-            searchResponse = search(location);
-            if (searchResponse == null) {
-                LOG.error("Server not respond by location: " + location);
-                return;
-            }
-        } else {
+        final String query = toNullIfBlank(inlineQuery.getQuery());
+        if (location == null && query == null) {
+            return;
+        }
+        final SearchResponse searchResponse = search(location, query);
+        if (searchResponse == null) {
+            LOG.error("Server not respond by: location=" + location + ", query=" + query);
             return;
         }
         final InlineQueryResult[] results = searchResponse.getData().getSites().stream()
@@ -130,7 +122,7 @@ public final class HyperNaviBot {
     private void processMessage(@NotNull final Message message) {
         final int chatId = message.getChat().getId();
         final GeoPoint location = message.getLocation();
-        final String text = message.getText();
+        final String text = toNullIfBlank(message.getText());
         final boolean startCommand = MoreStreamSupport.instances(message.getEntities(), BotCommand.class)
                 .anyMatch(command -> command.getCommand(Objects.requireNonNull(text)).equals("/start"));
         if (startCommand) {
@@ -139,20 +131,13 @@ public final class HyperNaviBot {
             api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
             return;
         }
-        final SearchResponse searchResponse;
-        if (location != null) {
-            searchResponse = search(location);
-            if (searchResponse == null) {
-                api.sendMessage(chatId, "Простите, наш сервер не работает");
-                return;
-            }
-        } else if (!StringUtils.isBlank(text)) {
-            searchResponse = search(text);
-            if (searchResponse == null) {
-                api.sendMessage(chatId, "Простите, я не знаю такого места");
-                return;
-            }
-        } else {
+        if (location == null && text == null) {
+            return;
+        }
+        final SearchResponse searchResponse = search(location, text);
+        if (searchResponse == null) {
+            LOG.error("Server not respond by: location=" + location + ", text=" + text);
+            api.sendMessage(chatId, "Простите, наш сервер не ответил на этот запрос");
             return;
         }
         searchResponse.getData().getSites().stream().map(Index::get).forEach(site -> respond(chatId, site, location));
@@ -182,21 +167,21 @@ public final class HyperNaviBot {
     }
 
     @Nullable
-    private SearchResponse search(@NotNull final GeoPoint location) {
+    private SearchResponse search(@Nullable final GeoPoint location, @Nullable final String text) {
+        if (location == null && text == null) {
+            throw new IllegalStateException("Specify text or location!");
+        }
         final URI uri = new URIBuilder("http://" + searchHost + "/search")
-                .add("lon", location.getLongitude())
-                .add("lat", location.getLatitude())
+                .addIfNotNull("lon", location != null ? location.getLongitude() : null)
+                .addIfNotNull("lat", location != null ? location.getLatitude() : null)
+                .addIfNotNull("text", text)
                 .add("ns", 1)
                 .build();
         return httpClient.execute(new HttpGet(uri), SearchResponse.class, GsonUtils.gson());
     }
 
     @Nullable
-    private SearchResponse search(@NotNull final String text) {
-        final URI uri = new URIBuilder("http://" + searchHost + "/search")
-                .add("text", text)
-                .add("ns", 1)
-                .build();
-        return httpClient.execute(new HttpGet(uri), SearchResponse.class, GsonUtils.gson());
+    private String toNullIfBlank(@Nullable final String text) {
+        return !StringUtils.isBlank(text) ? text : null;
     }
 }
