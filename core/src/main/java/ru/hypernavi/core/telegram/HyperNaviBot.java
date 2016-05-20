@@ -1,23 +1,13 @@
 package ru.hypernavi.core.telegram;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.awt.image.BufferedImage;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpGet;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.Image;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.SearchResponse;
@@ -44,6 +34,14 @@ import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.json.GsonUtils;
 import ru.hypernavi.util.stream.MoreStreamSupport;
+
+import java.awt.image.BufferedImage;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by amosov-f on 17.10.15.
@@ -102,16 +100,16 @@ public final class HyperNaviBot {
         final GeoPoint location = inlineQuery.getLocation();
         final String query = inlineQuery.getQuery();
         final SearchResponse searchResponse;
-        if (location != null) {
-            searchResponse = search(location);
-            if (searchResponse == null) {
-                LOG.error("Server not respond by location: " + location);
-                return;
-            }
-        } else if (!StringUtils.isBlank(query)) {
+        if (!StringUtils.isBlank(query)) {
             searchResponse = search(query);
             if (searchResponse == null) {
                 LOG.error("Server not respond by query: '" + query + "'");
+                return;
+            }
+        } else if (location != null) {
+            searchResponse = search(location);
+            if (searchResponse == null) {
+                LOG.error("Server not respond by location: " + location);
                 return;
             }
         } else {
