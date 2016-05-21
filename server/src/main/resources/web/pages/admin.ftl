@@ -22,7 +22,7 @@
         }
         .popover {
             display: block;
-            max-width: 600px;
+            max-width: 800px;
         }
         .close {
             position: absolute;
