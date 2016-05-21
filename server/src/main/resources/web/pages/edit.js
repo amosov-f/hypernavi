@@ -164,7 +164,7 @@ function duplicate(link) {
     return image;
 }
 
-function validate(hintIndex) {
+function validatePlanPoints(hintIndex) {
     var planLink = imageLink($('#plan' + hintIndex));
     if (!planLink) {
         alertAndThrow('Сначала укажите ссылку на схему!')
@@ -186,13 +186,20 @@ function validate(hintIndex) {
             points.forEach(function (point, i) {
                 var dx = Math.round(100 * diffs[i].x / planSize.width);
                 var dy = Math.round(100 * diffs[i].y / planSize.height);
-                $($($points.find('tr')[point.no]).find('td')[2]).html(dx + '%,' + dy + '%');
+                var dxFont = '<font color="' + errorColor(dx) + '">' + dx + '%</font>';
+                var dyFont = '<font color="' + errorColor(dy) + '">' + dy + '%</font>';
+                $($($points.find('tr')[point.no]).find('td')[2]).html(dxFont + ',' + dyFont);
             });
         },
         error: function (req, textStatus, error) {
             alert('Ошибка! ' + error)
         }
     });
+}
+
+function errorColor(num) {
+    var abs = Math.abs(num);
+    return abs <= 3 ? 'green' : abs <= 6 ? '#99cc00' : abs <= 10 ? 'orange' : 'red';
 }
 
 function check(points) {

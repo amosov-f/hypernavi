@@ -112,7 +112,7 @@
                         <button class="btn btn-default" onclick="addPointMap(${hint?index})">
                             <i class="glyphicon glyphicon-plus"></i> Еще точка
                         </button>
-                        <button class="btn btn-default" onclick="validate(${hint?index})">
+                        <button class="btn btn-default" onclick="validatePlanPoints(${hint?index})">
                             <i class="glyphicon glyphicon-play"></i> Провалидировать
                         </button>
                     </div>
