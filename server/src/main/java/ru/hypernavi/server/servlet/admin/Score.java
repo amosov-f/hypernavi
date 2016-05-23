@@ -9,13 +9,17 @@ import java.util.Comparator;
  */
 public final class Score {
     private final int authorUid;
+    private final int budget;
 
-    private int markedSchemes;
+    private int markedPlans;
     private int plans;
     private int hints;
 
-    public Score(final int authorUid) {
+    private int totalMarkedPlans;
+
+    public Score(final int authorUid, final int budget) {
         this.authorUid = authorUid;
+        this.budget = budget;
     }
 
     public int getAuthorUid() {
@@ -23,11 +27,11 @@ public final class Score {
     }
 
     public int getMarkedPlans() {
-        return markedSchemes;
+        return markedPlans;
     }
 
     public void incrementMarkedPlans() {
-        this.markedSchemes++;
+        this.markedPlans++;
     }
 
     public int getPlans() {
@@ -44,6 +48,22 @@ public final class Score {
 
     public void incrementHints() {
         this.hints++;
+    }
+
+    public void setTotalMarkedPlans(final int totalMarkedPlans) {
+        this.totalMarkedPlans = totalMarkedPlans;
+    }
+
+    public int getProfit() {
+        return profit(budget, markedPlans, totalMarkedPlans);
+    }
+
+    public int getNextCost() {
+        return profit(budget, markedPlans + 1, totalMarkedPlans + 1) - getProfit();
+    }
+
+    private static int profit(final int budget, final int markedPlans, final int totalMarkedPlans) {
+        return budget * markedPlans / totalMarkedPlans;
     }
 
     @NotNull

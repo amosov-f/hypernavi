@@ -1,12 +1,5 @@
 package ru.hypernavi.server;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-
-
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -22,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.auth.VkAuthValidator;
 import ru.hypernavi.core.classify.goods.GoodsClassifier;
@@ -39,6 +33,10 @@ import ru.hypernavi.core.telegram.update.UpdatesSource;
 import ru.hypernavi.core.telegram.update.WebhookUpdatesSource;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * User: amosov-f
@@ -150,6 +148,7 @@ public final class HyperNaviModule extends AbstractModule {
     private void bindTelegramBot() {
         bindProperty("hypernavi.telegram.bot.auth_token");
         bindProperty("hypernavi.telegram.bot.search_host");
+        bindProperty("hypernavi.telegram.data.budget");
         final Class<? extends UpdatesSource> updatesSourceClass = getPlatform().isProductionLike() ? WebhookUpdatesSource.class
                                                                                                    : GetUpdatesSource.class;
         bind(UpdatesSource.class).to(updatesSourceClass);

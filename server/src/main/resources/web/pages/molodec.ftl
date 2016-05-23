@@ -23,6 +23,8 @@
             <th>Размеченных схем</th>
             <th>Всего схем</th>
             <th>Всего подсказок</th>
+            <th>Возможный заработок</th>
+            <th>Разметка еще одной схемы принесет</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +36,8 @@
             <td>${score.markedPlans}</td>
             <td>${score.plans}</td>
             <td>${score.hints}</td>
+            <td>$${score.profit}</td>
+            <td>$${score.nextCost}</td>
         </tr>
         </#list>
         </tbody>
