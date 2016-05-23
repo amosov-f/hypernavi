@@ -10,12 +10,24 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <style>
+        .table td {
+            text-align: center;
+        }
+
+        .table th {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
+<#assign rub = 67>
+
 <div class="container">
     <h2 align="center">Молодцы</h2>
-    <table class="table table-striped fixed">
+    <table class="table table-striped fixed center-table">
         <thead>
         <tr>
             <th>#</th>
@@ -24,7 +36,7 @@
             <th>Всего схем</th>
             <th>Всего подсказок</th>
             <th>Возможный заработок</th>
-            <th>Разметка еще одной схемы принесет</th>
+            <th>Разметка следующей схемы принесет</th>
         </tr>
         </thead>
         <tbody>
@@ -33,11 +45,11 @@
             <th scope="row">${author?index + 1}</th>
             <td><img src="${author.photoRec}" width="40"/></td>
             <#assign score = scores[author?index]>
-            <td>${score.markedPlans}</td>
+            <td><b>${score.markedPlans}</b></td>
             <td>${score.plans}</td>
             <td>${score.hints}</td>
-            <td>$${score.profit}</td>
-            <td>$${score.nextCost}</td>
+            <td>$${score.profit} или ${score.profit * rub} руб.</td>
+            <td>$${score.nextCost} или ${score.nextCost * rub} руб.</td>
         </tr>
         </#list>
         </tbody>
