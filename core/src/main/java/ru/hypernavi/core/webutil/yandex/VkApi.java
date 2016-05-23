@@ -27,7 +27,7 @@ public final class VkApi {
     }
 
     @NotNull
-    public VkUser[] getUser(final int... uids) {
+    public VkUser[] getUsers(final int... uids) {
         if (uids.length == 0) {
             return VkUser.EMPTY_ARRAY;
         }

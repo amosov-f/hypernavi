@@ -47,7 +47,7 @@ public final class MolodecService extends HtmlPageHttpService {
     @Override
     public Object toDataModel(@NotNull final Session session) {
         final Map<Integer, Score> author2score = scoreCounter.count(provider.getAllSites());
-        final VkUser[] authors = vkApi.getUser(Ints.toArray(author2score.keySet()));
+        final VkUser[] authors = vkApi.getUsers(Ints.toArray(author2score.keySet()));
         final Score[] scores = author2score.values().toArray(new Score[author2score.size()]);
         return ImmutableMap.of("authors", authors, "scores", scores);
     }
