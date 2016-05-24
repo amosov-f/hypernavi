@@ -11,20 +11,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+    <script src="/web/pages/edit.js" type="text/javascript"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </#if>
 </head>
 <body>
+
 <h3>${site.place.name}</h3>
-
 <p>${site.place.description}</p>
-
-<div class="panel-group" id="accordion">
-    <div class="form-group">
-        <a class="btn btn-primary" onclick="onSubmit()">Сохранить</a>
-        <a class="btn btn-danger" onclick="onSiteRemove('${id!''}')">Удалить</a>
-    </div>
+<div class="form-group">
+    <a class="btn btn-primary" onclick="onSubmit()">Сохранить</a>
+    <a class="btn btn-danger" onclick="onSiteRemove('${id!''}')">Удалить</a>
+</div>
 
 <#assign hints = site.hints>
 <#if !hints?has_content>
@@ -36,6 +36,8 @@
         'points': []
     }]>
 </#if>
+
+<div class="panel-group" id="accordion">
 <#list hints as hint>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -140,6 +142,7 @@
 
 <script>
     var INDEX = ${hints?size};
+    var $TEMPLATE = $(".panel").first();
 
     function onSubmit() {
         onSiteSubmit({

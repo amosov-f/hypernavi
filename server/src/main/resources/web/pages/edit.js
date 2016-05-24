@@ -1,4 +1,3 @@
-var $TEMPLATE = $(".panel").first();
 
 function addHint() {
     var $newHint = $TEMPLATE.clone();
