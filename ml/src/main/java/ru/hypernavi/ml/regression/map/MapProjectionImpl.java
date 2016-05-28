@@ -6,15 +6,13 @@ import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.ml.regression.BestPolynomialRegression;
 import ru.hypernavi.ml.regression.WekaRegression;
 import ru.hypernavi.util.GeoPoint;
-import ru.hypernavi.util.function.MoreFunctions;
 import weka.classifiers.evaluation.Evaluation;
+import weka.classifiers.evaluation.Prediction;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.ToDoubleFunction;
-import java.util.stream.Collectors;
 
 /**
  * Created by amosov-f on 22.01.16.
@@ -57,23 +55,21 @@ public final class MapProjectionImpl implements MapProjection {
 
     @NotNull
     public static ValidationResult validate(@NotNull final PointMap... points) {
-        final Evaluation ex = learn(X, points).crossValidate();
-        final Evaluation ey = learn(Y, points).crossValidate();
-
-        final Map<Integer, Integer> fx = predictions(ex);
-        final Map<Integer, Integer> fy = predictions(ey);
+        final Evaluation evalX = learn(X, points).crossValidate();
+        final Evaluation evalY = learn(Y, points).crossValidate();
         final Point[] diffs = Arrays.stream(points)
                 .map(PointMap::getMapPoint)
-                .map(p -> diff(p, new Point(fx.get(p.x), fy.get(p.y))))
+                .map(p -> diff(p, new Point(prediction(evalX, p.x), prediction(evalY, p.y))))
                 .toArray(Point[]::new);
-        return new ValidationResult(diffs, ex.toSummaryString().trim(), ey.toSummaryString().trim());
+        return new ValidationResult(diffs, evalX.toSummaryString().trim(), evalY.toSummaryString().trim());
     }
 
-    @NotNull
-    private static Map<Integer, Integer> predictions(@NotNull final Evaluation evaluation) {
-        return evaluation.predictions()
-                .stream()
-                .collect(Collectors.toMap(p -> (int) p.actual(), p -> (int) p.predicted(), MoreFunctions.rightProjection()));
+    private static int prediction(@NotNull final Evaluation evaluation, final int actual) {
+        return (int) evaluation.predictions().stream()
+                .filter(p -> (int) p.actual() == actual)
+                .mapToDouble(Prediction::predicted)
+                .findAny()
+                .getAsDouble();
     }
 
     @NotNull
