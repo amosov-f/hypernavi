@@ -1,13 +1,9 @@
 package ru.hypernavi.core.classify.scheme;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.jetbrains.annotations.NotNull;
 import org.openimaj.feature.DoubleFVComparison;
 import ru.hypernavi.commons.Chain;
 import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
@@ -18,8 +14,13 @@ import ru.hypernavi.ml.factor.CachedFactor;
 import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.util.EnumUtils;
 import ru.hypernavi.util.MoreIOUtils;
-import weka.classifiers.Evaluation;
+import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.trees.RandomForest;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by amosov-f on 03.09.15.

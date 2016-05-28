@@ -110,6 +110,7 @@
                                     </#list>
                                 </tbody>
                             </table>
+                            <p id="eval${hint?index}"></p>
                         </#if>
                         <button class="btn btn-default" onclick="addPointMap(${hint?index})">
                             <i class="glyphicon glyphicon-plus"></i> Еще точка

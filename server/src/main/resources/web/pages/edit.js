@@ -171,23 +171,30 @@ function validatePlanPoints(hintIndex) {
     var planSize = dimension(planLink);
 
     var $points = $('#points' + hintIndex);
+    var $eval = $('#eval' + hintIndex);
+
     var points = extractPoints($points);
     check(points);
+
     $points.find('tr').each(function () {
         $($(this).find('td')[2]).html('');
     });
+    $eval.html('');
     $.ajax({
         url: '/admin/validate',
         data: JSON.stringify(points),
         type: 'POST',
         contentType: "application/json; charset=utf-8",
-        success: function (diffs) {
+        success: function (validation) {
             points.forEach(function (point, i) {
-                var dx = Math.round(100 * diffs[i].x / planSize.width);
-                var dy = Math.round(100 * diffs[i].y / planSize.height);
+                var dx = Math.round(100 * validation.diffs[i].x / planSize.width);
+                var dy = Math.round(100 * validation.diffs[i].y / planSize.height);
                 var dxFont = '<font color="' + errorColor(dx) + '">' + dx + '%</font>';
                 var dyFont = '<font color="' + errorColor(dy) + '">' + dy + '%</font>';
                 $($($points.find('tr')[point.no]).find('td')[2]).html(dxFont + ',' + dyFont);
+                var evalX = '<b>X</b><xmp>' + validation.evalX + '</xmp>';
+                var evalY = '<b>Y</b><xmp>' + validation.evalY + '</xmp>';
+                $eval.html(evalX + evalY);
             });
         },
         error: function (req, textStatus, error) {

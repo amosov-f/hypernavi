@@ -1,19 +1,17 @@
 package ru.hypernavi.ml.classifier;
 
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.ml.WekaAdapter;
+import ru.hypernavi.ml.factor.ClassFactor;
+import ru.hypernavi.ml.factor.Factor;
+import weka.core.Attribute;
+import weka.core.Instance;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
-
-
-import ru.hypernavi.ml.WekaAdapter;
-import ru.hypernavi.ml.factor.ClassFactor;
-import ru.hypernavi.ml.factor.Factor;
-import weka.core.Attribute;
-import weka.core.Instance;
 
 /**
  * Created by amosov-f on 03.09.15.
@@ -47,10 +45,10 @@ public class WekaClassifier<T> extends WekaAdapter<T> implements Classifier<T> {
     @Override
     protected Attribute getClassAttribute(@NotNull final T... dataset) {
         final List<String> classNames = Arrays.stream(dataset)
-                .mapToInt(answer::applyAsInt)
+                .mapToInt(answer)
                 .sorted()
                 .distinct()
-                .mapToObj(class2string::apply)
+                .mapToObj(class2string)
                 .collect(Collectors.toList());
         return new Attribute(answer.getName(), classNames);
     }

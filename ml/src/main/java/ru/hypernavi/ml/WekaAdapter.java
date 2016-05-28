@@ -2,18 +2,16 @@ package ru.hypernavi.ml;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-
 import ru.hypernavi.ml.factor.Factor;
 import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
+import weka.classifiers.evaluation.Evaluation;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by amosov-f on 23.01.16.
@@ -43,11 +41,11 @@ public abstract class WekaAdapter<T> {
                 .collect(Collectors.toList()));
         attributes.add(classAttribute);
         instances = new Instances("dataset", attributes, dataset.length);
-        instances.addAll(Arrays.stream(dataset).map(object -> {
+        for (final T object : dataset) {
             final Instance instance = toInstance(object, false);
             instance.setDataset(instances);
-            return instance;
-        }).collect(Collectors.toList()));
+            instances.add(instance);
+        }
         instances.setClass(classAttribute);
         try {
             this.classifier.buildClassifier(instances);
@@ -57,7 +55,7 @@ public abstract class WekaAdapter<T> {
     }
 
     @NotNull
-    public Evaluation crossValidate() {
+    public weka.classifiers.evaluation.Evaluation crossValidate() {
         Objects.requireNonNull(instances, "Learn classifier before!");
         try {
             final Evaluation evaluation = new Evaluation(instances);
