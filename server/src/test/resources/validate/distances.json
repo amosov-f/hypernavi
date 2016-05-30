@@ -1,26 +1,11 @@
-[
-  {
-    "x": -2,
-    "y": -13
-  },
-  {
-    "x": 15,
-    "y": -5
-  },
-  {
-    "x": -19,
-    "y": 4
-  },
-  {
-    "x": -8,
-    "y": 24
-  },
-  {
-    "x": -19,
-    "y": -49
-  },
-  {
-    "x": 3,
-    "y": 10
-  }
-]
+{"diffs":[{"x":-2,"y":-13},{"x":15,"y":-5},{"x":-19,"y":4},{"x":-8,"y":24},{"x":-19,"y":-49},{"x":3,"y":10}],"evalX":"Correlation coefficient                  0.9996
+Mean absolute error                     10.9776
+Root mean squared error                 13.0086
+Relative absolute error                  3.3172 %
+Root relative squared error              2.786  %
+Total Number of Instances                6","evalY":"Correlation coefficient                  0.9975
+Mean absolute error                     17.6817
+Root mean squared error                 23.3418
+Relative absolute error                  5.1321 %
+Root relative squared error              6.0661 %
+Total Number of Instances                6"}
