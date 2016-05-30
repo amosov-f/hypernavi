@@ -88,6 +88,7 @@
                             </div>
                         </div>
                         <img class="img-responsive img-rounded" <#if hint.type == 'PLAN'>src="${hint.image.link}"</#if>/>
+                        <p id="imgsize${hint?index}" align="right"></p>
                         <#if hint.type == 'PLAN'>
                             <h4 align="center">Разметка схемы</h4>
                             <table class="table table-striped fixed">

@@ -4,6 +4,7 @@ function addHint() {
 
     $newHint.find(':input').val('');
     $newHint.find('img').attr('src', '');
+    $newHint.find('p[id^=imgsize]').attr('id', 'imgsize' + INDEX);
     $newHint.find('textarea').val();
 
     $newHint.find(".accordion-toggle")
@@ -24,6 +25,7 @@ function addHint() {
 
     $newHint.find('tbody').attr('id', 'points' + INDEX);
     $newHint.find('button[onclick^=addPointMap]').attr('onclick', "addPointMap('" + INDEX + "')");
+    $newHint.find('button[onclick^=validatePlanPoints]').attr('onclick', "validatePlanPoints('" + INDEX + "')");
 
     $("#accordion").append($newHint.fadeIn());
 
@@ -38,9 +40,7 @@ function sync(tabId) {
     var $tab = $('#' + tabId);
     var link = $tab.find(':input[type=url]').val();
     $tab.find('img').attr('src', link);
-    console.log($tab.find('img').attr('src'));
     refresh();
-    console.log($tab.find('img').attr('src'));
 }
 
 function onSiteSubmit(site) {
@@ -142,8 +142,23 @@ function dimension(link) {
     img.src = link;
     return {
         width: img.width,
-        height: img.height
+        height: img.height,
+        fileSizeKb: Math.round(img.width * img.height / 4000)
     };
+}
+
+function fileSize(link) {
+    var req = new XMLHttpRequest();
+    req.open('head', link, true);
+    var fileSize = null;
+    req.onreadystatechange = function(resp) {
+        if ( this.readyState == 1 ) {
+            this.abort();
+        }
+        fileSize = this.getResponseHeader("Content-length");
+    };
+    req.send(null);
+    return fileSize;
 }
 
 function duplicate(link) {
@@ -169,6 +184,7 @@ function validatePlanPoints(hintIndex) {
         alertAndThrow('Сначала укажите ссылку на схему!')
     }
     var planSize = dimension(planLink);
+    $('#imgsize' + hintIndex).html(planSize.width + ' &times; ' + planSize.height + ' px &asymp; ' + planSize.fileSizeKb + ' kb');
 
     var $points = $('#points' + hintIndex);
     var $eval = $('#eval' + hintIndex);
