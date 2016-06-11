@@ -2,13 +2,6 @@ package ru.hypernavi.core.auth;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Optional;
-
-
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.RequestReader;
@@ -19,6 +12,12 @@ import ru.hypernavi.core.session.param.NamedParam;
 import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.util.function.Optionals;
 import ru.hypernavi.util.json.GsonUtils;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 /**
  * Created by amosov-f on 14.11.15.
@@ -63,7 +62,10 @@ public class VkAuthRequestReader extends RequestReader {
                     new Cookie(COOKIE_VK_USER.getName(), GsonUtils.gson().toJson(getParamUser())),
                     new Cookie(COOKIE_VK_HASH.getName(), PARAM_HASH.getValue(req))
             };
-            Arrays.stream(cookies).forEach(cookie -> cookie.setDomain("hypernavi.net"));
+            for (final Cookie cookie : cookies) {
+                cookie.setDomain("hypernavi.net");
+                cookie.setMaxAge((int) Instant.now().plus(2, ChronoUnit.YEARS).getEpochSecond());
+            }
             throw new SessionValidationException.Redirect("Vk params in request", builder.build().toString(), cookies);
         }
         final VkUser user = Optional.ofNullable(session.get(Property.VK_USER))
