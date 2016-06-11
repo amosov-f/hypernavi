@@ -89,36 +89,35 @@
                         </div>
                         <img class="img-responsive img-rounded" <#if hint.type == 'PLAN'>src="${hint.image.link}"</#if>/>
                         <p id="imgsize${hint?index}" align="right"></p>
-                        <#if hint.type == 'PLAN'>
-                            <h4 align="center">Разметка схемы</h4>
-                            <table class="table table-striped fixed">
-                                <thead>
+                        <h4 align="center">Разметка схемы</h4>
+                        <table class="table table-striped fixed">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Широта,Долгота</th>
+                                <th>X,Y</th>
+                                <th>Ошибка по X,Y</th>
+                            </tr>
+                            </thead>
+                            <tbody id="points${hint?index}">
+                                <#list hint.points as point>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Широта,Долгота</th>
-                                    <th>X,Y</th>
-                                    <th>Ошибка по X,Y</th>
+                                    <th scope="row">${point?index + 1}</th>
+                                    <td><input class="form-control" value="${point.geoPoint.latitude},${point.geoPoint.longitude}"></td>
+                                    <td><input class="form-control" value="${point.mapPoint.x},${point.mapPoint.y}"></td>
+                                    <td></td>
                                 </tr>
-                                </thead>
-                                <tbody id="points${hint?index}">
-                                    <#list hint.points as point>
-                                    <tr>
-                                        <th scope="row">${point?index + 1}</th>
-                                        <td><input class="form-control" value="${point.geoPoint.latitude},${point.geoPoint.longitude}"></td>
-                                        <td><input class="form-control" value="${point.mapPoint.x},${point.mapPoint.y}"></td>
-                                        <td></td>
-                                    </tr>
-                                    </#list>
-                                </tbody>
-                            </table>
-                            <p id="eval${hint?index}"></p>
-                        </#if>
+                                </#list>
+                            </tbody>
+                        </table>
                         <button class="btn btn-default" onclick="addPointMap(${hint?index})">
                             <i class="glyphicon glyphicon-plus"></i> Еще точка
                         </button>
                         <button class="btn btn-default" onclick="validatePlanPoints(${hint?index})">
                             <i class="glyphicon glyphicon-play"></i> Провалидировать
                         </button>
+                        <br></br>
+                        <p id="eval${hint?index}"></p>
                     </div>
                     <div id="picture${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PICTURE'>in active</#if>">
                         <div class="form-group">
