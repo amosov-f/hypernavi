@@ -15,8 +15,9 @@ import ru.hypernavi.util.json.GsonUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.time.Instant;
-import java.time.Period;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 /**
@@ -64,7 +65,7 @@ public class VkAuthRequestReader extends RequestReader {
             };
             for (final Cookie cookie : cookies) {
                 cookie.setDomain("hypernavi.net");
-                cookie.setMaxAge((int) Instant.now().plus(Period.ofYears(2)).getEpochSecond());
+                cookie.setMaxAge((int) LocalDateTime.now().plus(2, ChronoUnit.YEARS).toEpochSecond(ZoneOffset.UTC));
             }
             throw new SessionValidationException.Redirect("Vk params in request", builder.build().toString(), cookies);
         }
