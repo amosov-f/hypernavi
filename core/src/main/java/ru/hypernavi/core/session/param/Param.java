@@ -22,6 +22,8 @@ public interface Param<T> {
 
     Param<String> URL = new QueryParam.StringParam("url");
     Param<String> LINK = new QueryParam.StringParam("link");
+    Param<Integer> X = new QueryParam.IntegerParam("x");
+    Param<Integer> Y = new QueryParam.IntegerParam("y");
 
     Param<Boolean> DEBUG = new QueryParam.BooleanParam("debug").defaultValue(false);
 

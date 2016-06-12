@@ -43,6 +43,32 @@ function sync(tabId) {
     refresh();
 }
 
+function markup(button) {
+    var link = $(button).parents('.tab-pane').find('img').attr('src');
+    window.open('/admin/markup?link=' + link, '_blank');
+}
+
+function markupXY(button) {
+    var $button = $(button);
+    var xy = $button.parent().parent().find('input').eq(1).val();
+    var x = xy.split(',')[0];
+    var y = xy.split(',')[1];
+    var link = $button.parents('.tab-pane').find('img').attr('src');
+    window.open('/admin/markup?link=' + link + '&x=' + x + '&y=' + y, '_blank')
+}
+
+function yandexMaps(button) {
+    var latLon = $(button).parent().parent().find('input').eq(0).val();
+    var link = 'https://yandex.ru/maps/?text=' + latLon;
+    window.open(link, '_blank');
+}
+
+function googleMaps(button) {
+    var latLon = $(button).parent().parent().find('input').eq(0).val();
+    var link = 'https://google.com/maps/?q=' + latLon;
+    window.open(link, '_blank');
+}
+
 function onSiteSubmit(site) {
     site.hints = $('.panel-collapse').map(function() {
         var hint = {};
@@ -132,9 +158,13 @@ function extractPoints($html) {
 
 function addPointMap(hintIndex) {
     var $points = $('#points' + hintIndex);
-    var no = $points.children('tr').length + 1;
-    var row = '<tr><th scope="row">' + no + '</th><td><input class="form-control"></td><td><input class="form-control"></td><td></td></tr>';
-    $points.append(row)
+    var $rows = $points.find('tr');
+    var $newPoint = $rows.eq(0).clone();
+    $newPoint.find('th').html($rows.length + 1);
+    $newPoint.find('input').val('');
+    $newPoint.find('p').html('');
+    console.log($newPoint);
+    $points.append($newPoint)
 }
 
 function dimension(link) {
@@ -192,9 +222,7 @@ function validatePlanPoints(hintIndex) {
     var points = extractPoints($points);
     check(points);
 
-    $points.find('tr').each(function () {
-        $($(this).find('td')[2]).html('');
-    });
+    $points.find('p').html('');
     $eval.html('');
     $.ajax({
         url: '/admin/validate',
@@ -207,7 +235,7 @@ function validatePlanPoints(hintIndex) {
                 var dy = Math.round(100 * validation.diffs[i].y / planSize.height);
                 var dxFont = '<font color="' + errorColor(dx) + '">' + dx + '%</font>';
                 var dyFont = '<font color="' + errorColor(dy) + '">' + dy + '%</font>';
-                $($($points.find('tr')[point.no]).find('td')[2]).html(dxFont + ',' + dyFont);
+                $points.find('tr').eq(point.no).find('p').html(dxFont + ',' + dyFont);
                 var evalX = '<b>X</b><xmp>' + validation.evalX + '</xmp>';
                 var evalY = '<b>Y</b><xmp>' + validation.evalY + '</xmp>';
                 $eval.html(evalX + evalY);

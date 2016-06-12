@@ -7,6 +7,7 @@ import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.util.GeoPoint;
 
+import java.awt.*;
 import java.util.Locale;
 
 /**
@@ -30,6 +31,7 @@ public final class Property<T> {
 
     public static final Property<String> URL = new Property<>("url");
     public static final Property<String> LINK = new Property<>("link");
+    public static final Property<Point> MAP_POINT = new Property<>("map_point");
 
     public static final Property<VkUser> VK_USER = new Property<>("vk_user");
     public static final Property<Boolean> DEBUG = new Property<>("debug");

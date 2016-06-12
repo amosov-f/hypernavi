@@ -9,6 +9,7 @@ import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 
 /**
  * Created by amosov-f on 24.10.15.
@@ -38,6 +39,7 @@ public class RequestReader implements SessionInitializer {
 
         setPropertyIfPresent(session, Property.URL, Param.URL);
         setPropertyIfPresent(session, Property.LINK, Param.LINK);
+        session.setIfNotNull(Property.MAP_POINT, getMapPoint());
 
         setPropertyIfPresent(session, Property.DEBUG, Param.DEBUG);
     }
@@ -51,6 +53,13 @@ public class RequestReader implements SessionInitializer {
         final Double lon = Param.LON.getValue(req);
         final Double lat = Param.LAT.getValue(req);
         return lat != null && lon != null ? ArrayGeoPoint.of(lon, lat) : null;
+    }
+
+    @Nullable
+    private Point getMapPoint() {
+        final Integer x = Param.X.getValue(req);
+        final Integer y = Param.Y.getValue(req);
+        return x != null && y != null ? new Point(x, y) : null;
     }
 
     protected <T> void setPropertyIfPresent(@NotNull final Session session,

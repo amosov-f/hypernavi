@@ -72,13 +72,16 @@
                 <div class="tab-content">
                     <div id="plan${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PLAN'>in active</#if>">
                         <div class="form-group">
-                            <div class="form-group col-lg-10">
+                            <div class="form-group col-lg-8">
                                 <div class="input-group">
                                     <span class="input-group-addon">Ссылка</span>
                                     <input type="url" class="form-control" <#if hint.type == 'PLAN'>value="${hint.image.link}"</#if>>
                                 </div>
                             </div>
-                            <a class="btn btn-default col-lg-2" onclick="sync('plan${hint?index}')">Показать</a>
+                            <div class="col-lg-4">
+                                <a class="btn btn-default" onclick="sync('plan${hint?index}')">Показать</a>
+                                <a class="btn btn-default" onclick="markup(this)">Разметить</a>
+                            </div>
                         </div>
                         <div class="form-group col-lg-12">
                             <div class="form-group input-group">
@@ -95,17 +98,36 @@
                             <tr>
                                 <th>#</th>
                                 <th>Широта,Долгота</th>
+                                <th></th>
                                 <th>X,Y</th>
+                                <th></th>
                                 <th>Ошибка по X,Y</th>
                             </tr>
                             </thead>
                             <tbody id="points${hint?index}">
-                                <#list hint.points as point>
+                                <#assign points = hint.points>
+                                <#if !points?has_content>
+                                    <#assign points = points + [{}]>
+                                </#if>
+                                <#list points as point>
                                 <tr>
                                     <th scope="row">${point?index + 1}</th>
-                                    <td><input class="form-control" value="${point.geoPoint.latitude},${point.geoPoint.longitude}"></td>
-                                    <td><input class="form-control" value="${point.mapPoint.x},${point.mapPoint.y}"></td>
-                                    <td></td>
+                                    <td><input class="form-control" <#if point.geoPoint??>value="${point.geoPoint.latitude},${point.geoPoint.longitude}"</#if>></td>
+                                    <td>
+                                        <button class="btn btn-default" onclick="yandexMaps(this)">
+                                            <img src="http://yandex.ru/favicon.ico">
+                                        </button>
+                                        <button class="btn btn-default" onclick="googleMaps(this)">
+                                            <img src="http://www.google.ru/favicon.ico" height="18">
+                                        </button>
+                                    </td>
+                                    <td><input class="form-control" <#if point.mapPoint??>value="${point.mapPoint.x},${point.mapPoint.y}"</#if>></td>
+                                    <td>
+                                        <button class="btn btn-default" onclick="markupXY(this)">
+                                            <i class="glyphicon glyphicon-screenshot"></i>
+                                        </button>
+                                    </td>
+                                    <td><p></p></td>
                                 </tr>
                                 </#list>
                             </tbody>
@@ -121,7 +143,7 @@
                     </div>
                     <div id="picture${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PICTURE'>in active</#if>">
                         <div class="form-group">
-                            <div class="form-group col-lg-10">
+                            <div class="form-group col-lg-8">
                                 <div class="input-group">
                                     <span class="input-group-addon">Ссылка</span>
                                     <input type="url" class="form-control" <#if hint.type == 'PICTURE'>value="${hint.image.link}"</#if>>

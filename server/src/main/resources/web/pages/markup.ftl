@@ -24,13 +24,13 @@
     <div class="form-group col-lg-5">
         <div class="input-group">
             <span class="input-group-addon">Ссылка на картинку</span>
-            <input id="link" type="url" class="form-control" value="http://usamovara.spb.ru/px2/256.jpg">
+            <input id="link" type="url" class="form-control" <#if link??>value="${link}"</#if>>
         </div>
     </div>
     <div class="form-group col-lg-5">
         <div class="input-group">
             <span class="input-group-addon">Координаты пикселя</span>
-            <input id="coords" type="text" class="form-control" value="100,200">
+            <input id="coords" type="text" class="form-control" <#if point??>value="${point.x},${point.y}"</#if>>
         </div>
     </div>
     <div class="form-group col-lg-2">
@@ -43,6 +43,10 @@
 <script type="text/javascript">
     var image;
     var canvas;
+
+    <#if link??>
+        drawPixel();
+    </#if>
 
     $('#image').mousedown(function (e) {
         if (e.which != 1 && e.which != 3) {
