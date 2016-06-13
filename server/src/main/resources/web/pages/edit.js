@@ -44,7 +44,7 @@ function sync(tabId) {
 }
 
 function markup(button) {
-    var link = $(button).parents('.tab-pane').find('img').attr('src');
+    var link = $(button).parents('.tab-pane').find(':input[type=url]').val();
     window.open('/admin/markup?link=' + link, '_blank');
 }
 
