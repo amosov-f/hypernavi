@@ -157,7 +157,6 @@ function removeSite() {
 }
 
 function onSubmitSuccess(id) {
-    console.log('pizza: ' + id);
     site.properties.balloonContent = null;
     if (id) {
         site.raw.id = id;

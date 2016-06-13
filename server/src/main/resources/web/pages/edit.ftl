@@ -24,6 +24,13 @@
 <div class="form-group">
     <a class="btn btn-primary" onclick="onSubmit()">Сохранить</a>
     <a class="btn btn-danger" onclick="onSiteRemove('${id!''}')">Удалить</a>
+    <a class="btn btn-default" onclick="onSubmitSuccess()">Отмена</a>
+    <a class="btn btn-default pull-right" onclick="showOnGoogleMaps()">
+        <img src="http://www.google.ru/favicon.ico" height="18">
+    </a>
+    <a class="btn btn-default pull-right" onclick="showOnYandexMaps()">
+        <img src="http://yandex.ru/favicon.ico" height="18">
+    </a>
 </div>
 
 <#assign hints = site.hints>
@@ -72,15 +79,17 @@
                 <div class="tab-content">
                     <div id="plan${hint?index}" role="tabpanel" class="tab-pane fade <#if hint.type == 'PLAN'>in active</#if>">
                         <div class="form-group">
-                            <div class="form-group col-lg-8">
+                            <div class="form-group col-lg-9">
                                 <div class="input-group">
                                     <span class="input-group-addon">Ссылка</span>
                                     <input type="url" class="form-control" <#if hint.type == 'PLAN'>value="${hint.image.link}"</#if>>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <a class="btn btn-default" onclick="sync('plan${hint?index}')">Показать</a>
-                                <a class="btn btn-default" onclick="markup(this)">Разметить</a>
+                                <a class="btn btn-default" onclick="markup(this)">
+                                    <i class="glyphicon glyphicon-screenshot"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="form-group col-lg-12">
@@ -114,10 +123,10 @@
                                     <th scope="row">${point?index + 1}</th>
                                     <td><input class="form-control" <#if point.geoPoint??>value="${point.geoPoint.latitude},${point.geoPoint.longitude}"</#if>></td>
                                     <td>
-                                        <button class="btn btn-default" onclick="yandexMaps(this)">
-                                            <img src="http://yandex.ru/favicon.ico">
+                                        <button class="btn btn-default" onclick="showPointOnYandexMaps(this)">
+                                            <img src="http://yandex.ru/favicon.ico" height="18">
                                         </button>
-                                        <button class="btn btn-default" onclick="googleMaps(this)">
+                                        <button class="btn btn-default" onclick="showPointOnGoogleMaps(this)">
                                             <img src="http://www.google.ru/favicon.ico" height="18">
                                         </button>
                                     </td>
@@ -180,6 +189,14 @@
                 }
             }
         });
+    }
+
+    function showOnYandexMaps() {
+        showLatLonOnYandexMaps(${site.place.location.latitude} + ',' + ${site.place.location.longitude});
+    }
+
+    function showOnGoogleMaps() {
+        showLatLonOnGoogleMaps(${site.place.location.latitude} + ',' + ${site.place.location.longitude});
     }
 </script>
 

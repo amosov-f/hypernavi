@@ -57,16 +57,20 @@ function markupXY(button) {
     window.open('/admin/markup?link=' + link + '&x=' + x + '&y=' + y, '_blank')
 }
 
-function yandexMaps(button) {
-    var latLon = $(button).parent().parent().find('input').eq(0).val();
-    var link = 'https://yandex.ru/maps/?text=' + latLon;
-    window.open(link, '_blank');
+function showPointOnYandexMaps(button) {
+    showLatLonOnYandexMaps($(button).parent().parent().find('input').eq(0).val())
 }
 
-function googleMaps(button) {
-    var latLon = $(button).parent().parent().find('input').eq(0).val();
-    var link = 'https://google.com/maps/?q=' + latLon;
-    window.open(link, '_blank');
+function showLatLonOnYandexMaps(latLon) {
+    window.open('https://yandex.ru/maps/?text=' + latLon, '_blank');
+}
+
+function showPointOnGoogleMaps(button) {
+    showLatLonOnGoogleMaps($(button).parent().parent().find('input').eq(0).val())
+}
+
+function showLatLonOnGoogleMaps(latLon) {
+    window.open('https://google.com/maps/?q=' + latLon, '_blank');
 }
 
 function onSiteSubmit(site) {
