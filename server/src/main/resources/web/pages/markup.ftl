@@ -4,6 +4,10 @@
     <meta charset="utf-8">
 
     <title>Разметка картинок</title>
+
+<#setting locale="en_US">
+<#setting number_format="0.######">
+
     <style type="text/css">
         body {
             background: #d8f1f3 !important;
@@ -45,7 +49,7 @@
     var canvas;
 
     <#if link??>
-        drawPixel();
+    drawPixel();
     </#if>
 
     $('#image').mousedown(function (e) {
