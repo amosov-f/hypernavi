@@ -1,17 +1,5 @@
 package ru.hypernavi.server.servlet;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.commons.logging.Log;
@@ -20,13 +8,23 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.MDC;
 import org.eclipse.jetty.server.Request;
-import ru.hypernavi.core.auth.VkAuthRequestReader;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.core.auth.VkAuthValidator;
+import ru.hypernavi.core.auth.VkRequiredAuthRequestReader;
 import ru.hypernavi.core.http.HttpTools;
 import ru.hypernavi.core.server.Platform;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.server.servlet.dump.DumpWriters;
 import ru.hypernavi.util.json.GsonUtils;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * User: amosov-f
@@ -65,7 +63,7 @@ public abstract class AbstractHttpService extends HttpServlet {
         dumpWriters.enable(session, req);
 
         session.set(Property.PLATFORM, platform);
-        session.set(VkAuthRequestReader.VALIDATOR, validator);
+        session.set(VkRequiredAuthRequestReader.VALIDATOR, validator);
 
         LOG.info("Started processing: " + HttpTools.curl(req));
 

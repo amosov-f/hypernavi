@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * Created by amosov-f on 14.11.15.
  */
 @RunWith(HyperNaviServerRunner.class)
-public final class AdminServiceTest extends AcceptanceTest {
+public final class MordaPageTest extends AcceptanceTest {
     @Test
     @Ignore
     public void testUnauthorizedRequest() {

@@ -1,43 +1,31 @@
 package ru.hypernavi.server.servlet.admin.site;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
+import ru.hypernavi.core.auth.AdminRequestReader;
 import ru.hypernavi.core.session.ParamRequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
-import ru.hypernavi.core.session.param.BodyParam;
-import ru.hypernavi.core.session.param.Param;
-import ru.hypernavi.util.json.GsonUtils;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.function.Supplier;
 
-import static ru.hypernavi.server.servlet.admin.site.SiteReader.SITE_INDEX;
+import static ru.hypernavi.server.servlet.admin.site.SiteProperty.SITE_INDEX;
 
 /**
  * Created by amosov-f on 20.12.15.
  */
 @WebServlet(name = "edit site", value = "/admin/site/edit")
 public final class EditSiteService extends SiteAdminService {
-    private static final Param<Index<Site>> SITE_INDEX_BODY = new BodyParam.ObjectParam<>(new TypeToken<Index<Site>>() {}.getType(), new Supplier<Gson>() {
-        @Override
-        public Gson get() {
-            return GsonUtils.gson();
-        }
-    }, true);
-
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new ParamRequestReader(new SiteReader(req), SITE_INDEX, SITE_INDEX_BODY);
+        return new ParamRequestReader(new AdminRequestReader(req), SITE_INDEX, SiteProperty.SITE_INDEX_BODY);
     }
 
     @Override

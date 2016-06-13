@@ -40,10 +40,13 @@
     var LANG = '${lang}';
     var CENTER = [${center.latitude}, ${center.longitude}];
     var ZOOM = ${zoom};
+
+    var VK_USER = <#if vk_user??>true<#else>false</#if>;
+    var IS_ADMIN = ${is_admin?string('true', 'false')};
 </script>
 
 <script src="/web/pages/balloon.js" type="text/javascript"></script>
-<script src="/web/pages/admin.js" type="text/javascript"></script>
+<script src="/web/pages/morda.js" type="text/javascript"></script>
 <script src="/web/pages/edit.js" type="text/javascript"></script>
 
 </body>

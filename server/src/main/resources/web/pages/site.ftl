@@ -19,7 +19,7 @@
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="form-group">
-        <a class="btn btn-default" onclick="edit()">Редактировать</a>
+        <a class="btn btn-default <#if !is_admin>disabled</#if>" onclick="edit()">Редактировать</a>
     </div>
 <#list site.hints as hint>
     <div class="panel panel-default">

@@ -32,7 +32,7 @@ import ru.hypernavi.core.telegram.HyperNaviBot;
 import ru.hypernavi.server.handler.AfterRequestHandler;
 import ru.hypernavi.server.handler.BeforeRequestHandler;
 import ru.hypernavi.server.servlet.admin.MigrateServlet;
-import ru.hypernavi.server.servlet.admin.site.SiteTemplateService;
+import ru.hypernavi.server.servlet.admin.site.EditSitePage;
 import ru.hypernavi.util.Config;
 import ru.hypernavi.util.MoreIOUtils;
 
@@ -126,7 +126,7 @@ public final class HyperNaviServer {
     private static Set<Class<? extends HttpServlet>> servletClasses() {
         return Stream.concat(
                 new Reflections("ru.hypernavi").getSubTypesOf(HttpServlet.class).stream(),
-                Stream.of(MigrateServlet.class, SiteTemplateService.class) // TODO
+                Stream.of(MigrateServlet.class, EditSitePage.class) // TODO
         ).filter(servletClass -> servletClass.isAnnotationPresent(WebServlet.class)).collect(Collectors.toSet());
     }
 

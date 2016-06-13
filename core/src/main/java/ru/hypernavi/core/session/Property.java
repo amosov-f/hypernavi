@@ -34,6 +34,7 @@ public final class Property<T> {
     public static final Property<Point> MAP_POINT = new Property<>("map_point");
 
     public static final Property<VkUser> VK_USER = new Property<>("vk_user");
+    public static final Property<Boolean> IS_ADMIN = new Property<>("is_admin");
     public static final Property<Boolean> DEBUG = new Property<>("debug");
 
     @NotNull

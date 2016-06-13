@@ -4,6 +4,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.commons.Site;
+import ru.hypernavi.core.auth.AdminRequestReader;
+import ru.hypernavi.core.session.ParamRequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
 
@@ -20,12 +22,12 @@ public final class PutSiteService extends SiteAdminService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new SiteBodyReader(req);
+        return new ParamRequestReader(new AdminRequestReader(req), SiteProperty.SITE, SiteProperty.SITE_BODY);
     }
 
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
-        final Site site = session.demand(SiteBodyReader.SITE);
+        final Site site = session.demand(SiteProperty.SITE);
         setAuthorIfNotPresent(site, session);
         final String id = provider.put(site);
         resp.setStatus(HttpStatus.SC_OK);

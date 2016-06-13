@@ -8,10 +8,7 @@ import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
-import ru.hypernavi.core.session.SessionInitializer;
 import ru.hypernavi.server.servlet.AbstractHttpService;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by amosov-f on 11.12.15.
@@ -19,12 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class SiteAdminService extends AbstractHttpService {
     @Inject
     protected SiteProvider provider;
-
-    @NotNull
-    @Override
-    protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new SiteReader(req);
-    }
 
     protected void setAuthorIfNotPresent(@NotNull final Site site, @NotNull final Session session) {
         final VkUser author = session.get(Property.VK_USER);

@@ -12,6 +12,9 @@ ymaps.ready(function () {
     });
 
     addLangButton(map);
+    if (!VK_USER) {
+        addVkAuthButton(map);
+    }
 
     objectManager = new ymaps.ObjectManager({
         clusterize: true,
@@ -85,6 +88,21 @@ function addLangButton(map) {
     map.controls.add(changeLangButton);
 }
 
+function addVkAuthButton(map) {
+    var vkAuthButton = new ymaps.control.Button({
+        data: {
+            content: 'Войти через ВКонтакте'
+        },
+        options: {
+            maxWidth: 150
+        }
+    });
+    vkAuthButton.events.add('click', function() {
+        location.href = '/auth?url=' + location.href;
+    });
+    map.controls.add(vkAuthButton);
+}
+
 function convert(searchData) {
     var features = [];
     searchData.data.sites.forEach(function (rawSite) {
@@ -117,7 +135,7 @@ function balloonContent(rawSite) {
     var absent = !rawSite.id;
     var balloonContent = null;
     $.ajax({
-        url: absent ? '/admin/site' : url('/admin/site', 'site_id', rawSite.id),
+        url: absent ? '/site/edit' : url('/site', 'site_id', rawSite.id),
         data: absent ? JSON.stringify(rawSite) : null,
         type: absent ? 'POST' : 'GET',
         contentType: "application/json; charset=utf-8",
@@ -142,7 +160,7 @@ function refresh() {
 
 function edit() {
     $.ajax({
-        url: url('/admin/site', 'edit=1&site_id', site.raw.id),
+        url: url('/site/edit', 'site_id', site.raw.id),
         async: false,
         success: function(html) {
             site.properties.balloonContent = html;
