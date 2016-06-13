@@ -36,7 +36,7 @@ public final class MordaPage extends HtmlPageHttpService {
     @NotNull
     @Override
     public String getPathInBundle(@NotNull final Session session) {
-        return "morda1.ftl";
+        return "morda.ftl";
     }
 
     @NotNull
