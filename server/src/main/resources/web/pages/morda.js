@@ -94,13 +94,13 @@ function addVkAuthButton(map) {
             content: 'Войти через ВКонтакте'
         },
         options: {
-            maxWidth: 150
+            maxWidth: 200
         }
     });
     vkAuthButton.events.add('click', function() {
         location.href = '/auth?url=' + location.href;
     });
-    map.controls.add(vkAuthButton);
+    map.controls.add(vkAuthButton, {float: 'right'});
 }
 
 function convert(searchData) {
