@@ -13,7 +13,7 @@
     </script>
 
     <script type="text/javascript">
-        VK.Widgets.Auth("vk_auth", {width: "200px", authUrl: "${url}"});
+        VK.Widgets.Auth("vk_auth", {width: "200px", authUrl: "/setauth?url=${url}"});
     </script>
 </head>
 <body>
