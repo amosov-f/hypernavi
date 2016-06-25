@@ -1,7 +1,6 @@
 package ru.hypernavi.server.servlet.admin.site;
 
 import com.google.inject.Inject;
-import freemarker.template.TemplateModelException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.Site;
@@ -20,9 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.hypernavi.server.servlet.admin.site.SiteProperty.SITE;
-import static ru.hypernavi.server.servlet.admin.site.SiteProperty.SITE_BODY;
-import static ru.hypernavi.server.servlet.admin.site.SiteProperty.SITE_ID_PARAM;
+import static ru.hypernavi.server.servlet.admin.site.SiteProperty.*;
 
 /**
  * Created by amosov-f on 01.01.16.
@@ -40,7 +37,7 @@ public final class EditSitePage extends HtmlPageHttpService {
     @NotNull
     @Override
     protected SessionInitializer createReader(@NotNull final HttpServletRequest req) {
-        return new ParamRequestReader(new AdminRequestReader(req), SiteProperty.SITE_ID, SITE_ID_PARAM, SITE, SITE_BODY);
+        return new ParamRequestReader(new AdminRequestReader(req), SITE_ID, SITE_ID_PARAM, SITE, SITE_BODY);
     }
 
     @NotNull
@@ -51,8 +48,8 @@ public final class EditSitePage extends HtmlPageHttpService {
 
     @Nullable
     @Override
-    public Object toDataModel(@NotNull final Session session) throws TemplateModelException {
-        final String siteId = session.get(SiteProperty.SITE_ID);
+    public Object toDataModel(@NotNull final Session session) {
+        final String siteId = session.get(SITE_ID);
         final Site site = siteId != null ? provider.get(siteId) : session.get(SITE);
         if (site == null) {
             return null;

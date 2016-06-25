@@ -153,8 +153,21 @@ function balloonContent(rawSite) {
 
 function refresh() {
     objectManager.objects.balloon.open(site.id);
-    $(site.properties.balloonContent).filter('script').each(function() {
-        $.globalEval(this.text);
+    evalScripts(site.properties.balloonContent);
+}
+
+function evalScripts(content) {
+    $(content).filter('script').each(function () {
+        if (this.src) {
+            $.ajax({
+                async: false,
+                url: this.src,
+                dataType: "script"
+            });
+        }
+        if (this.innerHTML) {
+            $.globalEval(this.innerHTML)
+        }
     });
 }
 
