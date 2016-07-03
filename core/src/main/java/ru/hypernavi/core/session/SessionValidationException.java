@@ -1,16 +1,14 @@
 package ru.hypernavi.core.session;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpStatus;
 
 /**
  * Created by amosov-f on 08.11.15.
@@ -55,7 +53,7 @@ public class SessionValidationException extends Exception {
         }
     }
 
-    public static class Redirect extends SessionValidationException {
+    public static final class Redirect extends SessionValidationException {
         @NotNull
         private final String locaiton;
         @NotNull
@@ -65,6 +63,11 @@ public class SessionValidationException extends Exception {
             super(detailMessage);
             this.locaiton = location;
             this.cookies = cookies;
+        }
+
+        @NotNull
+        public Cookie[] getCookies() {
+            return cookies;
         }
 
         @Override

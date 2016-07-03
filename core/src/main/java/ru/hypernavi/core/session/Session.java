@@ -16,6 +16,8 @@ public interface Session {
     @NotNull
     String getId();
 
+    long getTimestamp();
+
     <T> void set(@NotNull final Property<? super T> property, @NotNull final T value);
 
     default <T> void setIfNotNull(@NotNull final Property<? super T> property, @Nullable final T value) {

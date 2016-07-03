@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -47,9 +48,7 @@ public class VkRequiredAuthRequestReader extends VkAuthRequestReader {
         super.validate(session);
         if (getParamUser() != null && PARAM_HASH.contained(req)) {
             final URIBuilder builder = new URIBuilder(session.demand(Property.HTTP_REQUEST_URI));
-            for (final NamedParam<?> param : VK_PARAMS) {
-                builder.remove(param.getName());
-            }
+            Arrays.stream(VK_PARAMS).map(NamedParam::getName).forEach(builder::remove);
             final Cookie[] cookies = {
                     new Cookie(COOKIE_VK_USER.getName(), GsonUtils.gson().toJson(getParamUser())),
                     new Cookie(COOKIE_VK_HASH.getName(), PARAM_HASH.getValue(req))
