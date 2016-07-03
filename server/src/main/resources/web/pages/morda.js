@@ -133,6 +133,14 @@ function feature(rawSite) {
 
 function balloonContent(rawSite) {
     var absent = !rawSite.id;
+    if (absent) {
+        if (VK_USER) {
+            return "Авторизуйтесь!";
+        }
+        if (!IS_ADMIN) {
+            return "Только администраторы могут добавлять новые объекты!";
+        }
+    }
     var balloonContent = null;
     $.ajax({
         url: absent ? '/site/edit' : url('/site', 'site_id', rawSite.id),
