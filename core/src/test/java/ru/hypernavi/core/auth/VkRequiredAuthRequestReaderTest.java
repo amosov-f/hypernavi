@@ -42,7 +42,7 @@ public class VkRequiredAuthRequestReaderTest {
                     .collect(Collectors.toMap(Cookie::getName, Function.identity()));
             final int maxAge = cookies.get("vk_user").getMaxAge();
             final long timestamp = session.getTimestamp();
-            Assert.assertEquals(2, (maxAge - timestamp / 1000) / (60 * 60 * 24 * 365));
+            Assert.assertEquals(2, (maxAge - timestamp / 1000.0) / (60 * 60 * 24 * 365), 0.001);
             return;
         }
         Assert.fail("Must be redirect!");
