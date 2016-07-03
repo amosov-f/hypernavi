@@ -140,7 +140,7 @@ function balloonContent(rawSite) {
     var absent = !rawSite.id;
     if (absent) {
         if (!VK_USER) {
-            return vkAuthButton();
+            return '<button class="btn" href="/auth?url=' + location.href + '">Войти через ВКонтакте</button>';
         }
         if (!IS_ADMIN) {
             return "Только админы могут добавлять новые объекты!<br>" +
