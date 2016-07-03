@@ -88,7 +88,7 @@ function addLangButton(map) {
     map.controls.add(changeLangButton);
 }
 
-function addVkAuthButton(map) {
+function vkAuthButton() {
     var vkAuthButton = new ymaps.control.Button({
         data: {
             content: 'Войти через ВКонтакте'
@@ -100,7 +100,12 @@ function addVkAuthButton(map) {
     vkAuthButton.events.add('click', function() {
         location.href = '/auth?url=' + location.href;
     });
-    map.controls.add(vkAuthButton, {float: 'right'});
+    return vkAuthButton;
+}
+
+function addVkAuthButton(map) {
+    var button = vkAuthButton();
+    map.controls.add(button, {float: 'right'});
 }
 
 function convert(searchData) {
@@ -135,10 +140,11 @@ function balloonContent(rawSite) {
     var absent = !rawSite.id;
     if (absent) {
         if (!VK_USER) {
-            return "Авторизуйтесь!";
+            return vkAuthButton();
         }
         if (!IS_ADMIN) {
-            return "Только администраторы могут добавлять новые объекты!";
+            return "Только админы могут добавлять новые объекты!<br>" +
+                    "Обратитесь к <a href='https://vk.com/id98810985'>Федору</a>, чтобы стать админом";
         }
     }
     var balloonContent = null;
