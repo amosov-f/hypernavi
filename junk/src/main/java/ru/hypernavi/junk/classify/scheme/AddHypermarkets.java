@@ -1,6 +1,10 @@
-package ru.hypernavi.core.database;
+package ru.hypernavi.junk.classify.scheme;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.util.MoreIOUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,14 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import ru.hypernavi.core.classify.scheme.Picture;
-import ru.hypernavi.core.classify.scheme.SchemeClassifier;
-import ru.hypernavi.util.MoreIOUtils;
 /**
  * Created by Константин on 16.09.2015.
  */

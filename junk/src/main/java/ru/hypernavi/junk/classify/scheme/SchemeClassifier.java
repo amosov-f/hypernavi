@@ -1,4 +1,4 @@
-package ru.hypernavi.core.classify.scheme;
+package ru.hypernavi.junk.classify.scheme;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -6,8 +6,8 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.jetbrains.annotations.NotNull;
 import org.openimaj.feature.DoubleFVComparison;
 import ru.hypernavi.commons.Chain;
-import ru.hypernavi.core.classify.scheme.answer.ChainAnswer;
-import ru.hypernavi.core.classify.scheme.feature.*;
+import ru.hypernavi.junk.classify.scheme.answer.ChainAnswer;
+import ru.hypernavi.junk.classify.scheme.feature.*;
 import ru.hypernavi.ml.classifier.BinaryClassifier;
 import ru.hypernavi.ml.classifier.WekaClassifier;
 import ru.hypernavi.ml.factor.CachedFactor;

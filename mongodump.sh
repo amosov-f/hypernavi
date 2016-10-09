@@ -45,6 +45,8 @@ git_push() {
 
 HYPERNAVI_DATA_DIR="/root/hypernavi-data"
 
+mongodump --host hypernavi.net --port 27017 --out /root/hypernavi-data/backup
+
 git_configure_user ${HYPERNAVI_DATA_DIR}
 git_update_branch "master" ${HYPERNAVI_DATA_DIR}
 git_commit_changes "data updated" ${HYPERNAVI_DATA_DIR}

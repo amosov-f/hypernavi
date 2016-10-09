@@ -1,4 +1,4 @@
-package ru.hypernavi.core.classify.scheme.feature;
+package ru.hypernavi.junk.classify.scheme.feature;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -9,7 +9,7 @@ import org.openimaj.image.processing.resize.ResizeProcessor;
 import org.openimaj.image.text.extraction.LiuSamarabanduTextExtractorBasic;
 import org.openimaj.math.geometry.shape.Rectangle;
 import org.openimaj.util.pair.IndependentPair;
-import ru.hypernavi.core.classify.scheme.Picture;
+import ru.hypernavi.junk.classify.scheme.Picture;
 import ru.hypernavi.ml.factor.Factor;
 
 /**

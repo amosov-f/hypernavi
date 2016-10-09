@@ -51,22 +51,6 @@
             <artifactId>mongo-java-driver</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.fracpete</groupId>
-            <artifactId>snowball-stemmers-weka-package</artifactId>
-            <version>1.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>nz.ac.waikato.cms.weka</groupId>
-                    <artifactId>weka-dev</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.google.api.client</groupId>
-            <artifactId>google-api-client-util</artifactId>
-            <version>1.2.3-alpha</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
         </dependency>
@@ -78,17 +62,7 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
-        <!-- OpenIMAJ -->
-        <dependency>
-            <groupId>org.openimaj</groupId>
-            <artifactId>image-processing</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openimaj</groupId>
-            <artifactId>image-feature-extraction</artifactId>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
 </project>

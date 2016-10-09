@@ -1,22 +1,20 @@
 package ru.hypernavi.core.http;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-
 import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.util.function.IOFunction;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by amosov-f on 04.11.15.

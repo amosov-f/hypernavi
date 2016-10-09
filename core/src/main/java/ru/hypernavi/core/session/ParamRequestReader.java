@@ -1,6 +1,5 @@
 package ru.hypernavi.core.session;
 
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.core.session.param.Param;
 
@@ -40,7 +39,7 @@ public final class ParamRequestReader implements SessionInitializer {
     @Override
     public void initialize(@NotNull final Session session) {
         delegate.initialize(session);
-        map.forEach((property, param) -> delegate.setPropertyIfPresent(session, (Property<T>) property, (Param<T>) param));
+        map.forEach((property, param) -> delegate.setPropertyIfPresent(session, property, (Param) param));
     }
 
     @Override

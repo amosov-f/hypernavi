@@ -1,6 +1,6 @@
-package ru.hypernavi.core.classify.scheme.feature;
+package ru.hypernavi.junk.classify.scheme.feature;
 
-import ru.hypernavi.core.classify.scheme.Picture;
+import ru.hypernavi.junk.classify.scheme.Picture;
 import ru.hypernavi.ml.factor.Factor;
 
 /**

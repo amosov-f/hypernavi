@@ -1,4 +1,4 @@
-package ru.hypernavi.core.classify.scheme;
+package ru.hypernavi.junk.classify.scheme;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,4 +1,4 @@
-package ru.hypernavi.core.classify.scheme.feature;
+package ru.hypernavi.junk.classify.scheme.feature;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.pixel.statistics.HistogramModel;
 import org.openimaj.math.statistics.distribution.MultidimensionalHistogram;
-import ru.hypernavi.core.classify.scheme.Picture;
+import ru.hypernavi.junk.classify.scheme.Picture;
 import ru.hypernavi.ml.factor.Factor;
 
 /**
