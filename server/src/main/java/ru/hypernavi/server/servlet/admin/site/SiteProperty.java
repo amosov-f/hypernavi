@@ -20,6 +20,6 @@ public enum SiteProperty {
     public static final Property<Index<Site>> SITE_INDEX = new Property<>("site_index");
 
     public static final Param<String> SITE_ID_PARAM = new QueryParam.StringParam("site_id");
-    public static final Param<Site> SITE_BODY = new BodyParam.ObjectParam<>(Site.class, GsonUtils::gson, true);
-    public static final Param<Index<Site>> SITE_INDEX_BODY = new BodyParam.ObjectParam<>(new TypeToken<Index<Site>>() {}.getType(), GsonUtils::gson, true);
+    public static final Param<Site> SITE_BODY = new BodyParam.ObjectParam<>(Site.class, GsonUtils::gson);
+    public static final Param<Index<Site>> SITE_INDEX_BODY = new BodyParam.ObjectParam<>(new TypeToken<Index<Site>>() {}.getType(), GsonUtils::gson);
 }

@@ -1,16 +1,10 @@
 package ru.hypernavi.server.servlet.telegram;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.BodyParam;
 import ru.hypernavi.core.session.param.Param;
@@ -18,6 +12,10 @@ import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
 import ru.hypernavi.core.telegram.update.WebhookUpdatesSource;
 import ru.hypernavi.server.servlet.AbstractHttpService;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * User: amosov-f
@@ -28,7 +26,7 @@ import ru.hypernavi.server.servlet.AbstractHttpService;
 public final class TelegramWebhookService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(TelegramWebhookService.class);
 
-    private static final Param<Update> UPDATE_PARAM = new BodyParam.ObjectParam<>(Update.class, TelegramApi.gsonFactory(), true);
+    private static final Param<Update> UPDATE_PARAM = new BodyParam.ObjectParam<>(Update.class, TelegramApi.gsonFactory());
 
     private static final Property<Update> UPDATE = new Property<>("update");
 
