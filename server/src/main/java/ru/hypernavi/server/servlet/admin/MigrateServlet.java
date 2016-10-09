@@ -1,24 +1,13 @@
 package ru.hypernavi.server.servlet.admin;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.commons.Dimension;
 import ru.hypernavi.commons.*;
 import ru.hypernavi.commons.Image;
@@ -37,6 +26,15 @@ import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.function.IOFunction;
 import ru.hypernavi.util.json.GsonUtils;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 /**
  * Created by Константин on 29.09.2015.
  */
@@ -54,8 +52,8 @@ public class MigrateServlet extends AbstractHttpService {
     @Inject
     private HttpClient httpClient;
     @Inject
-    @Named("localport")
-    private int localPort;
+    @Named("hypernavi.server.host")
+    private String host;
     @Inject
     private ImageDimensioner dimensioner;
 
@@ -161,8 +159,9 @@ public class MigrateServlet extends AbstractHttpService {
     }
 
     private void put(@NotNull final Site site, @NotNull final Session session) throws UnsupportedEncodingException {
-        final String siteValue = URLEncoder.encode(GsonUtils.gson().toJson(site), StandardCharsets.UTF_8.name());
-        final HttpGet req = new HttpGet("http://hypernavi.net/admin/site/put?site=" + siteValue);
+        final String siteValue = GsonUtils.gson().toJson(site);
+        final HttpPost req = new HttpPost("http://" + host + "/admin/site/put");
+        req.setEntity(new StringEntity(siteValue, StandardCharsets.UTF_8));
         req.setHeader(HttpHeaders.COOKIE, session.get(Property.HTTP_COOKIE));
         httpClient.execute(req, IOFunction.identity());
     }
