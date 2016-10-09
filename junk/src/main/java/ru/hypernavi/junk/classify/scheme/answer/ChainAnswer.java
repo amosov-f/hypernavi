@@ -1,8 +1,6 @@
 package ru.hypernavi.junk.classify.scheme.answer;
 
 import org.jetbrains.annotations.NotNull;
-
-
 import ru.hypernavi.junk.classify.scheme.Picture;
 import ru.hypernavi.ml.factor.ClassFactor;
 import ru.hypernavi.util.EnumUtils;

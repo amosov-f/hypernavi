@@ -1,8 +1,6 @@
 package ru.hypernavi.junk.classify.scheme.feature;
 
 import org.jetbrains.annotations.NotNull;
-
-
 import ru.hypernavi.junk.classify.scheme.Picture;
 import ru.hypernavi.ml.factor.BinaryFactor;
 
