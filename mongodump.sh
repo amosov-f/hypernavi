@@ -45,7 +45,7 @@ git_push() {
 
 HYPERNAVI_DATA_DIR="/root/hypernavi-data"
 
-docker run --rm -v /root/hypernavi-data/backup:/backup --link mongo:mongo istepanov/mongodump no-cron
+docker run --rm -v ${HYPERNAVI_DATA_DIR}/backup:/backup --link mongo:mongo istepanov/mongodump no-cron
 
 git_configure_user ${HYPERNAVI_DATA_DIR}
 git_update_branch "master" ${HYPERNAVI_DATA_DIR}
