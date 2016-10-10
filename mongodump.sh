@@ -12,6 +12,7 @@ git_configure_user() {
   DIR=$1
   git -C ${DIR} config user.name "${GIT_COMMITER_NAME}"
   git -C ${DIR} config user.email "${GIT_COMMITER_EMAIL}"
+  ssh -T git@github.com
 }
 
 git_switch_to() {
@@ -45,9 +46,9 @@ git_push() {
 
 HYPERNAVI_DATA_DIR="/root/hypernavi-data"
 
-ssh -T git@github.com
-
 docker run --rm -v ${HYPERNAVI_DATA_DIR}/backup:/backup --link mongo:mongo istepanov/mongodump no-cron
+
+# git clone git@github.com:amosov-f/hypernavi-data.git
 
 git_configure_user ${HYPERNAVI_DATA_DIR}
 git_update_branch "master" ${HYPERNAVI_DATA_DIR}
