@@ -54,10 +54,12 @@ public final class DuplicateImageService extends AbstractHttpService {
         final String imageLink = session.demand(LINK);
         final BufferedImage image = ImageUtils.download(imageLink);
         final BufferedImage thumb = ImageEditor.INSTANCE.createThumb(image, THUMB_HEIGHT);
-        final String path = new URL(imageLink).getPath();
 
-        ImageIO.write(image, ImageUtils.format(image, imageLink), MoreIOUtils.openOutputStream(dataPath, "img", path));
-        ImageIO.write(thumb, ImageUtils.format(thumb, imageLink), MoreIOUtils.openOutputStream(dataPath, "thumb", path));
+        final String path = new URL(imageLink).getPath();
+        final String[] imgParts = path.startsWith("/img") ? new String[]{path} : new String[]{"img", path};
+        final String[] thumbParts = path.startsWith("/thumb") ? new String[]{path} : new String[]{"thumb", path};
+        ImageIO.write(image, ImageUtils.format(image, imageLink), MoreIOUtils.openOutputStream(dataPath, imgParts));
+        ImageIO.write(thumb, ImageUtils.format(thumb, imageLink), MoreIOUtils.openOutputStream(dataPath, thumbParts));
 
         final String duplicateLink = "http://" + host + "/img" + path;
         final String thumbLink = "http://" + host + "/thumb" + path;
