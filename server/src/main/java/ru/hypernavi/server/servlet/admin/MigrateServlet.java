@@ -160,7 +160,7 @@ public class MigrateServlet extends AbstractHttpService {
 
     private void put(@NotNull final Site site, @NotNull final Session session) throws UnsupportedEncodingException {
         final String siteValue = GsonUtils.gson().toJson(site);
-        final HttpPost req = new HttpPost("http://" + host + "/admin/site/put");
+        final HttpPost req = new HttpPost("http://hypernavi.net/admin/site/put");
         req.setEntity(new StringEntity(siteValue, StandardCharsets.UTF_8));
         req.setHeader(HttpHeaders.COOKIE, session.get(Property.HTTP_COOKIE));
         httpClient.execute(req, IOFunction.identity());
