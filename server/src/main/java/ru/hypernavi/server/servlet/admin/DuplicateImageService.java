@@ -1,20 +1,8 @@
 package ru.hypernavi.server.servlet.admin;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.imageio.ImageIO;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
-
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.commons.Dimension;
 import ru.hypernavi.commons.Image;
 import ru.hypernavi.core.session.*;
@@ -23,7 +11,16 @@ import ru.hypernavi.core.session.param.QueryParam;
 import ru.hypernavi.core.webutil.ImageDimensioner;
 import ru.hypernavi.core.webutil.ImageEditor;
 import ru.hypernavi.server.servlet.AbstractHttpService;
+import ru.hypernavi.util.MoreIOUtils;
 import ru.hypernavi.util.awt.ImageUtils;
+
+import javax.imageio.ImageIO;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * User: amosov-f
@@ -59,8 +56,8 @@ public final class DuplicateImageService extends AbstractHttpService {
         final BufferedImage thumb = ImageEditor.INSTANCE.createThumb(image, THUMB_HEIGHT);
         final String path = new URL(imageLink).getPath();
 
-        ImageIO.write(image, ImageUtils.format(image, imageLink), FileUtils.openOutputStream(Paths.get(dataPath, "img", path).toFile()));
-        ImageIO.write(thumb, ImageUtils.format(thumb, imageLink), FileUtils.openOutputStream(Paths.get(dataPath, "thumb", path).toFile()));
+        ImageIO.write(image, ImageUtils.format(image, imageLink), MoreIOUtils.openOutputStream(dataPath, "img", path));
+        ImageIO.write(thumb, ImageUtils.format(thumb, imageLink), MoreIOUtils.openOutputStream(dataPath, "thumb", path));
 
         final String duplicateLink = "http://" + host + "/img" + path;
         final String thumbLink = "http://" + host + "/thumb" + path;

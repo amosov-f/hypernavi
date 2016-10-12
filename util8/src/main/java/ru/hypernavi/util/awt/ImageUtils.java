@@ -1,7 +1,10 @@
 package ru.hypernavi.util.awt;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.hypernavi.util.stream.MoreStreamSupport;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -12,11 +15,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Optional;
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import ru.hypernavi.util.stream.MoreStreamSupport;
 
 /**
  * User: amosov-f
@@ -106,7 +104,12 @@ public enum ImageUtils {
 
     @NotNull
     public static BufferedImage download(@NotNull final String link) throws IOException {
-        return ImageIO.read(new URL(link));
+        try {
+            return ImageIO.read(new URL(link));
+        } catch (IOException e) {
+            LOG.error("Can't download image: " + link);
+            throw e;
+        }
     }
 
     @Nullable
