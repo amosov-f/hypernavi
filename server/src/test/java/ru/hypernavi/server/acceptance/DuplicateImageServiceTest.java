@@ -1,10 +1,5 @@
 package ru.hypernavi.server.acceptance;
 
-import java.io.File;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -12,6 +7,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import ru.hypernavi.commons.Image;
 import ru.hypernavi.server.HyperNaviServerRunner;
+
+import java.io.File;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * User: amosov-f
@@ -27,8 +26,8 @@ public final class DuplicateImageServiceTest extends AcceptanceTest {
         final String linkParam = URLEncoder.encode(imageLink, StandardCharsets.UTF_8.name());
         final Image image = execute("/admin/image/duplicate?link=" + linkParam, Image.class);
         Assert.assertEquals(imageLink, image.getLink());
-        Assert.assertEquals("http://localhost:8081/img" + path, image.getDuplicates()[0].getLink());
-        Assert.assertEquals("http://localhost:8081/thumb" + path, image.getThumbLink());
+        Assert.assertEquals("http://localhost:8081" + path, image.getDuplicates()[0].getLink());
+        Assert.assertEquals("http://localhost:8081" + path, image.getThumbLink());
         Assert.assertTrue(new File("./data/img" + path).exists());
         Assert.assertTrue(new File("./data/thumb" + path).exists());
     }
