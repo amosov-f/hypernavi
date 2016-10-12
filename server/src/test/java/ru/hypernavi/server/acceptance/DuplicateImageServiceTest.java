@@ -27,7 +27,7 @@ public final class DuplicateImageServiceTest extends AcceptanceTest {
         final Image image = execute("/admin/image/duplicate?link=" + linkParam, Image.class);
         Assert.assertEquals(imageLink, image.getLink());
         Assert.assertEquals("http://localhost:8081" + path, image.getDuplicates()[0].getLink());
-        Assert.assertEquals("http://localhost:8081" + path, image.getThumbLink());
+        Assert.assertEquals("http://localhost:8081/thumb" + path, image.getThumbLink());
         Assert.assertTrue(new File("./data/img" + path).exists());
         Assert.assertTrue(new File("./data/thumb" + path).exists());
     }
