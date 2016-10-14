@@ -120,6 +120,12 @@ function convert(searchData) {
 }
 
 function feature(rawSite) {
+    var hasPoints = false;
+    rawSite.hints.forEach(function (hint) {
+        if (hint.type === 'plan') {
+            hasPoints |= hint.points.length > 0;
+        }
+    });
     return {
         type: "Feature",
         id: ID++,
@@ -127,6 +133,7 @@ function feature(rawSite) {
         properties: {
         },
         options: {
+            preset: hasPoints ? 'islands#blueDotIcon' : 'islands#greenDotIcon',
             balloonShadow: false,
             balloonLayout: BalloonLayout,
             balloonContentLayout: BalloonContentLayout,
