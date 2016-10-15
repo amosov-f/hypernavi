@@ -48,6 +48,9 @@ HYPERNAVI_DATA_DIR="/root/hypernavi-data"
 
 docker run --rm -v ${HYPERNAVI_DATA_DIR}/backup:/backup --link mongo:mongo istepanov/mongodump no-cron
 
+tar xvfz ${HYPERNAVI_DATA_DIR}/backup/backup-*.tar.gz -C ${HYPERNAVI_DATA_DIR}/backup
+rm ${HYPERNAVI_DATA_DIR}/backup/backup-*.tar.gz
+
 # git clone git@github.com:amosov-f/hypernavi-data.git
 
 git_configure_user ${HYPERNAVI_DATA_DIR}
