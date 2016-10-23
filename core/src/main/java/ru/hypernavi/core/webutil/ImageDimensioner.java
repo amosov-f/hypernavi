@@ -1,19 +1,16 @@
 package ru.hypernavi.core.webutil;
 
+import com.google.inject.Inject;
+import org.apache.http.client.methods.HttpGet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.hypernavi.commons.Dimension;
+import ru.hypernavi.core.http.HttpClient;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
-
-import com.google.inject.Inject;
-import org.apache.http.client.methods.HttpGet;
-import ru.hypernavi.commons.Dimension;
-import ru.hypernavi.core.http.HttpClient;
 
 /**
  * Created by amosov-f on 29.12.15.
@@ -40,7 +37,8 @@ public final class ImageDimensioner {
     }
 
     @Nullable
-    public Dimension getDimensionImpl(@NotNull final String imageLink) {
-        return Optional.ofNullable(httpClient.execute(new HttpGet(imageLink), ImageIO::read)).map(this::getDimension).orElse(null);
+    private Dimension getDimensionImpl(@NotNull final String imageLink) {
+        final BufferedImage image = httpClient.execute(new HttpGet(imageLink), ImageIO::read);
+        return image != null ? getDimension(image) : null;
     }
 }

@@ -1,6 +1,7 @@
 package ru.hypernavi.commons;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by amosov-f on 29.12.15.
@@ -25,5 +26,22 @@ public final class Dimension {
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public boolean equals(@Nullable final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        return width == ((Dimension) o).width && height == ((Dimension) o).height;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * width + height;
     }
 }

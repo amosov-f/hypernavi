@@ -171,28 +171,21 @@ function addPointMap(hintIndex) {
     $points.append($newPoint)
 }
 
-function dimension(link) {
-    var img = new Image();
-    img.src = link;
-    return {
-        width: img.width,
-        height: img.height,
-        fileSizeKb: Math.round(img.width * img.height / 4000)
-    };
-}
-
-function fileSize(link) {
-    var req = new XMLHttpRequest();
-    req.open('head', link, true);
-    var fileSize = null;
-    req.onreadystatechange = function(resp) {
-        if ( this.readyState == 1 ) {
-            this.abort();
+function imageSize(link) {
+    var imageSize;
+    $.ajax({
+        url: '/admin/image/size?link=' + encodeURIComponent(link),
+        async: false,
+        success: function (size) {
+            imageSize = size;
+        },
+        error: function (req, textStatus, error) {
+            alert('Ошибка! ' + error);
+            throw error;
         }
-        fileSize = this.getResponseHeader("Content-length");
-    };
-    req.send(null);
-    return fileSize;
+
+    });
+    return imageSize;
 }
 
 function duplicate(link) {
@@ -217,8 +210,11 @@ function validatePlanPoints(hintIndex) {
     if (!planLink) {
         alertAndThrow('Сначала укажите ссылку на схему!')
     }
-    var planSize = dimension(planLink);
-    $('#imgsize' + hintIndex).html(planSize.width + ' &times; ' + planSize.height + ' px &asymp; ' + planSize.fileSizeKb + ' kb');
+    var planSize = imageSize(planLink);
+    var w = planSize.dimension.width;
+    var h = planSize.dimension.height;
+    var kb = parseInt(planSize.fileSize / 1000, 10);
+    $('#imgsize' + hintIndex).html(w + ' &times; ' + h + ' px = ' + kb + ' kb');
 
     var $points = $('#points' + hintIndex);
     var $eval = $('#eval' + hintIndex);
@@ -235,8 +231,8 @@ function validatePlanPoints(hintIndex) {
         contentType: "application/json; charset=utf-8",
         success: function (validation) {
             points.forEach(function (point, i) {
-                var dx = Math.round(100 * validation.diffs[i].x / planSize.width);
-                var dy = Math.round(100 * validation.diffs[i].y / planSize.height);
+                var dx = Math.round(100 * validation.diffs[i].x / w);
+                var dy = Math.round(100 * validation.diffs[i].y / h);
                 var dxFont = '<font color="' + errorColor(dx) + '">' + dx + '%</font>';
                 var dyFont = '<font color="' + errorColor(dy) + '">' + dy + '%</font>';
                 $points.find('tr').eq(point.no).find('p').html(dxFont + ',' + dyFont);
