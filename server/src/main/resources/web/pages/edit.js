@@ -43,9 +43,14 @@ function sync(tabId) {
     refresh();
 }
 
-function markup(button) {
+function markup(button, hintIndex) {
+    var points = extractPoints($('#points' + hintIndex)).map(function (p) {
+        return p.mapPoint;
+    });
     var link = $(button).parents('.tab-pane').find(':input[type=url]').val();
-    window.open('/admin/markup?link=' + link, '_blank');
+    var url = '/admin/markup?link=' + encodeURIComponent(link) + '&points=' + JSON.stringify(points);
+
+    window.open(url, '_blank');
 }
 
 function markupXY(button) {
@@ -200,7 +205,6 @@ function duplicate(link) {
             alert('Ошибка! ' + error);
             throw error;
         }
-
     });
     return image;
 }

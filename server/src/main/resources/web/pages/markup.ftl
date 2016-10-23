@@ -34,11 +34,11 @@
     <div class="form-group col-lg-5">
         <div class="input-group">
             <span class="input-group-addon">Координаты пикселя</span>
-            <input id="coords" type="text" class="form-control" <#if point??>value="${point.x},${point.y}"</#if>>
+            <input id="coords" type="text" class="form-control" <#if 0 < points?size>value="${points?first.x},${points?first.y}"</#if>>
         </div>
     </div>
     <div class="form-group col-lg-2">
-        <a class="btn btn-primary" onclick="drawPixel()">Показать!</a>
+        <a class="btn btn-primary" onclick="reload()">Показать!</a>
     </div>
 </div>
 
@@ -48,9 +48,25 @@
     var image;
     var canvas;
 
-    <#if link??>
-    drawPixel();
-    </#if>
+    $(function() {
+        var $image = document.getElementById('image');
+        var ctx = $image.getContext('2d');
+        image = new Image();
+        image.onload = function() {
+            canvas = ctx.canvas;
+            canvas.width = window.innerWidth;
+            canvas.height = image.height * canvas.width / image.width;
+            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+            <#list points as p>
+                var x = parseInt(${p.x}) * canvas.width / image.width;
+                var y = parseInt(${p.y}) * canvas.height / image.height;
+                drawLocation(ctx, x, y);
+            </#list>
+        };
+        <#if link??>
+            image.src = '${link}';
+        </#if>
+    });
 
     $('#image').mousedown(function (e) {
         if (e.which != 1 && e.which != 3) {
@@ -77,24 +93,13 @@
         return {x: x, y: y};
     }
 
-    function drawPixel() {
-        var $image = document.getElementById('image');
-        var ctx = $image.getContext('2d');
-        image = new Image();
-        image.onload = function () {
-            canvas = ctx.canvas;
-            canvas.width = window.innerWidth;
-            canvas.height = image.height * canvas.width / image.width;
-            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-            var coords = $('#coords').val();
-            if (!coords) {
-                return;
-            }
-            var x = parseInt(coords.split(',')[0]) * canvas.width / image.width;
-            var y = parseInt(coords.split(',')[1]) * canvas.height / image.height;
-            drawLocation(ctx, x, y);
-        };
-        image.src = $('#link').val();
+    function reload() {
+        var href = '/admin/markup?link=' + encodeURIComponent($('#link').val());
+        var coords = $('#coords').val();
+        if (coords) {
+            href += '&x=' + parseInt(coords.split(',')[0]) + '&y=' + parseInt(coords.split(',')[1]);
+        }
+        window.location.href = href;
     }
 
     function drawLocation(ctx, x, y) {
@@ -107,7 +112,8 @@
         ctx.beginPath();
         ctx.arc(x, y, 20, 0, Math.PI * 2, true);
         ctx.closePath();
-        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'black';
         ctx.stroke();
     }
 </script>

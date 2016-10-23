@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.hypernavi.util.TextUtils;
 import ru.hypernavi.util.function.IOFunction;
 import ru.hypernavi.util.json.GsonUtils;
 
@@ -71,7 +70,7 @@ public abstract class BodyParam<T> implements Param<T> {
                                    @NotNull final Gson gson) throws IOException
         {
             final String body = IOUtils.toString(reader);
-            LOG.debug("Recieved post body: '" + TextUtils.limit(body, 1000) + "'");
+            LOG.debug("Recieved post body: '" + body + "'");
             return gson.fromJson(body, type);
         }
     }

@@ -87,7 +87,7 @@
                             </div>
                             <div class="form-group col-lg-3">
                                 <a class="btn btn-default" onclick="sync('plan${hint?index}')">Показать</a>
-                                <a class="btn btn-default" onclick="markup(this)">
+                                <a class="btn btn-default" onclick="markup(this, ${hint?index})">
                                     <i class="glyphicon glyphicon-screenshot"></i>
                                 </a>
                             </div>
