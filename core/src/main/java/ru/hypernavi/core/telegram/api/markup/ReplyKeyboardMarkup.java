@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ReplyKeyboardMarkup implements ReplyMarkup {
     @NotNull
     private final KeyboardButton[][] keyboard;
+    private final boolean resizeKeyboard = true;
 
     public ReplyKeyboardMarkup(@NotNull final KeyboardButton[]... keyboard) {
         this.keyboard = keyboard;
