@@ -42,8 +42,8 @@ public enum ImageEditor {
         g.setColor(Color.RED);
         final int r1 = Math.max(l / 20, 1);
         ImageUtils.drawCircle(g, location, r1);
-        final int r2 = Math.max(l  / 150, 1);
-        ImageUtils.fillCircle(g, location, r2);
+//        final int r2 = Math.max(l  / 150, 1);
+//        ImageUtils.fillCircle(g, location, r2);
         return plan;
     }
 }
