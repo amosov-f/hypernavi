@@ -1,16 +1,5 @@
 package ru.hypernavi.core.telegram.api;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializer;
@@ -26,6 +15,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.Image;
 import ru.hypernavi.core.http.HttpClient;
 import ru.hypernavi.core.http.URIBuilder;
@@ -36,6 +27,13 @@ import ru.hypernavi.util.GeoPointImpl;
 import ru.hypernavi.util.MoreIOUtils;
 import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.json.GsonUtils;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * User: amosov-f
@@ -85,7 +83,7 @@ public final class TelegramApi {
         final InputStream photoStream = MoreIOUtils.connectSafe(photo.getLink());
         if (photoStream == null) {
             LOG.error("Can't download photo: " + photo.getLink());
-            sendMessage(chatId, "Простите, не могу загрузить изображение");
+            sendMessage(chatId, "Sorry, can't upload picture");
             return;
         }
         sendPhoto(chatId, photoStream, photo.getFormat(), caption);

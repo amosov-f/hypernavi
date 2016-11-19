@@ -129,9 +129,9 @@ public final class HyperNaviBot {
         final boolean startCommand = MoreStreamSupport.instances(message.getEntities(), BotCommand.class)
                 .anyMatch(command -> command.getCommand(Objects.requireNonNull(text)).equals("/start"));
         if (startCommand) {
-            final KeyboardButton button = new KeyboardButton("Отправить геопозицию", false, true);
+            final KeyboardButton button = new KeyboardButton("Send location", false, true);
             final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
-            api.sendMessage(chatId, "Здравствуйте! Отправьте мне свою геопозицию, и я что-нибудь покажу =)", replyMarkup);
+            api.sendMessage(chatId, "Hello! Send me your location and I'll show interesting maps near", replyMarkup);
             return;
         }
         if (location == null && text == null) {
@@ -146,7 +146,7 @@ public final class HyperNaviBot {
         final SearchResponse searchResponse = search(location, text);
         if (searchResponse == null) {
             LOG.error("Server not respond by: location=" + location + ", text=" + text);
-            api.sendMessage(chatId, "Простите, наш сервер не ответил на этот запрос");
+            api.sendMessage(chatId, "Sorry, our server didn't respond to this request");
             return;
         }
         final GeoPoint finalLocation = location;
@@ -157,7 +157,7 @@ public final class HyperNaviBot {
     }
 
     private void respond(final int chatId, @NotNull final Site site, @Nullable final GeoPoint location) {
-        api.sendMessage(chatId, "Адрес: " + site.getPlace().getAddress());
+        api.sendMessage(chatId, "Address: " + site.getPlace().getAddress());
         for (final Hint hint : site.getHints()) {
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
