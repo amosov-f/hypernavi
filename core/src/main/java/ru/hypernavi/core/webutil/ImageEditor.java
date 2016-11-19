@@ -38,7 +38,7 @@ public enum ImageEditor {
         final int l = Math.max(w, h);
         final BufferedImage editedPlan = ImageUtils.copy(plan);
         final Graphics2D g = editedPlan.createGraphics();
-        g.setStroke(new BasicStroke(Math.max(l / 150, 1)));
+        g.setStroke(new BasicStroke(Math.max(l / 125, 1)));
         g.setColor(Color.RED);
         final int r1 = Math.max(l / 20, 1);
         ImageUtils.drawCircle(g, location, r1);
