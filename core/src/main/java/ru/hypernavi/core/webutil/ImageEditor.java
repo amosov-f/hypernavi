@@ -1,12 +1,10 @@
 package ru.hypernavi.core.webutil;
 
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.util.awt.ImageUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
-
-import ru.hypernavi.util.awt.ImageUtils;
 
 
 /**
@@ -40,11 +38,11 @@ public enum ImageEditor {
         final int l = Math.max(w, h);
         final BufferedImage editedPlan = ImageUtils.copy(plan);
         final Graphics2D g = editedPlan.createGraphics();
-        g.setStroke(new BasicStroke(Math.max(l / 100, 1)));
+        g.setStroke(new BasicStroke(Math.max(l / 150, 1)));
         g.setColor(Color.RED);
         final int r1 = Math.max(l / 20, 1);
         ImageUtils.drawCircle(g, location, r1);
-        final int r2 = Math.max(l  / 80, 1);
+        final int r2 = Math.max(l  / 150, 1);
         ImageUtils.fillCircle(g, location, r2);
         return plan;
     }
