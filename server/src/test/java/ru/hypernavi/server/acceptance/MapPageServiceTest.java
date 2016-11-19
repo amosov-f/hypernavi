@@ -14,11 +14,11 @@ import static org.junit.Assert.assertEquals;
  * Created by amosov-f on 14.11.15.
  */
 @RunWith(HyperNaviServerRunner.class)
-public final class MordaPageTest extends AcceptanceTest {
+public final class MapPageServiceTest extends AcceptanceTest {
     @Test
     @Ignore
     public void testUnauthorizedRequest() {
-        final HttpResponse resp = execute("/admin");
+        final HttpResponse resp = execute("/map");
         assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, resp.getStatusLine().getStatusCode());
         assertEquals("http://localhost:8081/auth?url=/admin", resp.getFirstHeader(HttpHeaders.LOCATION).getValue());
     }

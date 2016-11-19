@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  * Created by Константин on 02.09.2015.
  */
-@WebServlet(name = "morda", value = {"", "/", "/admin"})
-public final class MordaPage extends HtmlPageHttpService {
+@WebServlet(name = "map", value = "/map")
+public final class MapPageService extends HtmlPageHttpService {
     private static final GeoPoint DEFAULT_CENTER = ArrayGeoPoint.of(30.1466, 59.796);
     private static final int DEFAULT_ZOOM = 9;
 
@@ -36,7 +36,7 @@ public final class MordaPage extends HtmlPageHttpService {
     @NotNull
     @Override
     public String getPathInBundle(@NotNull final Session session) {
-        return "morda.ftl";
+        return "map.ftl";
     }
 
     @NotNull
