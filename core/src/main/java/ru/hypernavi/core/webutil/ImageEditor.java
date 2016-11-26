@@ -18,12 +18,12 @@ import java.io.UncheckedIOException;
 public enum ImageEditor {
     INSTANCE;
 
-    private static final double MIN_X_SCALE = 0.15;
-    private static final double MIN_Y_SCALE = 0.15;
+    private static final double MIN_X_SCALE = 0.2;
+    private static final double MIN_Y_SCALE = 0.2;
 
     @NotNull
     private final BufferedImage locationPicture;
-    private final int locationTipShift = 7;
+    private final Point locationTipShift = new Point(4, 2);
 
     ImageEditor() {
         try {
@@ -51,7 +51,9 @@ public enum ImageEditor {
 
     @NotNull
     public BufferedImage drawLocation(@NotNull final BufferedImage plan, @NotNull final Point location) {
-        return drawLocationPicture(plan, location);
+        BufferedImage result = drawLocationCircle(plan, location);
+        result = drawLocationPicture(result, location);
+        return result;
     }
 
     @NotNull
@@ -77,9 +79,8 @@ public enum ImageEditor {
         final double scale = Math.min(scaleX, scaleY);
         final int w = (int) Math.round(scale * locationPicture.getWidth());
         final int h = (int) Math.round(scale * locationPicture.getHeight());
-        final int tipShift = (int) Math.round(scale * locationTipShift);
-        final int x = location.x - w / 2;
-        final int y = location.y - h + tipShift;
+        final int x = location.x - w / 2 + (int) Math.round(scale * locationTipShift.x);
+        final int y = location.y - h + (int) Math.round(scale * locationTipShift.y);
 
         final BufferedImage editedPlan = ImageUtils.copy(plan);
         final Graphics2D g = editedPlan.createGraphics();
