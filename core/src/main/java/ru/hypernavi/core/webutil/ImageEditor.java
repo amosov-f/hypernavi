@@ -51,9 +51,7 @@ public enum ImageEditor {
 
     @NotNull
     public BufferedImage drawLocation(@NotNull final BufferedImage plan, @NotNull final Point location) {
-        BufferedImage result = drawLocationCircle(plan, location);
-        result = drawLocationPicture(result, location);
-        return result;
+        return drawLocationPicture(plan, location);
     }
 
     @NotNull
