@@ -18,8 +18,8 @@ import java.io.UncheckedIOException;
 public enum ImageEditor {
     INSTANCE;
 
-    private static final double MIN_X_SCALE = 0.13;
-    private static final double MIN_Y_SCALE = 0.13;
+    private static final double MIN_X_SCALE = 0.15;
+    private static final double MIN_Y_SCALE = 0.15;
 
     @NotNull
     private final BufferedImage locationPicture;
@@ -65,8 +65,8 @@ public enum ImageEditor {
         g.setColor(Color.RED);
         final int r1 = Math.max(l / 20, 1);
         ImageUtils.drawCircle(g, location, r1);
-//        final int r2 = Math.max(l  / 150, 1);
-//        ImageUtils.fillCircle(g, location, r2);
+        final int r2 = Math.max(l  / 150, 1);
+        ImageUtils.fillCircle(g, location, r2);
         return plan;
     }
 
@@ -74,10 +74,10 @@ public enum ImageEditor {
     public BufferedImage drawLocationPicture(@NotNull final BufferedImage plan, @NotNull final Point location) {
         final double scaleX = MIN_X_SCALE * plan.getWidth() / locationPicture.getWidth();
         final double scaleY = MIN_Y_SCALE * plan.getHeight() / locationPicture.getHeight();
-        final double scale = Math.max(scaleX, scaleY);
-        final int w = (int) (scale * locationPicture.getWidth());
-        final int h = (int) (scale * locationPicture.getHeight());
-        final int tipShift = (int) (scale * locationTipShift);
+        final double scale = Math.min(scaleX, scaleY);
+        final int w = (int) Math.round(scale * locationPicture.getWidth());
+        final int h = (int) Math.round(scale * locationPicture.getHeight());
+        final int tipShift = (int) Math.round(scale * locationTipShift);
         final int x = location.x - w / 2;
         final int y = location.y - h + tipShift;
 
