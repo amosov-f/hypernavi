@@ -136,7 +136,7 @@ public final class HyperNaviBot {
         if (startCommand) {
             final KeyboardButton button = new KeyboardButton("Send location", false, true);
             final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
-            api.sendMessage(chatId, "Hello! Send me your location and I'll show interesting maps near", replyMarkup);
+            api.sendMessage(chatId, "Hello! Send me your location and I'll show relevant map near", replyMarkup);
             return;
         }
         if (location == null && text == null) {

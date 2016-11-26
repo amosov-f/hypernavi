@@ -3,8 +3,11 @@ package ru.hypernavi.core.webutil;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.util.awt.ImageUtils;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 
 /**
@@ -14,6 +17,18 @@ import java.awt.image.BufferedImage;
  */
 public enum ImageEditor {
     INSTANCE;
+
+    @NotNull
+    private final BufferedImage locationPicture;
+    private final int locationTipShift = 7;
+
+    ImageEditor() {
+        try {
+            locationPicture = ImageIO.read(getClass().getResourceAsStream("/bot/location.png"));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 
     @NotNull
     public BufferedImage createThumb(@NotNull final BufferedImage image, final int height) {
@@ -33,6 +48,11 @@ public enum ImageEditor {
 
     @NotNull
     public BufferedImage drawLocation(@NotNull final BufferedImage plan, @NotNull final Point location) {
+        return drawLocationPicture(plan, location);
+    }
+
+    @NotNull
+    public BufferedImage drawLocationCircle(@NotNull final BufferedImage plan, @NotNull final Point location) {
         final int w = plan.getWidth();
         final int h = plan.getHeight();
         final int l = Math.max(w, h);
@@ -44,6 +64,16 @@ public enum ImageEditor {
         ImageUtils.drawCircle(g, location, r1);
 //        final int r2 = Math.max(l  / 150, 1);
 //        ImageUtils.fillCircle(g, location, r2);
+        return plan;
+    }
+
+    @NotNull
+    public BufferedImage drawLocationPicture(@NotNull final BufferedImage plan, @NotNull final Point location) {
+        final BufferedImage editedPlan = ImageUtils.copy(plan);
+        final Graphics2D g = editedPlan.createGraphics();
+        final int x = location.x - locationPicture.getWidth() / 2;
+        final int y = location.y - locationPicture.getHeight() + locationTipShift;
+        g.drawImage(locationPicture, x, y, null);
         return plan;
     }
 }

@@ -1,6 +1,12 @@
 package ru.hypernavi.core.webutil;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import ru.hypernavi.util.awt.ImageUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -8,14 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-
-
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
-import ru.hypernavi.util.awt.ImageUtils;
 
 /**
  * User: amosov-f
