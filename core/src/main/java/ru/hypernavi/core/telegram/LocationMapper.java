@@ -1,20 +1,20 @@
 package ru.hypernavi.core.telegram;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.webutil.ImageEditor;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.awt.ImageUtils;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * User: amosov-f
@@ -33,13 +33,19 @@ public enum LocationMapper {
             return null;
         }
 
-        final Point point = MapProjectionImpl.map(location, points);
+        final Future<BufferedImage> futurePlanPicture = ImageUtils.downloadAsync(plan.getImage().getLink());
 
-        final BufferedImage image = ImageUtils.downloadSafe(plan.getImage().getLink());
-        if (image == null) {
-            LOG.warn("Can't download image: " + plan.getImage().getLink());
+        final long start = System.currentTimeMillis();
+        final Point point = MapProjectionImpl.map(location, points);
+        LOG.info("Location mapping finished in " + (System.currentTimeMillis() - start) + " ms");
+
+        final BufferedImage planPicture;
+        try {
+            planPicture = futurePlanPicture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.warn("Can't download plan picture: " + plan.getImage().getLink(), e);
             return null;
         }
-        return ImageEditor.INSTANCE.drawLocation(image, point);
+        return ImageEditor.INSTANCE.drawLocation(planPicture, point);
     }
 }

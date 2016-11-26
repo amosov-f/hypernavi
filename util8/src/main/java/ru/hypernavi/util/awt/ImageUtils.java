@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * User: amosov-f
@@ -27,6 +30,8 @@ public enum ImageUtils {
     private static final Log LOG = LogFactory.getLog(ImageUtils.class);
 
     private static final String[] FORMATS = {"jpg", "png", "gif"};
+
+    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
 
     @NotNull
     public static String format(@Nullable final BufferedImage image, @Nullable final String imageLink) {
@@ -103,12 +108,21 @@ public enum ImageUtils {
     }
 
     @NotNull
+    public static Future<BufferedImage> downloadAsync(@NotNull final String link) {
+        return EXECUTOR.submit(() -> download(link));
+    }
+
+    @NotNull
     public static BufferedImage download(@NotNull final String link) throws IOException {
+        final long start = System.currentTimeMillis();
+        LOG.debug("Started downloading: " + link);
         try {
             return ImageIO.read(new URL(link));
         } catch (IOException e) {
             LOG.error("Can't download image: " + link);
             throw e;
+        } finally {
+            LOG.debug("Image downloading finished in " + (System.currentTimeMillis() - start) + " ms");
         }
     }
 
