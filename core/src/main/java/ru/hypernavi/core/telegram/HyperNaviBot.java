@@ -32,12 +32,10 @@ import ru.hypernavi.core.telegram.update.UpdatesSource;
 import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
-import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.json.GsonUtils;
 import ru.hypernavi.util.stream.MoreStreamSupport;
 
-import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -162,23 +160,27 @@ public final class HyperNaviBot {
     }
 
     private void respond(final int chatId, @NotNull final Site site, @Nullable final GeoPoint location) {
-        api.sendMessage(chatId, "Address: " + site.getPlace().getAddress());
+        final String siteName = site.getPlace().getName();
         for (final Hint hint : site.getHints()) {
+            final String hintDesc = hint.getDescription();
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
                 if (location != null) {
-                    final BufferedImage image = LocationMapper.INSTANCE.mapLocation(plan, location);
-                    if (image != null) {
-                        final Image.Format format = Optional.ofNullable(ImageUtils.format(image))
-                                .map(Image.Format::parse)
-                                .orElse(plan.getImage().getFormat(Image.Format.JPG));
-                        api.sendPhoto(chatId, image, format, hint.getDescription());
+                    final LocationImage locationImage = LocationMapper.INSTANCE.mapLocation(plan, location);
+                    if (locationImage != null) {
+                        if (locationImage.isLocationInsideMap()) {
+                            api.sendMessage(chatId, "You are at " + siteName + ". See your location at this place:");
+                        } else {
+                            api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
+                        }
+                        final Image.Format format = locationImage.getFormat();
+                        api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
                         continue;
                     }
                 }
             }
             if (hint instanceof Picture) {
-                api.sendPhoto(chatId, ((Picture) hint).getImage(), hint.getDescription());
+                api.sendPhoto(chatId, ((Picture) hint).getImage(), hintDesc);
             }
         }
     }

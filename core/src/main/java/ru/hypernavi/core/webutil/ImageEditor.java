@@ -1,6 +1,7 @@
 package ru.hypernavi.core.webutil;
 
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.core.telegram.LocationImage;
 import ru.hypernavi.util.awt.ImageUtils;
 
 import javax.imageio.ImageIO;
@@ -51,7 +52,10 @@ public enum ImageEditor {
 
     @NotNull
     public BufferedImage drawLocation(@NotNull final BufferedImage plan, @NotNull final Point location) {
-        return drawLocationPicture(plan, location);
+        if (LocationImage.checkLocationInsideImage(plan, location)) {
+            return drawLocationPicture(plan, location);
+        }
+        return plan;
     }
 
     @NotNull
