@@ -132,7 +132,7 @@ public final class HyperNaviBot {
         final boolean startCommand = MoreStreamSupport.instances(message.getEntities(), BotCommand.class)
                 .anyMatch(command -> command.getCommand(Objects.requireNonNull(text)).equals("/start"));
         if (startCommand) {
-            final KeyboardButton button = new KeyboardButton("Send location", false, true);
+            final KeyboardButton button = new KeyboardButton("Send my location", false, true);
             final ReplyMarkup replyMarkup = new ReplyKeyboardMarkup(new KeyboardButton[]{button});
             api.sendMessage(chatId, "Hello!");
             api.sendMessage(chatId, "Send me your location and I'll show relevant map near", replyMarkup);
