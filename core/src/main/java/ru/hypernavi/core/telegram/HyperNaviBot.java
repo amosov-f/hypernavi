@@ -170,7 +170,7 @@ public final class HyperNaviBot {
                     final LocationImage locationImage = LocationMapper.INSTANCE.mapLocation(plan, location);
                     if (locationImage != null) {
                         if (locationImage.isLocationInsideMap()) {
-                            api.sendMessage(chatId, "You are at " + siteName + ". See your location at this place:");
+                            api.sendMessage(chatId, "You are in " + siteName + ". See your location at this place:");
                         } else {
                             api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
                         }
