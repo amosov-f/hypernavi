@@ -42,101 +42,23 @@
 <div class="container">
 
     <div class="row">
-        <img src="/web/img/whereami.png" width="100%">
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row">
+        <div class="col-lg-8">
+            <img src="/web/img/whereami.png" width="100%">
+            <h2 align="center">Problem</h2>
+        </div>
         <div class="col-lg-4">
-            <img class="img-circle"
-                 src="http://s020.radikal.ru/i715/1611/5f/56bc179df454.jpg"
-                 alt="Generic placeholder image" width="140" height="140">
-            <h2>Machine learning</h2>
-            <p>We are using machine learning regression algorithms to determine location of user</p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-            <img class="img-circle"
-                 src="http://s020.radikal.ru/i715/1611/5f/56bc179df454.jpg"
-                 alt="Generic placeholder image" width="140" height="140">
-            <h2>Manually marked maps</h2>
-            <p>Each map marked by human, so, your result location is very accurate</p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-            <img class="img-circle"
-                 src="http://s020.radikal.ru/i715/1611/5f/56bc179df454.jpg"
-                 alt="Generic placeholder image" width="140" height="140">
-            <h2>Most popular places</h2>
-            <p>We mark most visited places on The World</p>
-        </div><!-- /.col-lg-4 -->
-    </div><!-- /.row -->
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Your location on hand-made map<span class="text-muted"></span></h2>
-            <p class="lead">Send your location to bot. Bot will return near map with your position on this map, if you are on this map</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block"
-                 src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg"
-                 alt="Generic placeholder image"
-                 >
+            <img src="/web/img/example.gif" width="100%">
+            <h2 align="center">Solution</h2>
         </div>
     </div>
 
-    <hr class="featurette-divider">
 
-    <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">Where are you?<span class="text-muted"></span>
-            </h2>
-            <p class="lead">Your friends will easily find you in huge popular park</p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg"
-                 alt="Generic placeholder image"
-                 >
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">How to go to that mountain splope?
-                <span class="text-muted">Ski resorts</span></h2>
-            <p class="lead">Popular European ski resorts are very confusing.
-                HyperNavi will show your position on human-adapted ski pistes map. You very simple find path to desired ski lift</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg"
-                 alt="Generic placeholder image"
-                 >
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">Better than paper-map<span class="text-muted"></span>
-            </h2>
-            <p class="lead">If you are at some popular place like Theme/Urban Park, Ski Resort etc., you need to navigate at such place.
-
-                For example, you are in huge park like Disneyland. You have paper map of this park. You need to find some
-                attraction. It is on paper map, but you don't know way to this attraction, because you don't know your location on this paper
-                map!
-
-                HyperNavi helps you with it. It shows you position on "paper map" in Telegram!</p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg"
-                 alt="Generic placeholder image"
-                 >
-        </div>
-    </div>
+    <p align="center">
+        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-primary btn-lg">
+            <img src="http://s019.radikal.ru/i630/1612/24/862bb220ba8c.png" height="30" width="30">  @HyperNaviBot
+        </a>
+        <a class="btn btn-info btn-lg" href="/web/pages/about.html" target="_blank" role="button">More info</a>
+    </p>
 
 </div>
 
