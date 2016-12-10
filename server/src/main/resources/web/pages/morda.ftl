@@ -61,10 +61,11 @@
         <div class="col-lg-1"></div>
     </div>
 
+    <hr class="featurette-divider">
 
     <p align="center">
-        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-primary btn-lg">
-            <img src="http://s019.radikal.ru/i630/1612/24/862bb220ba8c.png" height="30" width="30">  @HyperNaviBot
+        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-success btn-lg">
+            Get @HyperNaviBot
         </a>
         <a class="btn btn-info btn-lg" href="/web/pages/about.html" target="_blank" role="button">More info</a>
     </p>
