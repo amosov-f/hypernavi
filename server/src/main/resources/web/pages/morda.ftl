@@ -49,6 +49,8 @@
 
 <div class="container">
 
+    <h1 align="center">See your land position on visitor-adapted maps!</h1>
+
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-5">
