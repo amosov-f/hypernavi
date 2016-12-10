@@ -50,6 +50,8 @@ public final class GetUpdatesSource extends QueuedUpdatesSource {
         final int maxUpdateId = IntStream.concat(IntStream.of(updateIdSnapshot), updateIdsStream).max().orElse(updateIdSnapshot);
         updateId.compareAndSet(updateIdSnapshot, maxUpdateId);
 
-        Arrays.stream(getUpdatesResponse.getResult()).forEach(this::add);
+        Arrays.stream(getUpdatesResponse.getResult())
+            .peek(u -> u.setReqId(u.getUpdateId() + ""))
+            .forEach(this::add);
     }
 }

@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Nullable;
 
 import ru.hypernavi.core.telegram.api.inline.InlineQuery;
 
+import java.util.Objects;
+
 /**
  * Created by amosov-f on 18.10.15.
  */
@@ -15,6 +17,9 @@ public final class Update {
     private final Message message;
     @Nullable
     private final InlineQuery inlineQuery;
+
+    @Nullable
+    private String reqId;
     private long receiptTimestamp;
 
     public Update(final int updateId, @Nullable final Message message, @Nullable final InlineQuery inlineQuery) {
@@ -35,6 +40,15 @@ public final class Update {
     @Nullable
     public InlineQuery getInlineQuery() {
         return inlineQuery;
+    }
+
+    @NotNull
+    public String getReqId() {
+        return Objects.requireNonNull(reqId, "No reqId in update!");
+    }
+
+    public void setReqId(@NotNull final String reqId) {
+        this.reqId = reqId;
     }
 
     public void setReceiptTimestamp(final long receiptTimestamp) {

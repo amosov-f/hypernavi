@@ -57,7 +57,7 @@ public abstract class AbstractHttpService extends HttpServlet {
         final long startTime = System.currentTimeMillis();
 
         final Session session = Objects.requireNonNull(sessionFactory).get();
-        MDC.put("reqid", session.getId());
+        MDC.put(Session.REQ_ID, session.getId());
 
         session.set(Property.START_TIME, startTime);
 

@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 @SuppressWarnings("ClassReferencesSubclass")
 @ImplementedBy(SessionImpl.class)
 public interface Session {
+    String REQ_ID = "reqid";
+
     @NotNull
     String getId();
 

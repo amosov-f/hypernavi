@@ -26,6 +26,7 @@ public final class Property<T> {
     public static final Property<Platform> PLATFORM = new Property<>("platform");
 
     public static final Property<Long> START_TIME = new Property<>("start_time");
+
     public static final Property<String> TEXT = new Property<>("text");
     public static final Property<GeoPoint> GEO_LOCATION = new Property<>("geo_location");
     public static final Property<Integer> ZOOM = new Property<>("zoom");

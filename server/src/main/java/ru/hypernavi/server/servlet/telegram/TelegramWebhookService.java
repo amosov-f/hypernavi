@@ -62,6 +62,7 @@ public final class TelegramWebhookService extends AbstractHttpService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) {
         final Update update = session.demand(UPDATE);
+        update.setReqId(session.getId());
         update.setReceiptTimestamp(session.demand(Property.START_TIME));
         updatesSource.add(update);
     }

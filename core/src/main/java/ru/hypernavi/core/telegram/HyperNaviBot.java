@@ -78,6 +78,14 @@ public final class HyperNaviBot {
     }
 
     public void start() {
+        try {
+            startImpl();
+        } catch (@SuppressWarnings("ProhibitedExceptionCaught") Throwable e) {
+            LOG.fatal("Error in update receiver thread!", e);
+        }
+    }
+
+    public void startImpl() {
         while (true) {
             LOG.info("Waiting for next update...");
             final Update update = updatesSource.next();

@@ -32,6 +32,7 @@ public final class HyperHttpClient implements ru.hypernavi.core.http.HttpClient 
     @Nullable
     @Override
     public <T> T execute(@NotNull final HttpUriRequest req, @NotNull final IOFunction<InputStream, T> parser) {
+        final long start = System.currentTimeMillis();
         LOG.debug("Requesting data from: " + HttpTools.curl(req));
         final HttpResponse resp;
         try {
@@ -42,21 +43,21 @@ public final class HyperHttpClient implements ru.hypernavi.core.http.HttpClient 
         }
         final StatusLine statusLine = resp.getStatusLine();
         final int status = statusLine.getStatusCode();
-        LOG.debug("Received response: " + status + " " + statusLine.getReasonPhrase());
+        LOG.debug("Received response in " + (System.currentTimeMillis() - start) + " ms: " + status + " " + statusLine.getReasonPhrase());
         final HttpEntity entity = resp.getEntity();
         if (entity == null) {
-            LOG.info("Received empty response");
+            LOG.info("Received empty response in " + (System.currentTimeMillis() - start) + " ms");
             return null;
         }
         try {
             if (status != HttpStatus.SC_OK) {
-                LOG.info("Received non-OK response: " + status + " " + statusLine.getReasonPhrase());
+                LOG.info("Received non-OK response in " + (System.currentTimeMillis() - start) + " ms: " + status + " " + statusLine.getReasonPhrase());
                 return null;
             }
             try {
                 return parser.apply(entity.getContent());
             } catch (@SuppressWarnings("OverlyBroadCatchBlock") RuntimeException e) {
-                LOG.error("Received bad response!", e);
+                LOG.error("Received bad response in " + (System.currentTimeMillis() - start) + " ms!", e);
                 return null;
             }
         } catch (IOException e) {
