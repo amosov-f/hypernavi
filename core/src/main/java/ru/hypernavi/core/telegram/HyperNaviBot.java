@@ -82,11 +82,15 @@ public final class HyperNaviBot {
             LOG.info("Waiting for next update...");
             final Update update = updatesSource.next();
             service.submit(() -> {
+                final long start = update.getReceiptTimestamp();
                 try {
                     LOG.debug("Update processing started: '" + update + "'");
                     processUpdate(update);
-                } catch (RuntimeException e) {
-                    LOG.error("Error while processing update: '" + update + "'", e);
+                    final long processingTime = System.currentTimeMillis() - start;
+                    LOG.info("Update processed in " + processingTime + " ms: " + update);
+                } catch (@SuppressWarnings("ProhibitedExceptionCaught") Throwable e) {
+                    final long processingTime = System.currentTimeMillis() - start;
+                    LOG.error("Update processed with error in " + processingTime + " ms: " + update, e);
                 }
             });
         }
@@ -158,6 +162,8 @@ public final class HyperNaviBot {
                 .map(Index::get)
                 .forEach(site -> respond(chatId, site, finalLocation));
 
+        final int processingTime = (int) ((System.currentTimeMillis() + 500) / 1000) - message.getDate();
+        LOG.info("Message processed in " + processingTime + " s: " + message);
     }
 
     private void respond(final int chatId, @NotNull final Site site, @Nullable final GeoPoint location) {

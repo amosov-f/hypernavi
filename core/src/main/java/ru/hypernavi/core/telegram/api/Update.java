@@ -15,6 +15,7 @@ public final class Update {
     private final Message message;
     @Nullable
     private final InlineQuery inlineQuery;
+    private long receiptTimestamp;
 
     public Update(final int updateId, @Nullable final Message message, @Nullable final InlineQuery inlineQuery) {
         this.updateId = updateId;
@@ -34,6 +35,14 @@ public final class Update {
     @Nullable
     public InlineQuery getInlineQuery() {
         return inlineQuery;
+    }
+
+    public void setReceiptTimestamp(final long receiptTimestamp) {
+        this.receiptTimestamp = receiptTimestamp;
+    }
+
+    public long getReceiptTimestamp() {
+        return receiptTimestamp;
     }
 
     @NotNull

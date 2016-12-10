@@ -17,6 +17,7 @@ public final class Message {
     private final Chat chat;
     @Nullable
     private final String text;
+    private final int date;
     @Nullable
     private final GeoPoint location;
     @Nullable
@@ -25,12 +26,14 @@ public final class Message {
     public Message(final int messageId,
                    @NotNull final Chat chat,
                    @Nullable final String text,
+                   final int date,
                    @Nullable final GeoPoint location,
                    @Nullable final BotCommand... entities)
     {
         this.messageId = messageId;
         this.chat = chat;
         this.text = text;
+        this.date = date;
         this.location = location;
         this.entities = entities;
     }
@@ -49,6 +52,10 @@ public final class Message {
         return text;
     }
 
+    public int getDate() {
+        return date;
+    }
+
     @Nullable
     public GeoPoint getLocation() {
         return location;
@@ -57,5 +64,11 @@ public final class Message {
     @NotNull
     public Entity[] getEntities() {
         return entities != null ? entities : Entity.EMPTY_ARRAY;
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return TelegramApi.gson().toJson(this);
     }
 }

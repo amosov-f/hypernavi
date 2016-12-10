@@ -1,20 +1,18 @@
 package ru.hypernavi.core.telegram.update;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.core.telegram.api.GetUpdatesResponse;
+import ru.hypernavi.core.telegram.api.TelegramApi;
+import ru.hypernavi.core.telegram.api.Update;
+import ru.hypernavi.util.concurrent.MoreExecutors;
 
 import java.util.Arrays;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import ru.hypernavi.core.telegram.api.GetUpdatesResponse;
-import ru.hypernavi.core.telegram.api.TelegramApi;
-import ru.hypernavi.core.telegram.api.Update;
-import ru.hypernavi.util.concurrent.MoreExecutors;
 
 /**
  * User: amosov-f
@@ -44,6 +42,9 @@ public final class GetUpdatesSource extends QueuedUpdatesSource {
         if (getUpdatesResponse == null) {
             return;
         }
+
+        final long receiptTimestamp = System.currentTimeMillis();
+        Arrays.stream(getUpdatesResponse.getResult()).forEach(update -> update.setReceiptTimestamp(receiptTimestamp));
 
         final IntStream updateIdsStream = Arrays.stream(getUpdatesResponse.getResult()).mapToInt(Update::getUpdateId);
         final int maxUpdateId = IntStream.concat(IntStream.of(updateIdSnapshot), updateIdsStream).max().orElse(updateIdSnapshot);

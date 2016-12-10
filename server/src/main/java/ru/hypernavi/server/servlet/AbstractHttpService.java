@@ -59,6 +59,8 @@ public abstract class AbstractHttpService extends HttpServlet {
         final Session session = Objects.requireNonNull(sessionFactory).get();
         MDC.put("reqid", session.getId());
 
+        session.set(Property.START_TIME, startTime);
+
         final DumpWriters dumpWriters = dumpWritersProvider.get();
         dumpWriters.enable(session, req);
 
