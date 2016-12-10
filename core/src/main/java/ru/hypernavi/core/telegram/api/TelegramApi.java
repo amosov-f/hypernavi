@@ -24,7 +24,6 @@ import ru.hypernavi.core.telegram.api.inline.InlineQueryResult;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.GeoPointImpl;
-import ru.hypernavi.util.MoreIOUtils;
 import ru.hypernavi.util.awt.ImageUtils;
 import ru.hypernavi.util.json.GsonUtils;
 
@@ -80,13 +79,16 @@ public final class TelegramApi {
     }
 
     public void sendPhoto(final int chatId, @NotNull final Image photo, @Nullable final String caption) {
-        final InputStream photoStream = MoreIOUtils.connectSafe(photo.getLink());
-        if (photoStream == null) {
-            LOG.error("Can't download photo: " + photo.getLink());
-            sendMessage(chatId, "Sorry, can't upload picture");
-            return;
-        }
-        sendPhoto(chatId, photoStream, photo.getFormat(), caption);
+        sendPhoto(chatId, photo.getLink(), caption);
+    }
+
+    private void sendPhoto(final int chatId, @NotNull final String url, @Nullable final String caption) {
+        final URI uri = method("/sendPhoto")
+            .set("chat_id", chatId)
+            .set("photo", url)
+            .setIfNotNull("caption", caption)
+            .build();
+        execute(new HttpGet(uri), Object.class);
     }
 
     private void sendPhoto(final int chatId,

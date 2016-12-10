@@ -1,5 +1,7 @@
 package ru.hypernavi.core.database.provider.mongo;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -14,6 +16,8 @@ import ru.hypernavi.util.json.GsonUtils;
  * Created by amosov-f on 05.12.15.
  */
 public abstract class MongoProvider<T> implements DatabaseProvider<T> {
+    private static final Log LOG = LogFactory.getLog(MongoProvider.class);
+
     @NotNull
     protected final MongoCollection<Document> coll;
 
@@ -28,7 +32,12 @@ public abstract class MongoProvider<T> implements DatabaseProvider<T> {
 
     @NotNull
     protected static <T> T fromDoc(@NotNull final Document doc, @NotNull final Class<T> clazz) {
-        return GsonUtils.gson().fromJson(doc.toJson(), clazz);
+        final long start = System.currentTimeMillis();
+        try {
+            return GsonUtils.gson().fromJson(doc.toJson(), clazz);
+        } finally {
+            LOG.debug("Document to " + clazz.getSimpleName() + " conversion finished in " + (System.currentTimeMillis() - start) + " ms");
+        }
     }
 
     @NotNull

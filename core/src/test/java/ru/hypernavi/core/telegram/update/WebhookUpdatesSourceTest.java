@@ -1,19 +1,17 @@
 package ru.hypernavi.core.telegram.update;
 
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.Test;
+import ru.hypernavi.core.telegram.api.TelegramApi;
+import ru.hypernavi.core.telegram.api.Update;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
-
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import ru.hypernavi.core.telegram.api.TelegramApi;
-import ru.hypernavi.core.telegram.api.Update;
 
 /**
  * User: amosov-f
@@ -34,6 +32,7 @@ public class WebhookUpdatesSourceTest {
     @Test
     public void updatesSourceMustBeThreadSafe() {
         final Update update = TelegramApi.gson().fromJson(read("/telegram/webhook/text.json"), Update.class);
+        update.setReqId(update.getUpdateId() + "");
         final ExecutorService service = Executors.newFixedThreadPool(10);
         final int[] updateIds = IntStream.range(0, 100000).toArray();
         IntStream.of(updateIds).forEach(i -> service.submit(() -> source.add(clone(update, i))));
@@ -52,6 +51,9 @@ public class WebhookUpdatesSourceTest {
 
     @NotNull
     private Update clone(@NotNull final Update update, final int id) {
-        return new Update(id, update.getMessage(), update.getInlineQuery());
+        final Update clone = new Update(id, update.getMessage(), update.getInlineQuery());
+        clone.setReqId(update.getReqId());
+        clone.setReceiptTimestamp(update.getReceiptTimestamp());
+        return clone;
     }
 }

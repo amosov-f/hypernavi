@@ -22,13 +22,16 @@ public final class Message {
     private final GeoPoint location;
     @Nullable
     private final BotCommand[] entities;
+    @Nullable
+    private final PhotoSize[] photo;
 
     public Message(final int messageId,
                    @NotNull final Chat chat,
                    @Nullable final String text,
                    final int date,
                    @Nullable final GeoPoint location,
-                   @Nullable final BotCommand... entities)
+                   @Nullable final BotCommand[] entities,
+                   @Nullable final PhotoSize[] photo)
     {
         this.messageId = messageId;
         this.chat = chat;
@@ -36,6 +39,7 @@ public final class Message {
         this.date = date;
         this.location = location;
         this.entities = entities;
+        this.photo = photo;
     }
 
     public int getMessageId() {
@@ -64,6 +68,11 @@ public final class Message {
     @NotNull
     public Entity[] getEntities() {
         return entities != null ? entities : Entity.EMPTY_ARRAY;
+    }
+
+    @NotNull
+    public PhotoSize[] getPhoto() {
+        return photo != null ? photo : PhotoSize.EMPTY_ARRAY;
     }
 
     @NotNull

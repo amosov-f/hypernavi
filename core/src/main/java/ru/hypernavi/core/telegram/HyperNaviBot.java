@@ -185,11 +185,12 @@ public final class HyperNaviBot {
                     if (locationImage != null) {
                         if (locationImage.isLocationInsideMap()) {
                             api.sendMessage(chatId, "You are in " + siteName + ". See your location at this place:");
+                            final Image.Format format = locationImage.getFormat();
+                            api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
                         } else {
                             api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
+                            api.sendPhoto(chatId, plan.getImage(), hintDesc);
                         }
-                        final Image.Format format = locationImage.getFormat();
-                        api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
                         continue;
                     }
                 }

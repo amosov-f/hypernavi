@@ -1,25 +1,24 @@
 package ru.hypernavi.core.database.provider.mongo;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-
 import com.google.inject.Inject;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.geoindex.GeoIndex;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.stream.MoreStreamSupport;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by amosov-f on 05.12.15.
@@ -79,7 +78,10 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
     @NotNull
     @Override
     public List<Index<? extends Site>> getNN(@NotNull final GeoPoint location, final int offset, final int count) {
-        return MoreStreamSupport.stream(coll.find(near(location, null)))
+        final long start = System.currentTimeMillis();
+        final FindIterable<Document> result = coll.find(near(location, null));
+        LOG.info("Database search finished in " + (System.currentTimeMillis() - start) + " ms");
+        return MoreStreamSupport.stream(result)
                 .skip(offset)
                 .limit(count)
                 .map(SiteMongoProvider::site)

@@ -52,11 +52,14 @@ public enum MoreIOUtils {
 
     @NotNull
     public static InputStream connect(@NotNull final String url) throws IOException {
+        final long start = System.currentTimeMillis();
         final URLConnection connection = new URL(url).openConnection();
         connection.setDoOutput(true);
         connection.setDoInput(true);
         connection.addRequestProperty("User-Agent", "");
-        return connection.getInputStream();
+        final InputStream result = connection.getInputStream();
+        LOG.debug("Connecting with url finished in " + (System.currentTimeMillis() - start) + " ms: " + url);
+        return result;
     }
 
     @NotNull
