@@ -19,37 +19,46 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
+<nav class="navbar navbar-inverse navbar-static-top" style="height: 70px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+
+    <div class="container" style="background-color: RGB(183, 207, 217);">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">HyperNavi</a>
+
+            <div class="brand-centered" style="background-color: RGB(183, 207, 217);">
+            <a class="navbar-brand" href="#">
+                    <img src="/web/img/logo.png" style="margin-right: 10px; padding: 0; width: 60px; margin-top: -7px;" alt="Brand"><font color="white" style="font-weight: bold;">HyperNavi</font>
+                </a>
+            </div>
+
+
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
             </ul>
         </div>
     </div>
+
 </nav>
 
 
 <div class="container">
 
     <div class="row">
-        <div class="col-lg-8">
-            <img src="/web/img/whereami.png" width="100%">
-            <h2 align="center">Problem</h2>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5">
+            <img src="/web/img/man.png" width="85%" height="85%" style="margin-top: 60px;">
         </div>
-        <div class="col-lg-4">
-            <img src="/web/img/example.gif" width="100%">
-            <h2 align="center">Solution</h2>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-3">
+            <img src="/web/img/example.gif" width="115%" height="115%" style="margin-top: 40px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
         </div>
+        <div class="col-lg-1"></div>
     </div>
 
 

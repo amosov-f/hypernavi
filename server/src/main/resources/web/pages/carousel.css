@@ -132,3 +132,17 @@ body {
         margin-top: 120px;
     }
 }
+
+.brand-centered {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+.brand-centered .navbar-brand {
+    display: flex;
+    align-items: center;
+    height: 70px;
+}
