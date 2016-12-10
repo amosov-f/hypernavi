@@ -31,7 +31,7 @@
             </button>
 
             <div class="brand-centered" style="background-color: RGB(183, 207, 217);">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                     <img src="/web/img/logo.png" style="margin-right: 10px; padding: 0; width: 60px; margin-top: -7px;" alt="Brand"><font color="white" style="font-weight: bold;">HyperNavi</font>
                 </a>
             </div>
