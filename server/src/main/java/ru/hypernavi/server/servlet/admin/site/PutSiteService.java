@@ -29,6 +29,7 @@ public final class PutSiteService extends SiteAdminService {
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final Site site = session.demand(SiteProperty.SITE);
         setAuthorIfNotPresent(site, session);
+        learnAndSerializeModels(site);
         final String id = provider.put(site);
         resp.setStatus(HttpStatus.SC_OK);
         resp.setContentType(ContentType.TEXT_PLAIN.getMimeType());

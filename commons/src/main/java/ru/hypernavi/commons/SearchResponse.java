@@ -1,14 +1,12 @@
 package ru.hypernavi.commons;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
-
 import net.jcip.annotations.Immutable;
+import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.json.GsonUtils;
 import ru.hypernavi.util.json.RuntimeTypeAdapterFactory;
+
+import java.util.List;
 
 /**
  * Created by amosov-f on 07.11.15.

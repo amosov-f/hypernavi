@@ -49,11 +49,6 @@ public final class MapProjectionImpl implements MapProjection {
     }
 
     @NotNull
-    public static Point map(@NotNull final GeoPoint geoPoint, @NotNull final PointMap... points) {
-        return learn(points).map(geoPoint);
-    }
-
-    @NotNull
     public static ValidationResult validate(@NotNull final PointMap... points) {
         final Evaluation evalX = learn(X, points).crossValidate();
         final Evaluation evalY = learn(Y, points).crossValidate();
@@ -73,12 +68,22 @@ public final class MapProjectionImpl implements MapProjection {
     }
 
     @NotNull
-    private static WekaRegression<PointMap> learn(@NotNull final Factor<PointMap> answer,
-                                                  @NotNull final PointMap... points)
-    {
+    public static WekaRegression<PointMap> learn(@NotNull final Factor<PointMap> answer, @NotNull final PointMap... points) {
         final WekaRegression<PointMap> f = new WekaRegression<>(new BestPolynomialRegression(), FEATURES, answer);
         f.learn(points);
         return f;
+    }
+
+    @NotNull
+    public static MapProjection deserialize(@NotNull final String xModel,
+                                            @NotNull final String yModel,
+                                            @NotNull final PointMap... points)
+    {
+        final WekaRegression<PointMap> fx = WekaRegression.deserialize(xModel, FEATURES, X);
+        fx.init(points);
+        final WekaRegression<PointMap> fy = WekaRegression.deserialize(yModel, FEATURES, Y);
+        fy.init(points);
+        return new MapProjectionImpl(projection(fx), projection(fy));
     }
 
     @NotNull

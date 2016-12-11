@@ -2,11 +2,9 @@ package ru.hypernavi.core.telegram;
 
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.methods.HttpGet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.Image;
@@ -16,8 +14,7 @@ import ru.hypernavi.commons.Site;
 import ru.hypernavi.commons.hint.Hint;
 import ru.hypernavi.commons.hint.Picture;
 import ru.hypernavi.commons.hint.Plan;
-import ru.hypernavi.core.http.HttpClient;
-import ru.hypernavi.core.http.URIBuilder;
+import ru.hypernavi.core.geoindex.Searcher;
 import ru.hypernavi.core.telegram.api.Message;
 import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
@@ -33,10 +30,8 @@ import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
-import ru.hypernavi.util.json.GsonUtils;
 import ru.hypernavi.util.stream.MoreStreamSupport;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -61,10 +56,7 @@ public final class HyperNaviBot {
     @Inject
     private TelegramApi api;
     @Inject
-    @Named("hypernavi.telegram.bot.search_host")
-    private String searchHost;
-    @Inject
-    private HttpClient httpClient;
+    private Searcher searcher;
 
     @Inject
     private UpdatesSource updatesSource;
@@ -184,11 +176,11 @@ public final class HyperNaviBot {
                     final LocationImage locationImage = LocationMapper.INSTANCE.mapLocation(plan, location);
                     if (locationImage != null) {
                         if (locationImage.isLocationInsideMap()) {
-                            api.sendMessage(chatId, "You are in " + siteName + ". See your location at this place:");
+                            sendMessageAsync(chatId, "You are in " + siteName + ". See your location at this place:");
                             final Image.Format format = locationImage.getFormat();
                             api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
                         } else {
-                            api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
+                            sendMessageAsync(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
                             api.sendPhoto(chatId, plan.getImage(), hintDesc);
                         }
                         continue;
@@ -201,18 +193,13 @@ public final class HyperNaviBot {
         }
     }
 
+    private void sendMessageAsync(final int chatId, @NotNull final String text) {
+        service.submit(() -> api.sendMessage(chatId, text));
+    }
+
     @Nullable
     private SearchResponse search(@Nullable final GeoPoint location, @Nullable final String text) {
-        if (location == null && text == null) {
-            throw new IllegalStateException("Specify text or location!");
-        }
-        final URI uri = new URIBuilder("http://" + searchHost + "/search")
-                .addIfNotNull("lon", location != null ? location.getLongitude() : null)
-                .addIfNotNull("lat", location != null ? location.getLatitude() : null)
-                .addIfNotNull("text", text)
-                .add("ns", 1)
-                .build();
-        return httpClient.execute(new HttpGet(uri), SearchResponse.class, GsonUtils.gson());
+        return searcher.search(location, text, 0, 1);
     }
 
     @Nullable

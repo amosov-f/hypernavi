@@ -1,12 +1,8 @@
 package ru.hypernavi.ml.regression;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
@@ -14,12 +10,18 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * User: amosov-f
  * Date: 10.05.15
  * Time: 14:59
  */
 public final class PolynomialRegression extends AbstractClassifier {
+    private static final Log LOG = LogFactory.getLog(PolynomialRegression.class);
+
     private final int deg;
     @NotNull
     private final LinearRegression regression = new LinearRegression();
@@ -36,9 +38,13 @@ public final class PolynomialRegression extends AbstractClassifier {
 
     @Override
     public void buildClassifier(@NotNull final Instances data) throws Exception {
+//        final long start = System.currentTimeMillis();
         tuples = tuples(deg, data.numAttributes() - 1);
         tuples.remove(0); // remove [0, 0, ..., 0]
-        regression.buildClassifier(instances(data));
+        final Instances instances = instances(data);
+        regression.buildClassifier(instances);
+//        final String format = "Building linear model with %d attributes on %d instatces finished in %d ms";
+//        LOG.debug(String.format(format, instances.numAttributes(), instances.numInstances(), System.currentTimeMillis() - start));
     }
 
     @Override

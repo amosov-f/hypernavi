@@ -32,6 +32,7 @@ public final class EditSiteService extends SiteAdminService {
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final Index<Site> site = session.demand(SITE_INDEX);
         setAuthorIfNotPresent(site.get(), session);
+        learnAndSerializeModels(site.get());
         provider.put(site.getId(), site.get());
 
         resp.setStatus(HttpStatus.SC_OK);

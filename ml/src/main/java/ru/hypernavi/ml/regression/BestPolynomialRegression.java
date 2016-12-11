@@ -1,20 +1,18 @@
 package ru.hypernavi.ml.regression;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import weka.classifiers.AbstractClassifier;
+import weka.classifiers.Evaluation;
+import weka.core.Instance;
+import weka.core.Instances;
 
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.IntStream;
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Evaluation;
-import weka.core.Instance;
-import weka.core.Instances;
 
 /**
  * User: amosov-f
@@ -35,19 +33,24 @@ public final class BestPolynomialRegression extends AbstractClassifier {
 
     @Override
     public void buildClassifier(@NotNull final Instances data) throws Exception {
-        final int bestDeg = IntStream.range(0, MAX_DEG + 1).boxed().max(Comparator.comparing(deg -> {
-            try {
-                return evaluate(deg, data);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        })).get();
+        final int bestDeg = IntStream.rangeClosed(0, MAX_DEG)
+            .boxed()
+            .max(Comparator.comparing(deg -> evaluate(deg, data)))
+            .orElse(1);
         LOG.debug("Best degree of polynom is " + bestDeg);
         delegate = new PolynomialRegression(bestDeg);
         delegate.buildClassifier(data);
     }
 
-    private double evaluate(final int deg, @NotNull final Instances data) throws Exception {
+    private double evaluate(final int deg, @NotNull final Instances data) {
+        try {
+            return evaluateImpl(deg, data);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private double evaluateImpl(final int deg, @NotNull final Instances data) throws Exception {
         final PolynomialRegression poly = new PolynomialRegression(deg);
         final Evaluation eval = new Evaluation(data);
         eval.crossValidateModel(poly, data, data.size(), new Random(0));

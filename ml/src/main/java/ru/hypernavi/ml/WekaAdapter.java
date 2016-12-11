@@ -10,7 +10,10 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -34,11 +37,11 @@ public abstract class WekaAdapter<T> {
         this.features = features;
     }
 
-    public void learn(@NotNull final T... dataset) {
+    public void init(@NotNull final T...dataset) {
         classAttribute = getClassAttribute(dataset);
         attributes = new ArrayList<>(features.stream()
-                .map(feature -> new Attribute(feature.getName()))
-                .collect(Collectors.toList()));
+            .map(feature -> new Attribute(feature.getName()))
+            .collect(Collectors.toList()));
         attributes.add(classAttribute);
         instances = new Instances("dataset", attributes, dataset.length);
         for (final T object : dataset) {
@@ -47,6 +50,10 @@ public abstract class WekaAdapter<T> {
             instances.add(instance);
         }
         instances.setClass(classAttribute);
+    }
+
+    public void learn(@NotNull final T... dataset) {
+        init(dataset);
         try {
             this.classifier.buildClassifier(instances);
         } catch (Exception e) {

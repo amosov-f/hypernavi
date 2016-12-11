@@ -2,12 +2,16 @@ package ru.hypernavi.server.servlet.admin.site;
 
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.commons.hint.Hint;
+import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.ml.regression.WekaRegression;
+import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.server.servlet.AbstractHttpService;
 
 /**
@@ -25,6 +29,21 @@ public abstract class SiteAdminService extends AbstractHttpService {
         for (final Hint hint : site.getHints()) {
             if (hint.getAuthorUid() == null) {
                 hint.setAuthorUid(author.getUid());
+            }
+        }
+    }
+
+    protected void learnAndSerializeModels(@NotNull final Site site) {
+        for (final Hint hint : site.getHints()) {
+            if (hint instanceof Plan) {
+                final Plan plan = (Plan) hint;
+                final PointMap[] points = plan.getPoints();
+                if (points.length != 0) {
+                    final WekaRegression<PointMap> fx = MapProjectionImpl.learn(MapProjectionImpl.X, points);
+                    final WekaRegression<PointMap> fy = MapProjectionImpl.learn(MapProjectionImpl.Y, points);
+                    plan.setModel(Plan.X_MODEL_KEY, fx.serialize());
+                    plan.setModel(Plan.Y_MODEL_KEY, fy.serialize());
+                }
             }
         }
     }

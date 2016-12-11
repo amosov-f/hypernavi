@@ -1,17 +1,13 @@
-package ru.hypernavi.server.servlet.search;
+package ru.hypernavi.core.geoindex;
 
 import com.google.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.GeoObject;
 import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.SearchResponse;
 import ru.hypernavi.commons.Site;
-import ru.hypernavi.core.geoindex.GeoIndex;
-import ru.hypernavi.core.session.Property;
-import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.webutil.yandex.MapsSearcher;
 import ru.hypernavi.util.GeoPoint;
 
@@ -29,26 +25,30 @@ public final class Searcher {
     private MapsSearcher mapsSearcher;
 
     @Nullable
-    public SearchResponse search(@NotNull final Session session) {
-        GeoPoint location = session.get(Property.GEO_LOCATION);
+    public SearchResponse search(@Nullable final GeoPoint location,
+                                 @Nullable final String text,
+                                 final int page,
+                                 final int numSite)
+    {
+        GeoPoint searchLocation = location;
         if (location == null) {
-            final String text = session.demand(Property.TEXT);
+            if (text == null) {
+                throw new IllegalStateException("Specify text or location!");
+            }
             final GeoObject position = mapsSearcher.search(text, null);
             if (position != null) {
-                location = position.getLocation();
+                searchLocation = position.getLocation();
             }
         }
-        if (location == null) {
+        if (searchLocation == null) {
             return null;
         }
-        final int page = session.demand(SearchRequest.PAGE);
-        final int numSite = session.demand(SearchRequest.NUM_SITE);
 
         final long start = System.currentTimeMillis();
-        final List<Index<? extends Site>> sites = geoIndex.getNN(location, page * numSite, numSite);
+        final List<Index<? extends Site>> sites = geoIndex.getNN(searchLocation, page * numSite, numSite);
         LOG.info("Getting NN finished in " + (System.currentTimeMillis() - start) + " ms");
 
-        final SearchResponse.Meta meta = new SearchResponse.Meta(location);
+        final SearchResponse.Meta meta = new SearchResponse.Meta(searchLocation);
         final SearchResponse.Data data = new SearchResponse.Data(sites);
         return new SearchResponse(meta, data);
     }
