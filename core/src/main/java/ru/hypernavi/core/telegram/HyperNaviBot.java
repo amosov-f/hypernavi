@@ -174,20 +174,16 @@ public final class HyperNaviBot {
                 final Plan plan = (Plan) hint;
                 if (location != null) {
                     final LocationImage locationImage = LocationMapper.INSTANCE.mapLocation(plan, location);
-                    if (locationImage != null) {
-                        if (locationImage.isLocationInsideMap()) {
-                            sendMessageAsync(chatId, "You are in " + siteName + ". See your location at this place:");
-                            final Image.Format format = locationImage.getFormat();
-                            api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
-                        } else {
-                            sendMessageAsync(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
-                            api.sendPhoto(chatId, plan.getImage(), hintDesc);
-                        }
-                        continue;
+                    if (locationImage != null && locationImage.isLocationInsideMap()) {
+                        sendMessageAsync(chatId, "You are in " + siteName + ". See your location at this place:");
+                        final Image.Format format = locationImage.getFormat();
+                        api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
+                    } else {
+                        api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
+                        api.sendPhoto(chatId, plan.getImage(), hintDesc);
                     }
                 }
-            }
-            if (hint instanceof Picture) {
+            } else if (hint instanceof Picture) {
                 api.sendPhoto(chatId, ((Picture) hint).getImage(), hintDesc);
             }
         }

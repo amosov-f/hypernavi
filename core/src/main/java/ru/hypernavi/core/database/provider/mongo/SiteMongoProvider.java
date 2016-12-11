@@ -13,6 +13,7 @@ import ru.hypernavi.commons.Index;
 import ru.hypernavi.commons.Site;
 import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.geoindex.GeoIndex;
+import ru.hypernavi.util.ArrayGeoPoint;
 import ru.hypernavi.util.GeoPoint;
 import ru.hypernavi.util.stream.MoreStreamSupport;
 
@@ -110,7 +111,8 @@ public final class SiteMongoProvider extends MongoProvider<Site> implements GeoI
 
     @NotNull
     private static Document near(@NotNull final GeoPoint location, @Nullable final Integer radius) {
-        final Document near = new Document().append("$geometry", toDoc(location));
+        final GeoPoint arrayLocation = ArrayGeoPoint.of(location.getLongitude(), location.getLatitude());
+        final Document near = new Document().append("$geometry", toDoc(arrayLocation));
         if (radius != null) {
             near.append("$maxDistance", radius);
         }
