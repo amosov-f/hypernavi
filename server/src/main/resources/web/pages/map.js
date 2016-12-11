@@ -83,7 +83,7 @@ function addLangButton(map) {
         var lat = map.getCenter()[0];
         var lon = map.getCenter()[1];
         var lang = LANG === 'ru_RU' ? 'en_US' : 'ru_RU';
-        location.href = '/admin?lang=' + lang + '&lat=' + lat + '&lon=' + lon + '&zoom=' + map.getZoom();
+        location.href = '/map?lang=' + lang + '&lat=' + lat + '&lon=' + lon + '&zoom=' + map.getZoom();
     });
     map.controls.add(changeLangButton);
 }
