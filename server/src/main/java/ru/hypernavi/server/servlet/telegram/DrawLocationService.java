@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -26,6 +27,9 @@ public final class DrawLocationService extends AbstractHttpService {
     final BufferedImage image = ImageUtils.download(imageLink);
     final BufferedImage locatedImage = ImageEditor.INSTANCE.drawLocation(image, location);
     resp.setContentType("image/jpeg");
+    final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), bout);
+    resp.setContentLength(bout.toByteArray().length);
     ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), resp.getOutputStream());
   }
 }
