@@ -25,6 +25,7 @@ public final class DrawLocationService extends AbstractHttpService {
     final String imageLink = session.demand(Property.LINK);
     final BufferedImage image = ImageUtils.download(imageLink);
     final BufferedImage locatedImage = ImageEditor.INSTANCE.drawLocation(image, location);
+    resp.setContentType("image/jpeg");
     ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), resp.getOutputStream());
   }
 }
