@@ -1,6 +1,7 @@
 package ru.hypernavi.server.servlet.telegram;
 
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public final class DrawLocationService extends AbstractHttpService {
   @Override
   public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+    resp.setStatus(HttpStatus.SC_OK);
     final Point location = session.demand(Property.MAP_POINT);
     final String imageLink = session.demand(Property.LINK);
     final BufferedImage image = ImageUtils.download(imageLink);
