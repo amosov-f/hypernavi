@@ -1,5 +1,6 @@
 package ru.hypernavi.server.servlet.telegram;
 
+import org.apache.http.HttpHeaders;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
@@ -31,6 +32,8 @@ public final class DrawLocationService extends AbstractHttpService {
     ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), bout);
     bout.flush();
     bout.close();
+    resp.addHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+    resp.addDateHeader(HttpHeaders.LAST_MODIFIED, System.currentTimeMillis());
     resp.setContentLength(bout.toByteArray().length);
     ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), resp.getOutputStream());
   }
