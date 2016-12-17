@@ -29,6 +29,8 @@ public final class DrawLocationService extends AbstractHttpService {
     resp.setContentType("image/jpeg");
     final ByteArrayOutputStream bout = new ByteArrayOutputStream();
     ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), bout);
+    bout.flush();
+    bout.close();
     resp.setContentLength(bout.toByteArray().length);
     ImageIO.write(locatedImage, ImageUtils.format(locatedImage, imageLink), resp.getOutputStream());
   }
