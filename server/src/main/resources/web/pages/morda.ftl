@@ -104,10 +104,9 @@
             <h2 class="featurette-heading">Ski resort navigation</h2>
             <p class="lead">Popular European ski resorts are very confusing.
                 HyperNavi will show your position on human-adapted ski pistes map. You very simple find path to desired ski lift</p>
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/zermatt-zoom.jpg">
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/zermatt.jpg">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/zermatt-pistes.png">
         </div>
     </div>
 
