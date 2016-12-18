@@ -1,6 +1,7 @@
 package ru.hypernavi.core.telegram.api.inline;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * User: amosov-f
@@ -14,11 +15,17 @@ public final class InlineQueryResultPhoto extends InlineQueryResult {
     private final String photoUrl;
     @NotNull
     private final String thumbUrl;
+    @Nullable
+    private final String caption;
 
-    public InlineQueryResultPhoto(@NotNull final String id, @NotNull final String photoUrl, @NotNull final String thumbUrl) {
+    public InlineQueryResultPhoto(@NotNull final String id,
+                                  @NotNull final String photoUrl,
+                                  @NotNull final String thumbUrl,
+                                  @Nullable final String caption) {
         super("photo");
         this.id = id;
         this.photoUrl = photoUrl;
         this.thumbUrl = thumbUrl;
+        this.caption = caption;
     }
 }

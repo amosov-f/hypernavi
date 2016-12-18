@@ -2,6 +2,7 @@ package ru.hypernavi.core.http;
 
 import com.google.inject.Inject;
 import net.jcip.annotations.ThreadSafe;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -52,6 +53,7 @@ public final class HyperHttpClient implements ru.hypernavi.core.http.HttpClient 
         try {
             if (status != HttpStatus.SC_OK) {
                 LOG.info("Received non-OK response in " + (System.currentTimeMillis() - start) + " ms: " + status + " " + statusLine.getReasonPhrase());
+                LOG.debug("Response content: " + IOUtils.toString(entity.getContent()));
                 return null;
             }
             try {

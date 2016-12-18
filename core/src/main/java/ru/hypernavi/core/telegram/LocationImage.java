@@ -43,7 +43,13 @@ public final class LocationImage {
   }
 
   public static boolean checkLocationInsideImage(@NotNull final BufferedImage image, @NotNull final Point location) {
-    return checkBetween(location.x, 0, image.getWidth()) && checkBetween(location.y, 0, image.getHeight());
+    return checkBetween(location.x, 0, image.getWidth())
+        && checkBetween(location.y, 0, image.getHeight());
+  }
+
+  public static boolean checkLocationInsideImage(@NotNull final Image image, @NotNull final Point location) {
+    return checkBetween(location.x, 0, image.getDimension().getWidth())
+        && checkBetween(location.y, 0, image.getDimension().getHeight());
   }
 
   private static boolean checkBetween(final int x, final int l, final int r) {

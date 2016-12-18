@@ -28,15 +28,32 @@ public enum LocationMapper {
     private static final Log LOG = LogFactory.getLog(LocationMapper.class);
 
     @Nullable
-    public LocationImage mapLocation(@NotNull final Plan plan, @NotNull final GeoPoint geoLocation) {
-        final long start = System.currentTimeMillis();
-
+    public LocationImage drawLocation(@NotNull final Plan plan, @NotNull final GeoPoint geoLocation) {
         final PointMap[] points = plan.getPoints();
         if (points.length == 0) {
             return null;
         }
 
         final Future<BufferedImage> futurePlanPicture = ImageUtils.downloadAsync(plan.getImage().getLink());
+
+        final Point mapLocation = mapLocation(plan, geoLocation);
+
+        final BufferedImage planPicture;
+        try {
+            planPicture = futurePlanPicture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.warn("Can't download plan picture: " + plan.getImage().getLink(), e);
+            return null;
+        }
+        final BufferedImage map = ImageEditor.INSTANCE.drawLocation(planPicture, mapLocation);
+        return new LocationImage(plan, map, mapLocation);
+    }
+
+    @NotNull
+    public Point mapLocation(@NotNull final Plan plan, @NotNull final GeoPoint geoLocation) {
+        final long start = System.currentTimeMillis();
+
+        final PointMap[] points = plan.getPoints();
 
         final String xModel = plan.getModel(Plan.X_MODEL_KEY);
         final String yModel = plan.getModel(Plan.Y_MODEL_KEY);
@@ -52,14 +69,18 @@ public enum LocationMapper {
         final Point mapLocation = mapProjection.map(geoLocation);
         LOG.info("Location mapping finished in " + (System.currentTimeMillis() - start) + " ms");
 
-        final BufferedImage planPicture;
-        try {
-            planPicture = futurePlanPicture.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.warn("Can't download plan picture: " + plan.getImage().getLink(), e);
+        return mapLocation;
+    }
+
+    @Nullable
+    public Point mapLocationInside(@NotNull final Plan plan, @NotNull final GeoPoint geoLocation) {
+        if (plan.getPoints().length == 0) {
             return null;
         }
-        final BufferedImage map = ImageEditor.INSTANCE.drawLocation(planPicture, mapLocation);
-        return new LocationImage(plan, map, mapLocation);
+        final Point location = mapLocation(plan, geoLocation);
+        if (LocationImage.checkLocationInsideImage(plan.getImage(), location)) {
+            return location;
+        }
+        return null;
     }
 }

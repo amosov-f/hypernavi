@@ -82,7 +82,7 @@ public final class TelegramApi {
         sendPhoto(chatId, photo.getLink(), caption);
     }
 
-    private void sendPhoto(final int chatId, @NotNull final String url, @Nullable final String caption) {
+    public void sendPhoto(final int chatId, @NotNull final String url, @Nullable final String caption) {
         final URI uri = method("/sendPhoto")
             .set("chat_id", chatId)
             .set("photo", url)

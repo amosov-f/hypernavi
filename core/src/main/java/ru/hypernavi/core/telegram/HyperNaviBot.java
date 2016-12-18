@@ -15,6 +15,7 @@ import ru.hypernavi.commons.hint.Hint;
 import ru.hypernavi.commons.hint.Picture;
 import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.geoindex.Searcher;
+import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.telegram.api.Message;
 import ru.hypernavi.core.telegram.api.TelegramApi;
 import ru.hypernavi.core.telegram.api.Update;
@@ -32,6 +33,7 @@ import ru.hypernavi.util.MoreReflectionUtils;
 import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.stream.MoreStreamSupport;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -118,15 +120,40 @@ public final class HyperNaviBot {
                 .flatMap(Arrays::stream)
                 .filter(Picture.class::isInstance)
                 .map(Picture.class::cast)
-                .map(Picture::getImage)
-                .map(image -> new InlineQueryResultPhoto(generateId(image), image.getLink(), image.getThumbOrFull()))
+                .map(picture -> toInlineResult(picture, location))
                 .toArray(InlineQueryResult[]::new);
         api.answerInlineQuery(inlineQuery.getId(), results);
     }
 
     @NotNull
-    private String generateId(@NotNull final Image image) {
-        return String.valueOf(image.getLink().hashCode());
+    private InlineQueryResultPhoto toInlineResult(@NotNull final Picture picture, @NotNull final GeoPoint geoLocation) {
+        Point mapLocation = null;
+        if (picture instanceof Plan) {
+            mapLocation = LocationMapper.INSTANCE.mapLocationInside((Plan) picture, geoLocation);
+        }
+        final Image image = picture.getImage();
+        String locationImageLink = image.getLink();
+        if (mapLocation != null) {
+            locationImageLink = drawLocationLink(locationImageLink, mapLocation.getLocation());
+        }
+        final String id = generateId(locationImageLink);
+        final String caption = picture.getDescription();
+        return new InlineQueryResultPhoto(id, locationImageLink, image.getThumbOrFull(), caption);
+    }
+
+    @NotNull
+    private String generateId(@NotNull final String link) {
+        return link.hashCode() + "";
+    }
+
+    @NotNull
+    private String drawLocationLink(@NotNull final String link, @NotNull final Point p) {
+        return new URIBuilder("http://hypernavi.net/draw/location")
+            .set("x", p.x)
+            .set("y", p.y)
+            .set("link", link)
+            .build()
+            .toString();
     }
 
     private void processMessage(@NotNull final Message message) {
@@ -173,10 +200,11 @@ public final class HyperNaviBot {
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
                 if (location != null) {
-                    final LocationImage locationImage = LocationMapper.INSTANCE.mapLocation(plan, location);
+                    final LocationImage locationImage = LocationMapper.INSTANCE.drawLocation(plan, location);
                     if (locationImage != null && locationImage.isLocationInsideMap()) {
                         sendMessageAsync(chatId, "You are in " + siteName + ". See your location at this place:");
                         final Image.Format format = locationImage.getFormat();
+//                        api.sendPhoto(chatId, drawLocationLink(plan.getImage().getLink(), locationImage.getLocation()), hintDesc);
                         api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
                     } else {
                         api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");

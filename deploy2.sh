@@ -3,8 +3,7 @@
 docker build -t amosov/hypernavi .
 docker tag $(docker images -q amosov/hypernavi) amosov/hypernavi
 docker push amosov/hypernavi
-docker stop hypernavi
-docker rm hypernavi
+docker stop hypernavi && docker rm hypernavi
 docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -v /root/hypernavi-data/data/:/root/hypernavi-data/data/ -d amosov/hypernavi
 
 # mongodb
