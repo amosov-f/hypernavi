@@ -79,7 +79,7 @@
             <p class="lead">Send your location to bot. He will return nearest map with your position on it</p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/example.jpg">
         </div>
     </div>
 
@@ -93,7 +93,7 @@
                 Use inline mode to send picture with your location to friend</p>
         </div>
         <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/inline.png">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/inline.jpg">
         </div>
     </div>
 
