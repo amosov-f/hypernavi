@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-static-top" style="height: 70px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+<nav class="navbar navbar-inverse navbar-static-top shadow" style="height: 70px;">
 
     <div class="container" style="background-color: RGB(183, 207, 217);">
         <div class="navbar-header">
@@ -79,7 +79,7 @@
             <p class="lead">Send your location to bot. Bot will return near map with your position on this map, if you are on this map</p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg">
+            <img class="featurette-image img-responsive center-block shadow" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg">
         </div>
     </div>
 
@@ -93,7 +93,7 @@
                 Use inline mode to send picture with your location to friend</p>
         </div>
         <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/inline.png">
         </div>
     </div>
 
@@ -104,10 +104,10 @@
             <h2 class="featurette-heading">Ski resort navigation</h2>
             <p class="lead">Popular European ski resorts are very confusing.
                 HyperNavi will show your position on human-adapted ski pistes map. You very simple find path to desired ski lift</p>
-            <img class="featurette-image img-responsive center-block" src="/web/img/zermatt-zoom.jpg">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/zermatt-zoom.jpg">
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block" src="/web/img/zermatt.jpg">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/zermatt.jpg">
         </div>
     </div>
 
@@ -121,14 +121,6 @@
             How it works?
         </a>
     </p>
-
-    <hr class="featurette-divider">
-
-    <!-- FOOTER -->
-    <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2016 HyperNavi, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="/web/pages/about.html" target="_blank">More info</a></p>
-    </footer>
 
 </div>
 
