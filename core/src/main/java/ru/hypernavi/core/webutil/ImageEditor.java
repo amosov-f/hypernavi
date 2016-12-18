@@ -1,5 +1,7 @@
 package ru.hypernavi.core.webutil;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 import ru.hypernavi.core.telegram.LocationImage;
 import ru.hypernavi.util.awt.ImageUtils;
@@ -18,6 +20,8 @@ import java.io.UncheckedIOException;
  */
 public enum ImageEditor {
     INSTANCE;
+
+    private static final Log LOG = LogFactory.getLog(ImageEditor.class);
 
     private static final double MIN_X_SCALE = 0.2;
     private static final double MIN_Y_SCALE = 0.2;
@@ -76,6 +80,8 @@ public enum ImageEditor {
 
     @NotNull
     public BufferedImage drawLocationPicture(@NotNull final BufferedImage plan, @NotNull final Point location) {
+        final long start = System.currentTimeMillis();
+
         final double scaleX = MIN_X_SCALE * plan.getWidth() / locationPicture.getWidth();
         final double scaleY = MIN_Y_SCALE * plan.getHeight() / locationPicture.getHeight();
         final double scale = Math.min(scaleX, scaleY);
@@ -87,6 +93,9 @@ public enum ImageEditor {
         final BufferedImage editedPlan = ImageUtils.copy(plan);
         final Graphics2D g = editedPlan.createGraphics();
         g.drawImage(locationPicture, x, y, w, h, null);
+
+        LOG.info("Drawing location on BufferedImage finished in " + (System.currentTimeMillis() - start));
+
         return plan;
     }
 }
