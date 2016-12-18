@@ -21,6 +21,7 @@ import java.io.IOException;
 public final class DrawLocationService extends AbstractHttpService {
   @Override
   public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
+    resp.setStatus(HttpServletResponse.SC_OK);
     final Point location = session.demand(Property.MAP_POINT);
     final String imageLink = session.demand(Property.LINK);
     final BufferedImage image = ImageUtils.download(imageLink);
