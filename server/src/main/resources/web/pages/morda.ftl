@@ -75,8 +75,8 @@
 
     <div class="row featurette">
         <div class="col-md-7">
-            <h2 class="featurette-heading">Your location on hand-made map<span class="text-muted"></span></h2>
-            <p class="lead">Send your location to bot. Bot will return near map with your position on this map, if you are on this map</p>
+            <h2 class="featurette-heading">Your land positionon hand-made map<span class="text-muted"></span></h2>
+            <p class="lead">Send your location to bot. He will return nearest map with your position on it</p>
         </div>
         <div class="col-md-5">
             <img class="featurette-image img-responsive center-block shadow" src="http://s009.radikal.ru/i307/1611/9a/8cb37a0b8c52.jpg">
