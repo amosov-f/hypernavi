@@ -74,7 +74,10 @@ public enum ImageUtils {
 
     @NotNull
     public static BufferedImage copy(@NotNull final BufferedImage image) {
-        return image.getSubimage(0, 0, image.getWidth(), image.getHeight());
+        final long start = System.currentTimeMillis();
+        final BufferedImage copy = image.getSubimage(0, 0, image.getWidth(), image.getHeight());
+        LOG.info("Copying image " + image.getWidth() + "x" + image.getHeight() + " finished in " + (System.currentTimeMillis() - start));
+        return copy;
     }
 
     public static void drawCircle(@NotNull final Graphics2D g, @NotNull final Point p, final int r) {
