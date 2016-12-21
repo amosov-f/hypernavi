@@ -17,9 +17,9 @@
         }
     </style>
 </head>
-<body>
+<body style="padding-top: 70px;" data-spy="scroll" data-target=".navbar">
 
-<nav class="navbar navbar-inverse navbar-static-top shadow" style="height: 70px;">
+<div class="navbar navbar-inverse navbar-fixed-top shadow" style="height: 70px;">
 
     <div class="container" style="background-color: RGB(183, 207, 217);">
         <div class="navbar-header">
@@ -30,21 +30,24 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <div class="brand-centered" style="background-color: RGB(183, 207, 217);">
-            <a class="navbar-brand" href="/">
-                    <img src="/web/img/logo.png" style="margin-right: 10px; padding: 0; width: 60px; margin-top: -7px;" alt="Brand"><font color="white" style="font-weight: bold;">HyperNavi</font>
+            <div class="brand-centered" style="background-color: RGB(183, 207, 217); padding-left: 40px;">
+                <a class="navbar-brand" href="/">
+                    <img src="/web/img/logo.png" style="margin-right: 10px; padding: 0; width: 60px; margin-top: -7px;">
+                    <font color="white" style="font-weight: bold;">HyperNavi</font>
                 </a>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a class="navbar-brand" href="#usecases"><font color="white">Usecases</font></a></li>
+                        <li><a class="navbar-brand" href="#features"><font color="white">Features</font></a></li>
+                        <li><a class="navbar-brand" href="#how-it-works"><font color="white">How it works</font></a></li>
+                    </ul>
+                </div>
             </div>
 
-
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-            </ul>
         </div>
     </div>
 
-</nav>
+</div>
 
 
 <div class="container">
@@ -73,7 +76,7 @@
 
     <hr class="featurette-divider">
 
-    <div class="row featurette">
+    <div id="usecases" class="row featurette">
         <div class="col-md-7">
             <h2 class="featurette-heading">Your land positionon hand-made map<span class="text-muted"></span></h2>
             <p class="lead">Send your location to bot. He will return nearest map with your position on it</p>
@@ -112,14 +115,102 @@
 
     <hr class="featurette-divider">
 
-    <p align="center">
-        <a href="/web/pages/features.html" class="btn btn-info btn-lg">
-            More features
-        </a>
-        <a href="/web/pages/how-it-works.html" class="btn btn-info btn-lg">
-            How it works?
-        </a>
-    </p>
+    <div id="features" class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Better than paper map</h2>
+            <p class="lead">
+                Paper map with navigation is better than just paper map
+            </p>
+        </div>
+        <div class="col-md-5">
+            <img class="featurette-image img-responsive center-block shadow" src="http://hypernavi.net/draw/location?x=320&y=320&link=http://hypernavi.net/img/i199/1211/36/cf03e5615cbe.jpg">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+            <h2 class="featurette-heading">No more park plan photos</h2>
+            <p class="lead">All park schemes are already in your smartphone</p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+            <img class="featurette-image img-responsive center-block shadow" src="http://s019.radikal.ru/i600/1612/3d/d33f76e54a4e.jpg">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Most popular places</h2>
+            <p class="lead">HyperNavi database contains most visited places around The World.
+                Therefore, the bot most likely will be useful for you.</p>
+        </div>
+        <div class="col-md-5">
+            <img class="featurette-image img-responsive center-block shadow" src="http://hypernavi.net/draw/location?x=450&y=250&link=http://hypernavi.net/img/travel/images/russia2012d060.jpg">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+            <h2 class="featurette-heading">Supported places</h2>
+            <p class="lead">Our database is constantly updated.
+                See all places, currently supported by HyperNavi <a target="_blank" href="/map">hypernavi.net/map</a></p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/map.png">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div id="how-it-works" class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">How HyperNavi works?<span class="text-muted">machine learning</span>
+            </h2>
+            <p class="lead">We assosiate points at image with points at Google/Yandex maps. So, we understand image location for some geopoints.
+                After that, we use machine learning regression algorithms to compute location on image by other geopoints.
+            </p>
+            <img class="featurette-image img-responsive center-block shadow" src="http://clipartix.com/wp-content/uploads/2016/06/Map-location-clip-art-at-clker-vector-clip-art.png">
+        </div>
+        <div class="col-md-5">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/ml.png">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+            <h2 class="featurette-heading">Manually marked maps<br><span class="text-muted">no magic, just hardcore</span>
+            </h2>
+            <p class="lead">Each map marked by human, so, your result location is very accurate</p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+            <img class="featurette-image img-responsive center-block shadow" src="/web/img/mapping.png">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Open source<br><span class="text-muted">like Telegram</span></h2>
+            <br>
+            <p class="lead">See sources at GitHub
+                <a class="btn btn-default bth-lg" href="https://github.com/amosov-f/hypernavi">
+                    <img src="https://github.com/fluidicon.png" height="20" width="20" alt="Logo GitHub">
+                    <b> Watch</b>
+                </a>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <img class="featurette-image img-responsive center-block" src="http://popularcoin.com/images/github-6-xxl.png">
+        </div>
+    </div>
 
 </div>
 

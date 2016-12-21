@@ -136,7 +136,6 @@ body {
 
 .brand-centered {
     display: flex;
-    justify-content: center;
     position: absolute;
     width: 100%;
     left: 0;
@@ -146,6 +145,17 @@ body {
     display: flex;
     align-items: center;
     height: 70px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover {
+    color: transparent;
+    background: transparent none;
+    font-weight: bold;
+    box-shadow: unset;
+    -webkit-box-shadow: unset;
+    text-decoration: underline;
 }
 
 .shadow {
