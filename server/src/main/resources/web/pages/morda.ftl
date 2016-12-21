@@ -52,27 +52,19 @@
 
 <div class="container">
 
-    <h1 align="center">See your land position on visitor-adapted maps!</h1>
-
     <div class="row">
-        <div class="col-lg-1"></div>
-        <div class="col-lg-5">
-            <img src="/web/img/man.png" width="85%" height="85%" style="margin-top: 60px;">
+        <div class="col-lg-8">
+            <img src="/web/img/man.png" style="width: 100%; margin-top: 60px;">
         </div>
-        <div class="col-lg-2"></div>
-        <div class="col-lg-3">
-            <img src="/web/img/example.gif" width="115%" height="115%" style="margin-top: 40px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+        <div class="col-lg-4">
+            <h3 style="margin-top: 100px;">Find out your land position on visitor-adapted maps!</h3>
+            <img src="/web/img/intro.png" width="100%" style="margin-top: 30px;" class="shadow"/>
+            <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg" style="margin-top: 100px; background: RGB(9, 90, 101); color: RGB(226, 234, 235); text-shadow: none;">
+                GET @HyperNaviBot
+            </a>
+            <p style="font-size: 20px; margin-top: 20px;">Never get lost yourself and your loved ones in the popular places</p>
         </div>
-        <div class="col-lg-1"></div>
     </div>
-
-    <hr class="featurette-divider">
-
-    <p align="center">
-        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-success btn-lg">
-            Get @HyperNaviBot
-        </a>
-    </p>
 
     <hr class="featurette-divider">
 
