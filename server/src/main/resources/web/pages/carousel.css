@@ -3,7 +3,6 @@
 /* Padding below the footer and lighter body text */
 
 body {
-    padding-bottom: 40px;
     color: #5a5a5a;
 }
 
@@ -163,10 +162,13 @@ body {
     padding-right: 35px;
 }
 
+.navbar-inverse .navbar-nav>li>a {
+    color: white;
+}
+
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover {
-    color: transparent;
+    color: black;
     background: transparent none;
-    font-weight: bold;
     box-shadow: unset;
     -webkit-box-shadow: unset;
     text-decoration: underline;
@@ -195,4 +197,5 @@ img.center {
     background: RGB(9, 90, 101);
     color: RGB(226, 234, 235);
     text-shadow: none;
+    border-color: transparent;
 }

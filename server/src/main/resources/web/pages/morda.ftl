@@ -11,8 +11,7 @@
 
     <link href="/web/pages/carousel.css" rel="stylesheet"/>
 </head>
-<body style="padding-top: 70px; position: relative; background-color: RGB(241, 242, 245)" data-spy="scroll"
-      data-target=".navbar">
+<body style="padding-top: 70px; position: relative; background-color: RGB(241, 242, 245)" data-spy="scroll" data-target=".navbar" data-offset="225">
 
 <div class="navbar navbar-inverse navbar-fixed-top shadow" style="height: 70px;">
 
@@ -32,11 +31,10 @@
                 </a>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a class="navbar-brand" href="#usecases" style="color: white;">Usecases</a></li>
-                        <li><a class="navbar-brand" href="#how-to-use-bot" style="color: white;">How to use bot</a>
-                        </li>
-                        <li><a class="navbar-brand" href="#features" style="color: white;">Features</a></li>
-                        <li><a class="navbar-brand" href="#mechanism" style="color: white;">Mechanism</a></li>
+                        <li><a class="navbar-brand" href="#usecases">Usecases</a></li>
+                        <li><a class="navbar-brand" href="#how-to-use-bot">How to use bot</a></li>
+                        <li><a class="navbar-brand" href="#features">Features</a></li>
+                        <li><a class="navbar-brand" href="#how-bot-works">How bot works</a></li>
                     </ul>
                 </div>
             </div>
@@ -193,7 +191,7 @@
     </a>
 </div>
 
-<div id="mechanism"
+<div id="how-bot-works"
      style="background-color: black; padding-top: 60px; padding-bottom: 60px; color: white;">
     <div class="container">
         <div class="row featurette container-fluid">
@@ -217,21 +215,24 @@
     </div>
 </div>
 
-<div class="container" style="margin-top: 30px;">
-    <footer>
-        <p class="pull-right"><a href="mailto:amosov.f@mail.ru">Contact us via email</a></p>
-        <p>
-            <a target="_blank" class="btn btn-default btn-lg" href="https://github.com/amosov-f/hypernavi">
-                <img src="/web/img/github.png" width="24px">
-                Watch on GitHub
-            </a>
-            &nbsp;
-            <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot">
-                GET @HyperNaviBot
-            </a>
-        </p>
+<div style="padding-top: 30px; padding-bottom: 20px; background-color: RGB(57, 71, 76)">
+    <div class="container">
+        <footer>
+            <p class="pull-right"><a href="mailto:amosov.f@mail.ru" class="btn btn-lg">Contact us via email</a></p>
+            <p>
+                <a target="_blank" class="btn btn-default btn-lg" href="https://github.com/amosov-f/hypernavi">
+                    <img src="/web/img/github.png" width="24px">
+                    Watch on GitHub
+                </a>
+                &nbsp;
+                <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot">
+                    GET @HyperNaviBot
+                </a>
+            </p>
 
-    </footer>
+        </footer>
+    </div>
 </div>
+
 </body>
 </html>
