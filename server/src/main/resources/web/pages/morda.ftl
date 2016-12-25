@@ -10,14 +10,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
     <link href="/web/pages/carousel.css" rel="stylesheet"/>
-
-    <style>
-        body {
-            background-color: RGB(241, 242, 245)
-        }
-    </style>
 </head>
-<body style="padding-top: 70px;" data-spy="scroll" data-target=".navbar">
+<body style="padding-top: 70px; position: relative; background-color: RGB(241, 242, 245)" data-spy="scroll"
+      data-target=".navbar">
 
 <div class="navbar navbar-inverse navbar-fixed-top shadow" style="height: 70px;">
 
@@ -38,8 +33,10 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a class="navbar-brand" href="#usecases"><font color="white">Usecases</font></a></li>
+                        <li><a class="navbar-brand" href="#how-it-works"><font color="white">How it works</font></a>
+                        </li>
                         <li><a class="navbar-brand" href="#features"><font color="white">Features</font></a></li>
-                        <li><a class="navbar-brand" href="#how-it-works"><font color="white">How it works</font></a></li>
+                        <li><a class="navbar-brand" href="#mechanism"><font color="white">Mechanism</font></a></li>
                     </ul>
                 </div>
             </div>
@@ -49,161 +46,175 @@
 
 </div>
 
+<div class="row">
+    <div class="col-lg-8">
+        <img src="/web/img/man.png" style="width: 100%; margin-top: 10px;">
+    </div>
+    <div class="col-lg-4">
+        <h3 style="margin-top: 50px;">Find out your land position on visitor-adapted maps!</h3>
+        <img src="/web/img/disneyland.png" width="90%" style="margin-top: 30px;" class="shadow"/>
+        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg"
+           style="margin-top: 100px; background: RGB(9, 90, 101); color: RGB(226, 234, 235); text-shadow: none;">
+            GET @HyperNaviBot
+        </a>
+        <p style="margin-top: 20px;">Never get lost yourself and your loved ones in the popular places</p>
+    </div>
+</div>
 
-<div class="container">
+<div id="usecases" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#usecases" data-slide-to="0" class="active"></li>
+        <li data-target="#usecases" data-slide-to="1"></li>
+    </ol>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <img src="/web/img/man.png" style="width: 100%; margin-top: 60px;">
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        <div class="item active" style="background-color: RGB(226, 237, 239)">
+            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
+                <img class="shadow" src="/web/img/gorillas.png" alt="Chania" style="margin-top: 100px;">
+            </div>
+            <div class="col-lg-3">
+                <p style="margin-top: 100px;">Use the <a href="https://core.telegram.org/bots/inline">inline mode</a> to
+                    find your friends each other</p>
+            </div>
         </div>
-        <div class="col-lg-4">
-            <h3 style="margin-top: 100px;">Find out your land position on visitor-adapted maps!</h3>
-            <img src="/web/img/intro.png" width="100%" style="margin-top: 30px;" class="shadow"/>
-            <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg" style="margin-top: 100px; background: RGB(9, 90, 101); color: RGB(226, 234, 235); text-shadow: none;">
-                GET @HyperNaviBot
-            </a>
-            <p style="font-size: 20px; margin-top: 20px;">Never get lost yourself and your loved ones in the popular places</p>
+
+        <div class="item" style="background-color: RGB(226, 237, 239)">
+            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
+                <img class="shadow" src="/web/img/pistes.png" alt="Chania" style="margin-top: 100px;">
+            </div>
+            <div class="col-lg-3">
+                <p style="margin-top: 100px;">Find out your position on human-adapted ski pistes map to get the path to
+                    the desired <b>ski lift</b></p>
+            </div>
         </div>
     </div>
 
-    <hr class="featurette-divider">
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#usecases" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#usecases" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
 
-    <div id="usecases" class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Your land positionon hand-made map<span class="text-muted"></span></h2>
-            <p class="lead">Send your location to bot. He will return nearest map with your position on it</p>
+<div id="how-it-works"
+     style="background-color: RGB(200, 211, 214); margin-top: -60px; padding-top: 60px; padding-bottom: 60px;">
+    <div class="container">
+        <div class="row featurette container-fluid">
+            <div class="col-md-6 col-md-push-6">
+                <h2 class="featurette-heading">How does it works?</h2>
+                <ul>
+                    <li><p style="margin-top: 30px;">Press "send my location"</p></li>
+                    <li><p style="margin-top: 30px;">Get the nearest place map</p></li>
+                    <li><p style="margin-top: 30px;">See your land position</p></li>
+                </ul>
+            </div>
+            <div class="col-md-6 col-md-pull-6">
+                <img class="featurette-image img-responsive center-block shadow" src="/web/img/example.gif" width="50%"
+                     height="50%">
+            </div>
         </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/example.jpg">
+    </div>
+</div>
+
+<div id="features" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#features" data-slide-to="0" class="active"></li>
+        <li data-target="#features" data-slide-to="1"></li>
+        <li data-target="#features" data-slide-to="2"></li>
+        <li data-target="#features" data-slide-to="3"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        <div class="item active" style="background-color: RGB(165, 176, 179)">
+            <div class="col-lg-7" style="display: flex; justify-content: center; align-items: center;">
+                <img class="shadow" width="60%" style="margin-top: 100px;"
+                     src="http://hypernavi.net/draw/location?x=320&y=320&link=http://hypernavi.net/img/i199/1211/36/cf03e5615cbe.jpg">
+            </div>
+            <div class="col-lg-3">
+                <h2 style="margin-top: 100px;">Better than paper map</h2>
+                <p>Paper map with navigation is better than just paper map</p>
+            </div>
+        </div>
+
+        <div class="item" style="background-color: RGB(165, 176, 179)">
+            <div class="col-lg-7" style="display: flex; justify-content: center; align-items: center;">
+                <img class="shadow" width="60%" src="http://s019.radikal.ru/i600/1612/3d/d33f76e54a4e.jpg"
+                     style="margin-top: 100px;">
+            </div>
+            <div class="col-lg-3">
+                <h2 style="margin-top: 100px;">No more park plan photos</h2>
+                <p class="lead">All park schemes are already in your smartphone</p>
+            </div>
+        </div>
+
+        <div class="item" style="background-color: RGB(165, 176, 179)">
+            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
+                <img class="shadow" width="55%"
+                     src="http://hypernavi.net/draw/location?x=450&y=250&link=http://hypernavi.net/img/travel/images/russia2012d060.jpg"
+                     style="margin-top: 20px;">
+            </div>
+            <div class="col-lg-4">
+                <h2 style="margin-top: 100px;">Most popular places</h2>
+                <p class="lead">HyperNavi database contains most visited places around The World.
+                    Therefore, the bot most likely will be useful for you.</p>
+            </div>
+        </div>
+
+
+        <div class="item" style="background-color: RGB(175, 186, 189)">
+            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
+                <img class="shadow" width="55%" src="/web/img/map.png" style="margin-top: 20px;">
+            </div>
+            <div class="col-lg-4">
+                <h2 style="margin-top: 100px;">Supported places</h2>
+                <p class="lead">Our database is constantly updated.
+                    See all places, currently supported by HyperNavi <a target="_blank"
+                                                                        href="/map">hypernavi.net/map</a></p>
+            </div>
         </div>
     </div>
 
-    <hr class="featurette-divider">
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#features" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#features" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
 
-    <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">Where are you?<span class="text-muted"></span>
-            </h2>
-            <p class="lead">Your friends will easily find you in huge popular park.
-                Use inline mode to send picture with your location to friend</p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/inline.jpg">
-        </div>
-    </div>
+<div id="mechanism"
+     style="background-color: black; margin-top: -60px; padding-top: 60px; padding-bottom: 60px; color: white;">
+    <div class="container">
+        <div class="row featurette container-fluid">
+            <div class="col-md-6">
+                <h4 class="featurette-heading">Machine learning</h4>
+                <p>We assosiate points at picture with points at Google/Yandex maps.</p>
+                <img src="/web/img/admin.png" width="100%">
+                <p>
+                    After that, we use machine learning regression algorithms to compute location on picture by other
+                    geopoints.
+                    <img src="http://www.freeiconspng.com/uploads/yellow-light-bulb-png-image-16.png" width="30">
+                </p>
 
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Ski resort navigation</h2>
-            <p class="lead">Popular European ski resorts are very confusing.
-                HyperNavi will show your position on human-adapted ski pistes map. You very simple find path to desired ski lift</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/zermatt-pistes.png">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div id="features" class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Better than paper map</h2>
-            <p class="lead">
-                Paper map with navigation is better than just paper map
-            </p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="http://hypernavi.net/draw/location?x=320&y=320&link=http://hypernavi.net/img/i199/1211/36/cf03e5615cbe.jpg">
+            </div>
+            <div class="col-md-6">
+                <img src="/web/img/ml.png" width="100%">
+                <p style="font-style: italic; color: RGB(125, 125, 125);">Each map marked by human, so, your result
+                    location is very accurate</p>
+            </div>
         </div>
     </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">No more park plan photos</h2>
-            <p class="lead">All park schemes are already in your smartphone</p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block shadow" src="http://s019.radikal.ru/i600/1612/3d/d33f76e54a4e.jpg">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Most popular places</h2>
-            <p class="lead">HyperNavi database contains most visited places around The World.
-                Therefore, the bot most likely will be useful for you.</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="http://hypernavi.net/draw/location?x=450&y=250&link=http://hypernavi.net/img/travel/images/russia2012d060.jpg">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">Supported places</h2>
-            <p class="lead">Our database is constantly updated.
-                See all places, currently supported by HyperNavi <a target="_blank" href="/map">hypernavi.net/map</a></p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/map.png">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div id="how-it-works" class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">How HyperNavi works?<span class="text-muted">machine learning</span>
-            </h2>
-            <p class="lead">We assosiate points at image with points at Google/Yandex maps. So, we understand image location for some geopoints.
-                After that, we use machine learning regression algorithms to compute location on image by other geopoints.
-            </p>
-            <img class="featurette-image img-responsive center-block shadow" src="http://clipartix.com/wp-content/uploads/2016/06/Map-location-clip-art-at-clker-vector-clip-art.png">
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/ml.png">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">Manually marked maps<br><span class="text-muted">no magic, just hardcore</span>
-            </h2>
-            <p class="lead">Each map marked by human, so, your result location is very accurate</p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block shadow" src="/web/img/mapping.png">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Open source<br><span class="text-muted">like Telegram</span></h2>
-            <br>
-            <p class="lead">See sources at GitHub
-                <a class="btn btn-default bth-lg" href="https://github.com/amosov-f/hypernavi">
-                    <img src="https://github.com/fluidicon.png" height="20" width="20" alt="Logo GitHub">
-                    <b> Watch</b>
-                </a>
-            </p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block" src="http://popularcoin.com/images/github-6-xxl.png">
-        </div>
-    </div>
-
 </div>
 
 </body>
