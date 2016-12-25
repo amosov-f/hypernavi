@@ -184,10 +184,16 @@ public final class HyperNaviBot {
             api.sendMessage(chatId, "Sorry, our server didn't respond to this request");
             return;
         }
-        final GeoPoint finalLocation = location;
-        searchResponse.getData().getSites().stream()
-                .map(Index::get)
-                .forEach(site -> respond(chatId, site, finalLocation));
+        final List<Index<? extends Site>> sites = searchResponse.getData().getSites();
+        if (sites.isEmpty()) {
+            LOG.error("Server empty respond by: location=" + location + ", text=" + text);
+            api.sendMessage(chatId, "Sorry, there is no result for your request");
+            return;
+        }
+
+        for (final Index<? extends Site> site : sites) {
+            respond(chatId, site.get(), location);
+        }
 
         final int processingTime = (int) ((System.currentTimeMillis() + 500) / 1000) - message.getDate();
         LOG.info("Message processed in " + processingTime + " s: " + message);
@@ -199,17 +205,18 @@ public final class HyperNaviBot {
             final String hintDesc = hint.getDescription();
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
+                Point mapLocation =  null;
                 if (location != null) {
-                    final Point mapLocation = LocationMapper.INSTANCE.mapLocationInside(plan, location);
-                    if (mapLocation != null) {
-                        sendMessageAsync(chatId, "You are in " + siteName + ". See your location at this place:");
+                    mapLocation = LocationMapper.INSTANCE.mapLocationInside(plan, location);
+                }
+                if (mapLocation != null) {
+                    api.sendMessage(chatId, "You are in " + siteName + ". See your location at this place:");
 //                        final Image.Format format = locationImage.getFormat();
-                        api.sendPhoto(chatId, drawLocationLink(plan.getImage().getLink(), mapLocation), hintDesc);
+                    api.sendPhoto(chatId, drawLocationLink(plan.getImage().getLink(), mapLocation), hintDesc);
 //                        api.sendPhoto(chatId, locationImage.getMap(), format, hintDesc);
-                    } else {
-                        api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
-                        api.sendPhoto(chatId, plan.getImage(), hintDesc);
-                    }
+                } else {
+                    api.sendMessage(chatId, "Nearest popular place is " + siteName + ". See map of this place:");
+                    api.sendPhoto(chatId, plan.getImage(), hintDesc);
                 }
             } else if (hint instanceof Picture) {
                 api.sendPhoto(chatId, ((Picture) hint).getImage(), hintDesc);

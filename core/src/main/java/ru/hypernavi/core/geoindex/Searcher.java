@@ -45,8 +45,9 @@ public final class Searcher {
         }
 
         final long start = System.currentTimeMillis();
+        LOG.info("Getting NN for location=" + searchLocation + ", page=" + page + ", numSite=" + numSite + " started");
         final List<Index<? extends Site>> sites = geoIndex.getNN(searchLocation, page * numSite, numSite);
-        LOG.info("Getting NN finished in " + (System.currentTimeMillis() - start) + " ms");
+        LOG.info("Getting NN finished in " + (System.currentTimeMillis() - start) + " ms, found " + sites.size() + " sites");
 
         final SearchResponse.Meta meta = new SearchResponse.Meta(searchLocation);
         final SearchResponse.Data data = new SearchResponse.Data(sites);
