@@ -21,8 +21,8 @@ import java.util.Map;
  */
 @WebServlet(name = "map", value = "/map")
 public final class MapPageService extends HtmlPageHttpService {
-    private static final GeoPoint DEFAULT_CENTER = ArrayGeoPoint.of(30.1466, 59.796);
-    private static final int DEFAULT_ZOOM = 9;
+    private static final GeoPoint DEFAULT_CENTER = ArrayGeoPoint.of(14.5521505757169, 49.59433910434194);
+    private static final int DEFAULT_ZOOM = 5;
 
     @NotNull
     private final LocalDateTime initTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));

@@ -12,7 +12,7 @@ import java.util.Locale;
  * Time: 23:15
  */
 public interface Param<T> {
-    Param<Locale> LANG = new QueryParam.LocaleParam("lang").defaultValue(new Locale("ru", "RU"));
+    Param<Locale> LANG = new QueryParam.LocaleParam("lang").defaultValue(new Locale("en", "US"));
 
     Param<String> TEXT = new QueryParam.StringParam("text");
 

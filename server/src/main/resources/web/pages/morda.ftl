@@ -33,7 +33,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a class="navbar-brand" href="#usecases"><font color="white">Usecases</font></a></li>
-                        <li><a class="navbar-brand" href="#how-it-works"><font color="white">How it works</font></a>
+                        <li><a class="navbar-brand" href="#how-to-use-bot"><font color="white">How to use bot</font></a>
                         </li>
                         <li><a class="navbar-brand" href="#features"><font color="white">Features</font></a></li>
                         <li><a class="navbar-brand" href="#mechanism"><font color="white">Mechanism</font></a></li>
@@ -70,9 +70,9 @@
 
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
-        <div class="item active" style="background-color: RGB(226, 237, 239)">
-            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
-                <img class="shadow" src="/web/img/gorillas.png" alt="Chania" style="margin-top: 100px;">
+        <div class="item active">
+            <div class="col-lg-7 flex-center">
+                <img class="shadow" src="/web/img/gorillas.png" style="margin-top: 100px;">
             </div>
             <div class="col-lg-3">
                 <p style="margin-top: 100px;">Use the <a href="https://core.telegram.org/bots/inline">inline mode</a> to
@@ -80,9 +80,9 @@
             </div>
         </div>
 
-        <div class="item" style="background-color: RGB(226, 237, 239)">
-            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
-                <img class="shadow" src="/web/img/pistes.png" alt="Chania" style="margin-top: 100px;">
+        <div class="item">
+            <div class="col-lg-7 flex-center">
+                <img class="shadow" src="/web/img/pistes.png" style="margin-top: 100px;">
             </div>
             <div class="col-lg-3">
                 <p style="margin-top: 100px;">Find out your position on human-adapted ski pistes map to get the path to
@@ -102,12 +102,12 @@
     </a>
 </div>
 
-<div id="how-it-works"
-     style="background-color: RGB(200, 211, 214); margin-top: -60px; padding-top: 60px; padding-bottom: 60px;">
+<div id="how-to-use-bot"
+     style="background-color: RGB(200, 211, 214); padding-top: 60px; padding-bottom: 60px;">
     <div class="container">
         <div class="row featurette container-fluid">
             <div class="col-md-6 col-md-push-6">
-                <h2 class="featurette-heading">How does it works?</h2>
+                <h2 class="featurette-heading">How to use bot?</h2>
                 <ul>
                     <li><p style="margin-top: 30px;">Press "send my location"</p></li>
                     <li><p style="margin-top: 30px;">Get the nearest place map</p></li>
@@ -133,8 +133,8 @@
 
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
-        <div class="item active" style="background-color: RGB(165, 176, 179)">
-            <div class="col-lg-7" style="display: flex; justify-content: center; align-items: center;">
+        <div class="item active">
+            <div class="col-lg-7 flex-center">
                 <img class="shadow" width="60%" style="margin-top: 100px;"
                      src="http://hypernavi.net/draw/location?x=320&y=320&link=http://hypernavi.net/img/i199/1211/36/cf03e5615cbe.jpg">
             </div>
@@ -144,8 +144,8 @@
             </div>
         </div>
 
-        <div class="item" style="background-color: RGB(165, 176, 179)">
-            <div class="col-lg-7" style="display: flex; justify-content: center; align-items: center;">
+        <div class="item">
+            <div class="col-lg-7 flex-center">
                 <img class="shadow" width="60%" src="http://s019.radikal.ru/i600/1612/3d/d33f76e54a4e.jpg"
                      style="margin-top: 100px;">
             </div>
@@ -155,8 +155,8 @@
             </div>
         </div>
 
-        <div class="item" style="background-color: RGB(165, 176, 179)">
-            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
+        <div class="item">
+            <div class="col-lg-6 flex-center">
                 <img class="shadow" width="55%"
                      src="http://hypernavi.net/draw/location?x=450&y=250&link=http://hypernavi.net/img/travel/images/russia2012d060.jpg"
                      style="margin-top: 20px;">
@@ -168,16 +168,16 @@
             </div>
         </div>
 
-
-        <div class="item" style="background-color: RGB(175, 186, 189)">
-            <div class="col-lg-6" style="display: flex; justify-content: center; align-items: center;">
+        <div class="item">
+            <div class="col-lg-6 flex-center">
                 <img class="shadow" width="55%" src="/web/img/map.png" style="margin-top: 20px;">
             </div>
             <div class="col-lg-4">
                 <h2 style="margin-top: 100px;">Supported places</h2>
                 <p class="lead">Our database is constantly updated.
-                    See all places, currently supported by HyperNavi <a target="_blank"
-                                                                        href="/map">hypernavi.net/map</a></p>
+                    See all places, currently supported by HyperNavi
+                    <a target="_blank" href="/map">hypernavi.net/map</a>
+                </p>
             </div>
         </div>
     </div>
@@ -194,7 +194,7 @@
 </div>
 
 <div id="mechanism"
-     style="background-color: black; margin-top: -60px; padding-top: 60px; padding-bottom: 60px; color: white;">
+     style="background-color: black; padding-top: 60px; padding-bottom: 60px; color: white;">
     <div class="container">
         <div class="row featurette container-fluid">
             <div class="col-md-6">
@@ -209,7 +209,7 @@
 
             </div>
             <div class="col-md-6">
-                <img src="/web/img/ml.png" width="100%">
+                <img src="/web/img/ml.png" width="85.7%">
                 <p style="font-style: italic; color: RGB(125, 125, 125);">Each map marked by human, so, your result
                     location is very accurate</p>
             </div>
