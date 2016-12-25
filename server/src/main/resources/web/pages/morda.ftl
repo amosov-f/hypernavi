@@ -53,7 +53,8 @@
     <div class="col-lg-4">
         <h3 style="margin-top: 50px;">Find out your land position on visitor-adapted maps!</h3>
         <img src="/web/img/disneyland.png" width="90%" style="margin-top: 30px;" class="shadow"/>
-        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot">
+        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot"
+           style="margin-top: 100px;">
             GET @HyperNaviBot
         </a>
         <p style="margin-top: 20px;">Never get lost yourself and your loved ones in the popular places</p>
@@ -156,7 +157,7 @@
 
         <div class="item">
             <div class="col-lg-6 flex-center">
-                <img class="shadow" width="55%"
+                <img class="shadow" height="400px"
                      src="http://hypernavi.net/draw/location?x=450&y=250&link=http://hypernavi.net/img/travel/images/russia2012d060.jpg"
                      style="margin-top: 20px;">
             </div>
@@ -198,19 +199,19 @@
         <div class="row featurette container-fluid">
             <div class="col-md-6">
                 <h4 class="featurette-heading">Machine learning</h4>
-                <p>We assosiate points at picture with points at Google/Yandex maps.</p>
+                <p>We assosiate points at picture with geopoints at Google/Yandex maps</p>
                 <img src="/web/img/admin.png" width="100%">
                 <p>
-                    After that, we use machine learning regression algorithms to compute location on picture by other
-                    geopoints.
+                    After that, we use machine learning regression algorithms to compute location on picture for any geopoint
                     <img src="http://www.freeiconspng.com/uploads/yellow-light-bulb-png-image-16.png" width="30">
                 </p>
 
             </div>
             <div class="col-md-6">
                 <img src="/web/img/ml.png" width="85.7%">
-                <p style="font-style: italic; color: RGB(125, 125, 125);">Each map marked by human, so, your result
-                    location is very accurate</p>
+                <p style="font-style: italic; color: RGB(125, 125, 125);">
+                    Each map marked by human, so, your result location is very accurate
+                </p>
             </div>
         </div>
     </div>
