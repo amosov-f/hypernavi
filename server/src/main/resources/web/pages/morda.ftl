@@ -192,7 +192,7 @@
 </div>
 
 <div id="how-bot-works"
-     style="background-color: black; padding-top: 60px; padding-bottom: 60px; color: white;">
+     style="background-color: #333333; padding-top: 60px; padding-bottom: 60px; color: white;">
     <div class="container">
         <div class="row featurette container-fluid">
             <div class="col-md-6">

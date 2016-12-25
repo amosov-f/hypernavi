@@ -75,11 +75,11 @@ body {
 }
 
 .carousel-indicators li {
-    border-color: black;
+    border-color: #333333;
 }
 
 .carousel-indicators .active {
-    background-color: black;
+    background-color: #333333;
 }
 
 /* MARKETING CONTENT
@@ -175,7 +175,7 @@ body {
 }
 
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover {
-    color: black;
+    color: #333333;
     background: transparent none;
     box-shadow: unset;
     -webkit-box-shadow: unset;
