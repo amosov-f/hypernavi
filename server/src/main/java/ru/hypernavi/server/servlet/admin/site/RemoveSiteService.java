@@ -8,7 +8,6 @@ import ru.hypernavi.core.session.ParamRequestReader;
 import ru.hypernavi.core.session.Session;
 import ru.hypernavi.core.session.SessionInitializer;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by amosov-f on 11.12.15.
  */
-@WebServlet(name = "remove site", value = "/admin/site/remove")
+//@WebServlet(name = "remove site", value = "/admin/site/remove")
 public final class RemoveSiteService extends SiteAdminService {
     @NotNull
     @Override
