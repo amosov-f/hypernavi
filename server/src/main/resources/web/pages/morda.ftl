@@ -46,7 +46,7 @@
 
 </div>
 
-<div class="row">
+<div class="row" style="margin-left: 0; margin-right: 0">
     <div class="col-lg-8">
         <img src="/web/img/man.png" style="width: 100%; margin-top: 10px;">
     </div>
