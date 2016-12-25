@@ -73,7 +73,7 @@ ymaps.ready(function () {
 function addLangButton(map) {
     var changeLangButton = new ymaps.control.Button({
         data: {
-            content: 'Сменить язык'
+            content: LANG === 'ru_RU' ? 'English language' : 'Русский язык'
         },
         options: {
             maxWidth: 150
@@ -91,7 +91,7 @@ function addLangButton(map) {
 function vkAuthButton() {
     var vkAuthButton = new ymaps.control.Button({
         data: {
-            content: 'Войти через ВКонтакте'
+            content: LANG === 'ru_RU' ? 'Войти через ВКонтакте' : 'Log in with Vkontakte'
         },
         options: {
             maxWidth: 200

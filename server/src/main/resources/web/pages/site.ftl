@@ -19,7 +19,9 @@
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="form-group">
-        <a class="btn btn-default <#if !is_admin>disabled</#if>" onclick="edit()">Редактировать</a>
+    <#if is_admin>
+        <a class="btn btn-default" onclick="edit()">Редактировать</a>
+    </#if>
     </div>
 <#list site.hints as hint>
     <div class="panel panel-default">
@@ -43,13 +45,13 @@
                     <div class="well">${hint.description}</div>
 				</#if>
 				<#if hint.type == 'PLAN' && hint.points?has_content>
-                    <h4 align="center">Разметка схемы</h4>
+                    <h4 align="center">Markup</h4>
                     <table class="table table-striped fixed">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Широта</th>
-                            <th>Долгота</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
                             <th>X</th>
                             <th>Y</th>
                         </tr>

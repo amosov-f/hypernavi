@@ -190,3 +190,9 @@ img.center {
     justify-content: center;
     align-items: center;
 }
+
+.get-hypernavi-bot {
+    background: RGB(9, 90, 101);
+    color: RGB(226, 234, 235);
+    text-shadow: none;
+}

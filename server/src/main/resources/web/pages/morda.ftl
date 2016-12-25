@@ -32,11 +32,11 @@
                 </a>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a class="navbar-brand" href="#usecases"><font color="white">Usecases</font></a></li>
-                        <li><a class="navbar-brand" href="#how-to-use-bot"><font color="white">How to use bot</font></a>
+                        <li><a class="navbar-brand" href="#usecases" style="color: white;">Usecases</a></li>
+                        <li><a class="navbar-brand" href="#how-to-use-bot" style="color: white;">How to use bot</a>
                         </li>
-                        <li><a class="navbar-brand" href="#features"><font color="white">Features</font></a></li>
-                        <li><a class="navbar-brand" href="#mechanism"><font color="white">Mechanism</font></a></li>
+                        <li><a class="navbar-brand" href="#features" style="color: white;">Features</a></li>
+                        <li><a class="navbar-brand" href="#mechanism" style="color: white;">Mechanism</a></li>
                     </ul>
                 </div>
             </div>
@@ -53,8 +53,7 @@
     <div class="col-lg-4">
         <h3 style="margin-top: 50px;">Find out your land position on visitor-adapted maps!</h3>
         <img src="/web/img/disneyland.png" width="90%" style="margin-top: 30px;" class="shadow"/>
-        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg"
-           style="margin-top: 100px; background: RGB(9, 90, 101); color: RGB(226, 234, 235); text-shadow: none;">
+        <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot">
             GET @HyperNaviBot
         </a>
         <p style="margin-top: 20px;">Never get lost yourself and your loved ones in the popular places</p>
@@ -217,5 +216,21 @@
     </div>
 </div>
 
+<div class="container" style="margin-top: 30px;">
+    <footer>
+        <p class="pull-right"><a href="mailto:amosov.f@mail.ru">Contact us via email</a></p>
+        <p>
+            <a target="_blank" class="btn btn-default btn-lg" href="https://github.com/amosov-f/hypernavi">
+                <img src="/web/img/github.png" width="24px">
+                Watch on GitHub
+            </a>
+            &nbsp;
+            <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot">
+                GET @HyperNaviBot
+            </a>
+        </p>
+
+    </footer>
+</div>
 </body>
 </html>

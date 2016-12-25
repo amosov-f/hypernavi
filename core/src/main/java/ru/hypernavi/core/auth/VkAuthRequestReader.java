@@ -35,9 +35,6 @@ public class VkAuthRequestReader extends RequestReader {
     }
 
     private boolean isAdmin(@NotNull final Session session) {
-        if (session.demand(Property.PLATFORM).isLocal()) {
-            return true;
-        }
         return session.getOptional(Property.VK_USER)
                 .map(user -> ArrayUtils.contains(adminUids, user.getUid()))
                 .orElse(false);
