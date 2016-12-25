@@ -74,6 +74,14 @@ body {
     background-image: linear-gradient(to right, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .1) 100%);
 }
 
+.carousel-indicators li {
+    border-color: black;
+}
+
+.carousel-indicators .active {
+    background-color: black;
+}
+
 /* MARKETING CONTENT
 -------------------------------------------------- */
 

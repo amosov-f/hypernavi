@@ -168,7 +168,7 @@
 
         <div class="item">
             <div class="col-lg-6 flex-center">
-                <img class="shadow" width="55%" src="/web/img/map.png" style="margin-top: 20px;">
+                <img class="shadow" height="400px" src="/web/img/map.png" style="margin-top: 20px;">
             </div>
             <div class="col-lg-4">
                 <h2 style="margin-top: 100px;">Supported places</h2>
