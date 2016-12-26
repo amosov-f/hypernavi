@@ -49,7 +49,7 @@
         <img src="/web/img/man.png" style="width: 100%; margin-top: 10px;">
     </div>
     <div class="col-lg-4">
-        <h3 style="margin-top: 50px;">Find out your land position on visitor-adapted maps!</h3>
+        <h3 style="margin-top: 50px;">Find your land position on visitor-adapted maps!</h3>
         <img src="/web/img/disneyland.png" width="90%" style="margin-top: 30px;" class="shadow"/>
         <a target="_blank" href="https://telegram.me/HyperNaviBot" class="btn btn-default btn-lg get-hypernavi-bot"
            style="margin-top: 100px;">
@@ -83,7 +83,7 @@
                 <img class="shadow" src="/web/img/pistes.png" style="margin-top: 100px;">
             </div>
             <div class="col-lg-3">
-                <p style="margin-top: 100px;">Find out your position on human-adapted ski pistes map to get the path to
+                <p style="margin-top: 100px;">Find your position on human-adapted ski pistes map to get the path to
                     the desired <b>ski lift</b></p>
             </div>
         </div>
@@ -197,7 +197,7 @@
         <div class="row featurette container-fluid">
             <div class="col-md-6">
                 <h4 class="featurette-heading">Machine learning</h4>
-                <p>We assosiate points at picture with geopoints at Google/Yandex maps</p>
+                <p>We associate points at picture with geopoints at Google/Yandex maps</p>
                 <img src="/web/img/admin.png" width="100%">
                 <p>
                     After that, we use machine learning regression algorithms to compute location on picture for any geopoint
