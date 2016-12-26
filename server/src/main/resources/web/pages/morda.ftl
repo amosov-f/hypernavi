@@ -133,7 +133,7 @@
     <div class="carousel-inner" role="listbox">
         <div class="item active">
             <div class="col-lg-7 flex-center">
-                <img class="shadow" width="60%" style="margin-top: 100px;"
+                <img class="shadow" height="300px" style="margin-top: 100px;"
                      src="http://hypernavi.net/draw/location?x=320&y=320&link=http://hypernavi.net/img/i199/1211/36/cf03e5615cbe.jpg">
             </div>
             <div class="col-lg-3">
@@ -144,7 +144,7 @@
 
         <div class="item">
             <div class="col-lg-7 flex-center">
-                <img class="shadow" width="60%" src="http://s019.radikal.ru/i600/1612/3d/d33f76e54a4e.jpg"
+                <img class="shadow" height="300px" src="http://s019.radikal.ru/i600/1612/3d/d33f76e54a4e.jpg"
                      style="margin-top: 100px;">
             </div>
             <div class="col-lg-3">

@@ -75,11 +75,11 @@ body {
 }
 
 .carousel-indicators li {
-    border-color: #333333;
+    border-color: RGB(57, 71, 76);
 }
 
 .carousel-indicators .active {
-    background-color: #333333;
+    background-color: RGB(57, 71, 76);
 }
 
 /* MARKETING CONTENT
@@ -175,7 +175,7 @@ body {
 }
 
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover {
-    color: #333333;
+    color: RGB(57, 71, 76);
     background: transparent none;
     box-shadow: unset;
     -webkit-box-shadow: unset;
