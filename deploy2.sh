@@ -7,8 +7,18 @@ docker stop hypernavi && docker rm hypernavi
 docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -v /root/hypernavi-data/data/:/root/hypernavi-data/data/ -d amosov/hypernavi
 
 # mongodb
-# docker run --name mongo -p 27017:27017 -d mongo
-# docker stop mongo && docker rm mongo
+# docker run --name hypernavi-mongo -p 27017:27017 -d mongo --auth
+# docker exec -it hypernavi-mongo mongo admin
+# db.createUser({ user: 'root', pwd: '***', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });
+# exit
+# docker exec -it hypernavi-mongo mongo admin -u "root" -p "***"
+# use hypernavi
+# db.createUser({ user: 'hypernavi', pwd: '***', roles: [ { role: "dbAdmin", db: "hypernavi" } ] });
+# exit
+# mongo -u "hypernavi" -p "***" localhost --authenticationDatabase "hypernavi"
+# mongorestore --username hypernavi --password 12345 --authenticationDatabase hypernavi --port 27017 backup/dump --drop
+
+# docker stop hypernavi-mongo && docker rm hypernavi-mongo
 # local
 # sudo mongod --fork --logpath /var/log/mongod.log
 
