@@ -4,8 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
@@ -38,7 +36,7 @@ import ru.hypernavi.util.MoreIOUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * User: amosov-f
@@ -131,17 +129,9 @@ public final class HyperNaviModule extends AbstractModule {
                 LOG.info("Data storage is file system: " + dataPath);
                 return;
             case "mongo":
-                final String dbHost = config.getProperty("hypernavi.data.mongo.host");
-                final int dbPort = config.getInt("hypernavi.data.mongo.port");
-                final String dbName = config.getProperty("hypernavi.data.mongo.database");
-                final String user = config.getProperty("hypernavi.data.mongo.user");
-                final char[] password = config.getProperty("hypernavi.data.mongo.password").toCharArray();
-
-                final ServerAddress seed = new ServerAddress(dbHost, dbPort);
-                final MongoCredential credential = MongoCredential.createScramSha1Credential(user, dbName, password);
-                final MongoClient client = new MongoClient(seed, Collections.singletonList(credential));
-                final MongoDatabase database = client.getDatabase(dbName);
-
+                final String[] hostWithPort = config.getProperty("hypernavi.data.mongo.client").split(":");
+                final MongoClient client = new MongoClient(hostWithPort[0], Integer.parseInt(hostWithPort[1]));
+                final MongoDatabase database = client.getDatabase(config.getProperty("hypernavi.data.mongo.database"));
                 bind(MongoDatabase.class).toInstance(database);
                 bind(SiteProvider.class).to(SiteMongoProvider.class);
                 bind(new TypeLiteral<GeoIndex<Site>>() {
