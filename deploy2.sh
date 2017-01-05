@@ -13,7 +13,7 @@ docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -v /root/hypernavi
 # exit
 # docker exec -it hypernavi-mongo mongo admin -u "root" -p "***"
 # use hypernavi
-# db.createUser({ user: 'hypernavi', pwd: '***', roles: [ { role: "dbAdmin", db: "hypernavi" } ] });
+# db.createUser({ user: 'hypernavi', pwd: '***', roles: [ { role: "dbOwner", db: "hypernavi" } ] });
 # exit
 # mongo -u "hypernavi" -p "***" localhost --authenticationDatabase "hypernavi"
 # mongorestore --username hypernavi --password 12345 --authenticationDatabase hypernavi --port 27017 backup/dump --drop
