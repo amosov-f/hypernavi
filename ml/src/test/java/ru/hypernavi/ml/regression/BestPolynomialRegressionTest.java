@@ -1,14 +1,12 @@
 package ru.hypernavi.ml.regression;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.DoubleUnaryOperator;
-
-
 import org.junit.Assert;
 import org.junit.Test;
 import weka.core.Instance;
 import weka.core.Instances;
+
+import java.util.function.DoubleUnaryOperator;
 
 /**
  * User: amosov-f
@@ -16,7 +14,7 @@ import weka.core.Instances;
  * Time: 22:51
  */
 public final class BestPolynomialRegressionTest extends RegressionTestBase {
-    private static final double EPS = 1e-4;
+    private static final double EPS = 0.02;
 
     @Test
     public void test() throws Exception {

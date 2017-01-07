@@ -122,7 +122,7 @@ public enum ImageUtils {
         try {
             return ImageIO.read(new URL(link));
         } catch (IOException e) {
-            LOG.error("Can't download image: " + link);
+            LOG.error("Can't download image: " + link, e);
             throw e;
         } finally {
             LOG.debug("Image downloading finished in " + (System.currentTimeMillis() - start) + " ms");

@@ -21,6 +21,11 @@ public enum MoreIOUtils {
 
     private static final Log LOG = LogFactory.getLog(MoreIOUtils.class);
 
+    static {
+        SSLUtilities.trustAllHostnames();
+        SSLUtilities.trustAllHttpsCertificates();
+    }
+
     @Nullable
     public static InputStream getInputStream(@NotNull final String path) throws FileNotFoundException {
         return isClasspath(path) ? MoreIOUtils.class.getResourceAsStream(toResourceName(path)) : new FileInputStream(path);

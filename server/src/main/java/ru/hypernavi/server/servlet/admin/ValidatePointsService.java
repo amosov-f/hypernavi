@@ -5,6 +5,7 @@ import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.core.session.*;
 import ru.hypernavi.core.session.param.BodyParam;
 import ru.hypernavi.core.session.param.Param;
+import ru.hypernavi.ml.regression.map.MapFactors;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.ml.regression.map.ValidationResult;
 import ru.hypernavi.server.servlet.admin.site.SiteAdminService;
@@ -34,7 +35,7 @@ public final class ValidatePointsService extends SiteAdminService {
     @Override
     public void service(@NotNull final Session session, @NotNull final HttpServletResponse resp) throws IOException {
         final PointMap[] points = session.demand(POINTS);
-        final ValidationResult result = MapProjectionImpl.validate(points);
+        final ValidationResult result = MapProjectionImpl.validate(MapFactors.linearLonLat(points), points);
         write(result, resp);
     }
 }

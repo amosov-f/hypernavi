@@ -5,10 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.functions.LinearRegression;
-import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.Instance;
-import weka.core.Instances;
+import weka.core.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +21,15 @@ public final class PolynomialRegression extends AbstractClassifier {
 
     private final int deg;
     @NotNull
-    private final LinearRegression regression = new LinearRegression();
+    private final LinearRegression regression;
 
     private List<int[]> tuples;
 
     public PolynomialRegression(final int deg) {
         this.deg = deg;
+        this.regression = new LinearRegression();
+        regression.setEliminateColinearAttributes(false);
+        regression.setRidge(0.01);
     }
 
     public int getDegree() {

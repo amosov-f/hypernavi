@@ -240,9 +240,9 @@ function validatePlanPoints(hintIndex) {
                 var dxFont = '<font color="' + errorColor(dx) + '">' + dx + '%</font>';
                 var dyFont = '<font color="' + errorColor(dy) + '">' + dy + '%</font>';
                 $points.find('tr').eq(point.no).find('p').html(dxFont + ',' + dyFont);
-                var evalX = '<b>X</b><xmp>' + validation.evalX + '</xmp>';
-                var evalY = '<b>Y</b><xmp>' + validation.evalY + '</xmp>';
-                $eval.html(evalX + evalY);
+                var summaryEvalX = '<b>X</b><xmp>' + validation.summaryEvalX + '</xmp>';
+                var summaryEvalY = '<b>Y</b><xmp>' + validation.summaryEvalY + '</xmp>';
+                $eval.html(summaryEvalX + summaryEvalY);
             });
         },
         error: function (req, textStatus, error) {

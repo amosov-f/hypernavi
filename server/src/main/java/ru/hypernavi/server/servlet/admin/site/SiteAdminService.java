@@ -10,9 +10,13 @@ import ru.hypernavi.core.auth.VkUser;
 import ru.hypernavi.core.database.provider.SiteProvider;
 import ru.hypernavi.core.session.Property;
 import ru.hypernavi.core.session.Session;
+import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.ml.regression.WekaRegression;
+import ru.hypernavi.ml.regression.map.MapFactors;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
 import ru.hypernavi.server.servlet.AbstractHttpService;
+
+import java.util.List;
 
 /**
  * Created by amosov-f on 11.12.15.
@@ -38,9 +42,10 @@ public abstract class SiteAdminService extends AbstractHttpService {
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
                 final PointMap[] points = plan.getPoints();
+                final List<? extends Factor<PointMap>> features = MapFactors.linearLonLat(points);
                 if (points.length != 0) {
-                    final WekaRegression<PointMap> fx = MapProjectionImpl.learn(MapProjectionImpl.X, points);
-                    final WekaRegression<PointMap> fy = MapProjectionImpl.learn(MapProjectionImpl.Y, points);
+                    final WekaRegression<PointMap> fx = MapProjectionImpl.learn(features, MapFactors.X, points).getClassifier();
+                    final WekaRegression<PointMap> fy = MapProjectionImpl.learn(features, MapFactors.Y, points).getClassifier();
                     plan.setModel(Plan.X_MODEL_KEY, fx.serialize());
                     plan.setModel(Plan.Y_MODEL_KEY, fy.serialize());
                 }
