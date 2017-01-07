@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.PointMap;
 import ru.hypernavi.commons.hint.Plan;
 import ru.hypernavi.core.webutil.ImageEditor;
+import ru.hypernavi.ml.factor.Factor;
 import ru.hypernavi.ml.regression.map.MapFactors;
 import ru.hypernavi.ml.regression.map.MapProjection;
 import ru.hypernavi.ml.regression.map.MapProjectionImpl;
@@ -58,14 +59,15 @@ public enum LocationMapper {
 
         final String xModel = plan.getModel(Plan.X_MODEL_KEY);
         final String yModel = plan.getModel(Plan.Y_MODEL_KEY);
+        final java.util.List<? extends Factor<PointMap>> features = MapFactors.linearLonLat(points);
         final MapProjection mapProjection;
-//        if (xModel != null && yModel != null) {
-//            LOG.debug("Models are in database");
-//            mapProjection = MapProjectionImpl.deserialize(xModel, yModel, MapFactors.RAW_LON_LAT);
-//        } else {
+        if (xModel != null && yModel != null) {
+            LOG.debug("Models are in database");
+            mapProjection = MapProjectionImpl.deserialize(xModel, yModel, features);
+        } else {
             LOG.debug("No models in database");
-            mapProjection = MapProjectionImpl.learn(MapFactors.linearLonLat(points), points);
-//        }
+            mapProjection = MapProjectionImpl.learn(features, points);
+        }
 
         final Point mapLocation = mapProjection.map(geoLocation);
         LOG.info("Location mapping finished in " + (System.currentTimeMillis() - start) + " ms");
