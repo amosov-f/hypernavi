@@ -42,8 +42,8 @@ public abstract class SiteAdminService extends AbstractHttpService {
             if (hint instanceof Plan) {
                 final Plan plan = (Plan) hint;
                 final PointMap[] points = plan.getPoints();
-                final List<? extends Factor<PointMap>> features = MapFactors.linearLonLat(points);
                 if (points.length != 0) {
+                    final List<? extends Factor<PointMap>> features = MapFactors.linearLonLat(points);
                     final WekaRegression<PointMap> fx = MapProjectionImpl.learn(features, MapFactors.X, points).getClassifier();
                     final WekaRegression<PointMap> fy = MapProjectionImpl.learn(features, MapFactors.Y, points).getClassifier();
                     plan.setModel(Plan.X_MODEL_KEY, fx.serialize());
