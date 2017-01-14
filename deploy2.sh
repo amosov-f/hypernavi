@@ -20,6 +20,7 @@ docker run --name hypernavi -p 7340:80 -v /root/log:/root/log -v /root/hypernavi
 
 # docker stop hypernavi-mongo && docker rm hypernavi-mongo
 # local
+# docker start  `docker ps -q -l`
 # sudo mongod --fork --logpath /var/log/mongod.log
 
 # nginx

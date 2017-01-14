@@ -1,5 +1,6 @@
 package ru.hypernavi.server.servlet.telegram;
 
+import com.google.gson.JsonElement;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.logging.Log;
@@ -26,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 public final class TelegramWebhookService extends AbstractHttpService {
     private static final Log LOG = LogFactory.getLog(TelegramWebhookService.class);
 
-    private static final Param<Update> UPDATE_PARAM = new BodyParam.ObjectParam<>(Update.class, TelegramApi.gsonFactory());
+    private static final Param<JsonElement> RAW_UPDATE_PARAM = new BodyParam.ObjectParam<>(JsonElement.class);
 
     private static final Property<Update> UPDATE = new Property<>("update");
 
@@ -44,7 +45,10 @@ public final class TelegramWebhookService extends AbstractHttpService {
             @Override
             public void initialize(@NotNull final Session session) {
                 super.initialize(session);
-                setPropertyIfPresent(session, UPDATE, UPDATE_PARAM);
+                final JsonElement rawUpdate = RAW_UPDATE_PARAM.getValue(req);
+                final Update update = TelegramApi.gson().fromJson(rawUpdate, Update.class);
+                update.setRawUpdate(rawUpdate);
+                session.set(UPDATE, update);
             }
 
             @Override

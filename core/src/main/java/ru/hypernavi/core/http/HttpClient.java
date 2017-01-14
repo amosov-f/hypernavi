@@ -1,20 +1,18 @@
 package ru.hypernavi.core.http;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.util.TextUtils;
 import ru.hypernavi.util.function.IOFunction;
-import ru.hypernavi.util.json.MoreGsonUtils;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * User: amosov-f
@@ -23,6 +21,8 @@ import ru.hypernavi.util.json.MoreGsonUtils;
  */
 public interface HttpClient {
     Log LOG = LogFactory.getLog(HttpClient.class);
+    @NotNull
+    ThreadLocal<JsonElement> JSON_RESPONSE = new ThreadLocal<>();
 
     @Nullable
     <T> T execute(@NotNull HttpUriRequest req, @NotNull IOFunction<InputStream, T> parser);
@@ -47,6 +47,10 @@ public interface HttpClient {
 
     @Nullable
     default <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz, @NotNull final Gson gson) {
-        return executeText(req, MoreGsonUtils.parser(gson, clazz));
+        return executeText(req, s -> {
+            final JsonElement json = gson.fromJson(s, JsonElement.class);
+            JSON_RESPONSE.set(json);
+            return gson.fromJson(json, clazz);
+        });
     }
 }

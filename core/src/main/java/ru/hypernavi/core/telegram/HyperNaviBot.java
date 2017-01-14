@@ -34,10 +34,10 @@ import ru.hypernavi.util.concurrent.LoggingThreadFactory;
 import ru.hypernavi.util.stream.MoreStreamSupport;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,6 +46,10 @@ import java.util.concurrent.Executors;
  */
 public final class HyperNaviBot {
     private static final Log LOG = LogFactory.getLog(HyperNaviBot.class);
+
+    private static final Log TELEGRAM_LOG = LogFactory.getLog("TELEGRAM_LOG");
+
+    private static final ThreadLocal<Integer> REAL_PROCESSING_TIME = new ThreadLocal<>();
 
     static {
         MoreReflectionUtils.load(Index.class);
@@ -84,15 +88,27 @@ public final class HyperNaviBot {
             LOG.info("Waiting for next update...");
             final Update update = updatesSource.next();
             service.submit(() -> {
+                REAL_PROCESSING_TIME.remove();
+                TelegramApi.OPERATIONS.remove();
                 final long start = update.getReceiptTimestamp();
+                long processingTime = -1;
                 try {
                     LOG.debug("Update processing started: '" + update + "'");
                     processUpdate(update);
-                    final long processingTime = System.currentTimeMillis() - start;
+                    processingTime = System.currentTimeMillis() - start;
                     LOG.info("Update processed in " + processingTime + " ms: " + update);
                 } catch (@SuppressWarnings("ProhibitedExceptionCaught") Throwable e) {
-                    final long processingTime = System.currentTimeMillis() - start;
+                    processingTime = System.currentTimeMillis() - start;
                     LOG.error("Update processed with error in " + processingTime + " ms: " + update, e);
+                } finally {
+                    final Map<String, Object> info = new LinkedHashMap<>();
+                    info.put("date", ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime().toString());
+                    info.put("real_processing_time", REAL_PROCESSING_TIME.get());
+                    info.put("server_processing_time", processingTime);
+                    info.put("update", update.getRawUpdate());
+                    info.put("operations", TelegramApi.OPERATIONS.get());
+                    info.put("timestamp", System.currentTimeMillis());
+                    TELEGRAM_LOG.info(TelegramApi.gson().toJson(info));
                 }
             });
         }
@@ -196,6 +212,7 @@ public final class HyperNaviBot {
         }
 
         final int processingTime = (int) ((System.currentTimeMillis() + 500) / 1000) - message.getDate();
+        REAL_PROCESSING_TIME.set(processingTime);
         LOG.info("Message processed in " + processingTime + " s: " + message);
     }
 

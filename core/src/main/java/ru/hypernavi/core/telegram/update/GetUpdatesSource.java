@@ -50,8 +50,10 @@ public final class GetUpdatesSource extends QueuedUpdatesSource {
         final int maxUpdateId = IntStream.concat(IntStream.of(updateIdSnapshot), updateIdsStream).max().orElse(updateIdSnapshot);
         updateId.compareAndSet(updateIdSnapshot, maxUpdateId);
 
-        Arrays.stream(getUpdatesResponse.getResult())
-            .peek(u -> u.setReqId(u.getUpdateId() + ""))
-            .forEach(this::add);
+        for (final Update update : getUpdatesResponse.getResult()) {
+            update.setRawUpdate(TelegramApi.gson().toJsonTree(update));
+            update.setReqId(update.getUpdateId() + "");
+            add(update);
+        }
     }
 }

@@ -1,24 +1,22 @@
 package ru.hypernavi.core.http;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
-
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
 
 /**
  * User: amosov-f
@@ -60,6 +58,12 @@ public enum HttpTools {
             }
         }
         return headers;
+    }
+
+    @NotNull
+    public static Map<String, String> params(@NotNull final HttpUriRequest req) {
+        return URLEncodedUtils.parse(req.getURI(), StandardCharsets.UTF_8.name()).stream()
+            .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
     }
 
     @NotNull

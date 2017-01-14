@@ -1,5 +1,6 @@
 package ru.hypernavi.core.telegram.api;
 
+import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,8 @@ public final class Update {
     @Nullable
     private String reqId;
     private long receiptTimestamp;
+    @Nullable
+    private JsonElement rawUpdate;
 
     public Update(final int updateId, @Nullable final Message message, @Nullable final InlineQuery inlineQuery) {
         this.updateId = updateId;
@@ -57,6 +60,15 @@ public final class Update {
 
     public long getReceiptTimestamp() {
         return receiptTimestamp;
+    }
+
+    @Nullable
+    public JsonElement getRawUpdate() {
+        return rawUpdate;
+    }
+
+    public void setRawUpdate(@Nullable final JsonElement rawUpdate) {
+        this.rawUpdate = rawUpdate;
     }
 
     @NotNull

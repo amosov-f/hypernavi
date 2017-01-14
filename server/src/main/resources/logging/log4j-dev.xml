@@ -21,6 +21,16 @@
         </layout>
     </appender>
 
+    <appender name="Telegram" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="${LOGS_DIR}/current-hypernavi_telegram-${PORT}"/>
+        <param name="Append" value="true"/>
+        <param name="MaxBackupIndex" value="0"/>
+        <param name="MaxFileSize" value="1GB"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value='%m%n'/>
+        </layout>
+    </appender>
+
     <appender name="MainMemory" class="ru.hypernavi.util.log.MemoryAppender">
         <layout class="org.apache.log4j.EnhancedPatternLayout">
             <param name="ConversionPattern" value="%d{ddMMyy HHmmss.SSS}{Europe/Moscow} %5p [%t] %c{1} &lt;%X{reqid}&gt; %m %throwable>>%n"/>
@@ -53,6 +63,10 @@
 
     <logger name="ACCESS_LOG" additivity="false">
         <appender-ref ref="AccessFileShort" />
+    </logger>
+
+    <logger name="TELEGRAM_LOG" additivity="false">
+        <appender-ref ref="Telegram" />
     </logger>
 
     <root>

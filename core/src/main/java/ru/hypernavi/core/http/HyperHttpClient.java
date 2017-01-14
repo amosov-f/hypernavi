@@ -23,6 +23,9 @@ import java.io.InputStream;
 @ThreadSafe
 public final class HyperHttpClient implements ru.hypernavi.core.http.HttpClient {
     @NotNull
+    public static final ThreadLocal<Long> DURATION = ThreadLocal.withInitial(() -> 0L);
+
+    @NotNull
     private final HttpClient client;
 
     @Inject
@@ -35,6 +38,8 @@ public final class HyperHttpClient implements ru.hypernavi.core.http.HttpClient 
     public <T> T execute(@NotNull final HttpUriRequest req, @NotNull final IOFunction<InputStream, T> parser) {
         final long start = System.currentTimeMillis();
         LOG.debug("Requesting data from: " + HttpTools.curl(req));
+        DURATION.remove();
+        JSON_RESPONSE.remove();
         final HttpResponse resp;
         try {
             resp = client.execute(req);
@@ -42,24 +47,26 @@ public final class HyperHttpClient implements ru.hypernavi.core.http.HttpClient 
             catchIOException(e);
             return null;
         }
+        final long duration = (System.currentTimeMillis() - start);
+        DURATION.set(duration);
         final StatusLine statusLine = resp.getStatusLine();
         final int status = statusLine.getStatusCode();
-        LOG.debug("Received response in " + (System.currentTimeMillis() - start) + " ms: " + status + " " + statusLine.getReasonPhrase());
+        LOG.debug("Received response in " + duration + " ms: " + status + " " + statusLine.getReasonPhrase());
         final HttpEntity entity = resp.getEntity();
         if (entity == null) {
-            LOG.info("Received empty response in " + (System.currentTimeMillis() - start) + " ms");
+            LOG.info("Received empty response in " + duration + " ms");
             return null;
         }
         try {
             if (status != HttpStatus.SC_OK) {
-                LOG.info("Received non-OK response in " + (System.currentTimeMillis() - start) + " ms: " + status + " " + statusLine.getReasonPhrase());
+                LOG.info("Received non-OK response in " + duration + " ms: " + status + " " + statusLine.getReasonPhrase());
                 LOG.debug("Response content: " + IOUtils.toString(entity.getContent()));
                 return null;
             }
             try {
                 return parser.apply(entity.getContent());
             } catch (@SuppressWarnings("OverlyBroadCatchBlock") RuntimeException e) {
-                LOG.error("Received bad response in " + (System.currentTimeMillis() - start) + " ms!", e);
+                LOG.error("Received bad response in " + duration + " ms!", e);
                 return null;
             }
         } catch (IOException e) {

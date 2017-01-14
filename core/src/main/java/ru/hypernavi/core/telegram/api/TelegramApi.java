@@ -3,6 +3,7 @@ package ru.hypernavi.core.telegram.api;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -19,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.hypernavi.commons.Image;
 import ru.hypernavi.core.http.HttpClient;
+import ru.hypernavi.core.http.HttpTools;
+import ru.hypernavi.core.http.HyperHttpClient;
 import ru.hypernavi.core.http.URIBuilder;
 import ru.hypernavi.core.telegram.api.inline.InlineQueryResult;
 import ru.hypernavi.core.telegram.api.markup.ReplyMarkup;
@@ -31,7 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -43,6 +46,8 @@ public final class TelegramApi {
     private static final Log LOG = LogFactory.getLog(TelegramApi.class);
 
     private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot";
+
+    public static final ThreadLocal<List<JsonElement>> OPERATIONS = ThreadLocal.withInitial(ArrayList::new);
 
     @Inject
     @Named("hypernavi.telegram.bot.auth_token")
@@ -139,7 +144,21 @@ public final class TelegramApi {
 
     @Nullable
     private <T> T execute(@NotNull final HttpUriRequest req, @NotNull final Class<T> clazz) {
-        return httpClient.execute(req, clazz, gson());
+        final T result = httpClient.execute(req, clazz, gson());
+
+        final Map<String, Object> request = new HashMap<>();
+        final String path = req.getURI().getPath();
+        request.put("method", path.substring(path.lastIndexOf("/")));
+        HttpTools.params(req).forEach(request::put);
+
+        final Map<String, Object> message = new LinkedHashMap<>();
+        message.put("duration", HyperHttpClient.DURATION.get());
+        message.put("request", request);
+        message.put("response", HttpClient.JSON_RESPONSE.get());
+
+        OPERATIONS.get().add(gson().toJsonTree(message));
+
+        return result;
     }
 
     @NotNull
