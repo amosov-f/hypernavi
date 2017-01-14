@@ -1,5 +1,6 @@
 package amosov;
 
+import com.google.common.base.Joiner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -18,16 +19,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by amosov-f on 28.12.16
  */
 public enum PisteMapsParser {
   ;
+
+  private static final List<Integer> ALREADY_ADDED_IDS = Arrays.asList(585, 1016);
 
   private static final DocumentBuilder DOCUMENT_BUILDER;
   static {
@@ -51,8 +51,22 @@ public enum PisteMapsParser {
     }
     System.out.println(ids.size());
     for (int i : ids) {
+      if (ALREADY_ADDED_IDS.contains(i)) {
+        System.out.println(i + " already added");
+        continue;
+      }
       final Document d1 = getOrDownload("https://skimap.org/SkiAreas/view/" + i + ".xml");
       final Node georeferencing = d1.getElementsByTagName("georeferencing").item(0);
+      final String name = d1.getElementsByTagName("name").item(0).getTextContent();
+      final NodeList regions = d1.getElementsByTagName("regions").item(0).getChildNodes();
+      final List<String> addresses = new ArrayList<>();
+      for (int ii = 0; ii < regions.getLength(); ii++) {
+        final String address = regions.item(ii).getTextContent().trim();
+        if (!address.isEmpty()) {
+          addresses.add(address);
+        }
+      }
+      final String address = Joiner.on(", ").join(addresses);
       if (georeferencing != null) {
         final Node latNode = georeferencing.getAttributes().getNamedItem("lat");
         if (latNode != null) {
@@ -85,7 +99,8 @@ public enum PisteMapsParser {
             }
           }
           if (!xxx.isEmpty()) {
-            System.out.println(lat + " " + lon);
+            System.out.println(i);
+            System.out.println(name + " | " + address + " | " + lat + ", " + lon);
             xxx.sort(Comparator.comparing(Pair::getValue));
             xxx.forEach(x -> System.out.println(x.getLeft() + " " + x.getRight()));
             System.out.println("\n");
